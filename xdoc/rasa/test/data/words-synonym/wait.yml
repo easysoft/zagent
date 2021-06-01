@@ -1,0 +1,9 @@
+version: "2.0"
+
+nlu:
+
+- synonym: syn_wait
+  examples: |
+    - 等待
+    - 暂停
+    - 中断

@@ -1,0 +1,53 @@
+version: "2.0"
+
+stories:
+
+#- story: opt_owner
+#  steps:
+#    - intent: opt_owner
+#    - action: utter_greate
+#- story: opt_balance
+#  steps:
+#    - intent: opt_balance
+#    - action: utter_greate
+#
+#- story: opt elem
+#  steps:
+#  - intent: opt_elem
+#  - action: utter_greate
+#- story: opt page
+#  steps:
+#    - intent: opt_page
+#    - action: utter_greate
+#- story: opt_assert
+#  steps:
+#    - intent: opt_elem
+#    - action: utter_greate
+#- story: opt_browser
+#  steps:
+#    - intent: opt_elem
+#    - action: utter_greate
+#- story: opt_cookie
+#  steps:
+#    - intent: opt_elem
+#    - action: utter_greate
+#- story: opt_condition
+#  steps:
+#    - intent: opt_elem
+#    - action: utter_greate
+#- story: opt_iterator
+#  steps:
+#    - intent: opt_elem
+#    - action: utter_greate
+#- story: opt_log
+#  steps:
+#    - intent: opt_elem
+#    - action: utter_greate
+#- story: opt_var
+#  steps:
+#    - intent: opt_elem
+#    - action: utter_greate
+#- story: opt_wait
+#  steps:
+#    - intent: opt_elem
+#    - action: utter_greate

@@ -1,0 +1,16 @@
+version: "2.0"
+
+nlu:
+
+- intent: opt_var
+  examples: |
+    - [设置]{"entity":"set", "value":"syn_set"}变量[var1](variable)为值[abc](value)
+    - [设置]{"entity":"set", "value":"syn_set"}变量[var1](variable)为[控件]{"entity":"element", "value":"syn_element"}[文本框1](element_name)的[名称](property_name)属性
+    - [设置]{"entity":"set", "value":"syn_set"}变量[var1](variable)为[控件]{"entity":"element", "value":"syn_element"}[文本框1](element_name)的[名称](property_name)
+    - [设置]{"entity":"set", "value":"syn_set"}变量[var1](variable)为[文本框1](element_name)的[名称](property_name)属性
+    - [设置]{"entity":"set", "value":"syn_set"}变量[var1](variable)为[文本框1](element_name)的[名称](property_name)
+
+- intent: opt_var_match
+  examples: |
+    - [设置]{"entity":"set", "value":"syn_set"}变量[var1](variable)为表达式[abc](expr)的值
+    - [设置]{"entity":"set", "value":"syn_set"}变量[var1](variable)为表达式[abc](expr)

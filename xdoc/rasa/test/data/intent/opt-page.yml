@@ -1,0 +1,9 @@
+version: "2.0"
+
+nlu:
+
+- intent: opt_page_match
+  examples: | # with regex
+    - [加载]{"entity":"action_page", "value":"lkp_action_page"}页面[http://baidu.com](url)
+    - [加载]{"entity":"action_page", "value":"lkp_action_page"}地址[http://baidu.com](url)
+    - [加载]{"entity":"action_page", "value":"lkp_action_page"}[http://baidu.com](url)

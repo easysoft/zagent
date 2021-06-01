@@ -1,0 +1,10 @@
+version: "2.0"
+
+nlu:
+
+- synonym: print
+  examples: |
+    - 打印
+    - 输出
+    - 记录
+    - 噼火

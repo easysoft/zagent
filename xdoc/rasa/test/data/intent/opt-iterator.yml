@@ -1,0 +1,20 @@
+version: "2.0"
+
+nlu:
+
+- intent: opt_iterator
+  examples: |
+    - [迭代]{"entity":"iterator", "value":"syn_iterator"}[3](times)次
+    - [循环]{"entity":"iterator", "value":"syn_iterator"}[3](times)次
+    - [继续]{"entity":"continue", "value":"syn_continue"}[迭代]{"entity":"iterator", "value":"syn_iterator"}
+    - [再次]{"entity":"continue", "value":"syn_continue"}[循环]{"entity":"iterator", "value":"syn_iterator"}
+    - [退出]{"entity":"exit", "value":"syn_exit"}[迭代]{"entity":"iterator", "value":"syn_iterator"}
+    - [停止]{"entity":"exit", "value":"syn_exit"}[迭代]{"entity":"iterator", "value":"syn_iterator"}
+    - [跳到]{"entity":"jump", "value":"syn_jump"}第[3](line)行处
+    - [跳到]{"entity":"jump", "value":"syn_jump"}第[3](line)行
+
+- intent: opt_iterator_match
+  examples: |
+    - [迭代]{"entity":"iterator", "value":"syn_iterator"}数据[data.txt](data)为变量[var1](variable)
+    - [迭代]{"entity":"iterator", "value":"syn_iterator"}文件[data.txt](data)为变量[var1](variable)
+    - [迭代]{"entity":"iterator", "value":"syn_iterator"}文件[data.txt](data)成为变量[var1](variable)

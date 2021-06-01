@@ -1,0 +1,6 @@
+/.idea/
+*.log
+/zagent.db
+/bin/
+/res/agent/res.go
+/log/

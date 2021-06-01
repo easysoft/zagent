@@ -1,0 +1,8 @@
+version: "2.0"
+
+nlu:
+
+- synonym: syn_jump
+  examples: |
+    - 跳到
+    - 跳转

@@ -1,0 +1,9 @@
+version: "2.0"
+
+nlu:
+
+- synonym: syn_exit
+  examples: |
+    - 退出
+    - 停止
+    - 终止

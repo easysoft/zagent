@@ -1,0 +1,53 @@
+version: "2.0"
+
+rules:
+
+#- rule: opt owner
+#  steps:
+#    - intent: opt_owner
+#    - action: utter_greate
+#- rule: opt balance
+#  steps:
+#    - intent: opt_balance
+#    - action: utter_greate
+#
+#- rule: opt_elem
+#  steps:
+#  - intent: opt_elem
+#  - action: utter_greate
+#- rule: opt_page
+#  steps:
+#    - intent: opt_page
+#    - action: utter_greate
+#- rule: opt_assert
+#  steps:
+#    - intent: opt_assert
+#    - action: utter_greate
+#- rule: opt_browser
+#  steps:
+#    - intent: opt_browser
+#    - action: utter_greate
+#- rule: opt_cookie
+#  steps:
+#    - intent: opt_cookie
+#    - action: utter_greate
+#- rule: opt_condition
+#  steps:
+#    - intent: opt_condition
+#    - action: utter_greate
+#- rule: opt_iterator
+#  steps:
+#    - intent: opt_iterator
+#    - action: utter_greate
+#- rule: opt_log
+#  steps:
+#    - intent: opt_log
+#    - action: utter_greate
+#- rule: opt_var
+#  steps:
+#    - intent: opt_var
+#    - action: utter_greate
+#- rule: opt_wait
+#  steps:
+#    - intent: opt_wait
+#    - action: utter_greate

@@ -1,0 +1,12 @@
+version: "2.0"
+
+nlu:
+
+- lookup: lkp_action_elem
+  examples: |
+    - 点击
+    - 右击
+    - 双击
+    - 输入
+    - 选择
+    - 拖动

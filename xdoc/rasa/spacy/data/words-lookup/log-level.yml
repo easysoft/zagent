@@ -1,0 +1,16 @@
+version: "2.0"
+
+nlu:
+
+- lookup: loglevel
+  examples: |
+    - 消息
+    - 警告
+    - 错误
+
+- lookup: print
+  examples: |
+    - 打印
+    - 输出
+    - 记录
+    - 噼火

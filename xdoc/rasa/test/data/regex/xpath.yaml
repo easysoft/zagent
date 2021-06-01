@@ -1,0 +1,7 @@
+version: "2.0"
+
+nlu:
+
+- regex: regex_xpath
+  examples: |
+    - [a-zA-Z0-9]+

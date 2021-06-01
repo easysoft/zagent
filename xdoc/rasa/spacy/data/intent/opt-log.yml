@@ -1,0 +1,17 @@
+version: "2.0"
+
+nlu:
+
+- intent: opt_log
+  examples: |
+    - [打印]{"entity":"print", "value":"syn_print"}[消息]{"entity":"loglevel", "value":"lkp_loglevel"}[测试]{"entity":"xpath", "value":"rgx_xpath"}
+    - [打印]{"entity":"print", "value":"syn_print"}[警告]{"entity":"loglevel", "value":"lkp_loglevel"}日志[内容]{"entity":"xpath", "value":"rgx_xpath"}
+    - [输出]{"entity":"print", "value":"syn_print"}[错误]{"entity":"loglevel", "value":"lkp_loglevel"}[句子]{"entity":"xpath", "value":"rgx_xpath"}
+    - [记录]{"entity":"print", "value":"syn_print"}[消息]{"entity":"loglevel", "value":"lkp_loglevel"}日志[一些内容]{"entity":"xpath", "value":"rgx_xpath"}
+    - [输出]{"entity":"print", "value":"syn_print"}[警告]{"entity":"loglevel", "value":"lkp_loglevel"}[说些什么]{"entity":"xpath", "value":"rgx_xpath"}
+    - [记录]{"entity":"print", "value":"syn_print"}[错误]{"entity":"loglevel", "value":"lkp_loglevel"}日志[说明]{"entity":"xpath", "value":"rgx_xpath"}
+    - [打印]{"entity":"print", "value":"syn_print"}[一个很长的句子在这里]{"entity":"xpath", "value":"rgx_xpath"}[错误]{"entity":"loglevel", "value":"lkp_loglevel"}
+
+    - [打印]{"entity":"print", "value":"syn_print"}[123]{"entity":"xpath", "value":"rgx_xpath"}[消息]{"entity":"loglevel", "value":"lkp_loglevel"}
+    - [记录]{"entity":"print", "value":"syn_print"}[345]{"entity":"xpath", "value":"rgx_xpath"}[警告]{"entity":"loglevel", "value":"lkp_loglevel"}
+    - [输出]{"entity":"print", "value":"syn_print"}[123]{"entity":"xpath", "value":"rgx_xpath"}[消息]{"entity":"loglevel", "value":"lkp_loglevel"}

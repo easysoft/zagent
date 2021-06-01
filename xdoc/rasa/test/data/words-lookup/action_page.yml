@@ -1,0 +1,9 @@
+version: "2.0"
+
+nlu:
+
+- lookup: lkp_action_page
+  examples: |
+    - 刷新
+    - 加载
+    - 重载

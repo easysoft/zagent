@@ -1,0 +1,4 @@
+PRAGMA secure_delete = ON;
+
+vacuum;
+PRAGMA secure_delete = OFF;

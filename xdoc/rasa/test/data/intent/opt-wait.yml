@@ -1,0 +1,9 @@
+version: "2.0"
+
+nlu:
+
+- intent: opt_wait
+  examples: |
+    - 等待{"entity":"wait", "value":"syn_wait"}[5](value)秒
+    - 等待{"entity":"wait", "value":"syn_wait"}[3](value)分
+    - 等待{"entity":"wait", "value":"syn_wait"}[3](value)分钟

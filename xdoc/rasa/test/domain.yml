@@ -1,0 +1,185 @@
+version: "2.0"
+
+intents:
+  - opt_owner
+  - opt_balance
+  - opt_page
+  - opt_page
+  - opt_assert
+  - opt_browser
+  - opt_cookie
+  - opt_condition
+  - opt_iterator
+  - opt_log
+  - opt_var
+  - opt_wait
+
+entities:
+  - object_type
+  - use
+  - selector_type
+  - by
+  - action_elem
+  - action_page
+  - wait
+  - url
+  - jump
+  - line
+  - browser
+  - element
+  - element_name
+  - property_name
+  - root
+  - parent
+
+  - assert
+  - if
+  - expr
+  - times
+
+  - name
+  - variable
+  - value
+  - version
+  - script
+  - log_level
+  - message
+
+  - get
+  - set
+
+  - reg_phone
+  - owner
+  - balance
+
+  - iterator
+  - continue
+  - exit
+  - jump
+  - times
+  - data
+  - line
+
+slots:
+  object_type:
+    type: text
+    influence_conversation: false
+  use:
+    type: text
+    influence_conversation: false
+  selector_type:
+    type: text
+    influence_conversation: false
+  by:
+    type: text
+    influence_conversation: false
+  action_elem:
+    type: text
+    influence_conversation: false
+  action_page:
+    type: text
+    influence_conversation: false
+  wait:
+    type: text
+    influence_conversation: false
+  url:
+    type: text
+    influence_conversation: false
+
+  browser:
+    type: text
+    influence_conversation: false
+  element:
+    type: text
+    influence_conversation: false
+  element_name:
+    type: text
+    influence_conversation: false
+  property_name:
+    type: text
+    influence_conversation: false
+  root:
+    type: text
+    influence_conversation: false
+  parent:
+    type: text
+    influence_conversation: false
+
+  assert:
+    type: text
+    influence_conversation: false
+  if:
+    type: text
+    influence_conversation: false
+  expr:
+    type: text
+    influence_conversation: false
+
+  name:
+    type: text
+    influence_conversation: false
+  variable:
+    type: text
+    influence_conversation: false
+  value:
+    type: text
+    influence_conversation: false
+  version:
+    type: text
+    influence_conversation: false
+  script:
+    type: text
+    influence_conversation: false
+  log_level:
+    type: text
+    influence_conversation: false
+  message:
+    type: text
+    influence_conversation: false
+
+  get:
+    type: text
+    influence_conversation: false
+  set:
+    type: text
+    influence_conversation: false
+
+  reg_phone:
+    type: text
+    influence_conversation: false
+  owner:
+    type: text
+    influence_conversation: false
+  balance:
+    type: text
+    influence_conversation: false
+
+  iterator:
+    type: text
+    influence_conversation: false
+  continue:
+    type: text
+    influence_conversation: false
+  exit:
+    type: text
+    influence_conversation: false
+  jump:
+    type: text
+    influence_conversation: false
+  times:
+    type: text
+    influence_conversation: false
+  data:
+    type: text
+    influence_conversation: false
+  line:
+    type: text
+    influence_conversation: false
+
+responses:
+  utter_greate:
+  - text: "fine"
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

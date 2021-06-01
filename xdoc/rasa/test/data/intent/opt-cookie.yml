@@ -1,0 +1,12 @@
+version: "2.0"
+
+nlu:
+
+- intent: opt_cookie
+  examples: |
+    - [获取]{"entity":"get", "value":"syn_get"}名为[name](name)的cookie
+    - [获取]{"entity":"get", "value":"syn_get"}cookie[name](name)
+    - [设置]{"entity":"set", "value":"syn_set"}cookie[name](name)为[value](value)
+    - [设置]{"entity":"set", "value":"syn_set"}cookie[name](name)为变量[value](value)的值
+    - [设置]{"entity":"set", "value":"syn_set"}cookie[name](name)为变量[value](value)值
+    - [设置]{"entity":"set", "value":"syn_set"}cookie[name](name)为变量[value](value)

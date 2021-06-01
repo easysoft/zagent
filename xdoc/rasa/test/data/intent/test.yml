@@ -1,0 +1,15 @@
+version: "2.0"
+
+nlu:
+
+- intent: opt_owner
+  examples: |
+    - 我要查下[19822618425](reg_phone)的[机主]{"entity":"owner", "value":"syn_owner"}是谁
+    - 查一下手机号码[19862228425](reg_phone)的[机主信息]{"entity":"owner", "value":"syn_owner"}
+
+- intent: opt_balance
+  examples: |
+    - 我想查电话号码[19860618422](reg_phone)的[账户余额]{"entity":"balance", "value":"syn_balance"}
+    - 帮我查下号码[19860618422](reg_phone)的[账户余额]{"entity":"balance", "value":"syn_balance"}
+    - 请帮我查询一下电话[12260618425](reg_phone)的[账户余额]{"entity":"balance", "value":"syn_balance"}
+    - 帮我查个手机号[19860612222](reg_phone)的[余额]{"entity":"balance", "value":"syn_balance"}

@@ -1,0 +1,8 @@
+version: "2.0"
+
+nlu:
+
+- synonym: syn_assert
+  examples: |
+    - 断言
+    - 判断

@@ -1,0 +1,9 @@
+version: "2.0"
+
+nlu:
+
+- synonym: syn_use
+  examples: |
+    - 通过
+    - 使用
+    - 根据

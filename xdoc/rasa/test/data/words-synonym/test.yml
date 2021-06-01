@@ -1,0 +1,18 @@
+version: "2.0"
+
+nlu:
+
+- synonym: syn_owner
+  examples: |
+    - 机主信息
+    - 机主
+    - 拥有者
+    - 谁的
+    - 属于谁
+
+- synonym: syn_balance
+  examples: |
+    - 余额
+    - 话费
+    - 话费余额
+    - 账户余额

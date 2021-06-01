@@ -1,0 +1,11 @@
+version: "2.0"
+
+nlu:
+
+  - synonym: syn_get
+    examples: |
+      - 获取
+
+  - synonym: syn_set
+    examples: |
+      - 设置
