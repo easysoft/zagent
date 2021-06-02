@@ -3,7 +3,7 @@ package agentService
 type CheckService struct {
 	RegisterService *RegisterService `inject:""`
 	TaskService     *TaskService     `inject:""`
-	TestService     *TestService     `inject:""`
+	TestService     *BuildService    `inject:""`
 }
 
 func NewCheckService() *CheckService {

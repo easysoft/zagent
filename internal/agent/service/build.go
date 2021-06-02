@@ -5,16 +5,16 @@ import (
 	_const "github.com/easysoft/zagent/internal/pkg/const"
 )
 
-type TestService struct {
+type BuildService struct {
 	TaskService          *TaskService          `inject:""`
 	InterfaceTestService *InterfaceTestService `inject:""`
 }
 
-func NewTestService() *TestService {
-	return &TestService{}
+func NewTestService() *BuildService {
+	return &BuildService{}
 }
 
-func (s *TestService) Exec(build commDomain.Build) {
+func (s *BuildService) Exec(build commDomain.Build) {
 	s.TaskService.StartTask()
 
 	if build.BuildType == _const.InterfaceScenario || build.BuildType == _const.InterfaceSet {
