@@ -1,9 +1,9 @@
 package agentService
 
 type CheckService struct {
-	RegisterService   *RegisterService      `inject:""`
-	TaskService   *TaskService      `inject:""`
-	TestService   *TestService      `inject:""`
+	RegisterService *RegisterService `inject:""`
+	TaskService     *TaskService     `inject:""`
+	TestService     *TestService     `inject:""`
 }
 
 func NewCheckService() *CheckService {
@@ -12,7 +12,7 @@ func NewCheckService() *CheckService {
 
 func (s *CheckService) Check() {
 	// is running，register busy
-	if s.TaskService.CheckTaskRunning() {
+	if s.TaskService.IsRunning() {
 		s.RegisterService.Register(true)
 		return
 	}

@@ -3,57 +3,82 @@ package agentService
 import (
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
+	"sync"
 	"time"
 )
 
+var lock sync.Mutex
+
 type TaskService struct {
-	TM        time.Time
-	Tasks     []commDomain.BuildTo
-	IsRunning bool
+	TimeStamp time.Time
+	running   bool
+	tasks     []commDomain.BuildTo
 }
 
 func NewTaskService() *TaskService {
 	service := &TaskService{}
-	service.TM = time.Now()
-	service.Tasks = make([]commDomain.BuildTo, 0)
+
+	service.TimeStamp = time.Now()
+	service.tasks = make([]commDomain.BuildTo, 0)
 
 	return service
 }
 
 func (s *TaskService) AddTask(task commDomain.BuildTo) {
-	s.Tasks = append(s.Tasks, task)
+	lock.Lock()
+
+	s.tasks = append(s.tasks, task)
+
+	lock.Unlock()
 }
 
 func (s *TaskService) PeekTask() commDomain.BuildTo {
-	return s.Tasks[0]
+	lock.Lock()
+	defer lock.Unlock()
+
+	return s.tasks[0]
 }
 
-func (s *TaskService) RemoveTask() (task commDomain.BuildTo) {
-	if len(s.Tasks) == 0 {
-		return task
+func (s *TaskService) RemoveTask() {
+	lock.Lock()
+
+	if len(s.tasks) == 0 {
+		return
 	}
+	s.tasks = s.tasks[1:]
 
-	task = s.Tasks[0]
-	s.Tasks = s.Tasks[1:]
-
-	return task
+	lock.Unlock()
 }
 
 func (s *TaskService) StartTask() {
-	s.TM = time.Now()
-	s.IsRunning = true
+	lock.Lock()
+
+	s.TimeStamp = time.Now()
+	s.running = true
+
+	lock.Unlock()
 }
 func (s *TaskService) EndTask() {
-	s.IsRunning = false
+	lock.Lock()
+
+	s.running = false
+
+	lock.Unlock()
 }
 
 func (s *TaskService) GetTaskSize() int {
-	return len(s.Tasks)
+	lock.Lock()
+	defer lock.Unlock()
+
+	return len(s.tasks)
 }
 
-func (s *TaskService) CheckTaskRunning() bool {
-	if time.Now().Unix()-s.TM.Unix() > _const.AgentRunTime*60*1000 {
-		s.IsRunning = false
+func (s *TaskService) IsRunning() bool {
+	lock.Lock()
+	defer lock.Unlock()
+
+	if time.Now().Unix()-s.TimeStamp.Unix() > _const.AgentRunTime*60*1000 {
+		s.running = false
 	}
-	return s.IsRunning
+	return s.running
 }
