@@ -42,9 +42,10 @@ const (
 type BuildType string
 
 const (
-	InterfaceTest BuildType = "interface_test"
-	UnitTest      BuildType = "unit_test"
-	ZtfTest       BuildType = "ztf_test"
+	InterfaceScenario BuildType = "interface_scenario"
+	InterfaceSet      BuildType = "interface_set"
+
+	AutomatedTest BuildType = "automated_test"
 )
 
 type OsPlatform string

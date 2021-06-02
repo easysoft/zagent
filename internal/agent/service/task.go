@@ -12,19 +12,19 @@ var lock sync.Mutex
 type TaskService struct {
 	TimeStamp time.Time
 	running   bool
-	tasks     []commDomain.BuildTo
+	tasks     []commDomain.Build
 }
 
 func NewTaskService() *TaskService {
 	service := &TaskService{}
 
 	service.TimeStamp = time.Now()
-	service.tasks = make([]commDomain.BuildTo, 0)
+	service.tasks = make([]commDomain.Build, 0)
 
 	return service
 }
 
-func (s *TaskService) AddTask(task commDomain.BuildTo) {
+func (s *TaskService) AddTask(task commDomain.Build) {
 	lock.Lock()
 
 	s.tasks = append(s.tasks, task)
@@ -32,7 +32,7 @@ func (s *TaskService) AddTask(task commDomain.BuildTo) {
 	lock.Unlock()
 }
 
-func (s *TaskService) PeekTask() commDomain.BuildTo {
+func (s *TaskService) PeekTask() commDomain.Build {
 	lock.Lock()
 	defer lock.Unlock()
 

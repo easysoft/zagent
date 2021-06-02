@@ -24,7 +24,7 @@ func (s *CheckService) Check() {
 	}
 
 	// has task to run，register busy, then run
-	build := s.TaskService.PeekTask()
+	task := s.TaskService.PeekTask()
 	s.RegisterService.Register(true)
-	s.TestService.Exec(build)
+	s.TestService.Exec(task)
 }

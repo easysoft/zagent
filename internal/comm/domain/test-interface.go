@@ -1,6 +1,6 @@
 package commDomain
 
-type TestCase struct {
+type TestInterface struct {
 	Version float64 `json:"version" yaml:"version"`
 	Name    string  `json:"name" yaml:"name"`
 	Desc    string  `json:"desc" yaml:"desc"`
@@ -8,5 +8,5 @@ type TestCase struct {
 	Request   Request    `json:"request" yaml:"request" gorm:"-"`
 	Responses []Response `json:"responses" yaml:"responses" gorm:"-"`
 
-	Raw string `yaml:"raw"`
+	Raw string `json:"raw" yaml:"-"`
 }

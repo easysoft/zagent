@@ -8,16 +8,15 @@ import (
 	"golang.org/x/net/context"
 )
 
-type InterfaceCtrl struct {
-	InterfaceService *agentService.InterfaceService `inject:""`
-	TaskService      *agentService.TaskService      `inject:""`
+type TaskCtrl struct {
+	TaskService *agentService.TaskService `inject:""`
 }
 
-func NewInterfaceCtrl() *InterfaceCtrl {
-	return &InterfaceCtrl{}
+func NewTaskCtrl() *TaskCtrl {
+	return &TaskCtrl{}
 }
 
-func (c *InterfaceCtrl) Exec(ctx context.Context, task commDomain.BuildTo, reply *_domain.RpcResp) error {
+func (c *TaskCtrl) Add(ctx context.Context, task commDomain.Build, reply *_domain.RpcResp) error {
 	size := c.TaskService.GetTaskSize()
 	if size == 0 {
 		c.TaskService.AddTask(task)

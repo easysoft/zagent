@@ -13,7 +13,7 @@ func main() {
 	url := fmt.Sprintf("tcp@127.0.0.1:%d", _const.RpcPort)
 	d := client.NewPeer2PeerDiscovery(url, "")
 
-	xClient := client.NewXClient("Arith", client.Failtry, client.RandomSelect, d, client.DefaultOption)
+	xClient := client.NewXClient("arith", client.Failtry, client.RandomSelect, d, client.DefaultOption)
 	defer xClient.Close()
 
 	args := &_domain.ArithArgs{

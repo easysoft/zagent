@@ -10,8 +10,8 @@ import (
 )
 
 type Router struct {
-	ArithCtrl     *handler.ArithCtrl     `inject:""`
-	InterfaceCtrl *handler.InterfaceCtrl `inject:""`
+	ArithCtrl *handler.ArithCtrl `inject:""`
+	TaskCtrl  *handler.TaskCtrl  `inject:""`
 }
 
 func NewRouter() *Router {
@@ -23,8 +23,8 @@ func (r *Router) App() {
 	addr := agentConf.Inst.NodeIp + ":" + strconv.Itoa(agentConf.Inst.NodePort)
 
 	srv := server.NewServer()
-	srv.RegisterName("Arith", r.ArithCtrl, "")
-	srv.RegisterName("Interface", r.InterfaceCtrl, "")
+	srv.RegisterName("arith", r.ArithCtrl, "")
+	srv.RegisterName("test", r.TaskCtrl, "")
 
 	_logUtils.Info(_i118Utils.Sprintf("start_server", addr))
 	err := srv.Serve("tcp", addr)

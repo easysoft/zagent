@@ -34,7 +34,7 @@ func main() {
 	h.Set(gateway.XMessageID, "10000")
 	h.Set(gateway.XMessageType, "0")
 	h.Set(gateway.XSerializeType, "3")
-	h.Set(gateway.XServicePath, "Arith")
+	h.Set(gateway.XServicePath, "arith")
 	h.Set(gateway.XServiceMethod, "Add")
 
 	res, err := http.DefaultClient.Do(req)

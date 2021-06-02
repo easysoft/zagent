@@ -26,20 +26,20 @@ func injectObj(router *router.Router) {
 		//&inject.Object{Value: db.GetInst().DB()},
 
 		&inject.Object{Value: handler.NewArithCtrl()},
-		&inject.Object{Value: handler.NewInterfaceCtrl()},
+		&inject.Object{Value: handler.NewTaskCtrl()},
 
 		&inject.Object{Value: agentService.NewCheckService()},
 		&inject.Object{Value: agentService.NewCommonService()},
 		&inject.Object{Value: agentService.NewExecService()},
-		&inject.Object{Value: agentService.NewInterfaceService()},
 		&inject.Object{Value: agentService.NewRegisterService()},
 		&inject.Object{Value: agentService.NewScmService()},
 		&inject.Object{Value: agentService.NewTaskService()},
+		&inject.Object{Value: agentService.NewInterfaceTestService()},
+		&inject.Object{Value: agentService.NewAutomatedTestService()},
 		&inject.Object{Value: agentService.NewTestService()},
 
 		&inject.Object{Value: agentCron.NewCronService()},
 		&inject.Object{Value: router},
-
 	); err != nil {
 		logrus.Fatalf("provide usecase objects to the Graph: %v", err)
 	}

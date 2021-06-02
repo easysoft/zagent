@@ -6,19 +6,22 @@ import (
 )
 
 type TestService struct {
-	TaskService      *TaskService      `inject:""`
-	InterfaceService *InterfaceService `inject:""`
+	TaskService          *TaskService          `inject:""`
+	InterfaceTestService *InterfaceTestService `inject:""`
 }
 
 func NewTestService() *TestService {
 	return &TestService{}
 }
 
-func (s *TestService) Exec(build commDomain.BuildTo) {
+func (s *TestService) Exec(build commDomain.Build) {
 	s.TaskService.StartTask()
 
-	if build.BuildType == _const.InterfaceTest {
-		s.InterfaceService.ExecTest(&build)
+	if build.BuildType == _const.InterfaceScenario || build.BuildType == _const.InterfaceSet {
+		s.InterfaceTestService.ExecTest(&build)
+
+	} else if build.BuildType == _const.AutomatedTest {
+
 	}
 
 	s.TaskService.RemoveTask()

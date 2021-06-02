@@ -13,14 +13,14 @@ type TestSet struct {
 }
 
 type TestConf struct {
-	NumberOfThreads int `json:"numberOfThreads" yaml:"numberOfThreads"`
-	RampUpPeriod    int `json:"rampUpPeriod" yaml:"rampUpPeriod"` // sec
+	NumberOfThreads int `json:"numberOfThreads,omitempty" yaml:"numberOfThreads,omitempty"`
+	RampUpPeriod    int `json:"rampUpPeriod,omitempty" yaml:"rampUpPeriod,omitempty"` // sec
 
-	Duration  int  `json:"duration" yaml:"duration"` // sec, if set, loopCount will be ignore
-	LoopCount int  `json:"loopCount" yaml:"loopCount"`
-	Forever   bool `json:"forever" yaml:"forever"`
+	Duration  int  `json:"duration,omitempty" yaml:"duration,omitempty"` // sec, if set, loopCount will be ignore
+	LoopCount int  `json:"loopCount,omitempty" yaml:"loopCount,omitempty"`
+	Forever   bool `json:"forever,omitempty" yaml:"forever,omitempty"`
 
-	ErrorAction _const.ErrorAction `json:"errorAction" yaml:"errorAction"`
+	ErrorAction _const.ErrorAction `json:"errorAction,omitempty" yaml:"errorAction,omitempty"`
 
 	Agents []Node `json:"agents" yaml:"agents" gorm:"many2many:r_set_to_agent;"`
 }

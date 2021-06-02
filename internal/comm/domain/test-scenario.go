@@ -1,9 +1,9 @@
 package commDomain
 
-type TestEnv struct {
+type TestScenario struct {
 	Version float64 `json:"version" yaml:"version"`
 	Name    string  `json:"name" yaml:"name"`
 	Desc    string  `json:"desc" yaml:"desc"`
 
-	Url string `json:"url" yaml:"url"`
+	Processor TestProcessor `json:"processor" yaml:"processor"`
 }
