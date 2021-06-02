@@ -4,6 +4,7 @@ import (
 	"fmt"
 	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
 	_commonUtils "github.com/easysoft/zagent/internal/pkg/libs/common"
+	_i118Utils "github.com/easysoft/zagent/internal/pkg/libs/i118"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
 	agentRes "github.com/easysoft/zagent/res/agent"
 	"github.com/fatih/color"
@@ -16,7 +17,7 @@ var (
 )
 
 func PrintUsage() {
-	_logUtils.PrintColor("Usage: ", color.FgCyan)
+	_logUtils.PrintColor(_i118Utils.Sprintf("usage"), color.FgCyan)
 
 	usage := ReadResData(usageFile)
 

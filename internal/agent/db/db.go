@@ -4,6 +4,7 @@ import (
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
 	_fileUtils "github.com/easysoft/zagent/internal/pkg/libs/file"
+	_i118Utils "github.com/easysoft/zagent/internal/pkg/libs/i118"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
 	"gorm.io/driver/sqlite"
 	_ "gorm.io/driver/sqlite"
@@ -45,7 +46,7 @@ func InitDB() {
 	})
 
 	if err != nil {
-		_logUtils.Info(err.Error())
+		_logUtils.Info(_i118Utils.Sprintf("fail_to_init_db", conn, err.Error()))
 	}
 
 	_ = DB.Use(

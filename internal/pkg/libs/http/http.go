@@ -5,6 +5,7 @@ import (
 	"fmt"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
+	_i118Utils "github.com/easysoft/zagent/internal/pkg/libs/i118"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
 	"github.com/easysoft/zagent/internal/pkg/var"
 	"io/ioutil"
@@ -47,7 +48,7 @@ func GetObj(url string, requestTo string) (interface{}, bool) {
 		jsonErr := json.Unmarshal(bodyStr, &bodyJson)
 		if jsonErr != nil {
 			if strings.Index(string(bodyStr), "<html>") > -1 {
-				_logUtils.Error("server return a html")
+				_logUtils.Error(_i118Utils.Sprintf("wrong_response_format", "html"))
 				return nil, false
 			} else {
 				_logUtils.Error(jsonErr.Error())

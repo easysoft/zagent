@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"fmt"
 	_commonUtils "github.com/easysoft/zagent/internal/pkg/libs/common"
+	_i118Utils "github.com/easysoft/zagent/internal/pkg/libs/i118"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/libs/string"
 	"io"
@@ -60,7 +61,7 @@ func ExeShellInDirWithPid(cmdStr string, dir string) (ret string, err error, pid
 
 	err = cmd.Run()
 	if err != nil {
-		_logUtils.Error(fmt.Sprintf("fail to exec command `%s` in dir `%s`, error `%#v`.", cmdStr, cmd.Dir, err))
+		_logUtils.Error(_i118Utils.Sprintf("fail_to_exec_command", cmdStr, cmd.Dir, err))
 	}
 
 	pid = cmd.Process.Pid

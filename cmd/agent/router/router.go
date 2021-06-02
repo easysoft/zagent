@@ -1,17 +1,17 @@
 package router
 
 import (
-	"fmt"
 	"github.com/easysoft/zagent/cmd/agent/router/handler"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
+	_i118Utils "github.com/easysoft/zagent/internal/pkg/libs/i118"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
 	"github.com/smallnest/rpcx/server"
 	"strconv"
 )
 
 type Router struct {
-	ArithCtrl   *handler.ArithCtrl      `inject:""`
-	InterfaceCtrl   *handler.InterfaceCtrl      `inject:""`
+	ArithCtrl     *handler.ArithCtrl     `inject:""`
+	InterfaceCtrl *handler.InterfaceCtrl `inject:""`
 }
 
 func NewRouter() *Router {
@@ -26,9 +26,9 @@ func (r *Router) App() {
 	srv.RegisterName("Arith", r.ArithCtrl, "")
 	srv.RegisterName("Interface", r.InterfaceCtrl, "")
 
-	_logUtils.Info(fmt.Sprintf("start server on %s ...", addr))
+	_logUtils.Info(_i118Utils.Sprintf("start_server", addr))
 	err := srv.Serve("tcp", addr)
 	if err != nil {
-		_logUtils.Infof("fail to start server on %s, err is %s", err.Error())
+		_logUtils.Infof(_i118Utils.Sprintf("fail_to_start_server", addr, err.Error()))
 	}
 }

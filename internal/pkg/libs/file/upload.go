@@ -2,7 +2,7 @@ package _fileUtils
 
 import (
 	"bytes"
-	"fmt"
+	_i118Utils "github.com/easysoft/zagent/internal/pkg/libs/i118"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
 	"io"
 	"io/ioutil"
@@ -33,49 +33,13 @@ func Upload(url string, files []string, extraParams map[string]string) {
 	defer resp.Body.Close()
 
 	if err != nil {
-		e := "fail to upload files, err: " + err.Error()
-		_logUtils.Error(e)
+		_logUtils.Error(_i118Utils.Sprintf("fail_to_upload_files", err.Error()))
 	}
 
 	respBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		e := "fail to parse upload resp, err: " + err.Error()
-		_logUtils.Error(e)
+		_logUtils.Error(_i118Utils.Sprintf("fail_to_parse_upload_response", err.Error()))
 	}
 
-	_logUtils.Info("upload status " + resp.Status + ", resp is " + string(respBody))
-}
-
-func Download(url string, dst string) {
-	fmt.Printf("DownloadToFile From: %s.\n", url)
-	if d, err := HTTPDownload(url); err == nil {
-		_logUtils.Info(fmt.Sprintf("downloaded %s.\n", url))
-		if WriteDownloadFile(dst, d) == nil {
-			_logUtils.Info(fmt.Sprintf("saved %s as %s\n", url, dst))
-		}
-	}
-}
-
-func HTTPDownload(uri string) ([]byte, error) {
-	_logUtils.Info(fmt.Sprintf("HTTPDownload From: %s.\n", uri))
-	res, err := http.Get(uri)
-	if err != nil {
-		_logUtils.Error(err.Error())
-	}
-	defer res.Body.Close()
-	d, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		_logUtils.Error(err.Error())
-	}
-	_logUtils.Info(fmt.Sprintf("ReadFile: Size of download: %d\n", len(d)))
-	return d, err
-}
-
-func WriteDownloadFile(dst string, d []byte) error {
-	_logUtils.Info(fmt.Sprintf("WriteFile: Size of download: %d\n", len(d)))
-	err := ioutil.WriteFile(dst, d, 0444)
-	if err != nil {
-		_logUtils.Error(err.Error())
-	}
-	return err
+	_logUtils.Info(_i118Utils.Sprintf("upload_status", resp.Status, string(respBody)))
 }

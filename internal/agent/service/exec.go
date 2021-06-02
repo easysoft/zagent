@@ -8,6 +8,7 @@ import (
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	_fileUtils "github.com/easysoft/zagent/internal/pkg/libs/file"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/libs/http"
+	_i118Utils "github.com/easysoft/zagent/internal/pkg/libs/i118"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
 	_shellUtils "github.com/easysoft/zagent/internal/pkg/libs/shell"
 	"github.com/satori/go.uuid"
@@ -39,8 +40,8 @@ func (s *ExecService) UploadResult(build commDomain.BuildTo, result _domain.RpcR
 	zipFile := build.WorkDir + "testResult.zip"
 	err := _fileUtils.ZipFiles(zipFile, build.ProjectDir, strings.Split(build.ResultFiles, ","))
 	if err != nil {
-		_logUtils.Errorf("fail to zip test results, dist '%s', dir %s, files '%s', error %#v",
-			zipFile, build.ProjectDir, build.ResultFiles, err)
+		_logUtils.Errorf(_i118Utils.Sprintf("fail_to_zip_test_result",
+			zipFile, build.ProjectDir, build.ResultFiles, err))
 	}
 
 	result.Payload = build

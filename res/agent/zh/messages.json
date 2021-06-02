@@ -2,8 +2,61 @@
   "language": "zh",
   "messages": [
     {
-      "id": "for_example",
-      "translation": "例如 %s"
+      "id": "usage",
+      "translation": "Usage:"
+    },
+    {
+      "id": "success_to_register",
+      "translation": "success to register %s."
+    },
+    {
+      "id": "fail_to_register",
+      "translation": "fail to register %s, response is %v."
+    },
+    {
+      "id": "start_server",
+      "translation": "start server on %s ..."
+    },
+    {
+      "id": "fail_to_start_server",
+      "translation": "fail to start server on %s, err is %s."
+    },
+    {
+      "id": "fail_to_init_db",
+      "translation": "fail to init db %s, err is %s."
+    },
+    {
+      "id": "fail_to_zip_test_result",
+      "translation": "fail to zip test results, dist '%s', dir %s, files '%s', error %#v."
+    },
+    {
+      "id": "fail_to_upload_files",
+      "translation": "fail to upload files, err: %s."
+    },
+    {
+      "id": "fail_to_parse_upload_response",
+      "translation": "fail to parse upload resp, err: %s."
+    },
+    {
+      "id": "upload_status",
+      "translation": "upload status %s, resp is %s."
+    },
+    {
+      "id": "file_downloaded",
+      "translation": "file %s downloaded."
+    },
+    {
+      "id": "file_download_saved",
+      "translation": "saved downloaded file %s as %s."
+    },
+    {
+      "id": "fail_to_exec_command",
+      "translation": "fail to exec command `%s` in dir `%s`, error `%#v`."
+    },
+    {
+      "id": "wrong_response_format",
+      "translation": "wrong response format '%s'."
     }
+
   ]
 }

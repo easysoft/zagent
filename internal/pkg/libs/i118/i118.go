@@ -55,7 +55,6 @@ func ReadI18nJson(file string) string {
 	Check(err)
 	str := string(b)
 	return str
-
 }
 
 func InitRes(jsonPath string) {
@@ -81,4 +80,8 @@ func InitResFromAsset(bytes []byte) {
 	for _, e := range msgArr {
 		message.SetString(tag, e.Id, e.Translation)
 	}
+}
+
+func Sprintf(key message.Reference, a ...interface{}) string {
+	return I118Prt.Sprintf(key, a...)
 }
