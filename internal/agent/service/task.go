@@ -1,34 +1,34 @@
 package agentService
 
 import (
-	"github.com/easysoft/zagent/internal/agent/model"
+	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
 	"time"
 )
 
 type TaskService struct {
 	TM        time.Time
-	Tasks     []domain.BuildTo
+	Tasks     []commDomain.BuildTo
 	IsRunning bool
 }
 
 func NewTaskService() *TaskService {
 	service := &TaskService{}
 	service.TM = time.Now()
-	service.Tasks = make([]domain.BuildTo, 0)
+	service.Tasks = make([]commDomain.BuildTo, 0)
 
 	return service
 }
 
-func (s *TaskService) AddTask(task domain.BuildTo) {
+func (s *TaskService) AddTask(task commDomain.BuildTo) {
 	s.Tasks = append(s.Tasks, task)
 }
 
-func (s *TaskService) PeekTask() domain.BuildTo {
+func (s *TaskService) PeekTask() commDomain.BuildTo {
 	return s.Tasks[0]
 }
 
-func (s *TaskService) RemoveTask() (task domain.BuildTo) {
+func (s *TaskService) RemoveTask() (task commDomain.BuildTo) {
 	if len(s.Tasks) == 0 {
 		return task
 	}

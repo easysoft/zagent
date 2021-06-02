@@ -3,7 +3,7 @@ package _logUtils
 import (
 	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
-	_vari "github.com/easysoft/zagent/internal/pkg/vari"
+	"github.com/easysoft/zagent/internal/pkg/var"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
 	"github.com/smallnest/rpcx/log"
@@ -24,7 +24,7 @@ func Init(app string) {
 	usr, _ := user.Current()
 	log.Info("Run as user " + usr.Username)
 
-	_vari.WorkDir = addPathSepIfNeeded(filepath.Join(usr.HomeDir, agentConst.AppName))
+	_var.WorkDir = addPathSepIfNeeded(filepath.Join(usr.HomeDir, agentConst.AppName))
 	logDir := addPathSepIfNeeded("log")
 	MkDirIfNeeded(logDir)
 	log.Info("Log dir is " + logDir)

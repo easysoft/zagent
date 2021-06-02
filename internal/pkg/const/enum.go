@@ -30,20 +30,13 @@ const (
 	StatusFail    BuildStatus = "fail"
 )
 
-type NodeStatus string
-
-const (
-	NodeActive NodeStatus = "active"
-	NodeBusy   NodeStatus = "busy"
-)
-
 type ServiceStatus string
 
 const (
-	ServiceOff    ServiceStatus = "off"
-	ServiceOn     ServiceStatus = "on"
-	ServiceActive ServiceStatus = "active"
-	ServiceBusy   ServiceStatus = "busy"
+	ServiceOffline ServiceStatus = "offline"
+	ServiceOnline  ServiceStatus = "online"
+	ServiceActive  ServiceStatus = "active"
+	ServiceBusy    ServiceStatus = "busy"
 )
 
 type BuildType string

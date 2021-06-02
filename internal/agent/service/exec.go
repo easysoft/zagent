@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
-	"github.com/easysoft/zagent/internal/agent/model"
+	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	_fileUtils "github.com/easysoft/zagent/internal/pkg/libs/file"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/libs/http"
@@ -21,7 +21,7 @@ func NewExecService() *ExecService {
 	return &ExecService{}
 }
 
-func (s *ExecService) ExcCommand(build *domain.BuildTo) _domain.RpcResp {
+func (s *ExecService) ExcCommand(build *commDomain.BuildTo) _domain.RpcResp {
 	cmdStr := build.BuildCommands
 	out, err := _shellUtils.ExeShellWithOutputInDir(cmdStr, build.ProjectDir)
 
@@ -35,7 +35,7 @@ func (s *ExecService) ExcCommand(build *domain.BuildTo) _domain.RpcResp {
 	return result
 }
 
-func (s *ExecService) UploadResult(build domain.BuildTo, result _domain.RpcResp) {
+func (s *ExecService) UploadResult(build commDomain.BuildTo, result _domain.RpcResp) {
 	zipFile := build.WorkDir + "testResult.zip"
 	err := _fileUtils.ZipFiles(zipFile, build.ProjectDir, strings.Split(build.ResultFiles, ","))
 	if err != nil {
@@ -54,7 +54,7 @@ func (s *ExecService) UploadResult(build domain.BuildTo, result _domain.RpcResp)
 	_fileUtils.Upload(uploadResultUrl, files, extraParams)
 }
 
-func (s *ExecService) GetTestApp(build *domain.BuildTo) _domain.RpcResp {
+func (s *ExecService) GetTestApp(build *commDomain.BuildTo) _domain.RpcResp {
 	result := _domain.RpcResp{}
 
 	if strings.Index(build.AppUrl, "http://") == 0 {
@@ -72,7 +72,7 @@ func (s *ExecService) GetTestApp(build *domain.BuildTo) _domain.RpcResp {
 	return result
 }
 
-func (s *ExecService) DownloadApp(build *domain.BuildTo) {
+func (s *ExecService) DownloadApp(build *commDomain.BuildTo) {
 	path := build.WorkDir + uuid.NewV4().String() + _fileUtils.GetExtName(build.AppUrl)
 	_fileUtils.Download(build.AppUrl, path)
 	build.AppPath = path

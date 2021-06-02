@@ -3,8 +3,8 @@ package handler
 import (
 	"fmt"
 	agentService "github.com/easysoft/zagent/internal/agent/service"
+	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
-	"github.com/easysoft/zagent/internal/share/domain"
 	"golang.org/x/net/context"
 )
 
@@ -17,7 +17,7 @@ func NewInterfaceCtrl() *InterfaceCtrl {
 	return &InterfaceCtrl{}
 }
 
-func (c *InterfaceCtrl) Exec(ctx context.Context, task domain.BuildTo, reply *_domain.RpcResp) error {
+func (c *InterfaceCtrl) Exec(ctx context.Context, task commDomain.BuildTo, reply *_domain.RpcResp) error {
 	size := c.TaskService.GetTaskSize()
 	if size == 0 {
 		c.TaskService.AddTask(task)

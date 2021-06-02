@@ -6,7 +6,7 @@ import (
 	_const "github.com/easysoft/zagent/internal/pkg/const"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
-	_vari "github.com/easysoft/zagent/internal/pkg/vari"
+	"github.com/easysoft/zagent/internal/pkg/var"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -19,7 +19,7 @@ func Get(url string) (interface{}, bool) {
 func GetObj(url string, requestTo string) (interface{}, bool) {
 	client := &http.Client{}
 
-	if _vari.Verbose {
+	if _var.Verbose {
 		_logUtils.Info(url)
 	}
 
@@ -37,7 +37,7 @@ func GetObj(url string, requestTo string) (interface{}, bool) {
 	}
 
 	bodyStr, _ := ioutil.ReadAll(resp.Body)
-	if _vari.Verbose {
+	if _var.Verbose {
 		_logUtils.PrintUnicode(bodyStr)
 	}
 	defer resp.Body.Close()
@@ -69,7 +69,7 @@ func GetObj(url string, requestTo string) (interface{}, bool) {
 }
 
 func Post(url string, params interface{}) (interface{}, bool) {
-	if _vari.Verbose {
+	if _var.Verbose {
 		_logUtils.Info(url)
 	}
 	client := &http.Client{}
@@ -95,7 +95,7 @@ func Post(url string, params interface{}) (interface{}, bool) {
 	}
 
 	bodyStr, _ := ioutil.ReadAll(resp.Body)
-	if _vari.Verbose {
+	if _var.Verbose {
 		_logUtils.PrintUnicode(bodyStr)
 	}
 

@@ -23,12 +23,12 @@ type BuildTo struct {
 	ScmAccount  string `json:"scmAccount,omitempty"`
 	ScmPassword string `json:"scmPassword,omitempty"`
 
-	AppUrl          string         `json:"appUrl,omitempty"`
-	BuildCommands   string         `json:"buildCommands,omitempty"`
-	ResultFiles     string         `json:"resultFiles,omitempty"`
-	KeepResultFiles _domain.MyBool `json:"keepResultFiles,omitempty"`
-	ResultPath      string         `json:"resultPath,omitempty"`
-	ResultMsg       string         `json:"resultMsg,omitempty"`
+	AppUrl          string          `json:"appUrl,omitempty"`
+	BuildCommands   string          `json:"buildCommands,omitempty"`
+	ResultFiles     string          `json:"resultFiles,omitempty"`
+	KeepResultFiles _domain.Boolean `json:"keepResultFiles,omitempty"`
+	ResultPath      string          `json:"resultPath,omitempty"`
+	ResultMsg       string          `json:"resultMsg,omitempty"`
 
 	StartTime    time.Time `json:"startTime,omitempty"`
 	CompleteTime time.Time `json:"completeTime,omitempty"`

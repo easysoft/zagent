@@ -1,7 +1,7 @@
 package agentService
 
 import (
-	"github.com/easysoft/zagent/internal/agent/model"
+	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
 )
 
@@ -14,7 +14,7 @@ func NewTestService() *TestService {
 	return &TestService{}
 }
 
-func (s *TestService) Exec(build domain.BuildTo) {
+func (s *TestService) Exec(build commDomain.BuildTo) {
 	s.TaskService.StartTask()
 
 	if build.BuildType == _const.InterfaceTest {
