@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func MatchString(expect string, actual string, langType string) bool {
+func MatchExpr(expect string, actual string, langType string) bool {
 	expect = strings.TrimSpace(expect)
 	actual = strings.TrimSpace(actual)
 

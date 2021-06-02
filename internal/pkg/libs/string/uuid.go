@@ -6,7 +6,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-func NewUUID() string {
+func NewUuid() string {
 	uid := uuid.NewV4().String()
 	return strings.Replace(uid, "-", "", -1)
 }

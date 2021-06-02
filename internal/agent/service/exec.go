@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
+	"github.com/easysoft/zagent/internal/agent/model"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	_fileUtils "github.com/easysoft/zagent/internal/pkg/libs/file"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/libs/http"
@@ -20,11 +21,11 @@ func NewExecService() *ExecService {
 	return &ExecService{}
 }
 
-func (s *ExecService) ExcCommand(build *_domain.BuildTo) _domain.RpcResult {
+func (s *ExecService) ExcCommand(build *domain.BuildTo) _domain.RpcResp {
 	cmdStr := build.BuildCommands
 	out, err := _shellUtils.ExeShellWithOutputInDir(cmdStr, build.ProjectDir)
 
-	result := _domain.RpcResult{}
+	result := _domain.RpcResp{}
 	if err == nil {
 		result.Success(strings.Join(out, "\n"))
 	} else {
@@ -34,7 +35,7 @@ func (s *ExecService) ExcCommand(build *_domain.BuildTo) _domain.RpcResult {
 	return result
 }
 
-func (s *ExecService) UploadResult(build _domain.BuildTo, result _domain.RpcResult) {
+func (s *ExecService) UploadResult(build domain.BuildTo, result _domain.RpcResp) {
 	zipFile := build.WorkDir + "testResult.zip"
 	err := _fileUtils.ZipFiles(zipFile, build.ProjectDir, strings.Split(build.ResultFiles, ","))
 	if err != nil {
@@ -53,8 +54,8 @@ func (s *ExecService) UploadResult(build _domain.BuildTo, result _domain.RpcResu
 	_fileUtils.Upload(uploadResultUrl, files, extraParams)
 }
 
-func (s *ExecService) GetTestApp(build *_domain.BuildTo) _domain.RpcResult {
-	result := _domain.RpcResult{}
+func (s *ExecService) GetTestApp(build *domain.BuildTo) _domain.RpcResp {
+	result := _domain.RpcResp{}
 
 	if strings.Index(build.AppUrl, "http://") == 0 {
 		s.DownloadApp(build)
@@ -71,7 +72,7 @@ func (s *ExecService) GetTestApp(build *_domain.BuildTo) _domain.RpcResult {
 	return result
 }
 
-func (s *ExecService) DownloadApp(build *_domain.BuildTo) {
+func (s *ExecService) DownloadApp(build *domain.BuildTo) {
 	path := build.WorkDir + uuid.NewV4().String() + _fileUtils.GetExtName(build.AppUrl)
 	_fileUtils.Download(build.AppUrl, path)
 	build.AppPath = path

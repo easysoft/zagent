@@ -18,7 +18,7 @@ func NewCronService() *CronService {
 }
 
 func (s *CronService) Init() {
-	_cronUtils.AddTaskFuc(
+	_cronUtils.AddTask(
 		"check",
 		fmt.Sprintf("@every %ds", _const.AgentCheckInterval),
 		func() {

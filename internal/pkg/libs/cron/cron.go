@@ -5,21 +5,21 @@ import (
 	"github.com/robfig/cron/v3"
 )
 
-var cronInstace *cron.Cron
+var cronInst *cron.Cron
 
 var taskFunc = make(map[string]func())
 
 func GetCrontabInstance() *cron.Cron {
-	if cronInstace != nil {
-		return cronInstace
+	if cronInst != nil {
+		return cronInst
 	}
-	cronInstace = cron.New()
-	cronInstace.Start()
+	cronInst = cron.New()
+	cronInst.Start()
 
-	return cronInstace
+	return cronInst
 }
 
-func AddTaskFuc(name string, schedule string, f func()) {
+func AddTask(name string, schedule string, f func()) {
 	if _, ok := taskFunc[name]; !ok {
 		fmt.Println("Add a new task:", name)
 
@@ -33,5 +33,5 @@ func AddTaskFuc(name string, schedule string, f func()) {
 }
 
 func Stop() {
-	cronInstace.Stop()
+	cronInst.Stop()
 }

@@ -1,4 +1,4 @@
-package _numbUtils
+package _numUtils
 
 import (
 	"math"

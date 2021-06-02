@@ -4,19 +4,20 @@ import (
 	"fmt"
 	agentService "github.com/easysoft/zagent/internal/agent/service"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
+	"github.com/easysoft/zagent/internal/share/domain"
 	"golang.org/x/net/context"
 )
 
-type InterfaceCtrl struct{
+type InterfaceCtrl struct {
 	InterfaceService *agentService.InterfaceService `inject:""`
-	TaskService *agentService.TaskService `inject:""`
+	TaskService      *agentService.TaskService      `inject:""`
 }
 
 func NewInterfaceCtrl() *InterfaceCtrl {
 	return &InterfaceCtrl{}
 }
 
-func (c *InterfaceCtrl) Exec(ctx context.Context, task _domain.BuildTo, reply *_domain.RpcResult) error {
+func (c *InterfaceCtrl) Exec(ctx context.Context, task domain.BuildTo, reply *_domain.RpcResp) error {
 	size := c.TaskService.GetTaskSize()
 	if size == 0 {
 		c.TaskService.AddTask(task)

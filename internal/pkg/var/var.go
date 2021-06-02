@@ -1,4 +1,4 @@
-package _vari
+package _var
 
 var (
 	Verbose = false

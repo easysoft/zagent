@@ -1,6 +1,7 @@
 package agentService
 
 import (
+	"github.com/easysoft/zagent/internal/agent/model"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	_fileUtils "github.com/easysoft/zagent/internal/pkg/libs/file"
@@ -20,7 +21,7 @@ func NewScmService() *ScmService {
 	return &ScmService{}
 }
 
-func (s *ScmService) GetTestScript(build *_domain.BuildTo) _domain.RpcResult {
+func (s *ScmService) GetTestScript(build *domain.BuildTo) _domain.RpcResp {
 	if build.ScmAddress != "" {
 		CheckoutCodes(build)
 	} else if strings.Index(build.ScriptUrl, "http://") == 0 {
@@ -29,12 +30,12 @@ func (s *ScmService) GetTestScript(build *_domain.BuildTo) _domain.RpcResult {
 		build.ProjectDir = _fileUtils.AddPathSepIfNeeded(build.ScriptUrl)
 	}
 
-	result := _domain.RpcResult{}
+	result := _domain.RpcResp{}
 	result.Success("")
 	return result
 }
 
-func CheckoutCodes(task *_domain.BuildTo) {
+func CheckoutCodes(task *domain.BuildTo) {
 	url := task.ScmAddress
 	userName := task.ScmAccount
 	password := task.ScmPassword
@@ -61,7 +62,7 @@ func CheckoutCodes(task *_domain.BuildTo) {
 	task.ProjectDir = projectDir
 }
 
-func DownloadCodes(task *_domain.BuildTo) {
+func DownloadCodes(task *domain.BuildTo) {
 	zipPath := task.WorkDir + uuid.NewV4().String() + _fileUtils.GetExtName(task.ScriptUrl)
 	_fileUtils.Download(task.ScriptUrl, zipPath)
 

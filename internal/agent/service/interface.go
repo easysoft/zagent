@@ -2,22 +2,23 @@ package agentService
 
 import (
 	"fmt"
+	"github.com/easysoft/zagent/internal/agent/model"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 )
 
 type InterfaceService struct {
 	CommonService
-	RegisterService   *RegisterService      `inject:""`
-	ScmService   *ScmService      `inject:""`
-	ExecService   *ExecService      `inject:""`
+	RegisterService *RegisterService `inject:""`
+	ScmService      *ScmService      `inject:""`
+	ExecService     *ExecService     `inject:""`
 }
 
 func NewInterfaceService() *InterfaceService {
 	return &InterfaceService{}
 }
 
-func (s *InterfaceService) ExecTest(build *_domain.BuildTo) {
-	result := _domain.RpcResult{}
+func (s *InterfaceService) ExecTest(build *domain.BuildTo) {
+	result := _domain.RpcResp{}
 
 	s.SetBuildWorkDir(build)
 
@@ -40,7 +41,7 @@ func (s *InterfaceService) ExecTest(build *_domain.BuildTo) {
 	s.ExecService.UploadResult(*build, result)
 }
 
-func parseBuildCommand(build *_domain.BuildTo) {
+func parseBuildCommand(build *domain.BuildTo) {
 	// mvn clean test -Dtestng.suite=target/test-classes/baidu-test.xml
 	//		 		  -DdriverPath=${driverPath}
 

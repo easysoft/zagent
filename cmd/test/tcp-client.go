@@ -16,12 +16,12 @@ func main() {
 	xClient := client.NewXClient("Arith", client.Failtry, client.RandomSelect, d, client.DefaultOption)
 	defer xClient.Close()
 
-	args := &_domain.Args{
+	args := &_domain.ArithArgs{
 		A: 1,
 		B: 2,
 	}
 
-	reply := &_domain.Reply{}
+	reply := &_domain.ArithReply{}
 
 	err := xClient.Call(context.Background(), "Add", args, reply)
 	if err != nil {

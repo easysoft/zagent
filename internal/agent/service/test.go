@@ -1,20 +1,20 @@
 package agentService
 
 import (
+	"github.com/easysoft/zagent/internal/agent/model"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
-	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 )
 
 type TestService struct {
-	TaskService   *TaskService      `inject:""`
-	InterfaceService   *InterfaceService      `inject:""`
+	TaskService      *TaskService      `inject:""`
+	InterfaceService *InterfaceService `inject:""`
 }
 
 func NewTestService() *TestService {
 	return &TestService{}
 }
 
-func (s *TestService) Exec(build _domain.BuildTo) {
+func (s *TestService) Exec(build domain.BuildTo) {
 	s.TaskService.StartTask()
 
 	if build.BuildType == _const.InterfaceTest {

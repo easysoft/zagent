@@ -16,7 +16,7 @@ import (
 func main() {
 	cc := &codec.MsgpackCodec{}
 
-	args := &_domain.Args{
+	args := &_domain.ArithArgs{
 		A: 1,
 		B: 2,
 	}
@@ -48,7 +48,7 @@ func main() {
 		log.Errorf("failed to read response: ", err)
 	}
 	// 解码
-	reply := &_domain.Reply{}
+	reply := &_domain.ArithReply{}
 	err = cc.Decode(replyData, reply)
 	if err != nil {
 		log.Errorf("failed to decode reply: ", err)

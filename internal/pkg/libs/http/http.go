@@ -43,7 +43,7 @@ func GetObj(url string, requestTo string) (interface{}, bool) {
 	defer resp.Body.Close()
 
 	if requestTo == "farm" {
-		var bodyJson _domain.RpcResult
+		var bodyJson _domain.RpcResp
 		jsonErr := json.Unmarshal(bodyStr, &bodyJson)
 		if jsonErr != nil {
 			if strings.Index(string(bodyStr), "<html>") > -1 {
@@ -99,7 +99,7 @@ func Post(url string, params interface{}) (interface{}, bool) {
 		_logUtils.PrintUnicode(bodyStr)
 	}
 
-	var result _domain.RpcResult
+	var result _domain.RpcResp
 	json.Unmarshal(bodyStr, &result)
 
 	defer resp.Body.Close()
