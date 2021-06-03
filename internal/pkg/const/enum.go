@@ -141,16 +141,16 @@ type ProcessorType string
 
 const (
 	// logic
-	Simple     ProcessorType = "simple"
-	Loop       ProcessorType = "loop"
-	Once       TestType      = "once"
-	Each       TestType      = "each"
-	Variable   TestType      = "variable"
-	When       TestType      = "when"
-	Switch     TestType      = "switch"
-	SwitchCase TestType      = "switchCase"
-	RandomOne  TestType      = "randomOne"
-	RandomAll  TestType      = "randomAll"
+	Simple ProcessorType = "simple"
+	Once   TestType      = "once"
+	Each   TestType      = "each"
+
+	If        TestType      = "if"
+	Loop      ProcessorType = "loop"
+	Switch    TestType      = "switch"
+	RandomOne TestType      = "randomOne"
+	RandomAll TestType      = "randomAll"
+	Variable  TestType      = "variable"
 
 	// struct
 	Include TestType = "include"

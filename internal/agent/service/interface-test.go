@@ -17,6 +17,7 @@ func (s *InterfaceTestService) ExecScenario(build *commDomain.Build) {
 	result := commDomain.TestResult{}
 
 	scenario := build.TestScenario
+	s.ExecService.ExecProcessor(build, scenario.Processor)
 
 	result.Name = scenario.Name
 	s.ExecService.UploadResult(*build, result)

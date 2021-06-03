@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
+	_const "github.com/easysoft/zagent/internal/pkg/const"
 	_fileUtils "github.com/easysoft/zagent/internal/pkg/libs/file"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/libs/http"
 	_i118Utils "github.com/easysoft/zagent/internal/pkg/libs/i118"
@@ -13,13 +14,20 @@ import (
 
 type InterfaceExecService struct {
 	CommonService
-	RegisterService *RegisterService      `inject:""`
-	ScmService      *ScmService           `inject:""`
-	ExecService     *AutomatedExecService `inject:""`
+	InterfaceRequestService *InterfaceRequestService `inject:""`
 }
 
 func NewInterfaceExecService() *InterfaceExecService {
 	return &InterfaceExecService{}
+}
+
+func (s *InterfaceExecService) ExecProcessor(build *commDomain.Build, processor commDomain.TestProcessor) {
+	tp := processor.Type
+	if tp == _const.Simple {
+		for _, interf := range processor.Interfaces {
+			s.InterfaceRequestService.Request(build, interf)
+		}
+	}
 }
 
 func (s *InterfaceExecService) UploadResult(build commDomain.Build, result commDomain.TestResult) {
