@@ -1,0 +1,3 @@
+package commConst
+
+var ()

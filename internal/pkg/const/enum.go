@@ -140,23 +140,8 @@ const (
 type ProcessorType string
 
 const (
-	// logic
-	Simple ProcessorType = "simple"
-	Once   TestType      = "once"
-	Each   TestType      = "each"
-
-	If        TestType      = "if"
-	Loop      ProcessorType = "loop"
-	Switch    TestType      = "switch"
-	RandomOne TestType      = "randomOne"
-	RandomAll TestType      = "randomAll"
-	Variable  TestType      = "variable"
-
-	// struct
-	Include TestType = "include"
-
-	// action
-	CookieRetrieve TestType = "cookieRetrieve"
+	Extractor ProcessorType = "data_loop"
+	DataLoop  ProcessorType = "data_loop"
 )
 
 type ErrorAction string
