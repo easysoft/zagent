@@ -10,11 +10,13 @@ type TestProcessor struct {
 	Comments string               `json:"comments" yaml:"comments"`
 	Type     _const.ProcessorType `json:"type" yaml:"type"`
 
-	ParentId   uint            `json:"parentId" yaml:"parentId"`
-	Children   []TestProcessor `json:"children" yaml:"children" gorm:"-"`                                       // contains processors
-	Interfaces []TestInterface `json:"interfaces" yaml:"interfaces" gorm:"many2many:r_processor_to_interface;"` // refer to test cases
+	ParentId uint `json:"parentId" yaml:"parentId"`
 
-	DataStore map[string]interface{} `json:"dataStore" yaml:"dataStore" gorm:"-"` // store test data that loaded from file or zendata
+	// can be interface, Processor.
+	Children []interface{} `json:"children" yaml:"children" gorm:"-"`
+
+	// store test data that loaded from file or zendata
+	DataStore map[string]interface{} `json:"dataStore" yaml:"dataStore" gorm:"-"`
 }
 
 // automated cookie management
