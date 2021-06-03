@@ -8,6 +8,7 @@ import (
 type BuildService struct {
 	TaskService          *TaskService          `inject:""`
 	InterfaceTestService *InterfaceTestService `inject:""`
+	AutomatedTestService *AutomatedTestService `inject:""`
 }
 
 func NewTestService() *BuildService {
@@ -17,11 +18,14 @@ func NewTestService() *BuildService {
 func (s *BuildService) Exec(build commDomain.Build) {
 	s.TaskService.StartTask()
 
-	if build.BuildType == _const.InterfaceScenario || build.BuildType == _const.InterfaceSet {
-		s.InterfaceTestService.ExecTest(&build)
+	if build.BuildType == _const.InterfaceScenario {
+		s.InterfaceTestService.ExecScenario(&build)
+
+	} else if build.BuildType == _const.InterfaceSet {
+		s.InterfaceTestService.ExecSet(&build)
 
 	} else if build.BuildType == _const.AutomatedTest {
-
+		s.AutomatedTestService.Exec(&build)
 	}
 
 	s.TaskService.RemoveTask()

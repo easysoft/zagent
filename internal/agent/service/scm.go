@@ -22,12 +22,12 @@ func NewScmService() *ScmService {
 }
 
 func (s *ScmService) GetTestScript(build *commDomain.Build) _domain.RpcResp {
-	if build.ScmAddress != "" {
+	if build.AutomatedTest.ScmAddress != "" {
 		CheckoutCodes(build)
-	} else if strings.Index(build.ScriptUrl, "http://") == 0 {
+	} else if strings.Index(build.AutomatedTest.ScriptUrl, "http://") == 0 {
 		DownloadCodes(build)
 	} else {
-		build.ProjectDir = _fileUtils.AddPathSepIfNeeded(build.ScriptUrl)
+		build.ProjectDir = _fileUtils.AddPathSepIfNeeded(build.AutomatedTest.ScriptUrl)
 	}
 
 	result := _domain.RpcResp{}
@@ -36,9 +36,9 @@ func (s *ScmService) GetTestScript(build *commDomain.Build) _domain.RpcResp {
 }
 
 func CheckoutCodes(task *commDomain.Build) {
-	url := task.ScmAddress
-	userName := task.ScmAccount
-	password := task.ScmPassword
+	url := task.AutomatedTest.ScmAddress
+	userName := task.AutomatedTest.ScmAccount
+	password := task.AutomatedTest.ScmPassword
 
 	projectDir := task.WorkDir + _gitUtils.GetGitProjectName(url) + _const.PthSep
 
@@ -63,8 +63,8 @@ func CheckoutCodes(task *commDomain.Build) {
 }
 
 func DownloadCodes(task *commDomain.Build) {
-	zipPath := task.WorkDir + uuid.NewV4().String() + _fileUtils.GetExtName(task.ScriptUrl)
-	_fileUtils.Download(task.ScriptUrl, zipPath)
+	zipPath := task.WorkDir + uuid.NewV4().String() + _fileUtils.GetExtName(task.AutomatedTest.ScriptUrl)
+	_fileUtils.Download(task.AutomatedTest.ScriptUrl, zipPath)
 
 	scriptFolder := _fileUtils.GetZipSingleDir(zipPath)
 	if scriptFolder != "" { // single dir in zip

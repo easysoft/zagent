@@ -3,22 +3,20 @@ package agentService
 import (
 	"fmt"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 )
 
 type AutomatedTestService struct {
 	CommonService
-	RegisterService *RegisterService `inject:""`
-	ScmService      *ScmService      `inject:""`
-	ExecService     *ExecService     `inject:""`
+	ScmService  *ScmService           `inject:""`
+	ExecService *AutomatedExecService `inject:""`
 }
 
 func NewAutomatedTestService() *AutomatedTestService {
 	return &AutomatedTestService{}
 }
 
-func (s *AutomatedTestService) ExecTest(build *commDomain.Build) {
-	result := _domain.RpcResp{}
+func (s *AutomatedTestService) Exec(build *commDomain.Build) {
+	result := commDomain.TestResult{}
 
 	s.SetBuildWorkDir(build)
 
@@ -34,10 +32,11 @@ func (s *AutomatedTestService) ExecTest(build *commDomain.Build) {
 	result = s.ExecService.ExcCommand(build)
 	if !result.IsSuccess() {
 		result.Fail(fmt.Sprintf("failed to ext test,\n dir: %s\n  cmd: \n%s",
-			build.ProjectDir, build.BuildCommands))
+			build.ProjectDir, build.AutomatedTest.BuildCommands))
 	}
 
 	// submit result
+	result.Name = build.AutomatedTest.Name
 	s.ExecService.UploadResult(*build, result)
 }
 

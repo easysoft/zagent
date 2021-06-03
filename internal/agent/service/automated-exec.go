@@ -15,18 +15,18 @@ import (
 	"strings"
 )
 
-type ExecService struct {
+type AutomatedExecService struct {
 }
 
-func NewExecService() *ExecService {
-	return &ExecService{}
+func NewExecService() *AutomatedExecService {
+	return &AutomatedExecService{}
 }
 
-func (s *ExecService) ExcCommand(build *commDomain.Build) _domain.RpcResp {
-	cmdStr := build.BuildCommands
+func (s *AutomatedExecService) ExcCommand(build *commDomain.Build) commDomain.TestResult {
+	cmdStr := build.AutomatedTest.BuildCommands
 	out, err := _shellUtils.ExeShellWithOutputInDir(cmdStr, build.ProjectDir)
 
-	result := _domain.RpcResp{}
+	result := commDomain.TestResult{}
 	if err == nil {
 		result.Success(strings.Join(out, "\n"))
 	} else {
@@ -36,12 +36,36 @@ func (s *ExecService) ExcCommand(build *commDomain.Build) _domain.RpcResp {
 	return result
 }
 
-func (s *ExecService) UploadResult(build commDomain.Build, result _domain.RpcResp) {
+func (s *AutomatedExecService) GetTestApp(build *commDomain.Build) _domain.RpcResp {
+	result := _domain.RpcResp{}
+
+	if strings.Index(build.AutomatedTest.AppUrl, "http://") == 0 {
+		s.DownloadApp(build)
+	} else {
+		build.AutomatedTest.AppPath = build.AutomatedTest.AppUrl
+	}
+
+	if build.AutomatedTest.AppPath == "" {
+		result.Fail(fmt.Sprintf("App获取错误，%s", build.AutomatedTest.AppUrl))
+	} else {
+		result.Success("")
+	}
+
+	return result
+}
+
+func (s *AutomatedExecService) DownloadApp(build *commDomain.Build) {
+	path := build.WorkDir + uuid.NewV4().String() + _fileUtils.GetExtName(build.AutomatedTest.AppUrl)
+	_fileUtils.Download(build.AutomatedTest.AppUrl, path)
+	build.AutomatedTest.AppPath = path
+}
+
+func (s *AutomatedExecService) UploadResult(build commDomain.Build, result commDomain.TestResult) {
 	zipFile := build.WorkDir + "testResult.zip"
-	err := _fileUtils.ZipFiles(zipFile, build.ProjectDir, strings.Split(build.ResultFiles, ","))
+	err := _fileUtils.ZipFiles(zipFile, build.ProjectDir, strings.Split(build.AutomatedTest.ResultFiles, ","))
 	if err != nil {
 		_logUtils.Errorf(_i118Utils.Sprintf("fail_to_zip_test_result",
-			zipFile, build.ProjectDir, build.ResultFiles, err))
+			zipFile, build.ProjectDir, build.AutomatedTest.ResultFiles, err))
 	}
 
 	result.Payload = build
@@ -53,28 +77,4 @@ func (s *ExecService) UploadResult(build commDomain.Build, result _domain.RpcRes
 	extraParams["result"] = string(json)
 
 	_fileUtils.Upload(uploadResultUrl, files, extraParams)
-}
-
-func (s *ExecService) GetTestApp(build *commDomain.Build) _domain.RpcResp {
-	result := _domain.RpcResp{}
-
-	if strings.Index(build.AppUrl, "http://") == 0 {
-		s.DownloadApp(build)
-	} else {
-		build.AppPath = build.AppUrl
-	}
-
-	if build.AppPath == "" {
-		result.Fail(fmt.Sprintf("App获取错误，%s", build.AppUrl))
-	} else {
-		result.Success("")
-	}
-
-	return result
-}
-
-func (s *ExecService) DownloadApp(build *commDomain.Build) {
-	path := build.WorkDir + uuid.NewV4().String() + _fileUtils.GetExtName(build.AppUrl)
-	_fileUtils.Download(build.AppUrl, path)
-	build.AppPath = path
 }

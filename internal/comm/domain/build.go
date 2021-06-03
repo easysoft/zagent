@@ -22,7 +22,7 @@ type Build struct {
 	Status   _const.BuildStatus   `json:"status,omitempty"`
 
 	BuildType     _const.BuildType `json:"buildType,omitempty"`
-	TestScenario  `json:"testScenario,omitempty"`
-	TestSet       `json:"testSet,omitempty"`
-	AutomatedTest `json:"automatedTest,omitempty"`
+	TestScenario  TestScenario     `json:"testScenario,omitempty"`
+	TestSet       TestSet          `json:"testSet,omitempty"`
+	AutomatedTest AutomatedTest    `json:"automatedTest,omitempty"`
 }

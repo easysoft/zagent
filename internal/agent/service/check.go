@@ -3,7 +3,7 @@ package agentService
 type CheckService struct {
 	RegisterService *RegisterService `inject:""`
 	TaskService     *TaskService     `inject:""`
-	TestService     *BuildService    `inject:""`
+	BuildService    *BuildService    `inject:""`
 }
 
 func NewCheckService() *CheckService {
@@ -26,5 +26,5 @@ func (s *CheckService) Check() {
 	// has task to run，register busy, then run
 	task := s.TaskService.PeekTask()
 	s.RegisterService.Register(true)
-	s.TestService.Exec(task)
+	s.BuildService.Exec(task)
 }
