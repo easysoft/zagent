@@ -37,7 +37,7 @@ func (c *TaskCtrl) Exec(ctx context.Context, build commDomain.Build, reply *_dom
 	result := commDomain.TestResult{}
 
 	if build.BuildType == _const.InterfaceScenario {
-		c.InterfaceTestService.ExecScenario(&build, &result)
+		result = c.InterfaceTestService.ExecScenario(&build)
 	} else if build.BuildType == _const.InterfaceSet {
 		c.InterfaceTestService.ExecSet(&build, &result)
 	}

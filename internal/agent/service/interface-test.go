@@ -13,9 +13,11 @@ func NewInterfaceTestService() *InterfaceTestService {
 	return &InterfaceTestService{}
 }
 
-func (s *InterfaceTestService) ExecScenario(build *commDomain.Build, result *commDomain.TestResult) {
+func (s *InterfaceTestService) ExecScenario(build *commDomain.Build) (result commDomain.TestResult) {
 	scenario := build.TestScenario
-	s.ExecService.ExecProcessor(build, result, scenario.Processor)
+	s.ExecService.ExecProcessor(build, &scenario.Processor)
+
+	// TODO: deal with result with logs in scenario.Processor
 
 	result.Name = scenario.Name
 

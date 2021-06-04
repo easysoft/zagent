@@ -21,23 +21,22 @@ func NewInterfaceExecService() *InterfaceExecService {
 	return &InterfaceExecService{}
 }
 
-func (s *InterfaceExecService) ExecProcessor(build *commDomain.Build, result *commDomain.TestResult,
-	processor commDomain.TestProcessor) {
+func (s *InterfaceExecService) ExecProcessor(build *commDomain.Build, processor *commDomain.TestProcessor) {
 
 	for _, child := range processor.Children {
 		childMap := child.(map[string]interface{})
 
 		tp := childMap["Type"]
 		if tp != nil && tp != "" {
-			processor := commDomain.TestProcessor{}
-			mapstructure.Decode(childMap, &processor)
+			childProcessor := commDomain.TestProcessor{}
+			mapstructure.Decode(childMap, &childProcessor)
 
-			s.ExecProcessor(build, result, processor)
+			s.ExecProcessor(build, &childProcessor)
 		} else {
 			interf := commDomain.TestInterface{}
 			mapstructure.Decode(childMap, &interf)
 
-			s.InterfaceRequestService.Request(build, interf)
+			s.InterfaceRequestService.Request(build, &interf)
 		}
 	}
 }

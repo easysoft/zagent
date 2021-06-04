@@ -19,7 +19,8 @@ type URL struct {
 	Raw      string   `json:"raw" yaml:"raw"`
 	Protocol string   `json:"protocol" yaml:"protocol"`
 	Host     string   `json:"host" yaml:"host"`
-	Path     []string `json:"path" yaml:"path"`
+	Port     int      `json:"port" yaml:"port"`
+	Path     string   `json:"path" yaml:"path"`
 	Params   []Entity `json:"params" yaml:"params"`
 }
 

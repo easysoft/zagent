@@ -8,5 +8,5 @@ type TestInterface struct {
 	Request   Request    `json:"request" yaml:"request" gorm:"-"`
 	Responses []Response `json:"responses" yaml:"responses" gorm:"-"`
 
-	Raw string `json:"raw" yaml:"-"`
+	Raws []string `json:"raw" yaml:"-" gorm:"-"`
 }
