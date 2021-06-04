@@ -21,12 +21,13 @@ func NewInterfaceExecService() *InterfaceExecService {
 	return &InterfaceExecService{}
 }
 
-func (s *InterfaceExecService) ExecProcessor(build *commDomain.Build, processor commDomain.TestProcessor) {
+func (s *InterfaceExecService) ExecProcessor(build *commDomain.Build, result *commDomain.TestResult,
+	processor commDomain.TestProcessor) {
 	tp := processor.Type
 	if tp == _const.Simple {
 		for _, child := range processor.Children {
 			if _, ok := child.(commDomain.TestProcessor); ok {
-				s.ExecProcessor(build, child.(commDomain.TestProcessor))
+				s.ExecProcessor(build, result, child.(commDomain.TestProcessor))
 			} else {
 				s.InterfaceRequestService.Request(build, child.(commDomain.TestInterface))
 			}

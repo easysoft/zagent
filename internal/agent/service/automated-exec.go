@@ -18,7 +18,7 @@ import (
 type AutomatedExecService struct {
 }
 
-func NewExecService() *AutomatedExecService {
+func NewAutomatedExecService() *AutomatedExecService {
 	return &AutomatedExecService{}
 }
 

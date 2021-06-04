@@ -30,13 +30,16 @@ func injectObj(router *router.Router) {
 
 		&inject.Object{Value: agentService.NewCheckService()},
 		&inject.Object{Value: agentService.NewCommonService()},
-		&inject.Object{Value: agentService.NewExecService()},
 		&inject.Object{Value: agentService.NewRegisterService()},
 		&inject.Object{Value: agentService.NewScmService()},
 		&inject.Object{Value: agentService.NewTaskService()},
-		&inject.Object{Value: agentService.NewInterfaceTestService()},
+
+		&inject.Object{Value: agentService.NewBuildService()},
+		&inject.Object{Value: agentService.NewAutomatedExecService()},
 		&inject.Object{Value: agentService.NewAutomatedTestService()},
-		&inject.Object{Value: agentService.NewTestService()},
+		&inject.Object{Value: agentService.NewInterfaceExecService()},
+		&inject.Object{Value: agentService.NewInterfaceRequestService()},
+		&inject.Object{Value: agentService.NewInterfaceTestService()},
 
 		&inject.Object{Value: agentCron.NewCronService()},
 		&inject.Object{Value: router},

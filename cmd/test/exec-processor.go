@@ -10,6 +10,8 @@ import (
 )
 
 func main() {
+	build := commDomain.Build{BuildType: _const.InterfaceScenario}
+
 	processor := commDomain.TestProcessor{Type: _const.Simple}
 
 	dataLoop := commDomain.TestProcessor{Type: _const.DataLoop}
@@ -23,11 +25,12 @@ func main() {
 	}
 	req.URL.Params = append(req.URL.Params, commDomain.Entity{Key: "mode", Value: "getconfig"})
 
-	processor.Children = append(processor.Children, dataLoop)
 	dataLoop.Children = append(dataLoop.Children, interf)
+	processor.Children = append(processor.Children, dataLoop)
+	build.TestScenario.Processor = processor
 
 	url := fmt.Sprintf("http://127.0.0.1:%d/", _const.RpcPort)
-	result := _rpcUtils.Post(url, string(_const.Post), "task", "Exec", processor)
+	result := _rpcUtils.Post(url, string(_const.Post), "task", "Exec", build)
 
 	log.Printf("%v", result)
 }
