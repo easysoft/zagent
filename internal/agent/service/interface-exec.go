@@ -24,8 +24,12 @@ func NewInterfaceExecService() *InterfaceExecService {
 func (s *InterfaceExecService) ExecProcessor(build *commDomain.Build, processor commDomain.TestProcessor) {
 	tp := processor.Type
 	if tp == _const.Simple {
-		for _, interf := range processor.Interfaces {
-			s.InterfaceRequestService.Request(build, interf)
+		for _, child := range processor.Children {
+			if _, ok := child.(commDomain.TestProcessor); ok {
+				s.ExecProcessor(build, child.(commDomain.TestProcessor))
+			} else {
+				s.InterfaceRequestService.Request(build, child.(commDomain.TestInterface))
+			}
 		}
 	}
 }

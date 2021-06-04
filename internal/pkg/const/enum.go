@@ -140,8 +140,9 @@ const (
 type ProcessorType string
 
 const (
-	Extractor ProcessorType = "data_loop"
+	Simple    ProcessorType = "simple"
 	DataLoop  ProcessorType = "data_loop"
+	Extractor ProcessorType = "extractor"
 )
 
 type ErrorAction string

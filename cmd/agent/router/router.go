@@ -24,7 +24,7 @@ func (r *Router) App() {
 
 	srv := server.NewServer()
 	srv.RegisterName("arith", r.ArithCtrl, "")
-	srv.RegisterName("test", r.TaskCtrl, "")
+	srv.RegisterName("task", r.TaskCtrl, "")
 
 	_logUtils.Info(_i118Utils.Sprintf("start_server", addr))
 	err := srv.Serve("tcp", addr)

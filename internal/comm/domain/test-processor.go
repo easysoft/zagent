@@ -6,6 +6,9 @@ import (
 )
 
 type TestProcessor struct {
+	DataLoopProcessor
+	ExtractorProcessor
+
 	Name     string               `json:"name" yaml:"name"`
 	Comments string               `json:"comments" yaml:"comments"`
 	Type     _const.ProcessorType `json:"type" yaml:"type"`
@@ -15,15 +18,15 @@ type TestProcessor struct {
 	// can be interface, Processor.
 	Children []interface{} `json:"children" yaml:"children" gorm:"-"`
 
-	// store test data that loaded from file or zendata
+	// store test data loaded by DataLoopProcessor
 	DataStore map[string]interface{} `json:"dataStore" yaml:"dataStore" gorm:"-"`
 }
 
 // automated cookie management
 
 type DataLoopProcessor struct {
-	Source commConst.DataSource `json:"source,omitempty" yaml:"source,omitempty"`
-	Path   string               `json:"path,omitempty" yaml:"path,omitempty"`
+	Src  commConst.DataSource `json:"src,omitempty" yaml:"src,omitempty"`
+	Path string               `json:"path,omitempty" yaml:"path,omitempty"`
 
 	Loop           int    `json:"loop,omitempty" yaml:"loop,omitempty"`
 	StartIndex     int    `json:"startIndex,omitempty" yaml:"startIndex,omitempty"`
