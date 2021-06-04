@@ -33,6 +33,7 @@ require (
 	github.com/manveru/gobdd v0.0.0-20131210092515-f1a17fdd710b // indirect
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible // indirect
 	github.com/mholt/archiver/v3 v3.5.0
+	github.com/mitchellh/mapstructure v1.4.1
 	github.com/nats-io/nats-server/v2 v2.1.9 // indirect
 	github.com/nxadm/tail v1.4.5 // indirect
 	github.com/rifflock/lfshook v0.0.0-20180920164130-b9218ef580f5

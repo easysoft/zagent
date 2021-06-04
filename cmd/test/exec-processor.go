@@ -18,12 +18,13 @@ func main() {
 	dataLoop.Src = commConst.ZenData
 	dataLoop.Path = "http://127.0.0.1:8848/data?config=demo/default.yaml&F=field_format"
 
-	interf := commDomain.TestInterface{Name: "百度搜索"}
 	req := commDomain.Request{
 		Method: _const.Get,
 		URL:    commDomain.URL{Protocol: "http", Host: "max.demo.zentao.net/"},
 	}
 	req.URL.Params = append(req.URL.Params, commDomain.Entity{Key: "mode", Value: "getconfig"})
+
+	interf := commDomain.TestInterface{Name: "禅道配置", Request: req}
 
 	dataLoop.Children = append(dataLoop.Children, interf)
 	processor.Children = append(processor.Children, dataLoop)

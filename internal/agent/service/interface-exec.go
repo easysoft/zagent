@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	_const "github.com/easysoft/zagent/internal/pkg/const"
 	_fileUtils "github.com/easysoft/zagent/internal/pkg/libs/file"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/libs/http"
 	_i118Utils "github.com/easysoft/zagent/internal/pkg/libs/i118"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
+	"github.com/mitchellh/mapstructure"
 	"strings"
 )
 
@@ -23,14 +23,21 @@ func NewInterfaceExecService() *InterfaceExecService {
 
 func (s *InterfaceExecService) ExecProcessor(build *commDomain.Build, result *commDomain.TestResult,
 	processor commDomain.TestProcessor) {
-	tp := processor.Type
-	if tp == _const.Simple {
-		for _, child := range processor.Children {
-			if _, ok := child.(commDomain.TestProcessor); ok {
-				s.ExecProcessor(build, result, child.(commDomain.TestProcessor))
-			} else {
-				s.InterfaceRequestService.Request(build, child.(commDomain.TestInterface))
-			}
+
+	for _, child := range processor.Children {
+		childMap := child.(map[string]interface{})
+
+		tp := childMap["Type"]
+		if tp != nil && tp != "" {
+			processor := commDomain.TestProcessor{}
+			mapstructure.Decode(childMap, &processor)
+
+			s.ExecProcessor(build, result, processor)
+		} else {
+			interf := commDomain.TestInterface{}
+			mapstructure.Decode(childMap, &interf)
+
+			s.InterfaceRequestService.Request(build, interf)
 		}
 	}
 }
