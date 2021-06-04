@@ -18,6 +18,9 @@ type TestProcessor struct {
 	// can be interface, Processor.
 	Children []interface{} `json:"children" yaml:"children" gorm:"-"`
 
+	// results
+	Results []string `json:"results" yaml:"results" gorm:"-"`
+
 	// store test data loaded by DataLoopProcessor
 	DataStore map[string]interface{} `json:"dataStore" yaml:"dataStore" gorm:"-"`
 }
