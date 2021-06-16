@@ -9,7 +9,7 @@ import (
 
 const (
 	ConnStrLocal  = "qemu:///system"
-	ConnStrRemote = "qemu+ssh://192.168.0.56:22/system?keyfile=id_rsa"
+	ConnStrRemote = "qemu+ssh://192.168.0.56:22/system?keyfile=~/.ssh/id_rsa"
 )
 
 var (
@@ -24,7 +24,7 @@ func NewLibvirtService() *LibvirtService {
 }
 
 func (s *LibvirtService) GetDomain() (dom *libvirt.Domain) {
-	s.Connect(ConnStrRemote)
+	s.Connect(ConnStrLocal)
 	defer func() {
 		if res, _ := Conn.Close(); res != 0 {
 			_logUtils.Errorf("close() == %d, expected 0", res)
