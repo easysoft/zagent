@@ -25,7 +25,7 @@ func (s *LibvirtService) GetDomain() (dom *libvirt.Domain) {
 	conn := s.GetConn(ConnStrLocal)
 	defer func() {
 		if res, _ := conn.Close(); res != 0 {
-			_logUtils.Errorf("Close() == %d, expected 0", res)
+			_logUtils.Errorf("close() == %d, expected 0", res)
 		}
 	}()
 	names, err := conn.ListDefinedDomains()
@@ -35,7 +35,7 @@ func (s *LibvirtService) GetDomain() (dom *libvirt.Domain) {
 	}
 
 	if len(names) == 0 {
-		_logUtils.Errorf("Length of ListDomains shouldn't be zero")
+		_logUtils.Errorf("length of domains shouldn't be 0.")
 		return
 	}
 	dom, err = conn.LookupDomainByName(names[0])
