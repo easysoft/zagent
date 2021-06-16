@@ -7,9 +7,10 @@ import (
 	"github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/smallnest/rpcx/client"
 	"github.com/smallnest/rpcx/log"
+	"testing"
 )
 
-func main() {
+func TestTcpClient(t *testing.T) {
 	url := fmt.Sprintf("tcp@127.0.0.1:%d", _const.RpcPort)
 	d := client.NewPeer2PeerDiscovery(url, "")
 

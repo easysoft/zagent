@@ -7,9 +7,10 @@ import (
 	_const "github.com/easysoft/zagent/internal/pkg/const"
 	_rpcUtils "github.com/easysoft/zagent/internal/pkg/libs/rpc"
 	"log"
+	"testing"
 )
 
-func main() {
+func TestExecProcessor(t *testing.T) {
 	build := commDomain.Build{BuildType: _const.InterfaceScenario}
 
 	processor := commDomain.TestProcessor{Type: _const.Simple}

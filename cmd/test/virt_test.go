@@ -7,10 +7,9 @@ import (
 	"testing"
 )
 
-func TestServer(t *testing.T) {
+func TestVirt(t *testing.T) {
 	_logUtils.Init(agentConst.AppName)
 
 	virtService := agentService.NewLibvirtService()
 	virtService.GetDomain()
-
 }

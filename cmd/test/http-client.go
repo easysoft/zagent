@@ -11,9 +11,10 @@ import (
 	"github.com/smallnest/rpcx/log"
 	"io/ioutil"
 	"net/http"
+	"testing"
 )
 
-func main() {
+func TestHttpClient(t *testing.T) {
 	cc := &codec.MsgpackCodec{}
 
 	args := &_domain.ArithArgs{
@@ -26,7 +27,7 @@ func main() {
 	url := fmt.Sprintf("http://127.0.0.1:%d/", _const.RpcPort)
 	req, err := http.NewRequest("POST", url, bytes.NewReader(data))
 	if err != nil {
-		_logUtils.Errorf("failed to create request: ", err)
+		_logUtils.Errorf("failed to create request, error: %s", err.Error())
 		return
 	}
 
