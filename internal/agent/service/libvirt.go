@@ -77,6 +77,5 @@ func (s *LibvirtService) GetConn(str string) *libvirt.Connect {
 	if active {
 		return ConnLocal
 	}
-
 	return nil
 }
