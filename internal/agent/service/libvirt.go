@@ -4,6 +4,7 @@ import "C"
 import (
 	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
 	"github.com/libvirt/libvirt-go"
+	"github.com/smallnest/rpcx/log"
 )
 
 const (
@@ -50,7 +51,7 @@ func (s *LibvirtService) GetDomain() (dom *libvirt.Domain) {
 		return
 	}
 
-	_logUtils.Infof("%#v", info)
+	log.Infof("%#v", info)
 
 	defer dom.Free()
 
