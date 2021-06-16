@@ -7,5 +7,6 @@ import (
 
 func TestServer(t *testing.T) {
 	virtService := agentService.NewLibvirtService()
+
 	virtService.GetDomain()
 }
