@@ -23,7 +23,7 @@ func NewInterfaceExecService() *InterfaceExecService {
 
 func (s *InterfaceExecService) ExecProcessor(build *commDomain.Build, processor *commDomain.TestProcessor) {
 
-	for index, child := range processor.Children {
+	for _, child := range processor.Children {
 		childMap := child.(map[string]interface{})
 
 		tp := childMap["Type"]
