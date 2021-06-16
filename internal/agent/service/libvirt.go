@@ -50,7 +50,6 @@ func (s *LibvirtService) GetDomain() (dom *libvirt.Domain) {
 		_logUtils.Errorf(err.Error())
 		return
 	}
-
 	log.Infof("%#v", info)
 
 	defer dom.Free()
