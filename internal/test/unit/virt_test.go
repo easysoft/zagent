@@ -11,5 +11,6 @@ func TestServer(t *testing.T) {
 	_logUtils.Init(agentConst.AppName)
 
 	virtService := agentService.NewLibvirtService()
+
 	virtService.GetDomain()
 }
