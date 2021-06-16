@@ -53,6 +53,9 @@ func (s *LibvirtService) GetDomain() (dom *libvirt.Domain) {
 	}
 	log.Infof("%#v", info)
 
+	xml, err := dom.GetXMLDesc(0)
+	log.Infof("%#v", xml)
+
 	defer dom.Free()
 	return
 }
