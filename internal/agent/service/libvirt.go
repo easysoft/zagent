@@ -72,5 +72,11 @@ func (s *LibvirtService) GetConn(str string) *libvirt.Connect {
 	if err != nil {
 		_logUtils.Errorf(err.Error())
 	}
-	return ConnLocal
+
+	active, err := ConnLocal.IsAlive()
+	if active {
+		return ConnLocal
+	}
+
+	return nil
 }
