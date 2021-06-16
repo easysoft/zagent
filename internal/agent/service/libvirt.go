@@ -58,15 +58,20 @@ func (s *LibvirtService) GetDomain() (dom *libvirt.Domain) {
 }
 
 func (s *LibvirtService) GetConn(str string) *libvirt.Connect {
-	active, err := ConnLocal.IsAlive()
+	if ConnLocal != nil {
+		active, err := ConnLocal.IsAlive()
+		if err != nil {
+			_logUtils.Errorf(err.Error())
+		}
 
-	if active {
-		return ConnLocal
+		if active {
+			return ConnLocal
+		}
 	}
 
-	ConnLocal, err = libvirt.NewConnect(str)
+	ConnLocal, err := libvirt.NewConnect(str)
 	if err != nil {
-		panic(err)
+		_logUtils.Errorf(err.Error())
 	}
 	return ConnLocal
 }
