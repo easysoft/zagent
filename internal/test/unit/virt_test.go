@@ -2,11 +2,14 @@ package main
 
 import (
 	agentService "github.com/easysoft/zagent/internal/agent/service"
+	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
+	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
 	"testing"
 )
 
 func TestServer(t *testing.T) {
-	virtService := agentService.NewLibvirtService()
+	_logUtils.Init(agentConst.AppName)
 
+	virtService := agentService.NewLibvirtService()
 	virtService.GetDomain()
 }

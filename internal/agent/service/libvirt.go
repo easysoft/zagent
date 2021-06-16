@@ -8,11 +8,12 @@ import (
 )
 
 const (
-	ConnStrLocal = "qemu:///system"
+	ConnStrLocal  = "qemu:///system"
+	ConnStrRemote = "qemu+ssh://192.168.0.56:22/system?keyfile=id_rsa"
 )
 
 var (
-	ConnLocal *libvirt.Connect
+	Conn *libvirt.Connect
 )
 
 type LibvirtService struct {
@@ -23,13 +24,13 @@ func NewLibvirtService() *LibvirtService {
 }
 
 func (s *LibvirtService) GetDomain() (dom *libvirt.Domain) {
-	conn := s.GetConn(ConnStrLocal)
+	s.Connect(ConnStrRemote)
 	defer func() {
-		if res, _ := conn.Close(); res != 0 {
+		if res, _ := Conn.Close(); res != 0 {
 			_logUtils.Errorf("close() == %d, expected 0", res)
 		}
 	}()
-	names, err := conn.ListDefinedDomains()
+	names, err := Conn.ListDefinedDomains()
 	if err != nil {
 		_logUtils.Errorf(err.Error())
 		return
@@ -39,7 +40,7 @@ func (s *LibvirtService) GetDomain() (dom *libvirt.Domain) {
 		_logUtils.Errorf("length of domains shouldn't be 0.")
 		return
 	}
-	dom, err = conn.LookupDomainByName(names[0])
+	dom, err = Conn.LookupDomainByName(names[0])
 	if err != nil {
 		_logUtils.Errorf(err.Error())
 		return
@@ -56,25 +57,31 @@ func (s *LibvirtService) GetDomain() (dom *libvirt.Domain) {
 	return
 }
 
-func (s *LibvirtService) GetConn(str string) *libvirt.Connect {
-	if ConnLocal != nil {
-		active, err := ConnLocal.IsAlive()
+func (s *LibvirtService) Connect(str string) {
+	if Conn != nil {
+		active, err := Conn.IsAlive()
 		if err != nil {
 			_logUtils.Errorf(err.Error())
 		}
 		if active {
-			return ConnLocal
+			return
 		}
 	}
 
-	ConnLocal, err := libvirt.NewConnect(str)
+	var err error
+	Conn, err = libvirt.NewConnect(str)
 	if err != nil {
 		_logUtils.Errorf(err.Error())
+		return
 	}
 
-	active, err := ConnLocal.IsAlive()
-	if active {
-		return ConnLocal
+	active, err := Conn.IsAlive()
+	if err != nil {
+		_logUtils.Errorf(err.Error())
+		return
 	}
-	return nil
+	if !active {
+		_logUtils.Errorf("not active")
+	}
+	return
 }
