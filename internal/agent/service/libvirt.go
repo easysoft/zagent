@@ -28,17 +28,17 @@ func (s *LibvirtService) GetDomain() (dom *libvirt.Domain) {
 			_logUtils.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
-	ids, err := conn.ListDomains()
+	names, err := conn.ListDefinedDomains()
 	if err != nil {
 		_logUtils.Errorf(err.Error())
 		return
 	}
 
-	if len(ids) == 0 {
+	if len(names) == 0 {
 		_logUtils.Errorf("Length of ListDomains shouldn't be zero")
 		return
 	}
-	dom, err = conn.LookupDomainById(ids[0])
+	dom, err = conn.LookupDomainByName(names[0])
 	if err != nil {
 		_logUtils.Errorf(err.Error())
 		return
