@@ -4,3 +4,4 @@
 /bin/
 /res/agent/res.go
 /log/
+/cmd/test/log/

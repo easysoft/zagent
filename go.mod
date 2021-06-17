@@ -28,7 +28,7 @@ require (
 	github.com/kataras/iris/v12 v12.2.0-alpha2
 	github.com/lib/pq v1.8.0 // indirect
 	github.com/libvirt/libvirt-go v7.4.0+incompatible
-	github.com/libvirt/libvirt-go-xml v7.4.0+incompatible // indirect
+	github.com/libvirt/libvirt-go-xml v7.4.0+incompatible
 	github.com/manveru/gobdd v0.0.0-20131210092515-f1a17fdd710b // indirect
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible // indirect
 	github.com/mholt/archiver/v3 v3.5.0
