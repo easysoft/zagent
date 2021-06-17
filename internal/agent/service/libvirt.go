@@ -32,6 +32,28 @@ func NewLibvirtService() *LibvirtService {
 	return &LibvirtService{}
 }
 
+func (s *LibvirtService) CreateVm(vm *commDomain.Vm) (dom *libvirt.Domain, macAddress string, err error) {
+	s.setVmProps(vm)
+
+	srcXml := s.GetDomainDef(vm.Src)
+
+	vmXml := ""
+	baseDiskPath := ""
+	rawPath := filepath.Join(agentConf.Inst.DirImage, vm.Name+".qcow2")
+	vmXml, vm.MacAddress, baseDiskPath, _ = s.GenVmDef(srcXml, vm.Name, rawPath, 0)
+
+	vm.DiskSize, err = s.getDiskSize(baseDiskPath)
+	if err != nil || vm.DiskSize == 0 {
+		_logUtils.Errorf("wrong vm disk size %d, err %s", vm.DiskSize, err.Error())
+		return
+	}
+
+	s.createDiskFile(vm.Base, vm.Name, vm.DiskSize)
+
+	dom, err = Conn.DomainCreateXML(vmXml, 0)
+	return
+}
+
 func (s *LibvirtService) GetVm(name string) (dom *libvirt.Domain) {
 	s.Connect(ConnStrLocal)
 	defer func() {
@@ -56,28 +78,6 @@ func (s *LibvirtService) GetVm(name string) (dom *libvirt.Domain) {
 		return
 	}
 
-	return
-}
-
-func (s *LibvirtService) CreateVm(vm *commDomain.Vm) (dom *libvirt.Domain, macAddress string, err error) {
-	s.setVmProps(vm)
-
-	srcXml := s.GetDomainDef(vm.Src)
-
-	vmXml := ""
-	templDiskPath := ""
-	rawPath := filepath.Join(agentConf.Inst.DirImage, vm.Name+".qcow2")
-	vmXml, vm.MacAddress, templDiskPath, _ = s.GenVmDef(srcXml, vm.Name, rawPath, 0)
-
-	vm.DiskSize, err = s.getDiskSize(templDiskPath)
-	if err != nil || vm.DiskSize == 0 {
-		_logUtils.Errorf("wrong vm disk size %d, err %s", vm.DiskSize, err.Error())
-		return
-	}
-
-	s.createDiskFile(vm.Base, vm.Name, vm.DiskSize)
-
-	dom, err = Conn.DomainCreateXML(vmXml, 0)
 	return
 }
 
