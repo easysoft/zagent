@@ -97,7 +97,6 @@ func (s *LibvirtService) GenVmDef(src, vmName, rawPath string, vmMemory uint) (
 	diskPath = domCfg.Devices.Disks[mainDiskIndex].Source.File.File
 
 	domCfg.Name = vmName
-	domCfg.UUID = _stringUtils.NewUuidWithSep()
 	domCfg.Devices.Disks[mainDiskIndex].Source.File = &libvirtxml.DomainDiskSourceFile{
 		File: rawPath,
 	}
@@ -221,7 +220,7 @@ func (s *LibvirtService) createDiskFile(base, vmName string, diskSize int) {
 }
 
 func (s *LibvirtService) getDiskSize(path string) (size int, err error) {
-	cmd := fmt.Sprintf("qemu-img info %s | grep 'virtual size' | grep -v 'grep' | awk '{print $3}", path)
+	cmd := fmt.Sprintf("qemu-img info %s | grep 'virtual size' | grep -v 'grep' | awk '{print $3}'", path)
 
 	output, err := _shellUtils.ExeShellInDir(cmd, agentConf.Inst.DirKvm)
 	if err != nil {
