@@ -248,5 +248,6 @@ func (s *LibvirtService) getMainDiskIndex(domCfg *libvirtxml.Domain) (ret int) {
 			return
 		}
 	}
+
 	return
 }
