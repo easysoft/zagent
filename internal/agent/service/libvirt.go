@@ -103,6 +103,7 @@ func (s *LibvirtService) GenVmDef(src, vmName, rawPath, basePath string, vmMemor
 	diskPath = domCfg.Devices.Disks[mainDiskIndex].Source.File.File
 
 	domCfg.Name = vmName
+	domCfg.UUID = _stringUtils.NewUuidWithSep()
 	domCfg.Devices.Disks[mainDiskIndex].Source.File = &libvirtxml.DomainDiskSourceFile{
 		File: rawPath,
 	}
