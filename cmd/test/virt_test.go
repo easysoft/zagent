@@ -18,4 +18,5 @@ func TestVirt(t *testing.T) {
 
 	name, _ := dom.GetName()
 	_logUtils.Infof("%s: %s", name, macAddress)
+
 }
