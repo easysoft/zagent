@@ -28,7 +28,8 @@ var (
 
 	FolderKvm   = "kvm"
 	FolderIso   = "iso"
+	FolderBase  = "base"
 	FolderImage = "image"
-	FolderDef   = "def"
-	FolderTempl = "templ"
+	//FolderDef   = "def"
+	//FolderTempl = "templ"
 )

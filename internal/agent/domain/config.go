@@ -13,6 +13,7 @@ type Config struct {
 	DirKvm   string
 	DirIso   string
 	DirImage string
-	DirDef   string
-	DirTempl string
+	DirBase  string
+	//DirDef   string
+	//DirTempl string
 }

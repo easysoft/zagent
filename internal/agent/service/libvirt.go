@@ -2,13 +2,17 @@ package agentService
 
 import "C"
 import (
+	"fmt"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
+	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
 	_shellUtils "github.com/easysoft/zagent/internal/pkg/libs/shell"
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/libs/string"
 	"github.com/libvirt/libvirt-go"
 	libvirtxml "github.com/libvirt/libvirt-go-xml"
 	"path/filepath"
+	"strconv"
+	"strings"
 )
 
 const (
@@ -54,11 +58,23 @@ func (s *LibvirtService) GetVm(name string) (dom *libvirt.Domain) {
 	return
 }
 
-func (s *LibvirtService) CloneVm(src, vmName string) (dom *libvirt.Domain, macAddress string, err error) {
-	templ := s.GetDomainDef(src)
-	xml, macAddress, _ := s.GenVmDef(templ, vmName, 0, "", "")
+func (s *LibvirtService) CreateVm(vm *commDomain.Vm) (dom *libvirt.Domain, macAddress string, err error) {
+	srcXml := s.GetDomainDef(vm.Src)
 
-	dom, err = Conn.DomainCreateXML(xml, 0)
+	vmXml := ""
+	templDiskPath := ""
+	rawPath := filepath.Join(agentConf.Inst.DirImage, vm.Name+".qcow2")
+	vmXml, vm.MacAddress, templDiskPath, _ = s.GenVmDef(srcXml, vm.Name, rawPath, 0)
+
+	vm.DiskSize, err = s.getDiskSize(templDiskPath)
+	if err != nil || vm.DiskSize == 0 {
+		_logUtils.Errorf("wrong vm disk size %d, err %s", vm.DiskSize, err.Error())
+		return
+	}
+
+	s.createDiskFile(vm.Base, vm.Name, vm.DiskSize)
+
+	dom, err = Conn.DomainCreateXML(vmXml, 0)
 	return
 }
 
@@ -75,17 +91,17 @@ func (s *LibvirtService) UndefineVm(dom *libvirt.Domain) (err error) {
 	return
 }
 
-func (s *LibvirtService) GenVmDef(templ, vmName string, vmMemory uint, vmCdrom string, vmCdrom2 string) (
-	xml, macAddress string, err error) {
+func (s *LibvirtService) GenVmDef(src, vmName, rawPath string, vmMemory uint) (
+	xml, macAddress, diskPath string, err error) {
 
 	domCfg := &libvirtxml.Domain{}
-	err = domCfg.Unmarshal(templ)
+	err = domCfg.Unmarshal(src)
 	if err != nil {
 		return
 	}
 
 	domCfg.Name = vmName
-	rawPath := filepath.Join(agentConf.Inst.DirImage, vmName+".qcow2")
+
 	domCfg.Devices.Disks[0].Source.File = &libvirtxml.DomainDiskSourceFile{
 		File: rawPath,
 	}
@@ -99,19 +115,6 @@ func (s *LibvirtService) GenVmDef(templ, vmName string, vmMemory uint, vmCdrom s
 		domCfg.CurrentMemory = &libvirtxml.DomainCurrentMemory{
 			Unit:  "M",
 			Value: vmMemory,
-		}
-	}
-
-	if vmCdrom != "" {
-		cdromPath := filepath.Join(agentConf.Inst.DirIso, vmCdrom)
-		domCfg.Devices.Disks[2].Source.File = &libvirtxml.DomainDiskSourceFile{
-			File: cdromPath,
-		}
-	}
-	if vmCdrom2 != "" {
-		cdromPath2 := filepath.Join(agentConf.Inst.DirIso, vmCdrom2)
-		domCfg.Devices.Disks[3].Source.File = &libvirtxml.DomainDiskSourceFile{
-			File: cdromPath2,
 		}
 	}
 
@@ -182,5 +185,48 @@ func (s *LibvirtService) Connect(str string) {
 	if !active {
 		_logUtils.Errorf("not active")
 	}
+	return
+}
+
+func (s *LibvirtService) GetBaseImagePath(vm commDomain.Vm) (path string) {
+	dir := filepath.Join(agentConf.Inst.DirBase, vm.OsCategory.ToString(), vm.OsType.ToString())
+	name := fmt.Sprintf("%s-%s", vm.OsVersion, vm.SysLang.ToString())
+
+	path = filepath.Join(dir, name)
+
+	return
+}
+
+func (s *LibvirtService) createDiskFile(base, vmName string, diskSize int) {
+	basePath := ""
+	if base != "" {
+		basePath = filepath.Join(agentConf.Inst.DirBase, base)
+	}
+	vmRawPath := filepath.Join(agentConf.Inst.DirImage, vmName+".qcow2")
+
+	var cmd string
+	if basePath == "" {
+		cmd = fmt.Sprintf("qemu-img create -f qcow2 %s %dG",
+			vmRawPath, diskSize/1000)
+	} else {
+		cmd = fmt.Sprintf("qemu-img create -f qcow2 -o cluster_size=2M,backing_file=%s %s %dG",
+			basePath, vmRawPath, diskSize/1000)
+	}
+	_, err := _shellUtils.ExeShellInDir(cmd, agentConf.Inst.DirKvm)
+	if err != nil {
+		_logUtils.Errorf("fail to generate vm, cmd %s, err %s.", cmd, err.Error())
+		return
+	}
+}
+
+func (s *LibvirtService) getDiskSize(path string) (size int, err error) {
+	cmd := fmt.Sprintf("qemu-img info %s | grep 'virtual size' | grep -v 'grep' | awk '{print $3}", path)
+
+	output, err := _shellUtils.ExeShellInDir(cmd, agentConf.Inst.DirKvm)
+	if err != nil {
+		return
+	}
+	size, err = strconv.Atoi(strings.TrimSpace(output))
+
 	return
 }

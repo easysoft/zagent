@@ -13,7 +13,7 @@ type Node struct {
 
 	Status _const.ServiceStatus `json:"status" yaml:"status"`
 
-	OsPlatform _const.OsPlatform `json:"osPlatform" yaml:"osPlatform"`
+	OsPlatform _const.OsCategory `json:"osPlatform" yaml:"osPlatform"`
 	OsType     _const.OsType     `json:"osType" yaml:"osType"`
 	SysLang    _const.SysLang    `json:"sysLang" yaml:"sysLang"`
 }

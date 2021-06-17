@@ -35,7 +35,12 @@ func Init() {
 
 	Inst.DirKvm = _fileUtils.AddPathSepIfNeeded(filepath.Join(usr.HomeDir, agentConst.FolderKvm))
 	Inst.DirIso = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderIso))
+	Inst.DirBase = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderBase))
 	Inst.DirImage = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderImage))
-	Inst.DirTempl = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderTempl))
-	Inst.DirDef = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderDef))
+	//Inst.DirTempl = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderTempl))
+	//Inst.DirDef = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderDef))
+
+	_fileUtils.MkDirIfNeeded(Inst.DirIso)
+	_fileUtils.MkDirIfNeeded(Inst.DirBase)
+	_fileUtils.MkDirIfNeeded(Inst.DirImage)
 }
