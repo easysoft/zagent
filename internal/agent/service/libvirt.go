@@ -37,10 +37,16 @@ func (s *LibvirtService) CreateVm(vm *commDomain.Vm) (dom *libvirt.Domain, macAd
 
 	srcXml := s.GetDomainDef(vm.Src)
 
+	basePath := ""
+	if vm.Base != "" {
+		basePath = filepath.Join(agentConf.Inst.DirBase, vm.Base)
+	}
+	basePath += ".qcow2"
+
 	vmXml := ""
 	baseDiskPath := ""
 	rawPath := filepath.Join(agentConf.Inst.DirImage, vm.Name+".qcow2")
-	vmXml, vm.MacAddress, baseDiskPath, _ = s.GenVmDef(srcXml, vm.Name, rawPath, 0)
+	vmXml, vm.MacAddress, baseDiskPath, _ = s.GenVmDef(srcXml, vm.Name, rawPath, basePath, 0)
 
 	vm.DiskSize, err = s.getDiskSize(baseDiskPath)
 	if err != nil || vm.DiskSize == 0 {
@@ -48,7 +54,7 @@ func (s *LibvirtService) CreateVm(vm *commDomain.Vm) (dom *libvirt.Domain, macAd
 		return
 	}
 
-	s.createDiskFile(vm.Base, vm.Name, vm.DiskSize)
+	s.createDiskFile(basePath, vm.Name, vm.DiskSize)
 
 	dom, err = Conn.DomainCreateXML(vmXml, 0)
 	return
@@ -84,7 +90,7 @@ func (s *LibvirtService) UndefineVm(dom *libvirt.Domain) (err error) {
 	return
 }
 
-func (s *LibvirtService) GenVmDef(src, vmName, rawPath string, vmMemory uint) (
+func (s *LibvirtService) GenVmDef(src, vmName, rawPath, basePath string, vmMemory uint) (
 	xml, macAddress, diskPath string, err error) {
 
 	domCfg := &libvirtxml.Domain{}
@@ -99,6 +105,17 @@ func (s *LibvirtService) GenVmDef(src, vmName, rawPath string, vmMemory uint) (
 	domCfg.Name = vmName
 	domCfg.Devices.Disks[mainDiskIndex].Source.File = &libvirtxml.DomainDiskSourceFile{
 		File: rawPath,
+	}
+	domCfg.Devices.Disks[mainDiskIndex].BackingStore = &libvirtxml.DomainDiskBackingStore{
+		Index: 0,
+		Format: &libvirtxml.DomainDiskFormat{
+			Type: "qcow2",
+		},
+		Source: &libvirtxml.DomainDiskSource{
+			File: &libvirtxml.DomainDiskSourceFile{
+				File: basePath,
+			},
+		},
 	}
 
 	if vmMemory != 0 {
@@ -197,11 +214,7 @@ func (s *LibvirtService) GetBaseImagePath(vm commDomain.Vm) (path string) {
 	return
 }
 
-func (s *LibvirtService) createDiskFile(base, vmName string, diskSize int) {
-	basePath := ""
-	if base != "" {
-		basePath = filepath.Join(agentConf.Inst.DirBase, base)
-	}
+func (s *LibvirtService) createDiskFile(basePath, vmName string, diskSize int) {
 	vmRawPath := filepath.Join(agentConf.Inst.DirImage, vmName+".qcow2")
 
 	var cmd string
