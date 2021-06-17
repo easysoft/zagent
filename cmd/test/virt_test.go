@@ -22,7 +22,6 @@ func TestVirt(t *testing.T) {
 	src:  xml template
 	base: backing file, get by vm's OsCategory properties etc.
 	*/
-
 	src := "templ-win10-x64-pro-zh_cn"
 	vmName := strings.Replace(src, "templ-", "test-", -1) + "-" + _stringUtils.NewUuid()
 	vm := commDomain.Vm{Name: vmName, DiskSize: 3000, Src: src,
