@@ -243,7 +243,7 @@ func (s *LibvirtService) setVmProps(vm *commDomain.Vm) {
 
 func (s *LibvirtService) getMainDiskIndex(domCfg *libvirtxml.Domain) (ret int) {
 	for index, item := range domCfg.Devices.Disks {
-		if item.Device == "disk" && *item.Address.Drive.Unit == 0 {
+		if item.Device == "disk" && strings.Index(item.Source.File.File, "share") < 0 {
 			ret = index
 			return
 		}
