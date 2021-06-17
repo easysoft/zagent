@@ -93,8 +93,9 @@ func (s *LibvirtService) GenVmDef(src, vmName, rawPath string, vmMemory uint) (
 		return
 	}
 
-	domCfg.Name = vmName
+	diskPath = domCfg.Devices.Disks[0].Source.File.File
 
+	domCfg.Name = vmName
 	domCfg.Devices.Disks[0].Source.File = &libvirtxml.DomainDiskSourceFile{
 		File: rawPath,
 	}
@@ -116,6 +117,8 @@ func (s *LibvirtService) GenVmDef(src, vmName, rawPath string, vmMemory uint) (
 
 	machine := s.GenMachine()
 	domCfg.OS.Type.Machine = machine
+
+	xml, _ = domCfg.Marshal()
 
 	return
 }

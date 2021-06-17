@@ -1,6 +1,7 @@
 package main
 
 import (
+	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	agentService "github.com/easysoft/zagent/internal/agent/service"
 	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
 	commConst "github.com/easysoft/zagent/internal/comm/const"
@@ -13,6 +14,8 @@ import (
 
 func TestVirt(t *testing.T) {
 	_logUtils.Init(agentConst.AppName)
+	agentConf.Init()
+
 	virtService := agentService.NewLibvirtService()
 
 	src := "templ-win10-x64-pro-zh_cn"
