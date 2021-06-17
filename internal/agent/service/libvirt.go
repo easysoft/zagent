@@ -43,11 +43,9 @@ func (s *LibvirtService) CreateVm(vm *commDomain.Vm) (dom *libvirt.Domain, macAd
 	basePath += ".qcow2"
 
 	vmXml := ""
-	// baseDiskPath := ""
 	rawPath := filepath.Join(agentConf.Inst.DirImage, vm.Name+".qcow2")
 	vmXml, vm.MacAddress, _, _ = s.GenVmDef(srcXml, vm.Name, rawPath, basePath, 0)
 
-	// vm.DiskSize, err = s.getDiskSize(baseDiskPath)
 	if err != nil || vm.DiskSize == 0 {
 		_logUtils.Errorf("wrong vm disk size %d, err %s", vm.DiskSize, err.Error())
 		return
@@ -232,18 +230,6 @@ func (s *LibvirtService) createDiskFile(basePath, vmName string, diskSize int) {
 		return
 	}
 }
-
-/*func (s *LibvirtService) getDiskSize(path string) (size int, err error) {
-	cmd := fmt.Sprintf("qemu-img info %s | grep 'virtual size' | grep -v 'grep' | awk '{print $3}'", path)
-
-	output, err := _shellUtils.ExeShellInDir(cmd, agentConf.Inst.DirKvm)
-	if err != nil {
-		return
-	}
-	size, err = strconv.Atoi(strings.TrimSpace(output))
-
-	return
-}*/
 
 func (s *LibvirtService) setVmProps(vm *commDomain.Vm) {
 	osCategory := commConst.Windows
