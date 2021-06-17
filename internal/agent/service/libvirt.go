@@ -93,10 +93,11 @@ func (s *LibvirtService) GenVmDef(src, vmName, rawPath string, vmMemory uint) (
 		return
 	}
 
-	diskPath = domCfg.Devices.Disks[0].Source.File.File
+	mainDiskIndex := s.getMainDiskIndex(domCfg)
+	diskPath = domCfg.Devices.Disks[mainDiskIndex].Source.File.File
 
 	domCfg.Name = vmName
-	domCfg.Devices.Disks[0].Source.File = &libvirtxml.DomainDiskSourceFile{
+	domCfg.Devices.Disks[mainDiskIndex].Source.File = &libvirtxml.DomainDiskSourceFile{
 		File: rawPath,
 	}
 
@@ -238,4 +239,13 @@ func (s *LibvirtService) setVmProps(vm *commDomain.Vm) {
 
 	vm.Base = fmt.Sprintf("%s/%s/%s-%s", osCategory.ToString(), osType.ToString(),
 		osVersion, osLang.ToString())
+}
+
+func (s *LibvirtService) getMainDiskIndex(domCfg *libvirtxml.Domain) (ret int) {
+	for index, item := range domCfg.Devices.Disks {
+		if item.Device == "disk" && *item.Address.Drive.Unit == 0 {
+			ret = index
+			return
+		}
+	}
 }
