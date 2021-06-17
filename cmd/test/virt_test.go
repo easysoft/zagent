@@ -6,18 +6,20 @@ import (
 	commConst "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
+	"strings"
 	"testing"
 )
 
 func TestVirt(t *testing.T) {
 	_logUtils.Init(agentConst.AppName)
-
-	vm := commDomain.Vm{Name: "test-win10-x64-pro-zh_cn-01",
-		Src: "templ-win10-x64-pro-zh_cn", Base: "windows/win10/x64-pro-zh_cn",
-		OsCategory: commConst.Windows, OsType: commConst.Win10,
-		OsVersion: "x64-pro", SysLang: commConst.ZH_CN}
-
 	virtService := agentService.NewLibvirtService()
+
+	src := "templ-win10-x64-pro-zh_cn"
+	vmName := strings.Replace(src, "templ-", "", -1) + ""
+	vm := commDomain.Vm{Name: vmName, Src: src,
+		OsCategory: commConst.Windows, OsType: commConst.Win10,
+		OsVersion: "x64-pro", OsLang: commConst.ZH_CN}
+
 	dom, macAddress, _ := virtService.CreateVm(&vm)
 	defer dom.Free()
 

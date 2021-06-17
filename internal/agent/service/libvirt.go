@@ -4,6 +4,7 @@ import "C"
 import (
 	"fmt"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
+	commConst "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
 	_shellUtils "github.com/easysoft/zagent/internal/pkg/libs/shell"
@@ -59,6 +60,8 @@ func (s *LibvirtService) GetVm(name string) (dom *libvirt.Domain) {
 }
 
 func (s *LibvirtService) CreateVm(vm *commDomain.Vm) (dom *libvirt.Domain, macAddress string, err error) {
+	s.setVmProps(vm)
+
 	srcXml := s.GetDomainDef(vm.Src)
 
 	vmXml := ""
@@ -190,7 +193,7 @@ func (s *LibvirtService) Connect(str string) {
 
 func (s *LibvirtService) GetBaseImagePath(vm commDomain.Vm) (path string) {
 	dir := filepath.Join(agentConf.Inst.DirBase, vm.OsCategory.ToString(), vm.OsType.ToString())
-	name := fmt.Sprintf("%s-%s", vm.OsVersion, vm.SysLang.ToString())
+	name := fmt.Sprintf("%s-%s", vm.OsVersion, vm.OsLang.ToString())
 
 	path = filepath.Join(dir, name)
 
@@ -229,4 +232,14 @@ func (s *LibvirtService) getDiskSize(path string) (size int, err error) {
 	size, err = strconv.Atoi(strings.TrimSpace(output))
 
 	return
+}
+
+func (s *LibvirtService) setVmProps(vm *commDomain.Vm) {
+	osCategory := commConst.Windows
+	osType := commConst.Win10
+	osVersion := "x64-pro"
+	osLang := commConst.ZH_CN
+
+	vm.Base = fmt.Sprintf("%s/%s/%s-%s", osCategory.ToString(), osType.ToString(),
+		osVersion, osLang.ToString())
 }

@@ -124,14 +124,14 @@ func (e OsType) ToString() string {
 	return string(e)
 }
 
-type SysLang string
+type OsLang string
 
 const (
-	EN_US SysLang = "en_us"
-	ZH_CN SysLang = "zh_cn"
+	EN_US OsLang = "en_us"
+	ZH_CN OsLang = "zh_cn"
 )
 
-func (e SysLang) ToString() string {
+func (e OsLang) ToString() string {
 	return string(e)
 }
 

@@ -19,7 +19,7 @@ type Vm struct {
 	OsCategory commConst.OsCategory
 	OsType     commConst.OsType
 	OsVersion  string
-	SysLang    commConst.SysLang
+	OsLang     commConst.OsLang
 
 	Status            commConst.VmStatus
 	DestroyAt         time.Time
