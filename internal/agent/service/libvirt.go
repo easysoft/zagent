@@ -115,6 +115,7 @@ func (s *LibvirtService) GenVmDef(src, vmName, rawPath, basePath string, vmMemor
 		Source: &libvirtxml.DomainDiskSource{
 			File: &libvirtxml.DomainDiskSourceFile{
 				File: basePath,
+				//File: "/home/aaron/kvm/templ/templ-win10-x64-pro-zh_cn.qcow2",
 			},
 		},
 	}
