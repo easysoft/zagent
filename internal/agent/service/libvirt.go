@@ -97,6 +97,7 @@ func (s *LibvirtService) GenVmDef(src, vmName, rawPath string, vmMemory uint) (
 	diskPath = domCfg.Devices.Disks[mainDiskIndex].Source.File.File
 
 	domCfg.Name = vmName
+	domCfg.UUID = _stringUtils.NewUuidWithSep()
 	domCfg.Devices.Disks[mainDiskIndex].Source.File = &libvirtxml.DomainDiskSourceFile{
 		File: rawPath,
 	}
@@ -248,4 +249,5 @@ func (s *LibvirtService) getMainDiskIndex(domCfg *libvirtxml.Domain) (ret int) {
 			return
 		}
 	}
+	return
 }
