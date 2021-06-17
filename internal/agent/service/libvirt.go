@@ -10,7 +10,7 @@ import (
 	_shellUtils "github.com/easysoft/zagent/internal/pkg/libs/shell"
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/libs/string"
 	"github.com/libvirt/libvirt-go"
-	libvirtxml "github.com/libvirt/libvirt-go-xml"
+	"github.com/libvirt/libvirt-go-xml"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -61,18 +61,8 @@ func (s *LibvirtService) GetVm(name string) (dom *libvirt.Domain) {
 			_logUtils.Errorf("close() == %d, expected 0", res)
 		}
 	}()
-	names, err := Conn.ListDefinedDomains()
-	if err != nil {
-		_logUtils.Errorf(err.Error())
-		return
-	}
 
-	if len(names) == 0 {
-		_logUtils.Errorf("length of domains shouldn't be 0.")
-		return
-	}
-
-	dom, err = Conn.LookupDomainByName(name)
+	dom, err := Conn.LookupDomainByName(name)
 	if err != nil {
 		_logUtils.Errorf(err.Error())
 		return
@@ -156,7 +146,10 @@ func (s *LibvirtService) GenMachine() string {
 
 func (s *LibvirtService) GetDomainDef(name string) (xml string) {
 	dom := s.GetVm(name)
-	dom.Create()
+	if dom == nil {
+		return
+	}
+
 	xml, _ = dom.GetXMLDesc(0)
 
 	return
