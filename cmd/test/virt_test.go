@@ -11,5 +11,11 @@ func TestVirt(t *testing.T) {
 	_logUtils.Init(agentConst.AppName)
 
 	virtService := agentService.NewLibvirtService()
-	virtService.GetDomain()
+	dom, macAddress, _ := virtService.CloneVm("win10", "win10-01")
+	defer dom.Free()
+
+	virtService.StartVm(dom)
+
+	name, _ := dom.GetName()
+	_logUtils.Infof("%s: %s", name, macAddress)
 }

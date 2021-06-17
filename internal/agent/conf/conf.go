@@ -1,6 +1,7 @@
 package agentConf
 
 import (
+	"github.com/easysoft/zagent/internal/agent/domain"
 	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
 	_commonUtils "github.com/easysoft/zagent/internal/pkg/libs/common"
@@ -12,7 +13,7 @@ import (
 )
 
 var (
-	Inst = Config{}
+	Inst = domain.Config{}
 )
 
 func Init() {
@@ -32,4 +33,9 @@ func Init() {
 	usr, _ := user.Current()
 	Inst.WorkDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(usr.HomeDir, agentConst.AppName))
 
+	Inst.DirKvm = _fileUtils.AddPathSepIfNeeded(filepath.Join(usr.HomeDir, agentConst.FolderKvm))
+	Inst.DirIso = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderIso))
+	Inst.DirImage = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderImage))
+	Inst.DirTempl = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderTempl))
+	Inst.DirDef = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderDef))
 }

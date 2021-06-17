@@ -9,10 +9,10 @@ import (
 var (
 	AppName    = "zagent"
 	ConfigVer  = 1
-	ConfigFile = filepath.Join("conf", AppName + ".yaml")
+	ConfigFile = filepath.Join("conf", AppName+".yaml")
 
 	EnRes = filepath.Join("res", "messages_en.json")
-	ZhRes = filepath.Join("res" , "messages_zh.json")
+	ZhRes = filepath.Join("res", "messages_zh.json")
 
 	BrowserDriverDir = "browser_driver"
 	LogDir           = fmt.Sprintf("log%s", _const.PthSep)
@@ -24,10 +24,11 @@ var (
 
 	BuildParamSeleniumDriverPath = "${driverPath}"
 
-	FolderIso   = "iso/"
-	FolderImage = "image/"
-	FolderDef   = "def/"
-	FolderTempl = "templ/"
-
 	ControlActions = []string{"start", "stop", "restart", "install", "uninstall"}
+
+	FolderKvm   = "kvm"
+	FolderIso   = "iso"
+	FolderImage = "image"
+	FolderDef   = "def"
+	FolderTempl = "templ"
 )

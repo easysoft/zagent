@@ -1,4 +1,4 @@
-package agentConf
+package domain
 
 type Config struct {
 	Server   string `yaml:"Server"`
@@ -9,4 +9,10 @@ type Config struct {
 	NodeName string
 	WorkDir  string
 	LogDir   string
+
+	DirKvm   string
+	DirIso   string
+	DirImage string
+	DirDef   string
+	DirTempl string
 }
