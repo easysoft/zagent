@@ -2,16 +2,15 @@ package commDomain
 
 import (
 	commConst "github.com/easysoft/zagent/internal/comm/const"
-	_const "github.com/easysoft/zagent/internal/pkg/const"
 )
 
 type TestProcessor struct {
 	DataLoopProcessor
 	ExtractorProcessor
 
-	Name     string               `json:"name" yaml:"name"`
-	Comments string               `json:"comments" yaml:"comments"`
-	Type     _const.ProcessorType `json:"type" yaml:"type"`
+	Name     string                  `json:"name" yaml:"name"`
+	Comments string                  `json:"comments" yaml:"comments"`
+	Type     commConst.ProcessorType `json:"type" yaml:"type"`
 
 	ParentId uint `json:"parentId" yaml:"parentId"`
 

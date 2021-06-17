@@ -2,8 +2,8 @@ package agentService
 
 import (
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
+	commConst "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	_const "github.com/easysoft/zagent/internal/pkg/const"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/libs/http"
 	_i118Utils "github.com/easysoft/zagent/internal/pkg/libs/i118"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
@@ -21,9 +21,9 @@ func (s *RegisterService) Register(isBusy bool) {
 		Ip: agentConf.Inst.NodeIp, Port: agentConf.Inst.NodePort}
 
 	if isBusy {
-		node.Status = _const.ServiceBusy
+		node.Status = commConst.ServiceBusy
 	} else {
-		node.Status = _const.ServiceActive
+		node.Status = commConst.ServiceActive
 	}
 
 	url := _httpUtils.GenUrl(agentConf.Inst.Server, "vms/register")

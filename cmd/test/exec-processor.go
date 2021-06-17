@@ -11,11 +11,11 @@ import (
 )
 
 func TestExecProcessor(t *testing.T) {
-	build := commDomain.Build{BuildType: _const.InterfaceScenario}
+	build := commDomain.Build{BuildType: commConst.InterfaceScenario}
 
-	processor := commDomain.TestProcessor{Type: _const.Simple}
+	processor := commDomain.TestProcessor{Type: commConst.Simple}
 
-	dataLoop := commDomain.TestProcessor{Type: _const.DataLoop}
+	dataLoop := commDomain.TestProcessor{Type: commConst.DataLoop}
 	dataLoop.Src = commConst.ZenData
 	dataLoop.Path = "http://127.0.0.1:8848/data?config=demo/default.yaml&F=field_format"
 

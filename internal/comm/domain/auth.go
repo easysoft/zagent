@@ -1,19 +1,19 @@
 package commDomain
 
 import (
-	_const "github.com/easysoft/zagent/internal/pkg/const"
+	commConst "github.com/easysoft/zagent/internal/comm/const"
 )
 
 type Auth struct {
-	AuthType     _const.AuthType `json:"type" yaml:"type"`
-	Entities     []Entity        `json:"entities" yaml:"entities"`
-	OAuth2Entity OAuth2Entity    `json:"oAuth2Entity" yaml:"oAuth2Entity"`
+	AuthType     commConst.AuthType `json:"type" yaml:"type"`
+	Entities     []Entity           `json:"entities" yaml:"entities"`
+	OAuth2Entity OAuth2Entity       `json:"oAuth2Entity" yaml:"oAuth2Entity"`
 }
 
 type OAuth2Entity struct {
-	TokenName   string                     `json:"tokenName" yaml:"tokenName"`
-	GrantType   _const.OAuth2TypeGrantType `json:"grantType" yaml:"grantType"`
-	CallbackUrl string                     `json:"callbackUrl" yaml:"callbackUrl"`
+	TokenName   string                        `json:"tokenName" yaml:"tokenName"`
+	GrantType   commConst.OAuth2TypeGrantType `json:"grantType" yaml:"grantType"`
+	CallbackUrl string                        `json:"callbackUrl" yaml:"callbackUrl"`
 
 	AuthURL string `json:"authURL" yaml:"authURL"` // url to auth
 
@@ -30,10 +30,10 @@ type OAuth2Entity struct {
 	Password string `json:"password" yaml:"password"`
 
 	// for grant type AuthCodeWithPKCE
-	CodeChallengeMethod _const.CodeChallengeMethod `json:"codeChallengeMethod" yaml:"codeChallengeMethod"` // SHA-256 or Plain
-	CodeVerifier        string                     `json:"codeVerifier" yaml:"codeVerifier"`               // random string
+	CodeChallengeMethod commConst.CodeChallengeMethod `json:"codeChallengeMethod" yaml:"codeChallengeMethod"` // SHA-256 or Plain
+	CodeVerifier        string                        `json:"codeVerifier" yaml:"codeVerifier"`               // random string
 
-	ClientAuthentication _const.OAuth2ClientAuthType
+	ClientAuthentication commConst.OAuth2ClientAuthType
 	AuthorizeUseBrowser  bool `json:"authorizeUseBrowser" yaml:"authorizeUseBrowser"` // open browser to auth or not
 
 	HeaderPrefix string `json:"headerPrefix" yaml:"headerPrefix" gorm:"default:Bearer` // prefix added before access token in header

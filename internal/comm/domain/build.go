@@ -1,7 +1,7 @@
 package commDomain
 
 import (
-	_const "github.com/easysoft/zagent/internal/pkg/const"
+	commConst "github.com/easysoft/zagent/internal/comm/const"
 	"time"
 )
 
@@ -18,11 +18,11 @@ type Build struct {
 	StartTime    time.Time `json:"startTime,omitempty"`
 	CompleteTime time.Time `json:"completeTime,omitempty"`
 
-	Progress _const.BuildProgress `json:"progress,omitempty"`
-	Status   _const.BuildStatus   `json:"status,omitempty"`
+	Progress commConst.BuildProgress `json:"progress,omitempty"`
+	Status   commConst.BuildStatus   `json:"status,omitempty"`
 
-	BuildType     _const.BuildType `json:"buildType,omitempty"`
-	TestScenario  TestScenario     `json:"testScenario,omitempty"`
-	TestSet       TestSet          `json:"testSet,omitempty"`
-	AutomatedTest AutomatedTest    `json:"automatedTest,omitempty"`
+	BuildType     commConst.BuildType `json:"buildType,omitempty"`
+	TestScenario  TestScenario        `json:"testScenario,omitempty"`
+	TestSet       TestSet             `json:"testSet,omitempty"`
+	AutomatedTest AutomatedTest       `json:"automatedTest,omitempty"`
 }

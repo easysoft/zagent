@@ -1,8 +1,8 @@
 package agentService
 
 import (
+	commConst "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	_const "github.com/easysoft/zagent/internal/pkg/const"
 )
 
 type BuildService struct {
@@ -18,7 +18,7 @@ func NewBuildService() *BuildService {
 func (s *BuildService) Exec(build commDomain.Build) {
 	s.TaskService.StartTask()
 
-	if build.BuildType == _const.AutomatedTest {
+	if build.BuildType == commConst.AutomatedTest {
 		s.AutomatedTestService.Exec(&build)
 	}
 
