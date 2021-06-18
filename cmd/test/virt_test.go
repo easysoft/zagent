@@ -31,8 +31,6 @@ func TestVirt(t *testing.T) {
 	dom, macAddress, _ := virtService.CreateVm(&vm)
 	defer dom.Free()
 
-	virtService.StartVm(dom)
-
 	name, _ := dom.GetName()
 	_logUtils.Infof("%s: %s", name, macAddress)
 }

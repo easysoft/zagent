@@ -117,6 +117,27 @@ func (s *LibvirtService) GenVmDef(src, vmName, rawPath, basePath string, vmMemor
 		},
 	}
 
+	//<graphics type="vnc" port="-1" autoport="yes" listen="0.0.0.0" passwd="P2ssw0rd">
+	//<listen type="address" address="0.0.0.0"/>
+	//</graphics>
+	domCfg.Devices.Graphics = []libvirtxml.DomainGraphic{
+		{
+			VNC: &libvirtxml.DomainGraphicVNC{
+				AutoPort: "yes",
+				Port:     -1,
+				Listen:   "0.0.0.0",
+				Passwd:   "P2ssw0rd",
+				Listeners: []libvirtxml.DomainGraphicListener{
+					{
+						Address: &libvirtxml.DomainGraphicListenerAddress{
+							Address: "0.0.0.0",
+						},
+					},
+				},
+			},
+		},
+	}
+
 	if vmMemory != 0 {
 		domCfg.Memory = &libvirtxml.DomainMemory{
 			Unit:     "M",
