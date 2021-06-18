@@ -118,7 +118,7 @@ func (s *LibvirtService) GenVmDef(src, vmName, rawPath, basePath string, vmMemor
 	//<graphics type="vnc" port="-1" autoport="yes" listen="0.0.0.0" passwd="P2ssw0rd">
 	//<listen type="address" address="0.0.0.0"/>
 	//</graphics>
-	/*domCfg.Devices.Graphics = []libvirtxml.DomainGraphic{
+	domCfg.Devices.Graphics = []libvirtxml.DomainGraphic{
 		{
 			VNC: &libvirtxml.DomainGraphicVNC{
 				AutoPort: "yes",
@@ -134,7 +134,7 @@ func (s *LibvirtService) GenVmDef(src, vmName, rawPath, basePath string, vmMemor
 				},
 			},
 		},
-	}*/
+	}
 
 	domCfg.Devices.Controllers = s.removeUnnecessaryPciCtrl(domCfg)
 
