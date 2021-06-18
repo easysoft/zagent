@@ -24,7 +24,7 @@ func TestVirt(t *testing.T) {
 	*/
 	src := "base-win10-x64-pro-zh_cn"
 	vmName := strings.Replace(src, "base-", "test-", -1) + "-" + _stringUtils.NewUuid()
-	vm := commDomain.Vm{Name: vmName, DiskSize: 3000, Src: src,
+	vm := commDomain.Vm{Name: vmName, DiskSize: 30000, Src: src,
 		OsCategory: commConst.Windows, OsType: commConst.Win10,
 		OsVersion: "x64-pro", OsLang: commConst.ZH_CN}
 
