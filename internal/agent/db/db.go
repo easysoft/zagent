@@ -2,6 +2,7 @@ package db
 
 import (
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
+	"github.com/easysoft/zagent/internal/agent/domain"
 	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
 	_fileUtils "github.com/easysoft/zagent/internal/pkg/libs/file"
 	_i118Utils "github.com/easysoft/zagent/internal/pkg/libs/i118"
@@ -70,7 +71,7 @@ func (*Instance) DB() *gorm.DB {
 }
 
 type Instance struct {
-	config *agentConf.Config
+	config *domain.Config
 	db     *gorm.DB
 }
 

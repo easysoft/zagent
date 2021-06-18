@@ -3,8 +3,8 @@ package handler
 import (
 	"fmt"
 	agentService "github.com/easysoft/zagent/internal/agent/service"
+	commConst "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	_const "github.com/easysoft/zagent/internal/pkg/const"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
 	"golang.org/x/net/context"
@@ -36,9 +36,9 @@ func (c *TaskCtrl) Exec(ctx context.Context, build commDomain.Build, reply *_dom
 
 	result := commDomain.TestResult{}
 
-	if build.BuildType == _const.InterfaceScenario {
+	if build.BuildType == commConst.InterfaceScenario {
 		result = c.InterfaceTestService.ExecScenario(&build)
-	} else if build.BuildType == _const.InterfaceSet {
+	} else if build.BuildType == commConst.InterfaceSet {
 		c.InterfaceTestService.ExecSet(&build, &result)
 	}
 
