@@ -31,7 +31,8 @@ func NewLibvirtService() *LibvirtService {
 	return &LibvirtService{}
 }
 
-func (s *LibvirtService) CreateVm(vm *commDomain.Vm) (dom *libvirt.Domain, macAddress string, err error) {
+func (s *LibvirtService) CreateVm(vm *commDomain.Vm) (
+	dom *libvirt.Domain, macAddress string, vncPort int, err error) {
 	s.setVmProps(vm)
 
 	srcXml := s.GetDomainDef(vm.Src)
@@ -54,6 +55,21 @@ func (s *LibvirtService) CreateVm(vm *commDomain.Vm) (dom *libvirt.Domain, macAd
 	s.createDiskFile(basePath, vm.Name, vm.DiskSize)
 
 	dom, err = Conn.DomainCreateXML(vmXml, 0)
+
+	if err == nil {
+		newXml := ""
+		newXml, err = dom.GetXMLDesc(0)
+		if err != nil {
+			return
+		}
+
+		newDomCfg := &libvirtxml.Domain{}
+		err = newDomCfg.Unmarshal(newXml)
+
+		macAddress = newDomCfg.Devices.Interfaces[0].MAC.Address
+		vncPort = newDomCfg.Devices.Graphics[0].VNC.Port
+	}
+
 	return
 }
 

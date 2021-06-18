@@ -28,9 +28,9 @@ func TestVirt(t *testing.T) {
 		OsCategory: commConst.Windows, OsType: commConst.Win10,
 		OsVersion: "x64-pro", OsLang: commConst.ZH_CN}
 
-	dom, macAddress, _ := virtService.CreateVm(&vm)
+	dom, macAddress, vncPort, _ := virtService.CreateVm(&vm)
 	defer dom.Free()
 
 	name, _ := dom.GetName()
-	_logUtils.Infof("%s: %s", name, macAddress)
+	_logUtils.Infof("%s: %s, %d", name, macAddress, vncPort)
 }
