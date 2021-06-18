@@ -137,6 +137,8 @@ func (s *LibvirtService) GenVmDef(src, vmName, rawPath, basePath string, vmMemor
 			},
 		},
 	}
+	firstPciIndex := s.getFirstPciCtrlIndex(domCfg)
+	domCfg.Devices.Controllers[firstPciIndex].Model = "pci-root"
 
 	if vmMemory != 0 {
 		domCfg.Memory = &libvirtxml.DomainMemory{
@@ -265,6 +267,17 @@ func (s *LibvirtService) setVmProps(vm *commDomain.Vm) {
 func (s *LibvirtService) getMainDiskIndex(domCfg *libvirtxml.Domain) (ret int) {
 	for index, item := range domCfg.Devices.Disks {
 		if item.Device == "disk" && strings.Index(item.Source.File.File, "share") < 0 {
+			ret = index
+			return
+		}
+	}
+
+	return
+}
+
+func (s *LibvirtService) getFirstPciCtrlIndex(domCfg *libvirtxml.Domain) (ret int) {
+	for index, item := range domCfg.Devices.Controllers {
+		if item.Type == "pci" && *item.Index == 0 {
 			ret = index
 			return
 		}
