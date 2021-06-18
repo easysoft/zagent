@@ -137,8 +137,8 @@ func (s *LibvirtService) GenVmDef(src, vmName, rawPath, basePath string, vmMemor
 			},
 		},
 	}
-	firstPciIndex := s.getFirstPciCtrlIndex(domCfg)
-	domCfg.Devices.Controllers[firstPciIndex].Model = "pci-root"
+
+	domCfg.Devices.Controllers = s.removeUnnecessaryPciCtrl(domCfg)
 
 	if vmMemory != 0 {
 		domCfg.Memory = &libvirtxml.DomainMemory{
@@ -155,8 +155,7 @@ func (s *LibvirtService) GenVmDef(src, vmName, rawPath, basePath string, vmMemor
 	macAddress = s.GenMacAddress()
 	domCfg.Devices.Interfaces[0].MAC.Address = macAddress
 
-	machine := s.GenMachine()
-	domCfg.OS.Type.Machine = machine
+	//domCfg.OS.Type.Machine = s.GenMachine()
 
 	xml, _ = domCfg.Marshal()
 
@@ -281,6 +280,18 @@ func (s *LibvirtService) getFirstPciCtrlIndex(domCfg *libvirtxml.Domain) (ret in
 			ret = index
 			return
 		}
+	}
+
+	return
+}
+
+func (s *LibvirtService) removeUnnecessaryPciCtrl(domCfg *libvirtxml.Domain) (ret []libvirtxml.DomainController) {
+	for _, item := range domCfg.Devices.Controllers {
+		if item.Type == "pci" && *item.Index != 0 {
+			continue
+		}
+		//item.Model = "pci-root"
+		ret = append(ret, item)
 	}
 
 	return
