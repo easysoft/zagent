@@ -44,7 +44,7 @@ func (s *LibvirtService) CreateVm(vm *commDomain.Vm) (dom *libvirt.Domain, macAd
 
 	vmXml := ""
 	rawPath := filepath.Join(agentConf.Inst.DirImage, vm.Name+".qcow2")
-	vmXml, vm.MacAddress, _, _ = s.GenVmDef(srcXml, vm.Name, rawPath, basePath, 0)
+	vmXml, vm.MacAddress, _ = s.GenVmDef(srcXml, vm.Name, rawPath, basePath, 0)
 
 	if err != nil || vm.DiskSize == 0 {
 		_logUtils.Errorf("wrong vm disk size %d, err %s", vm.DiskSize, err.Error())
@@ -88,7 +88,7 @@ func (s *LibvirtService) UndefineVm(dom *libvirt.Domain) (err error) {
 }
 
 func (s *LibvirtService) GenVmDef(src, vmName, rawPath, basePath string, vmMemory uint) (
-	xml, macAddress, diskPath string, err error) {
+	xml, macAddress string, err error) {
 
 	domCfg := &libvirtxml.Domain{}
 	err = domCfg.Unmarshal(src)
@@ -97,7 +97,6 @@ func (s *LibvirtService) GenVmDef(src, vmName, rawPath, basePath string, vmMemor
 	}
 
 	mainDiskIndex := s.getMainDiskIndex(domCfg)
-	diskPath = domCfg.Devices.Disks[mainDiskIndex].Source.File.File
 
 	domCfg.Name = vmName
 	domCfg.UUID = _stringUtils.NewUuidWithSep()
@@ -112,7 +111,6 @@ func (s *LibvirtService) GenVmDef(src, vmName, rawPath, basePath string, vmMemor
 		Source: &libvirtxml.DomainDiskSource{
 			File: &libvirtxml.DomainDiskSourceFile{
 				File: basePath,
-				//File: "/home/aaron/kvm/templ/templ-win10-x64-pro-zh_cn.qcow2",
 			},
 		},
 	}
