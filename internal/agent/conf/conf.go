@@ -20,7 +20,7 @@ func Init() {
 	if Inst.Language == "" {
 		Inst.Language = "zh"
 	}
-	_i118Utils.InitI118(Inst.Language, "agent")
+	_i118Utils.InitI118(Inst.Language, agentConst.AppName)
 
 	Inst.Server = _httpUtils.UpdateUrl(Inst.Server)
 

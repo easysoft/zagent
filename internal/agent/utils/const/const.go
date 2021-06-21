@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	AppName    = "zagent"
+	AppName    = "agent"
 	ConfigVer  = 1
 	ConfigFile = filepath.Join("conf", AppName+".yaml")
 
