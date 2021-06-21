@@ -8,6 +8,7 @@ import (
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
 	_shellUtils "github.com/easysoft/zagent/internal/pkg/libs/shell"
+	_sshUtils "github.com/easysoft/zagent/internal/pkg/libs/ssh"
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/libs/string"
 	"github.com/libvirt/libvirt-go-xml"
 	"path/filepath"
@@ -138,10 +139,35 @@ func (s *QemuService) createDiskFile(basePath, vmName string, diskSize int) {
 		cmd = fmt.Sprintf("qemu-img create -f qcow2 -o cluster_size=2M,backing_file=%s %s %dG",
 			basePath, vmRawPath, diskSize/1000)
 	}
-	_, err := _shellUtils.ExeShellInDir(cmd, agentConf.Inst.DirKvm)
-	if err != nil {
-		_logUtils.Errorf("fail to generate vm, cmd %s, err %s.", cmd, err.Error())
-		return
+
+	if agentConf.Inst.Host == "" {
+		_, err := _shellUtils.ExeShellInDir(cmd, agentConf.Inst.DirKvm)
+		if err != nil {
+			_logUtils.Errorf("fail to generate vm, cmd %s, err %s.", cmd, err.Error())
+			return
+		}
+	} else {
+		conn, err := _sshUtils.Connect(agentConf.Inst.Host, agentConf.Inst.User)
+		if err != nil {
+			_logUtils.Errorf(err.Error())
+			return
+		}
+		defer conn.Close()
+
+		session, err := conn.NewSession()
+		if err != nil {
+			_logUtils.Errorf(err.Error())
+			return
+		}
+		defer session.Close()
+
+		cmdInfo, err := session.CombinedOutput(cmd)
+		if err != nil {
+			_logUtils.Errorf(err.Error())
+			return
+		} else {
+			_logUtils.Infof(string(cmdInfo))
+		}
 	}
 }
 

@@ -26,7 +26,6 @@ func Init() {
 
 	ip, _ := _commonUtils.GetIp()
 	if Inst.NodeIp == "" {
-
 		Inst.NodeIp = ip.String()
 	}
 	if Inst.NodePort == 0 {
@@ -34,9 +33,13 @@ func Init() {
 	}
 
 	usr, _ := user.Current()
-	Inst.WorkDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(usr.HomeDir, agentConst.AppName))
+	home := usr.HomeDir
+	if Inst.Host != "" {
+		home = "/home/" + Inst.User
+	}
 
-	Inst.DirKvm = _fileUtils.AddPathSepIfNeeded(filepath.Join(usr.HomeDir, agentConst.FolderKvm))
+	Inst.WorkDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(home, agentConst.AppName))
+	Inst.DirKvm = _fileUtils.AddPathSepIfNeeded(filepath.Join(home, agentConst.FolderKvm))
 	Inst.DirIso = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderIso))
 	Inst.DirBase = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderBase))
 	Inst.DirImage = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderImage))

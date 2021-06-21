@@ -14,7 +14,7 @@ import (
 
 const (
 	ConnStrLocal  = "qemu:///system"
-	ConnStrRemote = "qemu+ssh://192.168.0.56:22/system?keyfile=~/.ssh/id_rsa"
+	ConnStrRemote = "qemu+ssh://%s:22/system?socket=/var/run/libvirt/libvirt-sock"
 )
 
 var (
@@ -26,7 +26,17 @@ type LibvirtService struct {
 }
 
 func NewLibvirtService() *LibvirtService {
-	return &LibvirtService{}
+	connStr := ""
+	if agentConf.Inst.Host == "" {
+		connStr = ConnStrLocal
+	} else {
+		connStr = fmt.Sprintf(ConnStrRemote, agentConf.Inst.Host)
+	}
+
+	s := &LibvirtService{}
+	s.Connect(connStr)
+
+	return s
 }
 
 func (s *LibvirtService) CreateVm(vm *commDomain.Vm) (
@@ -72,7 +82,6 @@ func (s *LibvirtService) CreateVm(vm *commDomain.Vm) (
 }
 
 func (s *LibvirtService) GetVm(name string) (dom *libvirt.Domain) {
-	s.Connect(ConnStrLocal)
 	defer func() {
 		if res, _ := Conn.Close(); res != 0 {
 			_logUtils.Errorf("close() == %d, expected 0", res)
