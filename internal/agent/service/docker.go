@@ -21,7 +21,6 @@ import (
 )
 
 const (
-	DockerConnStrLocal  = ""
 	DockerConnStrRemote = "ssh://%s@%s:22"
 )
 
@@ -36,6 +35,7 @@ type DockerService struct {
 
 func NewDockerService() *DockerService {
 	s := &DockerService{}
+	s.existPortMap = map[int]bool{}
 	s.Connect()
 
 	return s

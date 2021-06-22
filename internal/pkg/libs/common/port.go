@@ -16,6 +16,7 @@ func GetValidPort(start int, end int, existPortMap *map[int]bool) (ret int) {
 	}
 
 	if newPort > 0 {
+		ret = newPort
 		(*existPortMap)[newPort] = true
 	}
 	return
