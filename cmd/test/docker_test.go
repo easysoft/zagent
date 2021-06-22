@@ -17,7 +17,7 @@ func TestDocker(t *testing.T) {
 
 	service := agentService.NewDockerService()
 
-	imageName := "easysoft/zentao"
+	imageName := "easysoft/zentao:15.0.2"
 
 	service.PullImage(imageName)
 	image, _ := service.GetImage(imageName)
@@ -35,17 +35,17 @@ func TestDocker(t *testing.T) {
 	_logUtils.Infof("get container %s", container.ID)
 
 	info, _ := service.GetContainerInfo(resp.ID)
-	_logUtils.Infof("get container %s on %d", info.Name, info.SshPort)
+	_logUtils.Infof("get container info %s on %d", info.Name, info.HttpPort)
 
 	log, err := service.GetContainerLog(container.ID)
 	if err != nil {
-		_logUtils.Infof("stop container, err %s", err.Error())
+		_logUtils.Infof("get container log, err %s", err.Error())
 	}
 	_logUtils.Infof("get container log %s", log)
 
 	err = service.StopContainer(container.ID)
 	if err != nil {
-		_logUtils.Infof("stop container, err %s", err.Error())
+		_logUtils.Infof("stop container , err %s", err.Error())
 	}
 	_logUtils.Infof("stop container %s", container.ID)
 

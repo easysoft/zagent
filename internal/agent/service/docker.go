@@ -7,6 +7,7 @@ import (
 	"github.com/docker/cli/cli/connhelper"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/api/types/mount"
 	client "github.com/docker/docker/client"
 	"github.com/docker/go-connections/nat"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
@@ -70,8 +71,14 @@ func (s *DockerService) GetContainerInfo(containerId string) (ret commDomain.Con
 
 	ret.Name = contain.Name
 	ret.Image = contain.Image
-	sshPort := contain.HostConfig.PortBindings[nat.Port("22/tcp")][0].HostPort
+	sshPort := contain.HostConfig.PortBindings[nat.Port("20/tcp")][0].HostPort
 	ret.SshPort, _ = strconv.Atoi(sshPort)
+
+	httpPort := contain.HostConfig.PortBindings[nat.Port("80/tcp")][0].HostPort
+	ret.HttpPort, _ = strconv.Atoi(httpPort)
+
+	httpsPort := contain.HostConfig.PortBindings[nat.Port("443/tcp")][0].HostPort
+	ret.HttpsPort, _ = strconv.Atoi(httpsPort)
 
 	return
 }
@@ -83,10 +90,33 @@ func (s *DockerService) CreateContainer(name string, cmd []string) (resp contain
 		&container.Config{
 			Image: name,
 			Cmd:   cmd, //[]string{"echo", "hello world"},
+			Env:   []string{"MYSQL_ROOT_PASSWORD=zgxIttknlJK6BpzhWMAz"},
 		},
 		&container.HostConfig{
 			PortBindings: nat.PortMap{
-				nat.Port("80/tcp"): []nat.PortBinding{{HostIP: "0.0.0.0", HostPort: strconv.Itoa(httpPort)}},
+				nat.Port("80/tcp"): []nat.PortBinding{
+					{
+						HostIP:   "0.0.0.0",
+						HostPort: strconv.Itoa(httpPort),
+					},
+				},
+			},
+			Mounts: []mount.Mount{
+				{
+					Source: "/home/aaron/zentaopms",
+					Target: "/www/zentaopms",
+					Type:   mount.TypeBind,
+				},
+				{
+					Source: "/home/aaron/zentaomysql",
+					Target: "/var/lib/mysql",
+					Type:   mount.TypeBind,
+				},
+				{
+					Source: "/etc/localtime",
+					Target: "/etc/localtime",
+					Type:   mount.TypeBind,
+				},
 			},
 		}, nil, nil, "")
 	if err != nil {
