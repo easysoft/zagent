@@ -71,14 +71,20 @@ func (s *DockerService) GetContainerInfo(containerId string) (ret commDomain.Con
 
 	ret.Name = contain.Name
 	ret.Image = contain.Image
-	sshPort := contain.HostConfig.PortBindings[nat.Port("20/tcp")][0].HostPort
-	ret.SshPort, _ = strconv.Atoi(sshPort)
+	if len(contain.HostConfig.PortBindings[nat.Port("20/tcp")]) > 0 {
+		sshPort := contain.HostConfig.PortBindings[nat.Port("20/tcp")][0].HostPort
+		ret.SshPort, _ = strconv.Atoi(sshPort)
+	}
 
-	httpPort := contain.HostConfig.PortBindings[nat.Port("80/tcp")][0].HostPort
-	ret.HttpPort, _ = strconv.Atoi(httpPort)
+	if len(contain.HostConfig.PortBindings[nat.Port("80/tcp")]) > 0 {
+		httpPort := contain.HostConfig.PortBindings[nat.Port("80/tcp")][0].HostPort
+		ret.HttpPort, _ = strconv.Atoi(httpPort)
+	}
 
-	httpsPort := contain.HostConfig.PortBindings[nat.Port("443/tcp")][0].HostPort
-	ret.HttpsPort, _ = strconv.Atoi(httpsPort)
+	if len(contain.HostConfig.PortBindings[nat.Port("443/tcp")]) > 0 {
+		httpsPort := contain.HostConfig.PortBindings[nat.Port("443/tcp")][0].HostPort
+		ret.HttpsPort, _ = strconv.Atoi(httpsPort)
+	}
 
 	return
 }
