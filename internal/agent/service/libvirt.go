@@ -105,6 +105,11 @@ func (s *LibvirtService) DestroyVm(dom *libvirt.Domain) (err error) {
 	err = dom.Destroy()
 	return
 }
+func (s *LibvirtService) DestroyVmByName(name string) (err error) {
+	dom := s.GetVm(name)
+	err = dom.Destroy()
+	return
+}
 func (s *LibvirtService) UndefineVm(dom *libvirt.Domain) (err error) {
 	err = dom.Undefine()
 	return

@@ -43,6 +43,19 @@ func (e DeviceStatus) ToString() string {
 	return string(e)
 }
 
+type ServiceStatus string
+
+const (
+	ServiceOffline ServiceStatus = "offline"
+	ServiceOnline  ServiceStatus = "online"
+	ServiceActive  ServiceStatus = "active"
+	ServiceBusy    ServiceStatus = "busy"
+)
+
+func (e ServiceStatus) ToString() string {
+	return string(e)
+}
+
 type BuildProgress string
 
 const (
@@ -67,19 +80,6 @@ const (
 )
 
 func (e BuildStatus) ToString() string {
-	return string(e)
-}
-
-type ServiceStatus string
-
-const (
-	ServiceOffline ServiceStatus = "offline"
-	ServiceOnline  ServiceStatus = "online"
-	ServiceActive  ServiceStatus = "active"
-	ServiceBusy    ServiceStatus = "busy"
-)
-
-func (e ServiceStatus) ToString() string {
 	return string(e)
 }
 

@@ -2,12 +2,14 @@ package server
 
 import (
 	"github.com/easysoft/zagent/cmd/agent/router"
+	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	"github.com/easysoft/zagent/internal/agent/db"
 	"github.com/facebookgo/inject"
 	"github.com/sirupsen/logrus"
 )
 
 func Init(router *router.Router) {
+	agentConf.Init()
 	db.InitDB()
 	injectObj(router)
 	router.App()

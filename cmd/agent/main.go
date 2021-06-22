@@ -15,9 +15,9 @@ import (
 )
 
 var (
-	help     bool
-	flagSet  *flag.FlagSet
-	platform string
+	help    bool
+	flagSet *flag.FlagSet
+	runMode string
 )
 
 func main() {
@@ -31,6 +31,7 @@ func main() {
 
 	flagSet = flag.NewFlagSet(agentConst.AppName, flag.ContinueOnError)
 
+	flagSet.StringVar(&runMode, "t", agentConst.Host.ToString(), "")
 	flagSet.StringVar(&agentConf.Inst.Server, "s", "", "")
 	flagSet.StringVar(&agentConf.Inst.NodeName, "n", "", "")
 	flagSet.StringVar(&agentConf.Inst.NodeIp, "i", "", "")
@@ -56,7 +57,7 @@ func start() {
 	_logUtils.Init(agentConst.AppName)
 
 	if err := flagSet.Parse(os.Args[1:]); err == nil {
-		agentConf.Init()
+		agentConf.Inst.RunMode = agentConst.RunMode(runMode)
 		server.Init(router.NewRouter())
 	}
 }

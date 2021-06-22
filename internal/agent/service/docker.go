@@ -8,12 +8,15 @@ import (
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	client "github.com/docker/docker/client"
+	"github.com/docker/go-connections/nat"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
+	_commonUtils "github.com/easysoft/zagent/internal/pkg/libs/common"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 const (
@@ -27,6 +30,7 @@ var (
 )
 
 type DockerService struct {
+	existPortMap map[int]bool
 }
 
 func NewDockerService() *DockerService {
@@ -57,10 +61,18 @@ func (s *DockerService) StopContainer(containerId string) (err error) {
 }
 
 func (s *DockerService) CreateContainer(name string, cmd []string) (resp container.ContainerCreateCreatedBody, err error) {
-	resp, err = DockerClient.ContainerCreate(DockerCtx, &container.Config{
-		Image: name,
-		Cmd:   cmd, //[]string{"echo", "hello world"},
-	}, nil, nil, nil, "")
+	sshPort := _commonUtils.GetValidPort(52200, 52299, &s.existPortMap)
+
+	resp, err = DockerClient.ContainerCreate(DockerCtx,
+		&container.Config{
+			Image: name,
+			Cmd:   cmd, //[]string{"echo", "hello world"},
+		},
+		&container.HostConfig{
+			PortBindings: nat.PortMap{
+				nat.Port("22/tcp"): []nat.PortBinding{{HostIP: "0.0.0.0", HostPort: strconv.Itoa(sshPort)}},
+			},
+		}, nil, nil, "")
 	if err != nil {
 		_logUtils.Errorf(err.Error())
 	}
