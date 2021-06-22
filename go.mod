@@ -10,7 +10,7 @@ require (
 	github.com/denisenkom/go-mssqldb v0.9.0 // indirect
 	github.com/docker/cli v20.10.7+incompatible
 	github.com/docker/docker v20.10.7+incompatible
-	github.com/docker/go-connections v0.4.0 // indirect
+	github.com/docker/go-connections v0.4.0
 	github.com/emirpasic/gods v1.12.0
 	github.com/facebookgo/ensure v0.0.0-20200202191622-63f1cf65ac4c // indirect
 	github.com/facebookgo/inject v0.0.0-20180706035515-f23751cae28b

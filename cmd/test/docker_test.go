@@ -34,6 +34,9 @@ func TestDocker(t *testing.T) {
 	container, _ := service.GetContainer(resp.ID)
 	_logUtils.Infof("get container %s", container.ID)
 
+	info, _ := service.GetContainerInfo(resp.ID)
+	_logUtils.Infof("get container %s on %d", info.Name, info.SshPort)
+
 	log, err := service.GetContainerLog(container.ID)
 	if err != nil {
 		_logUtils.Infof("stop container, err %s", err.Error())
