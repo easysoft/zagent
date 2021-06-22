@@ -12,14 +12,14 @@ import (
 	"testing"
 )
 
-func TestVirt(t *testing.T) {
+func TestLibVirt(t *testing.T) {
 	_logUtils.Init(agentConst.AppName)
 
 	agentConf.Inst.Host = "192.168.0.56"
 	agentConf.Inst.User = "aaron"
 	agentConf.Init()
 
-	virtService := agentService.NewLibvirtService()
+	service := agentService.NewLibvirtService()
 
 	/**
 	src:  xml template
@@ -31,7 +31,7 @@ func TestVirt(t *testing.T) {
 		OsCategory: commConst.Windows, OsType: commConst.Win10,
 		OsVersion: "x64-pro", OsLang: commConst.ZH_CN}
 
-	dom, macAddress, vncPort, err := virtService.CreateVm(&vm)
+	dom, macAddress, vncPort, err := service.CreateVm(&vm)
 	if err != nil {
 		_logUtils.Infof("fail to create vm, err %s", err.Error())
 		return

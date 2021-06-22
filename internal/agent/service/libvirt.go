@@ -13,12 +13,12 @@ import (
 )
 
 const (
-	ConnStrLocal  = "qemu:///system"
-	ConnStrRemote = "qemu+ssh://%s:22/system?socket=/var/run/libvirt/libvirt-sock"
+	LibvirtConnStrLocal  = "qemu:///system"
+	LibvirtConnStrRemote = "qemu+ssh://%s:22/system?socket=/var/run/libvirt/libvirt-sock"
 )
 
 var (
-	Conn *libvirt.Connect
+	LibvirtConn *libvirt.Connect
 )
 
 type LibvirtService struct {
@@ -28,9 +28,9 @@ type LibvirtService struct {
 func NewLibvirtService() *LibvirtService {
 	connStr := ""
 	if agentConf.Inst.Host == "" {
-		connStr = ConnStrLocal
+		connStr = LibvirtConnStrLocal
 	} else {
-		connStr = fmt.Sprintf(ConnStrRemote, agentConf.Inst.Host)
+		connStr = fmt.Sprintf(LibvirtConnStrRemote, agentConf.Inst.Host)
 	}
 
 	s := &LibvirtService{}
@@ -62,7 +62,7 @@ func (s *LibvirtService) CreateVm(vm *commDomain.Vm) (
 
 	s.QemuService.createDiskFile(basePath, vm.Name, vm.DiskSize)
 
-	dom, err = Conn.DomainCreateXML(vmXml, 0)
+	dom, err = LibvirtConn.DomainCreateXML(vmXml, 0)
 
 	if err == nil {
 		newXml := ""
@@ -83,12 +83,12 @@ func (s *LibvirtService) CreateVm(vm *commDomain.Vm) (
 
 func (s *LibvirtService) GetVm(name string) (dom *libvirt.Domain) {
 	defer func() {
-		if res, _ := Conn.Close(); res != 0 {
+		if res, _ := LibvirtConn.Close(); res != 0 {
 			_logUtils.Errorf("close() == %d, expected 0", res)
 		}
 	}()
 
-	dom, err := Conn.LookupDomainByName(name)
+	dom, err := LibvirtConn.LookupDomainByName(name)
 	if err != nil {
 		_logUtils.Errorf(err.Error())
 		return
@@ -122,8 +122,8 @@ func (s *LibvirtService) GetVmDef(name string) (xml string) {
 }
 
 func (s *LibvirtService) Connect(str string) {
-	if Conn != nil {
-		active, err := Conn.IsAlive()
+	if LibvirtConn != nil {
+		active, err := LibvirtConn.IsAlive()
 		if err != nil {
 			_logUtils.Errorf(err.Error())
 		}
@@ -133,13 +133,13 @@ func (s *LibvirtService) Connect(str string) {
 	}
 
 	var err error
-	Conn, err = libvirt.NewConnect(str)
+	LibvirtConn, err = libvirt.NewConnect(str)
 	if err != nil {
 		_logUtils.Errorf(err.Error())
 		return
 	}
 
-	active, err := Conn.IsAlive()
+	active, err := LibvirtConn.IsAlive()
 	if err != nil {
 		_logUtils.Errorf(err.Error())
 		return

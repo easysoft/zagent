@@ -2,9 +2,15 @@ module github.com/easysoft/zagent
 
 go 1.15
 
+replace google.golang.org/grpc => google.golang.org/grpc v1.29.0
+
 require (
 	github.com/Joker/hpp v1.0.0 // indirect
+	github.com/containerd/containerd v1.5.2 // indirect
 	github.com/denisenkom/go-mssqldb v0.9.0 // indirect
+	github.com/docker/cli v20.10.7+incompatible
+	github.com/docker/docker v20.10.7+incompatible
+	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/emirpasic/gods v1.12.0
 	github.com/facebookgo/ensure v0.0.0-20200202191622-63f1cf65ac4c // indirect
 	github.com/facebookgo/inject v0.0.0-20180706035515-f23751cae28b
@@ -51,7 +57,7 @@ require (
 	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110
 	golang.org/x/text v0.3.5
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
-	gopkg.in/yaml.v2 v2.3.0
+	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
 	gorm.io/driver/sqlite v1.1.4
 	gorm.io/gorm v1.20.11
