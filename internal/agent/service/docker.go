@@ -77,7 +77,7 @@ func (s *DockerService) GetContainerInfo(containerId string) (ret commDomain.Con
 }
 
 func (s *DockerService) CreateContainer(name string, cmd []string) (resp container.ContainerCreateCreatedBody, err error) {
-	sshPort := _commonUtils.GetValidPort(52200, 52299, &s.existPortMap)
+	httpPort := _commonUtils.GetValidPort(58000, 58099, &s.existPortMap)
 
 	resp, err = DockerClient.ContainerCreate(DockerCtx,
 		&container.Config{
@@ -86,7 +86,7 @@ func (s *DockerService) CreateContainer(name string, cmd []string) (resp contain
 		},
 		&container.HostConfig{
 			PortBindings: nat.PortMap{
-				nat.Port("22/tcp"): []nat.PortBinding{{HostIP: "0.0.0.0", HostPort: strconv.Itoa(sshPort)}},
+				nat.Port("80/tcp"): []nat.PortBinding{{HostIP: "0.0.0.0", HostPort: strconv.Itoa(httpPort)}},
 			},
 		}, nil, nil, "")
 	if err != nil {

@@ -17,7 +17,7 @@ func TestDocker(t *testing.T) {
 
 	service := agentService.NewDockerService()
 
-	imageName := "bfirsh/reticulate-splines"
+	imageName := "easysoft/zentao"
 
 	service.PullImage(imageName)
 	image, _ := service.GetImage(imageName)
