@@ -97,10 +97,12 @@ func (s *DockerService) CreateContainer(name string, cmd []string) (resp contain
 			Image: name,
 			Cmd:   cmd, //[]string{"echo", "hello world"},
 			Env:   []string{"MYSQL_ROOT_PASSWORD=zgxIttknlJK6BpzhWMAz"},
+			ExposedPorts: map[nat.Port]struct{}{
+				"80/tcp": {}},
 		},
 		&container.HostConfig{
 			PortBindings: nat.PortMap{
-				nat.Port("80/tcp"): []nat.PortBinding{
+				"80/tcp": []nat.PortBinding{
 					{
 						HostIP:   "0.0.0.0",
 						HostPort: strconv.Itoa(httpPort),
