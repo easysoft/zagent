@@ -91,6 +91,7 @@ func (s *DockerService) GetContainerInfo(containerId string) (ret commDomain.Con
 
 func (s *DockerService) CreateContainer(name string, cmd []string) (resp container.ContainerCreateCreatedBody, err error) {
 	httpPort := _commonUtils.GetValidPort(58000, 58099, &s.existPortMap)
+	sshPort := _commonUtils.GetValidPort(52200, 52299, &s.existPortMap)
 
 	resp, err = DockerClient.ContainerCreate(DockerCtx,
 		&container.Config{
@@ -98,10 +99,18 @@ func (s *DockerService) CreateContainer(name string, cmd []string) (resp contain
 			Cmd:   cmd, //[]string{"echo", "hello world"},
 			Env:   []string{"MYSQL_ROOT_PASSWORD=zgxIttknlJK6BpzhWMAz"},
 			ExposedPorts: map[nat.Port]struct{}{
-				"80/tcp": {}},
+				"80/tcp": {},
+				"22/tcp": {},
+			},
 		},
 		&container.HostConfig{
 			PortBindings: nat.PortMap{
+				"22/tcp": []nat.PortBinding{
+					{
+						HostIP:   "0.0.0.0",
+						HostPort: strconv.Itoa(sshPort),
+					},
+				},
 				"80/tcp": []nat.PortBinding{
 					{
 						HostIP:   "0.0.0.0",
