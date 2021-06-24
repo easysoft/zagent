@@ -1,8 +1,0 @@
-version: "2.0"
-
-nlu:
-
-- intent: opt_test
-  examples: |
-    - 我要去北京
-    - 我想去上海

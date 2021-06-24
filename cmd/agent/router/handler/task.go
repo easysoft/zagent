@@ -6,7 +6,7 @@ import (
 	commConst "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
+	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"golang.org/x/net/context"
 )
 

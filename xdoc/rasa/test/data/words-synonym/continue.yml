@@ -1,8 +1,0 @@
-version: "2.0"
-
-nlu:
-
-- synonym: syn_continue
-  examples: |
-    - 继续
-    - 再次

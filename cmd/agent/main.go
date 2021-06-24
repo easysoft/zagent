@@ -2,12 +2,12 @@ package main
 
 import (
 	"flag"
+	ini "github.com/easysoft/zagent/cmd/agent/init"
 	"github.com/easysoft/zagent/cmd/agent/router"
-	"github.com/easysoft/zagent/cmd/agent/server"
-	agentConf "github.com/easysoft/zagent/internal/agent/conf"
-	agentUtils "github.com/easysoft/zagent/internal/agent/utils/common"
-	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
+	"github.com/easysoft/zagent/internal/agent/conf"
+	"github.com/easysoft/zagent/internal/agent/utils/common"
+	"github.com/easysoft/zagent/internal/agent/utils/const"
+	"github.com/easysoft/zagent/internal/pkg/lib/log"
 	"github.com/fatih/color"
 	"os"
 	"os/signal"
@@ -58,7 +58,7 @@ func start() {
 
 	if err := flagSet.Parse(os.Args[1:]); err == nil {
 		agentConf.Inst.RunMode = agentConst.RunMode(runMode)
-		server.Init(router.NewRouter())
+		ini.Init(router.NewRouter())
 	}
 }
 

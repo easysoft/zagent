@@ -1,9 +1,0 @@
-version: "2.0"
-
-nlu:
-
-- lookup: lkp_log_level
-  examples: |
-    - 消息
-    - 警告
-    - 错误

@@ -4,9 +4,9 @@ import (
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	commConst "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	_httpUtils "github.com/easysoft/zagent/internal/pkg/libs/http"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
-	_shellUtils "github.com/easysoft/zagent/internal/pkg/libs/shell"
+	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
+	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	_shellUtils "github.com/easysoft/zagent/internal/pkg/lib/shell"
 	"strings"
 )
 

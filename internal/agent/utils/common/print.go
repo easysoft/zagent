@@ -3,9 +3,9 @@ package agentUtils
 import (
 	"fmt"
 	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
-	_commonUtils "github.com/easysoft/zagent/internal/pkg/libs/common"
-	_i118Utils "github.com/easysoft/zagent/internal/pkg/libs/i118"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
+	_commonUtils "github.com/easysoft/zagent/internal/pkg/lib/common"
+	_i118Utils "github.com/easysoft/zagent/internal/pkg/lib/i118"
+	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	agentRes "github.com/easysoft/zagent/res/agent"
 	"github.com/fatih/color"
 	"io/ioutil"

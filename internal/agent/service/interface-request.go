@@ -5,7 +5,7 @@ import (
 	agentHttpUtils "github.com/easysoft/zagent/internal/agent/utils/request"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
+	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 )
 
 type InterfaceRequestService struct {

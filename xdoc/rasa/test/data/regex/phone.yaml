@@ -1,7 +1,0 @@
-version: "2.0"
-
-nlu:
-
-- regex: reg_phone
-  examples: |
-    - ([0-9]{11})

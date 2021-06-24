@@ -4,7 +4,7 @@ import (
 	"fmt"
 	agentService "github.com/easysoft/zagent/internal/agent/service"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
-	_cronUtils "github.com/easysoft/zagent/internal/pkg/libs/cron"
+	_cronUtils "github.com/easysoft/zagent/internal/pkg/lib/cron"
 )
 
 type CronService struct {

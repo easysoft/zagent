@@ -1,9 +1,0 @@
-version: "2.0"
-
-nlu:
-
-- intent: opt_elem_match
-  examples: |
-    - [通过]{"entity":"use", "value":"syn_use"}[选择器]{"entity":"selector_type", "value":"lkp_selector_type"}[任意长度](by)[点击]{"entity":"action_elem", "value":"lkp_action_elem"}
-    - [点击]{"entity":"action_elem", "value":"lkp_action_elem"}[选择器]{"entity":"selector_type", "value":"lkp_selector_type"}[#](by)
-    - [点击]{"entity":"action_elem", "value":"lkp_action_elem"}[通过]{"entity":"use", "value":"syn_use"}[选择器]{"entity":"selector_type", "value":"lkp_selector_type"}[#](by)

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/domain"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
+	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	gateway "github.com/rpcx-ecosystem/rpcx-gateway"
 	"github.com/smallnest/rpcx/codec"
 	"github.com/smallnest/rpcx/log"

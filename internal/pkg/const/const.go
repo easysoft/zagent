@@ -5,8 +5,8 @@ import "os"
 const (
 	PthSep = string(os.PathSeparator)
 
-	RpcPort     = 8848
-	UploadDir           = "uploads"
+	RpcPort   = 8848
+	UploadDir = "uploads"
 
 	LanguageEN      = "en"
 	LanguageZH      = "zh"
@@ -15,9 +15,12 @@ const (
 	RegisterExpireTime = 5  // min
 	WaitForExecTime    = 60 // min
 
-	RetryTime    = 3
-	AgentRunTime = 20 // sec
+	RetryTime          = 3
+	AgentRunTime       = 20 // sec
 	AgentCheckInterval = 10 // sec
 
-	SepOfMacAddress     = ":"
+	SepOfMacAddress = ":"
+
+	UserTokenExpireTime   = 365 * 24 * 60 * 60 * 1000
+	WebCheckQueueInterval = 5
 )

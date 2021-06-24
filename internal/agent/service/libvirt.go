@@ -6,7 +6,7 @@ import (
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	commConst "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
+	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"github.com/libvirt/libvirt-go"
 	"github.com/libvirt/libvirt-go-xml"
 	"path/filepath"

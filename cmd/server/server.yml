@@ -1,0 +1,29 @@
+logLevel: info
+debug: true
+binData: false
+https: false
+host: 0.0.0.0
+port: 8085
+
+admin:
+  username: admin
+  rolename: administrator
+  name: admin
+  password: pass
+
+db:
+  adapter: sqlite3
+  host: localhost
+  port: 3306
+  name: ztest
+  user: root
+  password: P2ssw0rd
+
+redis:
+  enable: false
+  host: localhost
+  port: 6379
+  pwd:
+
+options:
+  uploadMaxSize: 100 # M

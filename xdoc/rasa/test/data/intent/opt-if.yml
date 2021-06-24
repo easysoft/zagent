@@ -1,8 +1,0 @@
-version: "2.0"
-
-nlu:
-
-- intent: opt_condition
-  examples: |
-    - [如果]{"entity":"if", "value":"syn_if"}[${a} > 1](expr)
-    - [如果]{"entity":"if", "value":"syn_if"}变量[var1](variable)

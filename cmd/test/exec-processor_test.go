@@ -5,7 +5,7 @@ import (
 	commConst "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
-	_rpcUtils "github.com/easysoft/zagent/internal/pkg/libs/rpc"
+	_rpcUtils "github.com/easysoft/zagent/internal/pkg/lib/rpc"
 	"log"
 	"testing"
 )

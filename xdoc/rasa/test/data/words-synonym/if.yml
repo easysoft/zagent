@@ -1,9 +1,0 @@
-version: "2.0"
-
-nlu:
-
-- synonym: syn_if
-  examples: |
-    - 如果
-    - 假如
-    - 倘若

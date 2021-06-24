@@ -5,4 +5,5 @@
 /res/agent/res.go
 /log/
 /cmd/test/log/
-/agent.db
+/*.db
+/res/server/res.go

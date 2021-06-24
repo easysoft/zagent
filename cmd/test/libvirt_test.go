@@ -6,8 +6,8 @@ import (
 	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
 	commConst "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
-	_stringUtils "github.com/easysoft/zagent/internal/pkg/libs/string"
+	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
 	"strings"
 	"testing"
 )

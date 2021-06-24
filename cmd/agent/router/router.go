@@ -4,8 +4,8 @@ import (
 	"github.com/easysoft/zagent/cmd/agent/router/handler"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
-	_i118Utils "github.com/easysoft/zagent/internal/pkg/libs/i118"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
+	_i118Utils "github.com/easysoft/zagent/internal/pkg/lib/i118"
+	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"github.com/smallnest/rpcx/server"
 	"strconv"
 )

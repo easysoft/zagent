@@ -19,3 +19,10 @@ const (
 	Put    HttpMethod = "PUT"
 	Delete HttpMethod = "DELETE"
 )
+
+type ValidMethod string
+
+const (
+	ValidProjectPath ValidMethod = "validProjectPath"
+	ValidDictName    ValidMethod = "validDictName"
+)

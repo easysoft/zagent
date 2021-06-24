@@ -1,0 +1,3 @@
+package serverConst
+
+const ()

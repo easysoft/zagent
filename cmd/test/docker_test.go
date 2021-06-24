@@ -4,7 +4,7 @@ import (
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	agentService "github.com/easysoft/zagent/internal/agent/service"
 	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/libs/log"
+	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"testing"
 )
 
