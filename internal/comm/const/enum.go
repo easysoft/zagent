@@ -135,6 +135,19 @@ func (e OsLang) ToString() string {
 	return string(e)
 }
 
+type BrowserType string
+
+const (
+	Chrome  BrowserType = "chrome"
+	Firefox BrowserType = "firefox"
+	Edge    BrowserType = "edge"
+	IE      BrowserType = "ie"
+)
+
+func (e BrowserType) ToString() string {
+	return string(e)
+}
+
 type AuthType string
 
 const (
