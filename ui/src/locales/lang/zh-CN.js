@@ -17,9 +17,6 @@ const locale = {
   'menu.settings.sys': '系统设置',
   'menu.settings.account': '账号设置',
 
-  'menu.plan': '计划',
-  'menu.plan.list': '计划列表',
-  'menu.plan.edit': '计划编辑',
   'menu.task': '任务',
   'menu.task.list': '任务列表',
   'menu.task.edit': '任务编辑',

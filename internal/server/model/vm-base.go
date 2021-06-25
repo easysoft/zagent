@@ -4,7 +4,7 @@ import (
 	commConst "github.com/easysoft/zagent/internal/comm/const"
 )
 
-type Image struct {
+type VmBase struct {
 	BaseModel
 
 	Name string
@@ -28,6 +28,6 @@ type Image struct {
 	DriverIsoId uint
 }
 
-func (Image) TableName() string {
-	return "biz_image"
+func (VmBase) TableName() string {
+	return "biz_vm_base"
 }

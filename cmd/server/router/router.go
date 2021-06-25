@@ -27,7 +27,7 @@ type Router struct {
 
 	AccountCtrl *handler.AccountCtrl `inject:""`
 	FileCtrl    *handler.FileCtrl    `inject:""`
-	PlanCtrl    *handler.PlantCtrl   `inject:""`
+	TaskCtrl    *handler.TaskCtrl    `inject:""`
 
 	PermCtrl *handler.PermCtrl `inject:""`
 	RoleCtrl *handler.RoleCtrl `inject:""`
@@ -96,12 +96,12 @@ func (r *Router) App() {
 			v1.PartyFunc("/test", func(admin iris.Party) {
 				admin.Use(r.JwtService.Serve, r.TokenService.Serve, r.CasbinService.Serve)
 
-				admin.PartyFunc("/plans", func(party iris.Party) {
-					party.Get("/", r.PlanCtrl.List).Name = "计划列表"
-					party.Get("/{id:uint}", r.PlanCtrl.Get).Name = "计划详情"
-					party.Post("/", r.PlanCtrl.Create).Name = "创建项目"
-					party.Put("/{id:uint}", r.PlanCtrl.Update).Name = "更新计划"
-					party.Delete("/{id:uint}", r.PlanCtrl.Delete).Name = "删除项目"
+				admin.PartyFunc("/tasks", func(party iris.Party) {
+					party.Get("/", r.TaskCtrl.List).Name = "任务列表"
+					party.Get("/{id:uint}", r.TaskCtrl.Get).Name = "任务详情"
+					party.Post("/", r.TaskCtrl.Create).Name = "创建任务"
+					party.Put("/{id:uint}", r.TaskCtrl.Update).Name = "更新任务"
+					party.Delete("/{id:uint}", r.TaskCtrl.Delete).Name = "删除任务"
 				})
 
 				admin.PartyFunc("/valid", func(party iris.Party) {

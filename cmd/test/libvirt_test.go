@@ -29,7 +29,7 @@ func TestLibVirt(t *testing.T) {
 	vmName := strings.Replace(src, "base-", "test-", -1) + "-" + _stringUtils.NewUuid()
 	vm := commDomain.Vm{Name: vmName, DiskSize: 40000, Src: src,
 		OsCategory: commConst.Windows, OsType: commConst.Win10,
-		OsVersion: "x64-pro", OsLang: commConst.ZH_CN}
+		OsVersion: "x64-pro", OsLang: commConst.ZH_CN} // base image by os props
 
 	dom, macAddress, vncPort, err := service.CreateVm(&vm)
 	if err != nil {

@@ -7,16 +7,16 @@ import (
 	"time"
 )
 
-type PlanRepo struct {
+type TaskRepo struct {
 	CommonRepo
 	DB *gorm.DB `inject:""`
 }
 
-func NewPlanRepo() *PlanRepo {
-	return &PlanRepo{}
+func NewTaskRepo() *TaskRepo {
+	return &TaskRepo{}
 }
 
-func (r *PlanRepo) Query(keywords, status string, pageNo int, pageSize int) (pos []model.Plan, total int64) {
+func (r *TaskRepo) Query(keywords, status string, pageNo int, pageSize int) (pos []model.Task, total int64) {
 	query := r.DB.Select("*").Order("id ASC")
 	if status == "true" {
 		query = query.Where("NOT disabled")
@@ -36,7 +36,7 @@ func (r *PlanRepo) Query(keywords, status string, pageNo int, pageSize int) (pos
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
-	err = r.DB.Model(&model.Plan{}).Count(&total).Error
+	err = r.DB.Model(&model.Task{}).Count(&total).Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
@@ -44,31 +44,31 @@ func (r *PlanRepo) Query(keywords, status string, pageNo int, pageSize int) (pos
 	return
 }
 
-func (r *PlanRepo) Get(id uint) (po model.Plan) {
+func (r *TaskRepo) Get(id uint) (po model.Task) {
 	r.DB.Where("id = ?", id).First(&po)
 
 	return
 }
 
-func (r *PlanRepo) Save(po *model.Plan) (err error) {
+func (r *TaskRepo) Save(po *model.Task) (err error) {
 	err = r.DB.Model(&po).Omit("").Create(&po).Error
 	return
 }
 
-func (r *PlanRepo) Update(po *model.Plan) (err error) {
+func (r *TaskRepo) Update(po *model.Task) (err error) {
 	err = r.DB.Omit("").Save(&po).Error
 	return
 }
 
-func (r *PlanRepo) SetDefault(id uint) (err error) {
+func (r *TaskRepo) SetDefault(id uint) (err error) {
 	r.DB.Transaction(func(tx *gorm.DB) error {
-		err = r.DB.Model(&model.Plan{}).Where("id = ?", id).
+		err = r.DB.Model(&model.Task{}).Where("id = ?", id).
 			Updates(map[string]interface{}{"is_default": true}).Error
 		if err != nil {
 			return err
 		}
 
-		err = r.DB.Model(&model.Plan{}).Where("id != ?", id).
+		err = r.DB.Model(&model.Task{}).Where("id != ?", id).
 			Updates(map[string]interface{}{"is_default": false}).Error
 
 		return nil
@@ -77,15 +77,15 @@ func (r *PlanRepo) SetDefault(id uint) (err error) {
 	return
 }
 
-func (r *PlanRepo) Disable(id uint) (err error) {
-	err = r.DB.Model(&model.Plan{}).Where("id = ?", id).
+func (r *TaskRepo) Disable(id uint) (err error) {
+	err = r.DB.Model(&model.Task{}).Where("id = ?", id).
 		Updates(map[string]interface{}{"disabled": gorm.Expr("NOT disabled")}).Error
 
 	return
 }
 
-func (r *PlanRepo) Delete(id uint) (err error) {
-	err = r.DB.Model(&model.Plan{}).Where("id = ?", id).
+func (r *TaskRepo) Delete(id uint) (err error) {
+	err = r.DB.Model(&model.Task{}).Where("id = ?", id).
 		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
 
 	return

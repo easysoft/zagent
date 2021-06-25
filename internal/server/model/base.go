@@ -18,7 +18,18 @@ type BaseModel struct {
 
 var (
 	Models = []interface{}{
-		&Plan{},
+		&Host{},
+
+		&Iso{},
+		&VmBase{},
+		&VmSrc{},
+		&Vm{},
+		&Container{},
+
+		&Task{},
+		&Task{},
+		&Build{},
+
 		&User{},
 		&Role{},
 		&Permission{},

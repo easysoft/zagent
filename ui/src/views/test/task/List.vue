@@ -50,10 +50,6 @@
             <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
           </span>
 
-          <span slot="path" slot-scope="text">
-            <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
-          </span>
-
           <span slot="status" slot-scope="text, record">
             <a-badge :status="!record.disabled | statusTypeFilter(statusMap)" :text="!record.disabled | statusFilter(statusMap)" />
           </span>
@@ -63,14 +59,7 @@
               <a @click="view(record)">{{ $t('form.view') }}</a>
               <a-divider type="vertical" />
 
-              <a @click="test(record)">{{ $t('form.test') }}</a>
-              <a-divider type="vertical" />
-
               <a @click="edit(record)">{{ $t('form.edit') }}</a>
-              <a-divider type="vertical" />
-
-              <a v-if="!record.disabled" @click="disable(record)">{{ $t('form.disable') }}</a>
-              <a v-if="record.disabled" @click="disable(record)">{{ $t('form.enable') }}</a>
               <a-divider type="vertical" />
 
               <a-popconfirm
@@ -93,10 +82,10 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { listPlan, disablePlan, removePlan } from '@/api/manage'
+import { listTask, disableTask, removeTask } from '@/api/manage'
 
 export default {
-  name: 'PlanList',
+  name: 'TaskList',
   components: {
     STable,
     Ellipsis
@@ -114,7 +103,7 @@ export default {
       queryParam: { status: '' },
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
-        return listPlan(requestParameters)
+        return listTask(requestParameters)
           .then(res => {
             return res
           })
@@ -149,19 +138,10 @@ export default {
         dataIndex: 'name'
       },
       {
-        title: this.$t('form.path'),
-        dataIndex: 'path'
-      },
-      {
         title: this.$t('form.status'),
         dataIndex: 'status',
         scopedSlots: { customRender: 'status' }
       },
-      // {
-      //   title: this.$t('form.is.default'),
-      //   dataIndex: 'default',
-      //   scopedSlots: { customRender: 'default' }
-      // },
       {
         title: this.$t('form.opt'),
         dataIndex: 'action',
@@ -189,36 +169,36 @@ export default {
       this.mdl = null
       this.visible = true
 
-      this.$router.push('/test/plan/0/edit')
+      this.$router.push('/test/task/0/edit')
     },
     test (record) {
       this.visible = true
       this.mdl = { ...record }
 
-      this.$router.push('/test/plan/' + record.id + '/test')
+      this.$router.push('/test/task/' + record.id + '/test')
     },
     view (record) {
       this.visible = true
       this.mdl = { ...record }
 
-      this.$router.push('/test/plan/' + record.id + '/view')
+      this.$router.push('/test/task/' + record.id + '/view')
     },
     edit (record) {
       this.visible = true
       this.mdl = { ...record }
 
-      this.$router.push('/test/plan/' + record.id + '/edit')
+      this.$router.push('/test/task/' + record.id + '/edit')
     },
 
     disable (record) {
-      disablePlan(record).then(json => {
-        console.log('disablePlan', json)
+      disableTask(record).then(json => {
+        console.log('disableTask', json)
         this.$refs.table.refresh(false)
       })
     },
     confirmRemove (record) {
-      removePlan(record).then(json => {
-        console.log('removePlan', json)
+      removeTask(record).then(json => {
+        console.log('removeTask', json)
         this.$refs.table.refresh(false)
       })
     },

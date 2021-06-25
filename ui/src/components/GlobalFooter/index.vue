@@ -2,7 +2,7 @@
   <global-footer class="footer custom-render">
     <template v-slot:links></template>
     <template v-slot:copyright>
-      © 2021 <a href="https://util.ai" target="_blank">util.ai</a>
+      © 2021 <a href="https://github.com/easysoft/ztest" target="_blank">ztest</a>
     </template>
   </global-footer>
 </template>

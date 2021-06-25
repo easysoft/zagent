@@ -4,7 +4,6 @@ const testPrefix = '/v1/test'
 
 const api = {
   profile: `${testPrefix}/profile`,
-  plans: `${testPrefix}/plans`,
   tasks: `${testPrefix}/tasks`,
 
   user: `${testPrefix}/user`,
@@ -47,43 +46,6 @@ export function getProfile (parameter) {
     url: api.profile,
     method: 'get',
     data: parameter
-  })
-}
-
-// 计划
-export function listPlan (params) {
-  return request({
-    url: api.plans,
-    method: 'get',
-    params: params
-  })
-}
-export function getPlan (id) {
-  return request({
-    url: api.plans + '/' + id,
-    method: 'get',
-    params: {}
-  })
-}
-export function savePlan (model) {
-  return request({
-    url: !model.id ? api.plans : api.plans + '/' + model.id,
-    method: !model.id ? 'post' : 'put',
-    data: model
-  })
-}
-export function disablePlan (model) {
-  return request({
-    url: api.plans + '/' + model.id + '/disable',
-    method: 'post',
-    params: {}
-  })
-}
-export function removePlan (model) {
-  return request({
-    url: api.plans + '/' + model.id,
-    method: 'delete',
-    params: {}
   })
 }
 

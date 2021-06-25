@@ -45,10 +45,10 @@
 
 <script>
 import { labelCol, wrapperCol, wrapperFull } from '@/utils/const'
-import { requestSuccess, getPlan, savePlan } from '@/api/manage'
+import { requestSuccess, getTask, saveTask } from '@/api/manage'
 
 export default {
-  name: 'PlanEdit',
+  name: 'TaskEdit',
   props: {
     id: {
       type: Number,
@@ -92,7 +92,7 @@ export default {
       }
     },
     getModel () {
-      return getPlan(this.id)
+      return getTask(this.id)
     },
     save (e) {
       console.log(this.model)
@@ -102,10 +102,10 @@ export default {
           return false
         }
 
-        savePlan(this.model).then(json => {
-          console.log('savePlan', json)
+        saveTask(this.model).then(json => {
+          console.log('saveTask', json)
           if (requestSuccess(json.code)) {
-            this.$router.push('/plan/list')
+            this.$router.push('/task/list')
           }
         })
       })
@@ -115,7 +115,7 @@ export default {
       this.$refs.form.resetFields()
     },
     back () {
-      this.$router.push('/plan/list')
+      this.$router.push('/task/list')
     }
   }
 }

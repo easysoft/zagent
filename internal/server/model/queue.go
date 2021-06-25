@@ -47,13 +47,47 @@ type Queue struct {
 }
 
 func NewQueue() Queue {
-	queue := Queue{
+	Task := Queue{
 		Progress: commConst.ProgressCreated,
 		Status:   commConst.StatusCreated,
 	}
-	return queue
+	return Task
+}
+func NewTaskDetail(serial string, buildType commConst.BuildType, groupId uint, taskId uint, taskPriority int,
+	osPlatform commConst.OsCategory, osType commConst.OsType,
+	osLang commConst.OsLang, browserType commConst.BrowserType, browserVersion string,
+	scriptUrl string, scmAddress string, scmAccount string, scmPassword string,
+	resultFiles string, keepResultFiles bool, taskName string, userName string,
+	appUrl string, buildCommands string) Queue {
+	Task := Queue{
+		Progress: commConst.ProgressCreated,
+		Status:   commConst.StatusCreated,
+
+		Serial:      serial,
+		BuildType:   buildType,
+		OsLang:      osLang,
+		OsPlatform:  osPlatform,
+		OsType:      osType,
+		BrowserType: browserType,
+
+		GroupId:         groupId,
+		TaskId:          taskId,
+		Priority:        taskPriority,
+		ScriptUrl:       scriptUrl,
+		ScmAddress:      scmAddress,
+		ScmAccount:      scmAccount,
+		ScmPassword:     scmPassword,
+		ResultFiles:     resultFiles,
+		KeepResultFiles: keepResultFiles,
+		TaskName:        taskName,
+		UserName:        userName,
+
+		AppUrl:        appUrl,
+		BuildCommands: buildCommands,
+	}
+	return Task
 }
 
 func (Queue) TableName() string {
-	return "biz_queue"
+	return "biz_Task"
 }

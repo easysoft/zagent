@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import { UserLayout, BasicLayout } from '@/layouts'
-import { dashboard, plan } from '@/core/icons'
+import { dashboard, task } from '@/core/icons'
 
 const RouteView = {
   name: 'RouteView',
@@ -14,7 +14,7 @@ export const asyncRouterMap = [
     name: 'index',
     component: BasicLayout,
     meta: { title: 'menu.home' },
-    redirect: '/test/plan/list',
+    redirect: '/test/task/list',
     children: [
       {
         path: '/platform/dashboard',
@@ -23,24 +23,24 @@ export const asyncRouterMap = [
         meta: { title: 'menu.platform.dashboard', icon: dashboard, keepAlive: true }
       },
       {
-        path: '/test/plan',
-        name: 'plan',
-        redirect: '/test/plan/list',
+        path: '/test/task',
+        name: 'task',
+        redirect: '/test/task/list',
         component: RouteView,
-        meta: { title: 'menu.plan', icon: plan, keepAlive: true },
+        meta: { title: 'menu.task', icon: task, keepAlive: true },
         hideChildrenInMenu: true,
         children: [
           {
-            path: '/test/plan/list',
-            name: 'plan-list',
-            component: () => import('@/views/test/plan/List'),
-            meta: { title: 'menu.plan.list', keepAlive: true }
+            path: '/test/task/list',
+            name: 'task-list',
+            component: () => import('@/views/test/task/List'),
+            meta: { title: 'menu.task.list', keepAlive: true }
           },
           {
-            path: '/test/plan/:id/edit',
-            name: 'plan-edit',
-            component: () => import('@/views/test/plan/Edit'),
-            meta: { title: 'menu.plan.edit', keepAlive: true }
+            path: '/test/task/:id/edit',
+            name: 'task-edit',
+            component: () => import('@/views/test/task/Edit'),
+            meta: { title: 'menu.task.edit', keepAlive: true }
           }
         ]
       }
