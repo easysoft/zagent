@@ -11,7 +11,7 @@ type Vm struct {
 	HostId int
 
 	Name      string
-	Src       string
+	Tmpl      string
 	Base      string
 	ImagePath string
 	BasePath  string

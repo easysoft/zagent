@@ -7,8 +7,6 @@ import (
 	commConst "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
-	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
-	"strings"
 	"testing"
 )
 
@@ -25,11 +23,9 @@ func TestLibVirt(t *testing.T) {
 	src:  xml template
 	base: backing file, get by vm's OsCategory properties etc.
 	*/
-	src := "tmpl-win10-x64-pro-zh_cn"
-	vmName := strings.Replace(src, "src-", "test-", -1) + "-" + _stringUtils.NewUuid()
-	vm := commDomain.Vm{Name: vmName, DiskSize: 40000, Src: src,
+	vm := commDomain.Vm{DiskSize: 40000,
 		OsCategory: commConst.Windows, OsType: commConst.Win10,
-		OsVersion: "x64-pro", OsLang: commConst.ZH_CN} // base image by os props
+		OsVersion: "x64-pro", OsLang: commConst.ZH_CN}
 
 	dom, macAddress, vncPort, err := service.CreateVm(&vm)
 	if err != nil {

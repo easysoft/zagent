@@ -7,6 +7,7 @@ import (
 	commConst "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
 	"github.com/libvirt/libvirt-go"
 	"github.com/libvirt/libvirt-go-xml"
 	"path/filepath"
@@ -43,7 +44,7 @@ func (s *LibvirtService) CreateVm(vm *commDomain.Vm) (
 	dom *libvirt.Domain, macAddress string, vncPort int, err error) {
 	s.setVmProps(vm)
 
-	srcXml := s.GetVmDef(vm.Src)
+	srcXml := s.GetVmDef(vm.Tmpl)
 
 	basePath := ""
 	if vm.Base != "" {
@@ -163,4 +164,8 @@ func (s *LibvirtService) setVmProps(vm *commDomain.Vm) {
 
 	vm.Base = fmt.Sprintf("%s/%s/%s-%s", osCategory.ToString(), osType.ToString(),
 		osVersion, osLang.ToString())
+
+	vm.Tmpl = "tmpl-" + vm.Base
+	vm.Name = "test-" + _stringUtils.NewUuid()
+
 }
