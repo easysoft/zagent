@@ -96,7 +96,7 @@ func injectObj(router *router.Router) {
 		&inject.Object{Value: db.GetInst().DB()},
 
 		// repo
-		&inject.Object{Value: repo.NewProjectRepo()},
+		&inject.Object{Value: repo.NewPlanRepo()},
 
 		&inject.Object{Value: repo.NewCommonRepo()},
 		&inject.Object{Value: repo.NewPermRepo()},
@@ -111,7 +111,7 @@ func injectObj(router *router.Router) {
 		&inject.Object{Value: bizCasbin.NewCasbinService()},
 
 		// service
-		&inject.Object{Value: service.NewProjectService()},
+		&inject.Object{Value: service.NewPlanService()},
 
 		&inject.Object{Value: serverCron.NewServerCron()},
 		&inject.Object{Value: service.NewWebSocketService()},
@@ -123,7 +123,7 @@ func injectObj(router *router.Router) {
 		&inject.Object{Value: service.NewUserService()},
 
 		// controller
-		&inject.Object{Value: handler.NewProjectCtrl()},
+		&inject.Object{Value: handler.NewPlanCtrl()},
 		&inject.Object{Value: handler.NewFileCtrl()},
 		&inject.Object{Value: handler.NewPermCtrl()},
 		&inject.Object{Value: handler.NewUserCtrl()},

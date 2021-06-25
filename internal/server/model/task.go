@@ -8,10 +8,16 @@ import (
 type Task struct {
 	BaseModel
 
-	Priority     int
-	Serials      string // for appium test
-	Environments string // for selenium test
-	BuildType    commConst.BuildType
+	Priority int
+	Serial   string
+	VmId     uint
+
+	BuildType      commConst.BuildType
+	OsPlatform     commConst.OsCategory
+	OsType         commConst.OsType
+	OsLang         commConst.OsLang
+	BrowserType    commConst.BrowserType
+	BrowserVersion string
 
 	ScriptUrl   string
 	ScmAddress  string
@@ -26,24 +32,62 @@ type Task struct {
 	Progress commConst.BuildProgress
 	Status   commConst.BuildStatus
 
-	StartTime   time.Time
-	PendingTime time.Time
-	ResultTime  time.Time
+	Retry int
 
 	TaskName string
 	UserName string
 
+	StartTime   time.Time
+	PendingTime time.Time
+	ResultTime  time.Time
+	TimeoutTime time.Time
+
+	TaskId  uint
 	GroupId uint
 }
 
 func NewTask() Task {
-	task := Task{
+	Task := Task{
 		Progress: commConst.ProgressCreated,
 		Status:   commConst.StatusCreated,
 	}
-	return task
+	return Task
+}
+func NewTaskDetail(serial string, buildType commConst.BuildType, groupId uint, taskId uint, taskPriority int,
+	osPlatform commConst.OsCategory, osType commConst.OsType,
+	osLang commConst.OsLang, browserType commConst.BrowserType, browserVersion string,
+	scriptUrl string, scmAddress string, scmAccount string, scmPassword string,
+	resultFiles string, keepResultFiles bool, taskName string, userName string,
+	appUrl string, buildCommands string) Task {
+	Task := Task{
+		Progress: commConst.ProgressCreated,
+		Status:   commConst.StatusCreated,
+
+		Serial:      serial,
+		BuildType:   buildType,
+		OsLang:      osLang,
+		OsPlatform:  osPlatform,
+		OsType:      osType,
+		BrowserType: browserType,
+
+		GroupId:         groupId,
+		TaskId:          taskId,
+		Priority:        taskPriority,
+		ScriptUrl:       scriptUrl,
+		ScmAddress:      scmAddress,
+		ScmAccount:      scmAccount,
+		ScmPassword:     scmPassword,
+		ResultFiles:     resultFiles,
+		KeepResultFiles: keepResultFiles,
+		TaskName:        taskName,
+		UserName:        userName,
+
+		AppUrl:        appUrl,
+		BuildCommands: buildCommands,
+	}
+	return Task
 }
 
 func (Task) TableName() string {
-	return "biz_task"
+	return "biz_Task"
 }

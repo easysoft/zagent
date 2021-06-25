@@ -10,17 +10,17 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
-type ProjectCtrl struct {
+type PlantCtrl struct {
 	BaseCtrl
 
-	ProjectService *service.ProjectService `inject:""`
+	PlanService *service.PlanService `inject:""`
 }
 
-func NewProjectCtrl() *ProjectCtrl {
-	return &ProjectCtrl{}
+func NewPlanCtrl() *PlantCtrl {
+	return &PlantCtrl{}
 }
 
-func (c *ProjectCtrl) List(ctx iris.Context) {
+func (c *PlantCtrl) List(ctx iris.Context) {
 	keywords := ctx.URLParam("keywords")
 	status := ctx.URLParam("status")
 	pageNo, _ := ctx.URLParamInt("pageNo")
@@ -30,14 +30,14 @@ func (c *ProjectCtrl) List(ctx iris.Context) {
 		pageSize = serverConst.PageSize
 	}
 
-	projects, total := c.ProjectService.List(keywords, status, pageNo, pageSize)
+	projects, total := c.PlanService.List(keywords, status, pageNo, pageSize)
 
 	_, _ = ctx.JSON(_httpUtils.ApiResPage(200, "请求成功",
 		projects, pageNo, pageSize, total))
 }
 
-func (c *ProjectCtrl) ListForSelect(ctx iris.Context) {
-	projects, _ := c.ProjectService.List("", "", 0, 0)
+func (c *PlantCtrl) ListForSelect(ctx iris.Context) {
+	projects, _ := c.PlanService.List("", "", 0, 0)
 
 	data := map[string]interface{}{}
 	data["projects"] = projects
@@ -49,22 +49,22 @@ func (c *ProjectCtrl) ListForSelect(ctx iris.Context) {
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", data))
 }
 
-func (c *ProjectCtrl) Get(ctx iris.Context) {
+func (c *PlantCtrl) Get(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	model := c.ProjectService.Get(uint(id))
+	model := c.PlanService.Get(uint(id))
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", model))
 	return
 }
 
-func (c *ProjectCtrl) Create(ctx iris.Context) {
+func (c *PlantCtrl) Create(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
 
-	model := model.Project{}
+	model := model.Plan{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
@@ -76,7 +76,7 @@ func (c *ProjectCtrl) Create(ctx iris.Context) {
 
 	cred := jwt.GetCredentials(ctx)
 
-	err := c.ProjectService.Save(&model, _stringUtils.ParseUint(cred.UserId))
+	err := c.PlanService.Save(&model, _stringUtils.ParseUint(cred.UserId))
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, "操作失败", nil))
 		return
@@ -86,14 +86,14 @@ func (c *ProjectCtrl) Create(ctx iris.Context) {
 	return
 }
 
-func (c *ProjectCtrl) Update(ctx iris.Context) {
-	model := model.Project{}
+func (c *PlantCtrl) Update(ctx iris.Context) {
+	model := model.Plan{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	err := c.ProjectService.Update(&model)
+	err := c.PlanService.Update(&model)
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, "操作失败", nil))
 		return
@@ -102,35 +102,35 @@ func (c *ProjectCtrl) Update(ctx iris.Context) {
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", model))
 }
 
-func (c *ProjectCtrl) SetDefault(ctx iris.Context) {
+func (c *PlantCtrl) SetDefault(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	c.ProjectService.SetDefault(uint(id))
+	c.PlanService.SetDefault(uint(id))
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", ""))
 }
 
-func (c *ProjectCtrl) Disable(ctx iris.Context) {
+func (c *PlantCtrl) Disable(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	c.ProjectService.Disable(uint(id))
+	c.PlanService.Disable(uint(id))
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", ""))
 }
 
-func (c *ProjectCtrl) Delete(ctx iris.Context) {
+func (c *PlantCtrl) Delete(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	c.ProjectService.Delete(uint(id))
+	c.PlanService.Delete(uint(id))
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", ""))
 }

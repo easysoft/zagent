@@ -19,17 +19,10 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-              <!-- <template v-if="advanced">
-              </template> -->
               <a-col :md="!advanced && 8 || 24" :sm="24">
                 <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
                   <a-button type="primary" @click="$refs.table.refresh(true)">{{ $t('form.search') }}</a-button>
                   <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">{{ $t('form.reset') }}</a-button>
-
-                  <!-- <a @click="toggleAdvanced" style="margin-left: 8px">
-                    {{ advanced ? $t('form.collapse') : $t('form.expand') }}
-                    <a-icon :type="advanced ? 'up' : 'down'"/>
-                  </a> -->
                 </span>
               </a-col>
             </a-row>
@@ -100,10 +93,10 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { listProject, disableProject, removeProject } from '@/api/manage'
+import { listPlan, disablePlan, removePlan } from '@/api/manage'
 
 export default {
-  name: 'ProjectList',
+  name: 'PlanList',
   components: {
     STable,
     Ellipsis
@@ -121,7 +114,7 @@ export default {
       queryParam: { status: '' },
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
-        return listProject(requestParameters)
+        return listPlan(requestParameters)
           .then(res => {
             return res
           })
@@ -196,36 +189,36 @@ export default {
       this.mdl = null
       this.visible = true
 
-      this.$router.push('/project/0/edit')
+      this.$router.push('/test/plan/0/edit')
     },
     test (record) {
       this.visible = true
       this.mdl = { ...record }
 
-      this.$router.push('/project/' + record.id + '/test')
+      this.$router.push('/test/plan/' + record.id + '/test')
     },
     view (record) {
       this.visible = true
       this.mdl = { ...record }
 
-      this.$router.push('/project/' + record.id + '/view')
+      this.$router.push('/test/plan/' + record.id + '/view')
     },
     edit (record) {
       this.visible = true
       this.mdl = { ...record }
 
-      this.$router.push('/project/' + record.id + '/edit')
+      this.$router.push('/test/plan/' + record.id + '/edit')
     },
 
     disable (record) {
-      disableProject(record).then(json => {
-        console.log('disableProject', json)
+      disablePlan(record).then(json => {
+        console.log('disablePlan', json)
         this.$refs.table.refresh(false)
       })
     },
     confirmRemove (record) {
-      removeProject(record).then(json => {
-        console.log('removeProject', json)
+      removePlan(record).then(json => {
+        console.log('removePlan', json)
         this.$refs.table.refresh(false)
       })
     },

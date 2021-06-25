@@ -26,8 +26,8 @@ type Router struct {
 	CasbinService *bizCasbin.CasbinService `inject:""`
 
 	AccountCtrl *handler.AccountCtrl `inject:""`
-	ProjectCtrl *handler.ProjectCtrl `inject:""`
 	FileCtrl    *handler.FileCtrl    `inject:""`
+	PlanCtrl    *handler.PlantCtrl   `inject:""`
 
 	PermCtrl *handler.PermCtrl `inject:""`
 	RoleCtrl *handler.RoleCtrl `inject:""`
@@ -64,25 +64,11 @@ func (r *Router) App() {
 			v1.PartyFunc("/admin", func(admin iris.Party) {
 				admin.Post("/login", r.AccountCtrl.UserLogin)
 
-				//登录验证
 				admin.Use(r.JwtService.Serve, r.TokenService.Serve, r.CasbinService.Serve)
 
 				admin.Post("/logout", r.AccountCtrl.UserLogout).Name = "退出"
 				admin.Get("/expire", r.AccountCtrl.UserExpire).Name = "刷新Token"
 				admin.Get("/profile", r.UserCtrl.GetProfile).Name = "个人信息"
-
-				admin.PartyFunc("/projects", func(party iris.Party) {
-					party.Get("/", r.ProjectCtrl.List).Name = "项目列表"
-					party.Get("/{id:uint}", r.ProjectCtrl.Get).Name = "项目详情"
-					party.Post("/", r.ProjectCtrl.Create).Name = "创建项目"
-					party.Put("/{id:uint}", r.ProjectCtrl.Update).Name = "更新项目"
-					party.Delete("/{id:uint}", r.ProjectCtrl.Delete).Name = "删除项目"
-					party.Post("/{id:uint}/disable", r.ProjectCtrl.Disable).Name = "禁用/启动项目"
-				})
-
-				admin.PartyFunc("/valid", func(party iris.Party) {
-					party.Post("/", r.ValidCtrl.Valid).Name = "表单验证"
-				})
 
 				admin.PartyFunc("/users", func(party iris.Party) {
 					party.Get("/", r.UserCtrl.GetAllUsers).Name = "用户列表"
@@ -104,6 +90,22 @@ func (r *Router) App() {
 					party.Post("/", r.PermCtrl.CreatePermission).Name = "创建权限"
 					party.Put("/{id:uint}", r.PermCtrl.UpdatePermission).Name = "编辑权限"
 					party.Delete("/{id:uint}", r.PermCtrl.DeletePermission).Name = "删除权限"
+				})
+			})
+
+			v1.PartyFunc("/test", func(admin iris.Party) {
+				admin.Use(r.JwtService.Serve, r.TokenService.Serve, r.CasbinService.Serve)
+
+				admin.PartyFunc("/plans", func(party iris.Party) {
+					party.Get("/", r.PlanCtrl.List).Name = "计划列表"
+					party.Get("/{id:uint}", r.PlanCtrl.Get).Name = "计划详情"
+					party.Post("/", r.PlanCtrl.Create).Name = "创建项目"
+					party.Put("/{id:uint}", r.PlanCtrl.Update).Name = "更新计划"
+					party.Delete("/{id:uint}", r.PlanCtrl.Delete).Name = "删除项目"
+				})
+
+				admin.PartyFunc("/valid", func(party iris.Party) {
+					party.Post("/", r.ValidCtrl.Valid).Name = "表单验证"
 				})
 			})
 		}

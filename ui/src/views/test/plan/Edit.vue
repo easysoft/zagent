@@ -45,10 +45,10 @@
 
 <script>
 import { labelCol, wrapperCol, wrapperFull } from '@/utils/const'
-import { requestSuccess, getProject, saveProject, validProjectPath } from '@/api/manage'
+import { requestSuccess, getPlan, savePlan } from '@/api/manage'
 
 export default {
-  name: 'ProjectEdit',
+  name: 'PlanEdit',
   props: {
     id: {
       type: Number,
@@ -58,21 +58,6 @@ export default {
     }
   },
   data () {
-    let checkPending
-    const checkPath = (rule, value, callback) => {
-      clearTimeout(checkPending)
-      checkPending = setTimeout(() => {
-        validProjectPath(value).then(json => {
-          console.log('validProjectPath', json)
-          if (requestSuccess(json.code) && json.data.pass) {
-            callback()
-          } else {
-            callback(new Error(this.$t('valid.project.path')))
-          }
-        })
-      }, 500)
-    }
-
     return {
       labelCol: labelCol,
       wrapperCol: wrapperCol,
@@ -80,8 +65,7 @@ export default {
       model: {},
       rules: {
         name: [{ required: true, message: this.$t('valid.required.name'), trigger: 'blur' }],
-        path: [{ required: true, message: this.$t('valid.required.path'), trigger: 'blur' },
-               { validator: checkPath, trigger: 'change' }]
+        path: [{ required: true, message: this.$t('valid.required.path'), trigger: 'blur' }]
       }
     }
   },
@@ -108,7 +92,7 @@ export default {
       }
     },
     getModel () {
-      return getProject(this.id)
+      return getPlan(this.id)
     },
     save (e) {
       console.log(this.model)
@@ -118,10 +102,10 @@ export default {
           return false
         }
 
-        saveProject(this.model).then(json => {
-          console.log('saveProject', json)
+        savePlan(this.model).then(json => {
+          console.log('savePlan', json)
           if (requestSuccess(json.code)) {
-            this.$router.push('/project/list')
+            this.$router.push('/plan/list')
           }
         })
       })
@@ -131,7 +115,7 @@ export default {
       this.$refs.form.resetFields()
     },
     back () {
-      this.$router.push('/project/list')
+      this.$router.push('/plan/list')
     }
   }
 }
