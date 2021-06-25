@@ -45,5 +45,5 @@ func NewTask() Task {
 }
 
 func (Task) TableName() string {
-	return "biz_plan"
+	return "biz_task"
 }

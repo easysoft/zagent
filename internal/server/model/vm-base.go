@@ -11,7 +11,7 @@ type VmBase struct {
 	Path string
 	Size int
 
-	OsPlatform commConst.OsCategory
+	OsCategory commConst.OsCategory
 	OsType     commConst.OsType
 	OsLang     commConst.OsLang
 

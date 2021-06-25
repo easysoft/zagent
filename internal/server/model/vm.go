@@ -42,3 +42,7 @@ type Vm struct {
 	ResolutionHeight int
 	ResolutionWidth  int
 }
+
+func (Vm) TableName() string {
+	return "biz_vm"
+}

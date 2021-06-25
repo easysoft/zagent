@@ -10,7 +10,7 @@ type Host struct {
 
 	Name string
 
-	OsPlatform commConst.OsCategory
+	OsCategory commConst.OsCategory
 	OsType     commConst.OsType
 	OsLang     commConst.OsLang
 

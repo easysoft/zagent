@@ -89,5 +89,5 @@ func NewTaskDetail(serial string, buildType commConst.BuildType, groupId uint, t
 }
 
 func (Queue) TableName() string {
-	return "biz_Task"
+	return "biz_queue"
 }

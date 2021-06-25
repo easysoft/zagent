@@ -25,8 +25,8 @@ func TestLibVirt(t *testing.T) {
 	src:  xml template
 	base: backing file, get by vm's OsCategory properties etc.
 	*/
-	src := "base-win10-x64-pro-zh_cn"
-	vmName := strings.Replace(src, "base-", "test-", -1) + "-" + _stringUtils.NewUuid()
+	src := "src-win10-x64-pro-zh_cn"
+	vmName := strings.Replace(src, "src-", "test-", -1) + "-" + _stringUtils.NewUuid()
 	vm := commDomain.Vm{Name: vmName, DiskSize: 40000, Src: src,
 		OsCategory: commConst.Windows, OsType: commConst.Win10,
 		OsVersion: "x64-pro", OsLang: commConst.ZH_CN} // base image by os props

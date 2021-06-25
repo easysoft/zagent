@@ -31,5 +31,5 @@ type Token struct {
 }
 
 func (User) TableName() string {
-	return "biz_user"
+	return "sys_user"
 }

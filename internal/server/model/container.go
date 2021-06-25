@@ -5,3 +5,7 @@ type Container struct {
 
 	Ident string
 }
+
+func (Container) TableName() string {
+	return "biz_container"
+}
