@@ -4,7 +4,7 @@ import (
 	commConst "github.com/easysoft/zagent/internal/comm/const"
 )
 
-type VmSrc struct {
+type VmTmpl struct {
 	BaseModel
 
 	HostId int
@@ -19,6 +19,6 @@ type VmSrc struct {
 	Status commConst.VmStatus
 }
 
-func (VmSrc) TableName() string {
-	return "biz_vm_src"
+func (VmTmpl) TableName() string {
+	return "biz_vm_tmpl"
 }

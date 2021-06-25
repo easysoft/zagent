@@ -22,7 +22,7 @@ var (
 
 		&Iso{},
 		&VmBase{},
-		&VmSrc{},
+		&VmTmpl{},
 		&Vm{},
 		&Container{},
 
