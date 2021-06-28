@@ -61,6 +61,37 @@ const locale = {
   'form.is.default': '是否默认',
   'form.opt': '操作',
   'form.opt.log': '操作日志',
+  'form.add': '添加',
+
+  'form.env.var': '环境变量',
+  'form.env.var.tips': '需要传递的环境变量，支持多行，格式NAME=value。',
+  'form.result.files': '结果文件',
+  'form.result.files.tips': '列出需要打包的测试结果文件，支持多行。',
+  'form.test.type': '测试类型',
+  'form.selenium': 'Selenium',
+  'form.appium': 'Appium',
+  'form.selenium.test': 'Selenium测试',
+  'form.appium.test': 'Appium测试',
+
+  'form.os.category': '系统分类',
+   'form.os.category.windows': 'Windows',
+   'form.os.category.linux': 'Linux',
+   'form.os.category.mac': 'Mac',
+
+   'form.os.type': '系统类型',
+   'form.os.type.win10': 'Win10',
+   'form.os.type.win7': 'Win7',
+   'form.os.type.winxp': 'WinXP',
+   'form.os.type.ubuntu': 'Ubuntu',
+   'form.os.type.centos': 'Centos',
+   'form.os.type.debian': 'Debian',
+  'form.os.type.mac': 'Mac',
+
+  'form.os.lang': '系统语言',
+   'form.os.lang.en_us': '美国英语',
+   'form.os.lang.zh_cn': '简体中文',
+
+  'form.edit.env': '编辑环境',
 
   'status.enable': '启用',
   'status.disable': '禁用',
@@ -68,6 +99,10 @@ const locale = {
   'valid.required.code': '请输入编码',
   'valid.required.name': '请输入名称',
   'valid.required.buildType': '请选择类型',
+  'valid.required.osCategory': '请选择系统分类',
+  'valid.required.osType': '请选择系统类型',
+  'valid.required.osVersion': '请选择系统版本',
+  'valid.required.osLang': '请选择系统语言',
 
   'common.status': '状态',
   'common.info': '消息',

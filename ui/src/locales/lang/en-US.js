@@ -61,6 +61,37 @@ const locale = {
   'form.is.default': 'Is Default',
   'form.opt': 'Operation',
   'form.opt.log': 'Operation Log',
+  'form.add': 'Add',
+
+  'form.env.var': 'Environment Variable',
+  'form.env.var.tips': 'Environment variables need to passed, format NAME=value.',
+  'form.result.files': 'Result Files',
+  'form.result.files.tips': 'List testing result files that need to zip.',
+  'form.test.type': 'Test Type',
+  'form.selenium': 'Selenium',
+  'form.appium': 'Appium',
+  'form.selenium.test': 'Selenium Test',
+  'form.appium.test': 'Appium Test',
+
+  'form.os.category': 'System Category',
+  'form.os.category.windows': 'Windows',
+  'form.os.category.linux': 'Linux',
+
+  'form.os.type': 'System Type',
+  'form.os.category.mac': 'Mac',
+  'form.os.type.win10': 'Win10',
+  'form.os.type.win7': 'Win7',
+  'form.os.type.winxp': 'WinXP',
+  'form.os.type.ubuntu': 'Ubuntu',
+  'form.os.type.centos': 'CentOS',
+  'form.os.type.debian': 'Debian',
+  'form.os.type.mac': 'Mac',
+
+  'form.os.lang': 'System Language',
+  'form.os.lang.en_us': 'US English',
+  'form.os.lang.zh_cn': 'Simple Chinese',
+
+  'form.edit.env': 'Edit Environment',
 
   'status.enable': 'Enable',
   'status.disable': 'Disable',
@@ -68,6 +99,10 @@ const locale = {
   'valid.required.code': 'Please input code.',
   'valid.required.name': 'Please input name.',
   'valid.required.buildType': 'Please select type.',
+  'valid.required.osCategory': 'Please select OS Category.',
+  'valid.required.osType': 'Please select OS type.',
+  'valid.required.osVersion': 'Please select OS version.',
+  'valid.required.osLang': 'Please select OS Language.',
 
   'common.status': '状态',
   'common.login': 'Login',

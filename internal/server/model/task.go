@@ -8,7 +8,9 @@ import (
 type Task struct {
 	BaseModel
 
-	Name         string              `json:"name"`
+	Name string `json:"name"`
+	Desc string `json:"desc"`
+
 	Priority     int                 `json:"priority"`
 	Serials      string              `json:"serials"`      // for appium test
 	Environments string              `json:"environments"` // for selenium test
@@ -21,6 +23,7 @@ type Task struct {
 
 	AppUrl          string `json:"appUrl"`
 	BuildCommands   string `json:"buildCommands"`
+	EnvVars         string `json:"envVars"`
 	ResultFiles     string `json:"resultFiles"`
 	KeepResultFiles bool   `json:"keepResultFiles"`
 
