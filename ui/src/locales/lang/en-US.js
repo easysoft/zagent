@@ -63,6 +63,7 @@ const locale = {
   'form.opt.log': 'Operation Log',
   'form.add': 'Add',
 
+  'form.test.env': 'Test Environment',
   'form.env.var': 'Environment Variable',
   'form.env.var.tips': 'Environment variables need to passed, format NAME=value.',
   'form.result.files': 'Result Files',

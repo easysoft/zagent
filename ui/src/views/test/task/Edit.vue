@@ -35,41 +35,42 @@
             <a-textarea v-model="model.desc" />
           </a-form-model-item>
 
-          <div class="environments">
-            <a-row :gutter="cols" class="title">
-              <a-col :offset="7" :span="col">{{ $t('form.os.category') }}</a-col>
-              <a-col :span="col">{{ $t('form.os.type') }}</a-col>
-              <a-col :span="col">{{ $t('form.os.lang') }}</a-col>
-            </a-row>
-            <a-row v-if="!environments || environments.length == 0" :gutter="cols">
-              <a-col :offset="7" :span="col"></a-col>
-              <a-col :span="col"></a-col>
-              <a-col :span="col">
-                <a class="edit">
-                  <a @click="addEnv()" class="edit">{{ $t('form.add') }}</a>
-                </a>
-              </a-col>
-            </a-row>
-            <a-row :offset="7" v-for="item in environments" :key="item.id" :gutter="cols">
-              <a-col :span="col">
-                <span v-if="item.type=='interval'">{{ $t('form.type.interval') }}</span>
-                <span v-if="item.type=='list'">{{ $t('form.type.list') }}</span>
-                <span v-if="item.type=='literal'">{{ $t('form.type.literal') }}</span>
-              </a-col>
+          <a-form-model-item :label="$t('form.test.env')" :labelCol="labelCol" :wrapperCol="wrapperCol">
+            <div class="environments">
+              <a-row :gutter="cols" class="title">
+                <a-col :offset="1" :span="col">{{ $t('form.os.category') }}</a-col>
+                <a-col :span="col">{{ $t('form.os.type') }}</a-col>
+                <a-col :span="col">{{ $t('form.os.lang') }}</a-col>
+                <a-col :span="col-1">{{ $t('form.opt') }}</a-col>
+              </a-row>
+              <a-row v-if="!environments || environments.length == 0" :gutter="cols">
+                <a-col :offset="col * 3 + 1" :span="col-1">
+                  <a class="edit">
+                    <a @click="addEnv()" class="edit">{{ $t('form.add') }}</a>
+                  </a>
+                </a-col>
+              </a-row>
+              <a-row v-for="item in environments" :key="item.id" :gutter="cols">
+                <a-col :offset="1" :span="col">
+                  <span>{{ item.osCategory }}</span>
+                </a-col>
+                <a-col :span="col">
+                  <span>{{ item.osType }}</span>
+                </a-col>
+                <a-col :span="col">
+                  <span>{{ item.osLang }}</span>
+                </a-col>
 
-              <a-col :span="col">
-                <span>{{ item.value }}</span>
-              </a-col>
-
-              <a-col :span="8">
-                <a class="edit">
-                  <a @click="insertEnv(item)" class="edit">{{ $t('action.add') }}</a> &nbsp;
-                  <a @click="editEnv(item)" class="edit">{{ $t('action.edit') }}</a> &nbsp;
-                  <a class="edit">{{ $t('action.delete') }}</a>
-                </a>
-              </a-col>
-            </a-row>
-          </div>
+                <a-col :span="col-1">
+                  <a class="edit">
+                    <a @click="addEnv(item)" class="edit"><a-icon type="file-add" /></a> &nbsp;
+                    <a @click="editEnv(item)" class="edit"><a-icon type="edit" /> </a> &nbsp;
+                    <a @click="removeEnv(item)" class="edit"><a-icon type="delete" /></a> &nbsp;
+                  </a>
+                </a-col>
+              </a-row>
+            </div>
+          </a-form-model-item>
 
           <a-form-item :wrapperCol="wrapperFull" style="text-align: center">
             <a-button @click="save()" htmlType="submit" type="primary">{{ $t('form.save') }}</a-button>
@@ -99,7 +100,7 @@
 
           <a-form-model-item :label="$t('form.os.type')" prop="osType" :labelCol="labelCol" :wrapperCol="wrapperCol">
             <a-select v-model="environment.osType">
-              <a-select-option v-for="(value, key) in osTypes[model.osCategory]" :value="value[0]" :key="key">
+              <a-select-option v-for="(value, key) in osTypes[environment.osCategory]" :value="value[0]" :key="key">
                 {{ value[1] }}
               </a-select-option>
             </a-select>
@@ -156,7 +157,7 @@ export default {
       },
 
       cols: 24,
-      col: 4
+      col: 6
     }
   },
   watch: {
@@ -216,14 +217,24 @@ export default {
 
     addEnv (item) {
       console.log('addEnv', item)
+      this.environment = {}
       this.editEnvVisible = true
     },
     editEnv (item) {
       console.log('editEnv', item)
       this.editEnvVisible = true
     },
+    removeEnv (item) {
+      console.log('removeEnv', item)
+    },
     saveEnv () {
       console.log('saveEnv')
+      this.environments.push({
+        osCategory: this.environment.osCategory,
+        osType: this.environment.osType,
+        osLang: this.environment.osLang })
+
+      this.editEnvVisible = false
     },
     cancelEnv () {
       console.log('cancelEnv')
