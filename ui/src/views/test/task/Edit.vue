@@ -9,31 +9,20 @@
       </div>
       <a-card :body-style="{padding: '24px 32px'}" :bordered="false">
         <a-form-model ref="form" :model="model" :rules="rules">
-          <a-form-model-item
-            :label="$t('form.name')"
-            prop="name"
-            :labelCol="labelCol"
-            :wrapperCol="wrapperCol">
+          <a-form-model-item :label="$t('form.name')" prop="name" :labelCol="labelCol" :wrapperCol="wrapperCol">
             <a-input v-model="model.name" />
           </a-form-model-item>
-          <a-form-model-item
-            :label="$t('form.type')"
-            prop="type"
-            :labelCol="labelCol"
-            :wrapperCol="wrapperCol">
-            <a-input v-model="model.type" />
+          <a-form-model-item :label="$t('form.type')" prop="buildType" :labelCol="labelCol" :wrapperCol="wrapperCol">
+            <a-select v-model="model.buildType">
+              <a-select-option v-for="(item, key) in types" :value="item.code" :key="key">
+                {{ item.text }}
+              </a-select-option>
+            </a-select>
           </a-form-model-item>
-          <a-form-model-item
-            :label="$t('form.desc')"
-            prop="desc"
-            :labelCol="labelCol"
-            :wrapperCol="wrapperCol">
+          <a-form-model-item :label="$t('form.desc')" prop="desc" :labelCol="labelCol" :wrapperCol="wrapperCol">
             <a-input v-model="model.desc" />
           </a-form-model-item>
-          <a-form-item
-            :wrapperCol="wrapperFull"
-            style="text-align: center"
-          >
+          <a-form-item :wrapperCol="wrapperFull" style="text-align: center">
             <a-button @click="save()" htmlType="submit" type="primary">{{ $t('form.save') }}</a-button>
             <a-button @click="reset()" style="margin-left: 8px">{{ $t('form.reset') }}</a-button>
           </a-form-item>
@@ -63,9 +52,10 @@ export default {
       wrapperCol: wrapperCol,
       wrapperFull: wrapperFull,
       model: {},
+      typeMap: {},
       rules: {
         name: [{ required: true, message: this.$t('valid.required.name'), trigger: 'blur' }],
-        path: [{ required: true, message: this.$t('valid.required.path'), trigger: 'blur' }]
+        buildType: [{ required: true, message: this.$t('valid.required.buildType'), trigger: 'blur' }]
       }
     }
   },
@@ -74,6 +64,12 @@ export default {
       console.log('watch id', this.id)
       this.loadData()
     }
+  },
+  created () {
+    this.types = [
+      { code: 'selenium', text: 'Selenium' },
+      { code: 'appium', text: 'Appium' }
+    ]
   },
   mounted () {
     this.loadData()

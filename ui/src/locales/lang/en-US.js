@@ -65,12 +65,9 @@ const locale = {
   'status.enable': 'Enable',
   'status.disable': 'Disable',
 
+  'valid.required.code': 'Please input code.',
   'valid.required.name': 'Please input name.',
-  'valid.required.project': 'Please select project.',
-  'valid.required.content': 'Please input content.',
-  'valid.required.path': 'Path not exist.',
-  'valid.select.dict': 'Please select dictionary.',
-  'valid.project.path': 'Not a valid project path.',
+  'valid.required.buildType': 'Please select type.',
 
   'common.status': '状态',
   'common.login': 'Login',
