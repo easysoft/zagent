@@ -165,7 +165,8 @@ func (s *LibvirtService) setVmProps(vm *commDomain.Vm) {
 	vm.Base = fmt.Sprintf("%s/%s/%s-%s", osCategory.ToString(), osType.ToString(),
 		osVersion, osLang.ToString())
 
-	vm.Tmpl = "tmpl-" + vm.Base
-	vm.Name = "test-" + _stringUtils.NewUuid()
-
+	vm.Tmpl = fmt.Sprintf("tmpl-%s-%s-%s",
+		osType.ToString(), osVersion, osLang.ToString())
+	vm.Name = fmt.Sprintf("test-%s-%s-%s-%s",
+		osType.ToString(), osVersion, osLang.ToString(), _stringUtils.NewUuid())
 }

@@ -7,25 +7,25 @@ import (
 type VmBase struct {
 	BaseModel
 
-	Name string
-	Path string
-	Size int
+	Name string `json:"name"`
+	Path string `json:"path"`
+	Size int    `json:"size"`
 
-	OsCategory commConst.OsCategory
-	OsType     commConst.OsType
-	OsLang     commConst.OsLang
+	OsCategory commConst.OsCategory `json:"osCategory"`
+	OsType     commConst.OsType     `json:"osType"`
+	OsLang     commConst.OsLang     `json:"osLang"`
 
-	OsVersion string
-	OsBuild   string
-	OsBits    string
+	OsVersion string `json:"osVersion"`
+	OsBuild   string `json:"osBuild"`
+	OsBits    string `json:"osBits"`
 
-	ResolutionHeight  int
-	ResolutionWidth   int
-	SuggestDiskSize   int
-	SuggestMemorySize int
+	ResolutionHeight  int `json:"resolutionHeight"`
+	ResolutionWidth   int `json:"resolutionWidth"`
+	SuggestDiskSize   int `json:"suggestDiskSize"`
+	SuggestMemorySize int `json:"suggestMemorySize"`
 
-	SysIsoId    uint
-	DriverIsoId uint
+	SysIsoId    uint `json:"sysIsoId"`
+	DriverIsoId uint `json:"driverIsoId"`
 }
 
 func (VmBase) TableName() string {

@@ -8,24 +8,24 @@ import (
 type Build struct {
 	BaseModel
 
-	QueueId uint
-	Queue   `sql:"-", gorm:"foreignkey:QueueId"`
+	QueueId uint `json:"queueId"`
+	Queue   `json:"queue" sql:"-", gorm:"foreignkey:QueueId"`
 
-	BuildType commConst.BuildType
-	VmId      uint
+	BuildType commConst.BuildType `json:"buildType"`
+	VmId      uint                `json:"vmId"`
 
-	Serial   string
-	Priority int
-	NodeIp   string
-	NodePort int
+	Serial   string `json:"serial"`
+	Priority int    `json:"priority"`
+	NodeIp   string `json:"nodeIp"`
+	NodePort int    `json:"nodePort"`
 
-	AppiumPort int
+	AppiumPort int `json:"appiumPort"`
 
-	StartTime    time.Time
-	CompleteTime time.Time
+	StartTime    *time.Time `json:"startTime"`
+	CompleteTime *time.Time `json:"completeTime"`
 
-	Progress commConst.BuildProgress
-	Status   commConst.BuildStatus
+	Progress commConst.BuildProgress `json:"progress"`
+	Status   commConst.BuildStatus   `json:"status"`
 }
 
 func NewBuild() Build {

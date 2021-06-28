@@ -16,7 +16,7 @@ type User struct {
 	Token            string     `gorm:"type:varchar(128)" json:"token" comment:"令牌"`
 	TokenUpdatedTime *time.Time `json:"tokenUpdatedTime" comment:"令牌更新时间"`
 
-	RoleIds []uint `gorm:"-" json:"role_ids"  validate:"required" comment:"角色"`
+	RoleIds []uint `gorm:"-" json:"roleIds"  validate:"required" comment:"角色"`
 
 	ProjectId uint `json:"projectId" comment:"用户工作项目"`
 }

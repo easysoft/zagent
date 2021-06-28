@@ -50,6 +50,7 @@ const locale = {
   'form.code': 'Code',
   'form.name': 'Name',
   'form.placeholder': 'Placeholder',
+  'form.type': 'Type',
   'form.path': 'Path',
   'form.content': 'Content',
   'form.status': 'Status',

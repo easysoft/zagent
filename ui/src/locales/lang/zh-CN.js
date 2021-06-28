@@ -51,7 +51,7 @@ const locale = {
   'form.code': '编码',
   'form.name': '名称',
   'form.placeholder': '占位符',
-  'form.path': '路径',
+  'form.type': '类型',
   'form.content': '内容',
   'form.status': '状态',
   'form.desc': '描述',

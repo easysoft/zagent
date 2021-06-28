@@ -8,26 +8,26 @@ import (
 type Host struct {
 	BaseModel
 
-	Name string
+	Name string `json:"name"`
 
-	OsCategory commConst.OsCategory
-	OsType     commConst.OsType
-	OsLang     commConst.OsLang
+	OsCategory commConst.OsCategory `json:"osCategory"`
+	OsType     commConst.OsType     `json:"osType"`
+	OsLang     commConst.OsLang     `json:"osLang"`
 
-	OsVersion string
-	OsBuild   string
-	OsBits    string
+	OsVersion string `json:"osVersion"`
+	OsBuild   string `json:"osBuild"`
+	OsBits    string `json:"osBits"`
 
-	Ip      string
-	Port    int
-	WorkDir string
+	Ip      string `json:"ip"`
+	Port    int    `json:"port"`
+	WorkDir string `json:"workDir"`
 
-	SshPort int
-	VncPort int
-	Status  commConst.HostStatus
+	SshPort int                  `json:"sshPort"`
+	VncPort int                  `json:"vncPort"`
+	Status  commConst.HostStatus `json:"status"`
 
-	taskCount        int
-	LastRegisterDate time.Time
+	TaskCount        int        `json:"taskCount"`
+	LastRegisterDate *time.Time `json:"lastRegisterDate"`
 }
 
 func NewHost() Host {

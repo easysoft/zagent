@@ -3,7 +3,7 @@ package model
 type Container struct {
 	BaseModel
 
-	Ident string
+	Ident string `json:"ident"`
 }
 
 func (Container) TableName() string {

@@ -7,16 +7,16 @@ import (
 type VmTmpl struct {
 	BaseModel
 
-	HostId int
+	HostId int `json:"hostId"`
 
-	Name string
+	Name string `json:"name"`
 
-	OsCategory commConst.OsCategory
-	OsType     commConst.OsType
-	OsVersion  string
-	OsLang     commConst.OsLang
+	OsCategory commConst.OsCategory `json:"osCategory"`
+	OsType     commConst.OsType     `json:"osType"`
+	OsVersion  string               `json:"osVersion"`
+	OsLang     commConst.OsLang     `json:"osLang"`
 
-	Status commConst.VmStatus
+	Status commConst.VmStatus `json:"status"`
 }
 
 func (VmTmpl) TableName() string {

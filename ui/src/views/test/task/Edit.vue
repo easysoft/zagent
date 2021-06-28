@@ -17,11 +17,11 @@
             <a-input v-model="model.name" />
           </a-form-model-item>
           <a-form-model-item
-            :label="$t('form.path')"
-            prop="path"
+            :label="$t('form.type')"
+            prop="type"
             :labelCol="labelCol"
             :wrapperCol="wrapperCol">
-            <a-input v-model="model.path" />
+            <a-input v-model="model.type" />
           </a-form-model-item>
           <a-form-model-item
             :label="$t('form.desc')"

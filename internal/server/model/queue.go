@@ -8,42 +8,42 @@ import (
 type Queue struct {
 	BaseModel
 
-	Priority int
-	Serial   string
-	VmId     uint
+	Priority int    `json:"priority"`
+	Serial   string `json:"serial"`
+	VmId     uint   `json:"vmId"`
 
-	BuildType      commConst.BuildType
-	OsPlatform     commConst.OsCategory
-	OsType         commConst.OsType
-	OsLang         commConst.OsLang
-	BrowserType    commConst.BrowserType
-	BrowserVersion string
+	BuildType      commConst.BuildType   `json:"buildType"`
+	OsPlatform     commConst.OsCategory  `json:"osPlatform"`
+	OsType         commConst.OsType      `json:"osType"`
+	OsLang         commConst.OsLang      `json:"osLang"`
+	BrowserType    commConst.BrowserType `json:"browserType"`
+	BrowserVersion string                `json:"browserVersion"`
 
-	ScriptUrl   string
-	ScmAddress  string
-	ScmAccount  string
-	ScmPassword string
+	ScriptUrl   string `json:"scriptUrl"`
+	ScmAddress  string `json:"ScmAddress"`
+	ScmAccount  string `json:"ScmAccount"`
+	ScmPassword string `json:"ScmPassword"`
 
-	AppUrl          string
-	BuildCommands   string
-	ResultFiles     string
-	KeepResultFiles bool
+	AppUrl          string `json:"appUrl"`
+	BuildCommands   string `json:"buildCommands"`
+	ResultFiles     string `json:"resultFiles"`
+	KeepResultFiles bool   `json:"keepResultFiles"`
 
-	Progress commConst.BuildProgress
-	Status   commConst.BuildStatus
+	Progress commConst.BuildProgress `json:"progress"`
+	Status   commConst.BuildStatus   `json:"status"`
 
-	Retry int
+	Retry int `json:"retry"`
 
-	TaskName string
-	UserName string
+	TaskName string `json:"taskName"`
+	UserName string `json:"userName"`
 
-	StartTime   time.Time
-	PendingTime time.Time
-	ResultTime  time.Time
-	TimeoutTime time.Time
+	StartTime   *time.Time `json:"startTime"`
+	PendingTime *time.Time `json:"pendingTime"`
+	ResultTime  *time.Time `json:"resultTime"`
+	TimeoutTime *time.Time `json:"timeoutTime"`
 
-	TaskId  uint
-	GroupId uint
+	TaskId  uint `json:"taskId"`
+	GroupId uint `json:"groupId"`
 }
 
 func NewQueue() Queue {

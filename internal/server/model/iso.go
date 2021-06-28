@@ -7,22 +7,22 @@ import (
 type Iso struct {
 	BaseModel
 
-	Name string
-	Path string
-	Size int
+	Name string `json:"name"`
+	Path string `json:"path"`
+	Size int    `json:"size"`
 
-	OsPlatform commConst.OsCategory
-	OsType     commConst.OsType
-	OsLang     commConst.OsLang
+	OsPlatform commConst.OsCategory `json:"osPlatform"`
+	OsType     commConst.OsType     `json:"osType"`
+	OsLang     commConst.OsLang     `json:"osLang"`
 
-	OsVersion string
-	OsBuild   string
-	OsBits    string
+	OsVersion string `json:"osVersion"`
+	OsBuild   string `json:"osBuild"`
+	OsBits    string `json:"osBits"`
 
-	ResolutionHeight  int
-	ResolutionWidth   int
-	suggestDiskSize   int
-	suggestMemorySize int
+	ResolutionHeight  int `json:"resolutionHeight"`
+	ResolutionWidth   int `json:"resolutionWidth"`
+	SuggestDiskSize   int `json:"suggestDiskSize"`
+	SuggestMemorySize int `json:"suggestMemorySize"`
 }
 
 func (Iso) TableName() string {
