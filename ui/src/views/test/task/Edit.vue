@@ -46,11 +46,11 @@
               <a-row v-if="!environments || environments.length == 0" :gutter="cols">
                 <a-col :offset="col * 3 + 1" :span="col-1">
                   <a class="edit">
-                    <a @click="addEnv()" class="edit">{{ $t('form.add') }}</a>
+                    <a @click="addEnv(0)" class="edit">{{ $t('form.add') }}</a>
                   </a>
                 </a-col>
               </a-row>
-              <a-row v-for="item in environments" :key="item.id" :gutter="cols">
+              <a-row v-for="(item, index)  in environments" :key="index" :gutter="cols">
                 <a-col :offset="1" :span="col">
                   <span>{{ item.osCategory }}</span>
                 </a-col>
@@ -63,9 +63,9 @@
 
                 <a-col :span="col-1">
                   <a class="edit">
-                    <a @click="addEnv(item)" class="edit"><a-icon type="file-add" /></a> &nbsp;
-                    <a @click="editEnv(item)" class="edit"><a-icon type="edit" /> </a> &nbsp;
-                    <a @click="removeEnv(item)" class="edit"><a-icon type="delete" /></a> &nbsp;
+                    <a @click="addEnv(index)" class="edit"><a-icon type="file-add" /></a> &nbsp;
+                    <a @click="editEnv(index)" class="edit"><a-icon type="edit" /> </a> &nbsp;
+                    <a @click="removeEnv(index)" class="edit"><a-icon type="delete" /></a> &nbsp;
                   </a>
                 </a-col>
               </a-row>
@@ -140,9 +140,12 @@ export default {
       labelCol: labelCol,
       wrapperCol: wrapperCol,
       wrapperFull: wrapperFull,
-      model: { osLang: 'en_us' },
+      model: {},
       environments: [],
-      environment: {},
+      environment: { osLang: 'zh_cn' },
+      environmentIndex: -1,
+      isInsert: false,
+
       editEnvVisible: false,
       buildTypes: {},
       osCategories: {},
@@ -215,26 +218,42 @@ export default {
       this.$router.push('/task/list')
     },
 
-    addEnv (item) {
-      console.log('addEnv', item)
-      this.environment = {}
+    addEnv (index) {
+      console.log('addEnv', index)
+      this.environment = { osLang: 'zh_cn' }
+      this.environmentIndex = index
+      this.isInsert = true
       this.editEnvVisible = true
     },
-    editEnv (item) {
-      console.log('editEnv', item)
+    editEnv (index) {
+      console.log('editEnv', index)
+      this.environment = this.environments[index]
+      this.environmentIndex = index
+      this.isInsert = false
       this.editEnvVisible = true
     },
-    removeEnv (item) {
-      console.log('removeEnv', item)
+    removeEnv (index) {
+      console.log('removeEnv', index)
+      this.isInsert = false
+      this.environments.splice(index, 1)
     },
     saveEnv () {
       console.log('saveEnv')
-      this.environments.push({
-        osCategory: this.environment.osCategory,
-        osType: this.environment.osType,
-        osLang: this.environment.osLang })
 
-      this.editEnvVisible = false
+      this.$refs.editEnvForm.validate(valid => {
+        if (!valid) {
+          console.log('validate fail', valid)
+          return false
+        }
+
+        if (this.isInsert) {
+          this.environments.splice(this.environmentIndex + 1, 0, this.environment)
+        } else {
+          this.environments[this.environmentIndex] = this.environment
+        }
+
+        this.editEnvVisible = false
+      })
     },
     cancelEnv () {
       console.log('cancelEnv')
