@@ -56,6 +56,7 @@ func (r *TaskRepo) Save(po *model.Task) (err error) {
 }
 
 func (r *TaskRepo) Update(po *model.Task) (err error) {
+	err = r.DB.Model(&po).Association("Environments").Delete(po.Environments)
 	err = r.DB.Session(&gorm.Session{FullSaveAssociations: true}).Updates(&po).Error
 	return
 }
