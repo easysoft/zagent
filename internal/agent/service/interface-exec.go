@@ -21,7 +21,7 @@ func NewInterfaceExecService() *InterfaceExecService {
 	return &InterfaceExecService{}
 }
 
-func (s *InterfaceExecService) ExecProcessor(build *commDomain.Build, processor *commDomain.TestProcessor) {
+func (s *InterfaceExecService) ExecProcessor(build *commDomain.IntfTest, processor *commDomain.TestProcessor) {
 
 	for _, child := range processor.Children {
 		childMap := child.(map[string]interface{})
@@ -41,7 +41,7 @@ func (s *InterfaceExecService) ExecProcessor(build *commDomain.Build, processor 
 	}
 }
 
-func (s *InterfaceExecService) UploadResult(build commDomain.Build, result commDomain.TestResult) {
+func (s *InterfaceExecService) UploadResult(build commDomain.IntfTest, result commDomain.TestResult) {
 	zipFile := build.WorkDir + "testResult.zip"
 	err := _fileUtils.ZipFiles(zipFile, build.ProjectDir, strings.Split(build.AutomatedTest.ResultFiles, ","))
 	if err != nil {

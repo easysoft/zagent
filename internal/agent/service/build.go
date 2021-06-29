@@ -15,7 +15,7 @@ func NewBuildService() *BuildService {
 	return &BuildService{}
 }
 
-func (s *BuildService) Exec(build commDomain.Build) {
+func (s *BuildService) Exec(build commDomain.IntfTest) {
 	s.TaskService.StartTask()
 
 	if build.BuildType == commConst.AutomatedTest {

@@ -2,20 +2,21 @@ package model
 
 import (
 	commConst "github.com/easysoft/zagent/internal/comm/const"
+	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	"time"
 )
 
 type Vm struct {
 	BaseModel
 
-	BaseId int `json:"baseId"`
-	HostId int `json:"hostId"`
+	BackingId uint `json:"baseId"`
+	HostId    uint `json:"hostId"`
 
-	Name      string `json:"name"`
-	Src       string `json:"src"`
-	Base      string `json:"base"`
-	ImagePath string `json:"imagePath"`
-	BasePath  string `json:"basePath"`
+	Name        string `json:"name"`
+	Tmpl        string `json:"tmpl"`
+	Backing     string `json:"backing"`
+	ImagePath   string `json:"imagePath"`
+	BackingPath string `json:"backingPath"`
 
 	OsCategory commConst.OsCategory `json:"osCategory"`
 	OsType     commConst.OsType     `json:"osType"`
@@ -41,6 +42,15 @@ type Vm struct {
 	CdromDriver      string `json:"cdromDriver"`
 	ResolutionHeight int    `json:"resolutionHeight"`
 	ResolutionWidth  int    `json:"resolutionWidth"`
+}
+
+func GenKvmReq(po Vm) (req commDomain.KvmReq) {
+	req = commDomain.KvmReq{
+		VmMacAddress: po.MacAddress, VmId: int(po.ID), VmUniqueName: po.Name,
+		VmDiskSize: po.DiskSize, VmMemorySize: po.MemorySize,
+		VmCdromSys: po.CdromSys, VmCdromDriver: po.CdromDriver, VmBackingImage: po.Backing}
+
+	return
 }
 
 func (Vm) TableName() string {

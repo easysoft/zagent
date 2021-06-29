@@ -22,7 +22,7 @@ func NewAutomatedExecService() *AutomatedExecService {
 	return &AutomatedExecService{}
 }
 
-func (s *AutomatedExecService) ExcCommand(build *commDomain.Build) commDomain.TestResult {
+func (s *AutomatedExecService) ExcCommand(build *commDomain.IntfTest) commDomain.TestResult {
 	cmdStr := build.AutomatedTest.BuildCommands
 	out, err := _shellUtils.ExeShellWithOutputInDir(cmdStr, build.ProjectDir)
 
@@ -36,7 +36,7 @@ func (s *AutomatedExecService) ExcCommand(build *commDomain.Build) commDomain.Te
 	return result
 }
 
-func (s *AutomatedExecService) GetTestApp(build *commDomain.Build) _domain.RpcResp {
+func (s *AutomatedExecService) GetTestApp(build *commDomain.IntfTest) _domain.RpcResp {
 	result := _domain.RpcResp{}
 
 	if strings.Index(build.AutomatedTest.AppUrl, "http://") == 0 {
@@ -54,13 +54,13 @@ func (s *AutomatedExecService) GetTestApp(build *commDomain.Build) _domain.RpcRe
 	return result
 }
 
-func (s *AutomatedExecService) DownloadApp(build *commDomain.Build) {
+func (s *AutomatedExecService) DownloadApp(build *commDomain.IntfTest) {
 	path := build.WorkDir + uuid.NewV4().String() + _fileUtils.GetExtName(build.AutomatedTest.AppUrl)
 	_fileUtils.Download(build.AutomatedTest.AppUrl, path)
 	build.AutomatedTest.AppPath = path
 }
 
-func (s *AutomatedExecService) UploadResult(build commDomain.Build, result commDomain.TestResult) {
+func (s *AutomatedExecService) UploadResult(build commDomain.IntfTest, result commDomain.TestResult) {
 	zipFile := build.WorkDir + "testResult.zip"
 	err := _fileUtils.ZipFiles(zipFile, build.ProjectDir, strings.Split(build.AutomatedTest.ResultFiles, ","))
 	if err != nil {

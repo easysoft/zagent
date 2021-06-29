@@ -1,0 +1,107 @@
+package service
+
+import (
+	commConst "github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/server/model"
+	"github.com/easysoft/zagent/internal/server/repo"
+	"strings"
+)
+
+type QueueService struct {
+	DeviceRepo *repo.DeviceRepo `inject:""`
+	QueueRepo  *repo.QueueRepo  `inject:""`
+
+	TaskService *TaskService `inject:""`
+}
+
+func NewQueueService() *QueueService {
+	return &QueueService{}
+}
+
+func (s QueueService) GenerateFromTask(task model.Task) (count int) {
+	if task.BuildType == commConst.AutoAppium {
+		count = s.GenerateAppiumQueuesFromTask(task)
+	} else if task.BuildType == commConst.AutoSelenium {
+		count = s.GenerateSeleniumQueuesFromTask(task)
+	}
+
+	return
+}
+
+func (s QueueService) GenerateAppiumQueuesFromTask(task model.Task) (count int) {
+	if len(task.Serials) == 0 {
+		return
+	}
+
+	var groupId uint
+	if task.GroupId != 0 {
+		groupId = task.GroupId
+	} else {
+		groupId = task.ID
+	}
+
+	serials := strings.Split(task.Serials, ",")
+	for _, serial := range serials {
+		serial = strings.TrimSpace(serial)
+		if serial == "" {
+			continue
+		}
+
+		device := s.DeviceRepo.GetBySerial(serial)
+		if device.ID != 0 {
+			queue := model.NewQueueDetail(serial, task.BuildType, groupId, task.ID, task.Priority,
+				"", "", "",
+				task.ScriptUrl, task.ScmAddress, task.ScmAccount, task.ScmPassword,
+				task.ResultFiles, task.KeepResultFiles, task.Name, task.UserName,
+				task.AppUrl, task.BuildCommands)
+
+			s.QueueRepo.Save(&queue)
+			count++
+		}
+	}
+
+	s.QueueRepo.DeleteInSameGroup(task.GroupId, serials) // disable same serial queues in same group
+
+	return
+}
+
+func (s QueueService) GenerateSeleniumQueuesFromTask(task model.Task) (count int) {
+	// windows,win10,cn_zh,chrome,84;
+	envs := task.Environments
+
+	if len(envs) == 0 {
+		return
+	}
+
+	var groupId uint
+	if task.GroupId != 0 {
+		groupId = task.GroupId
+	} else {
+		groupId = task.ID
+	}
+
+	for _, env := range envs {
+		osCategory := env.OsCategory
+		osType := env.OsType
+		osLang := env.OsLang
+
+		queue := model.NewQueueDetail("", task.BuildType, groupId, task.ID, task.Priority,
+			commConst.OsCategory(osCategory), commConst.OsType(osType),
+			commConst.OsLang(osLang),
+			task.ScriptUrl, task.ScmAddress, task.ScmAccount, task.ScmPassword,
+			task.ResultFiles, task.KeepResultFiles, task.Name, task.UserName,
+			"", task.BuildCommands)
+
+		s.QueueRepo.Save(&queue)
+		count++
+	}
+
+	return
+}
+
+func (s QueueService) SetQueueResult(queueId uint, progress commConst.BuildProgress, status commConst.BuildStatus) {
+	queue := s.QueueRepo.GetQueue(queueId)
+
+	s.QueueRepo.SetQueueStatus(queueId, progress, status)
+	s.TaskService.CheckCompleted(queue.TaskId)
+}

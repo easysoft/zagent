@@ -102,6 +102,18 @@ func (e BuildType) ToString() string {
 	return string(e)
 }
 
+type OsDevice string
+
+const (
+	Android OsDevice = "android"
+	Ios     OsDevice = "ios"
+	Harmony OsDevice = "harmony"
+)
+
+func (e OsDevice) ToString() string {
+	return string(e)
+}
+
 type OsCategory string
 
 const (

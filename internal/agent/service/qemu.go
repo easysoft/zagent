@@ -22,7 +22,7 @@ func NewQemuService() *QemuService {
 	return &QemuService{}
 }
 
-func (s *QemuService) GenVmDef(src, vmName, rawPath, basePath string, vmMemory uint) (
+func (s *QemuService) GenVmDef(src, vmName, rawPath, backingPath string, vmMemory uint) (
 	xml, macAddress string, err error) {
 
 	domCfg := &libvirtxml.Domain{}
@@ -45,7 +45,7 @@ func (s *QemuService) GenVmDef(src, vmName, rawPath, basePath string, vmMemory u
 		},
 		Source: &libvirtxml.DomainDiskSource{
 			File: &libvirtxml.DomainDiskSourceFile{
-				File: basePath,
+				File: backingPath,
 			},
 		},
 	}

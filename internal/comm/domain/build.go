@@ -6,23 +6,48 @@ import (
 )
 
 type Build struct {
-	QueueId  uint
-	ID       uint   `json:"id,omitempty"`
-	Priority int    `json:"priority,omitempty"`
-	NodeIp   string `json:"nodeIp,omitempty"`
-	NodePort int    `json:"nodePort,omitempty"`
+	Version float64 `json:"version,omitempty"`
+	QueueId uint    `json:"queueId,omitempty"`
+	ID      uint    `json:"id,omitempty"`
+	Name    string  `json:"name,omitempty"`
+	Desc    string  `json:"desc,omitempty"`
+
+	BuildType  commConst.BuildType  `json:"buildType,omitempty"`
+	OsCateGory commConst.OsCategory `json:"osCateGory,omitempty"`
+	OsType     commConst.OsType     `json:"osType,omitempty"`
+	OsVersion  string               `json:"osVersion,omitempty"`
+	OsLang     commConst.OsLang     `json:"osLang,omitempty"`
 
 	WorkDir    string `json:"workDir,omitempty"`
 	ProjectDir string `json:"projectDir,omitempty"`
 
-	StartTime    time.Time `json:"startTime,omitempty"`
-	CompleteTime time.Time `json:"completeTime,omitempty"`
+	Serial   string `json:"serial,omitempty"`
+	Priority int    `json:"priority,omitempty"`
+	NodeIp   string `json:"nodeIp,omitempty"`
+	NodePort int    `json:"nodePort,omitempty"`
+	DeviceIp string `json:"deviceIp,omitempty"`
 
-	Progress commConst.BuildProgress `json:"progress,omitempty"`
-	Status   commConst.BuildStatus   `json:"status,omitempty"`
+	AppiumPort            int                   `json:"appiumPort,omitempty"`
+	SeleniumDriverType    commConst.BrowserType `json:"seleniumDriverType,omitempty"`
+	SeleniumDriverVersion string                `json:"seleniumDriverVersion,omitempty"`
+	SeleniumDriverPath    string                `json:"seleniumDriverPath,omitempty"`
 
-	BuildType     commConst.BuildType `json:"buildType,omitempty"`
-	TestScenario  TestScenario        `json:"testScenario,omitempty"`
-	TestSet       TestSet             `json:"testSet,omitempty"`
-	AutomatedTest AutomatedTest       `json:"automatedTest,omitempty"`
+	AppPath     string `json:"appPath,omitempty"`
+	ScriptUrl   string `json:"scriptUrl,omitempty"`
+	ScmAddress  string `json:"scmAddress,omitempty"`
+	ScmAccount  string `json:"scmAccount,omitempty"`
+	ScmPassword string `json:"scmPassword,omitempty"`
+
+	AppUrl          string `json:"appUrl,omitempty"`
+	BuildCommands   string `json:"buildCommands,omitempty"`
+	ResultFiles     string `json:"resultFiles,omitempty"`
+	KeepResultFiles bool   `json:"keepResultFiles,omitempty"`
+	ResultPath      string `json:"resultPath,omitempty"`
+	ResultMsg       string `json:"resultMsg,omitempty"`
+
+	StartTime    *time.Time `json:"startTime,omitempty"`
+	CompleteTime *time.Time `json:"completeTime,omitempty"`
+
+	Progress commConst.BuildProgress `json:"progress"`
+	Status   commConst.BuildStatus   `json:"status"`
 }

@@ -208,6 +208,16 @@ func (r *CommonRepo) Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
+func Defer(tx *gorm.DB, code *int) {
+	if *code == 1 {
+		//提交事务
+		tx.Commit()
+	} else {
+		//回滚
+		tx.Rollback()
+	}
+}
+
 type SumRes struct {
 	Total int64 `json:"total"`
 }

@@ -6,15 +6,15 @@ import (
 )
 
 type Vm struct {
-	Id     int
-	BaseId int
-	HostId int
+	Id        int
+	BackingId int
+	HostId    int
 
-	Name      string
-	Tmpl      string
-	Base      string
-	ImagePath string
-	BasePath  string
+	Name        string
+	Tmpl        string
+	Base        string
+	ImagePath   string
+	BackingPath string
 
 	OsCategory commConst.OsCategory
 	OsType     commConst.OsType

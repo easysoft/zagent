@@ -4,7 +4,7 @@ import (
 	commConst "github.com/easysoft/zagent/internal/comm/const"
 )
 
-type VmBase struct {
+type VmBacking struct {
 	BaseModel
 
 	Name string `json:"name"`
@@ -28,6 +28,6 @@ type VmBase struct {
 	DriverIsoId uint `json:"driverIsoId"`
 }
 
-func (VmBase) TableName() string {
+func (VmBacking) TableName() string {
 	return "biz_vm_base"
 }

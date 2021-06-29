@@ -16,7 +16,7 @@ func NewInterfaceRequestService() *InterfaceRequestService {
 	return &InterfaceRequestService{}
 }
 
-func (s *InterfaceRequestService) Request(build *commDomain.Build, interf *commDomain.TestInterface) (respStr string) {
+func (s *InterfaceRequestService) Request(build *commDomain.IntfTest, interf *commDomain.TestInterface) (respStr string) {
 	method := interf.Request.Method
 	if method == _const.Get {
 		respStr = s.Get(*interf)

@@ -53,22 +53,21 @@ func NewQueue() Queue {
 	}
 	return Task
 }
-func NewTaskDetail(serial string, buildType commConst.BuildType, groupId uint, taskId uint, taskPriority int,
-	osPlatform commConst.OsCategory, osType commConst.OsType,
-	osLang commConst.OsLang, browserType commConst.BrowserType, browserVersion string,
+func NewQueueDetail(serial string, buildType commConst.BuildType, groupId uint, taskId uint, taskPriority int,
+	osCategory commConst.OsCategory, osType commConst.OsType, osLang commConst.OsLang,
 	scriptUrl string, scmAddress string, scmAccount string, scmPassword string,
 	resultFiles string, keepResultFiles bool, taskName string, userName string,
 	appUrl string, buildCommands string) Queue {
+
 	Task := Queue{
 		Progress: commConst.ProgressCreated,
 		Status:   commConst.StatusCreated,
 
-		Serial:      serial,
-		BuildType:   buildType,
-		OsLang:      osLang,
-		OsPlatform:  osPlatform,
-		OsType:      osType,
-		BrowserType: browserType,
+		Serial:     serial,
+		BuildType:  buildType,
+		OsLang:     osLang,
+		OsPlatform: osCategory,
+		OsType:     osType,
 
 		GroupId:         groupId,
 		TaskId:          taskId,

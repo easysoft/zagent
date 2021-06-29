@@ -21,7 +21,7 @@ func NewScmService() *ScmService {
 	return &ScmService{}
 }
 
-func (s *ScmService) GetTestScript(build *commDomain.Build) _domain.RpcResp {
+func (s *ScmService) GetTestScript(build *commDomain.IntfTest) _domain.RpcResp {
 	if build.AutomatedTest.ScmAddress != "" {
 		CheckoutCodes(build)
 	} else if strings.Index(build.AutomatedTest.ScriptUrl, "http://") == 0 {
@@ -35,7 +35,7 @@ func (s *ScmService) GetTestScript(build *commDomain.Build) _domain.RpcResp {
 	return result
 }
 
-func CheckoutCodes(task *commDomain.Build) {
+func CheckoutCodes(task *commDomain.IntfTest) {
 	url := task.AutomatedTest.ScmAddress
 	userName := task.AutomatedTest.ScmAccount
 	password := task.AutomatedTest.ScmPassword
@@ -62,7 +62,7 @@ func CheckoutCodes(task *commDomain.Build) {
 	task.ProjectDir = projectDir
 }
 
-func DownloadCodes(task *commDomain.Build) {
+func DownloadCodes(task *commDomain.IntfTest) {
 	zipPath := task.WorkDir + uuid.NewV4().String() + _fileUtils.GetExtName(task.AutomatedTest.ScriptUrl)
 	_fileUtils.Download(task.AutomatedTest.ScriptUrl, zipPath)
 

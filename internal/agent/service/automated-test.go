@@ -15,7 +15,7 @@ func NewAutomatedTestService() *AutomatedTestService {
 	return &AutomatedTestService{}
 }
 
-func (s *AutomatedTestService) Exec(build *commDomain.Build) {
+func (s *AutomatedTestService) Exec(build *commDomain.IntfTest) {
 	result := commDomain.TestResult{}
 
 	s.SetBuildWorkDir(build)
@@ -40,7 +40,7 @@ func (s *AutomatedTestService) Exec(build *commDomain.Build) {
 	s.ExecService.UploadResult(*build, result)
 }
 
-func parseBuildCommand(build *commDomain.Build) {
+func parseBuildCommand(build *commDomain.IntfTest) {
 	// mvn clean test -Dtestng.suite=target/test-classes/baidu-test.xml
 	//		 		  -DdriverPath=${driverPath}
 

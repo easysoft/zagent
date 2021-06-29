@@ -4,6 +4,7 @@ import (
 	"fmt"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
 	_cronUtils "github.com/easysoft/zagent/internal/pkg/lib/cron"
+	"github.com/kataras/iris/v12"
 )
 
 type ServerCron struct {
@@ -23,4 +24,8 @@ func (s *ServerCron) Init() {
 
 		},
 	)
+
+	iris.RegisterOnInterrupt(func() {
+		_cronUtils.Stop()
+	})
 }

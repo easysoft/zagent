@@ -46,22 +46,22 @@ func (s *LibvirtService) CreateVm(vm *commDomain.Vm) (
 
 	srcXml := s.GetVmDef(vm.Tmpl)
 
-	basePath := ""
+	backingPath := ""
 	if vm.Base != "" {
-		basePath = filepath.Join(agentConf.Inst.DirBase, vm.Base)
+		backingPath = filepath.Join(agentConf.Inst.DirBase, vm.Base)
 	}
-	basePath += ".qcow2"
+	backingPath += ".qcow2"
 
 	vmXml := ""
 	rawPath := filepath.Join(agentConf.Inst.DirImage, vm.Name+".qcow2")
-	vmXml, vm.MacAddress, _ = s.QemuService.GenVmDef(srcXml, vm.Name, rawPath, basePath, 0)
+	vmXml, vm.MacAddress, _ = s.QemuService.GenVmDef(srcXml, vm.Name, rawPath, backingPath, 0)
 
 	if err != nil || vm.DiskSize == 0 {
 		_logUtils.Errorf("wrong vm disk size %d, err %s", vm.DiskSize, err.Error())
 		return
 	}
 
-	s.QemuService.createDiskFile(basePath, vm.Name, vm.DiskSize)
+	s.QemuService.createDiskFile(backingPath, vm.Name, vm.DiskSize)
 
 	dom, err = LibvirtConn.DomainCreateXML(vmXml, 0)
 

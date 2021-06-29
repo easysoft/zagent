@@ -1,12 +1,14 @@
 package service
 
 import (
+	commConst "github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 )
 
 type TaskService struct {
-	TaskRepo *repo.TaskRepo `inject:""`
+	TaskRepo  *repo.TaskRepo  `inject:""`
+	QueueRepo *repo.QueueRepo `inject:""`
 }
 
 func NewTaskService() *TaskService {
@@ -36,12 +38,6 @@ func (s *TaskService) Update(po *model.Task) (err error) {
 	return
 }
 
-func (s *TaskService) SetDefault(id uint) (err error) {
-	err = s.TaskRepo.SetDefault(id)
-
-	return
-}
-
 func (s *TaskService) Disable(id uint) (err error) {
 	err = s.TaskRepo.Disable(id)
 
@@ -52,4 +48,35 @@ func (s *TaskService) Delete(id uint) (err error) {
 	err = s.TaskRepo.Delete(id)
 
 	return
+}
+
+func (s *TaskService) SetProgress(id uint, progress commConst.BuildProgress) {
+	s.TaskRepo.SetProgress(id, progress)
+}
+
+func (s *TaskService) CheckCompleted(taskId uint) {
+	queues := s.QueueRepo.QueryByTask(taskId)
+
+	progress := commConst.ProgressCompleted
+	status := commConst.StatusPass
+	isAllQueuesCompleted := true
+
+	for _, queue := range queues {
+		if queue.Progress != commConst.ProgressCompleted && queue.Progress != commConst.ProgressTimeout { // 有queue在进行中
+			isAllQueuesCompleted = false
+			break
+		}
+
+		if queue.Progress == commConst.ProgressTimeout { // 有一个超时，就超时
+			progress = commConst.ProgressTimeout
+		}
+
+		if queue.Status == commConst.StatusFail { // 有一个失败，就失败
+			status = commConst.StatusFail
+		}
+	}
+
+	if isAllQueuesCompleted {
+		s.TaskRepo.SetResult(taskId, progress, status)
+	}
 }

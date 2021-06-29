@@ -1,6 +1,7 @@
 package repo
 
 import (
+	commConst "github.com/easysoft/zagent/internal/comm/const"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"github.com/easysoft/zagent/internal/server/model"
 	"gorm.io/gorm"
@@ -89,5 +90,23 @@ func (r *TaskRepo) Delete(id uint) (err error) {
 	err = r.DB.Model(&model.Task{}).Where("id = ?", id).
 		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
 
+	return
+}
+
+func (r *TaskRepo) SetProgress(taskId uint, progress commConst.BuildProgress) (err error) {
+	var data map[string]interface{}
+	if progress == commConst.ProgressInProgress {
+		data = map[string]interface{}{"progress": progress, "start_time": time.Now()}
+	} else {
+		data = map[string]interface{}{"progress": progress, "pending_time": time.Now()}
+	}
+
+	r.DB.Model(model.Task{}).Where("id=?", taskId).Updates(data)
+	return
+}
+
+func (r *TaskRepo) SetResult(taskId uint, progress commConst.BuildProgress, status commConst.BuildStatus) (err error) {
+	var data = map[string]interface{}{"progress": progress, "result": status, "updatedTime": time.Now()}
+	r.DB.Model(model.Task{}).Where("id=?", taskId).Updates(data)
 	return
 }

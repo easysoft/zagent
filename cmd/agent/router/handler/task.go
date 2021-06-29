@@ -19,7 +19,7 @@ func NewTaskCtrl() *TaskCtrl {
 	return &TaskCtrl{}
 }
 
-func (c *TaskCtrl) Add(ctx context.Context, task commDomain.Build, reply *_domain.RpcResp) error {
+func (c *TaskCtrl) Add(ctx context.Context, task commDomain.IntfTest, reply *_domain.RpcResp) error {
 	size := c.TaskService.GetTaskSize()
 	if size == 0 {
 		c.TaskService.AddTask(task)
@@ -31,7 +31,7 @@ func (c *TaskCtrl) Add(ctx context.Context, task commDomain.Build, reply *_domai
 	return nil
 }
 
-func (c *TaskCtrl) Exec(ctx context.Context, build commDomain.Build, reply *_domain.RpcResp) error {
+func (c *TaskCtrl) Exec(ctx context.Context, build commDomain.IntfTest, reply *_domain.RpcResp) error {
 	_logUtils.Infof("%v", build)
 
 	result := commDomain.TestResult{}

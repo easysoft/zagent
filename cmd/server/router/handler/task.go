@@ -102,17 +102,6 @@ func (c *TaskCtrl) Update(ctx iris.Context) {
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", model))
 }
 
-func (c *TaskCtrl) SetDefault(ctx iris.Context) {
-	id, err := ctx.Params().GetInt("id")
-	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
-		return
-	}
-
-	c.TaskService.SetDefault(uint(id))
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", ""))
-}
-
 func (c *TaskCtrl) Disable(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {

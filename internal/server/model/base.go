@@ -21,7 +21,7 @@ var (
 		&Host{},
 
 		&Iso{},
-		&VmBase{},
+		&VmBacking{},
 		&VmTmpl{},
 		&Vm{},
 		&Container{},
