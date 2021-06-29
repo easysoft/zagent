@@ -1,38 +1,25 @@
 export function getBuildTypes (that) {
-  const m = new Map()
-
-  m.set('selenium', that.$t('form.selenium.test'))
-  m.set('appium', that.$t('form.appium.test'))
-
-  return m
+  return { 'selenium': that.$t('form.selenium.test'), 'appium': that.$t('form.appium.test') }
 }
 
 export function getOsCategories (that) {
-  const m = new Map()
-
-  m.set('windows', that.$t('form.os.category.windows'))
-  m.set('linux', that.$t('form.os.category.linux'))
-  m.set('mac', that.$t('form.os.category.mac'))
-
-  return m
+  return {
+    'windows': that.$t('form.os.category.windows'),
+    'linux': that.$t('form.os.category.linux'),
+    'mac': that.$t('form.os.category.mac')
+  }
 }
 
 export function getOsTypes (that) {
-  // return { 'windows': getWindowsMap(that), 'linux': getLinuxMap(that), 'mac': getMacMap(that) }
-
-  const m = new Map()
-
-  m.set('win10', that.$t('form.os.type.win10'))
-  m.set('win7', that.$t('form.os.type.win7'))
-  m.set('winxp', that.$t('form.os.type.winxp'))
-
-  m.set('ubuntu', that.$t('form.os.type.ubuntu'))
-  m.set('centos', that.$t('form.os.type.centos'))
-  m.set('debian', that.$t('form.os.type.debian'))
-
-  m.set('mac', that.$t('form.os.type.mac'))
-
-  return m
+  return {
+    'win10': that.$t('form.os.type.win10'),
+    'win7': that.$t('form.os.type.win7'),
+    'winxp': that.$t('form.os.type.winxp'),
+    'ubuntu': that.$t('form.os.type.ubuntu'),
+    'centos': that.$t('form.os.type.centos'),
+    'debian': that.$t('form.os.type.debian'),
+    'mac': that.$t('form.os.type.mac')
+  }
 }
 
 /* function getWindowsMap (that) {
@@ -66,10 +53,8 @@ export function getOsVersion (that) {
 }
 
 export function getOsLangs (that) {
-  const m = new Map()
-
-  m.set('en_us', that.$t('form.os.lang.en_us'))
-  m.set('zh_cn', that.$t('form.os.lang.zh_cn'))
-
-  return m
+  return {
+    'en_us': that.$t('form.os.lang.en_us'),
+    'zh_cn': that.$t('form.os.lang.zh_cn')
+  }
 }

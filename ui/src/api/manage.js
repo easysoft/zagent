@@ -91,7 +91,7 @@ export function removeTask (model) {
 export function getTestEnvs (env) {
   return request({
     url: api.envs,
-    method: 'get',
+    method: 'post',
     data: env
   })
 }

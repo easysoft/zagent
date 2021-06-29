@@ -105,7 +105,7 @@ func (r *Router) App() {
 					party.Delete("/{id:uint}", r.TaskCtrl.Delete).Name = "删除任务"
 				})
 
-				admin.PartyFunc("/envs/{envId:uint}", func(party iris.Party) {
+				admin.PartyFunc("/envs", func(party iris.Party) {
 					party.Post("/", r.EnvCtrl.GetMap).Name = "获取测试环境数据"
 				})
 

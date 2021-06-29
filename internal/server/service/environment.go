@@ -16,6 +16,11 @@ func NewEnvironmentService() *EnvironmentService {
 }
 
 func (s *EnvironmentService) GetMap(env model.Environment) (data map[string]interface{}) {
+	categoryMap := map[string]bool{}
+	typeMap := map[string]bool{}
+	langMap := map[string]bool{}
+	browserMap := map[string]bool{}
+
 	categories := make([]string, 0)
 	types := make([]string, 0)
 	langs := make([]string, 0)
@@ -24,22 +29,35 @@ func (s *EnvironmentService) GetMap(env model.Environment) (data map[string]inte
 	backings := s.BackingRepo.ListAll()
 
 	for _, backingItem := range backings {
-		categories = append(categories, backingItem.OsCategory.ToString())
+		if !categoryMap[backingItem.OsCategory.ToString()] {
+			categories = append(categories, backingItem.OsCategory.ToString())
+			categoryMap[backingItem.OsCategory.ToString()] = true
+		}
 
 		if backingItem.OsCategory == env.OsCategory {
-			types = append(types, backingItem.OsType.ToString())
+			if !typeMap[backingItem.OsType.ToString()] {
+				types = append(types, backingItem.OsType.ToString())
+				typeMap[backingItem.OsType.ToString()] = true
+			}
 
 			if backingItem.OsType == env.OsType {
-				langs = append(langs, backingItem.OsLang.ToString())
+				if !langMap[backingItem.OsLang.ToString()] {
+					langs = append(langs, backingItem.OsLang.ToString())
+					langMap[backingItem.OsLang.ToString()] = true
+				}
 
 				browserPos := s.BrowserRepo.ListByBacking(backingItem.ID)
 				for _, browserItem := range browserPos {
-					browsers = append(browsers, browserItem.Type.ToString()+" "+browserItem.Version)
+					if !browserMap[browserItem.Type.ToString()] {
+						browsers = append(browsers, browserItem.Type.ToString())
+						browserMap[browserItem.Type.ToString()] = true
+					}
 				}
 			}
 		}
 	}
 
+	data = map[string]interface{}{}
 	data["categories"] = categories
 	data["types"] = types
 	data["langs"] = langs

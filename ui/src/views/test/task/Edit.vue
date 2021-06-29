@@ -102,24 +102,24 @@
         <a-form-model ref="editEnvForm" :model="environment" :rules="rules">
           <a-form-model-item :label="$t('form.os.category')" prop="osCategory" :labelCol="labelCol" :wrapperCol="wrapperCol">
             <a-select v-model="environment.osCategory">
-              <a-select-option v-for="(value, key) in osCategories" :value="value[0]" :key="key">
-                {{ value[1] }}
+              <a-select-option v-for="(value, key) in envData.categories" :value="value" :key="key">
+                {{ osCategories[value] }}
               </a-select-option>
             </a-select>
           </a-form-model-item>
 
           <a-form-model-item :label="$t('form.os.type')" prop="osType" :labelCol="labelCol" :wrapperCol="wrapperCol">
             <a-select v-model="environment.osType">
-              <a-select-option v-for="(value, key) in osTypes[environment.osCategory]" :value="value[0]" :key="key">
-                {{ value[1] }}
+              <a-select-option v-for="(value, key) in envData.types" :value="value" :key="key">
+                {{  osTypes[value] }}
               </a-select-option>
             </a-select>
           </a-form-model-item>
 
           <a-form-model-item :label="$t('form.os.lang')" prop="osLang" :labelCol="labelCol" :wrapperCol="wrapperCol">
             <a-select v-model="environment.osLang">
-              <a-select-option v-for="(value, key) in osLangs" :value="value[0]" :key="key">
-                {{ value[1] }}
+              <a-select-option v-for="(value, key) in envData.langs" :value="value" :key="key">
+                {{ osLangs[value] }}
               </a-select-option>
             </a-select>
           </a-form-model-item>
