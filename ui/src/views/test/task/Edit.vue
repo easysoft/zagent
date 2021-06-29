@@ -187,12 +187,11 @@ export default {
     this.osLangs = getOsLangs(this)
   },
   mounted () {
-    this.loadTestEnvs()
     this.loadData()
   },
   methods: {
     loadTestEnvs () {
-      getTestEnvs().then(json => {
+      getTestEnvs(this.environment).then(json => {
         this.envData = json.data
       })
     },
@@ -239,6 +238,8 @@ export default {
       this.environment = { osLang: 'zh_cn' }
       this.environmentIndex = index
       this.isInsert = true
+
+      this.loadTestEnvs()
       this.editEnvVisible = true
     },
     editEnv (index) {
@@ -246,6 +247,8 @@ export default {
       this.environment = this.model.environments[index]
       this.environmentIndex = index
       this.isInsert = false
+
+      this.loadTestEnvs()
       this.editEnvVisible = true
     },
     removeEnv (index) {

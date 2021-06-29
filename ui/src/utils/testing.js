@@ -18,10 +18,24 @@ export function getOsCategories (that) {
 }
 
 export function getOsTypes (that) {
-  return { 'windows': getWindowsMap(that), 'linux': getLinuxMap(that), 'mac': getMacMap(that) }
+  // return { 'windows': getWindowsMap(that), 'linux': getLinuxMap(that), 'mac': getMacMap(that) }
+
+  const m = new Map()
+
+  m.set('win10', that.$t('form.os.type.win10'))
+  m.set('win7', that.$t('form.os.type.win7'))
+  m.set('winxp', that.$t('form.os.type.winxp'))
+
+  m.set('ubuntu', that.$t('form.os.type.ubuntu'))
+  m.set('centos', that.$t('form.os.type.centos'))
+  m.set('debian', that.$t('form.os.type.debian'))
+
+  m.set('mac', that.$t('form.os.type.mac'))
+
+  return m
 }
 
-function getWindowsMap (that) {
+/* function getWindowsMap (that) {
   const m = new Map()
 
   m.set('win10', that.$t('form.os.type.win10'))
@@ -45,7 +59,7 @@ function getMacMap (that) {
   m.set('mac', that.$t('form.os.type.mac'))
 
   return m
-}
+} */
 
 export function getOsVersion (that) {
   return []

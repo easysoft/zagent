@@ -88,11 +88,11 @@ export function removeTask (model) {
 }
 
 // Environment
-export function getTestEnvs () {
+export function getTestEnvs (env) {
   return request({
     url: api.envs,
     method: 'get',
-    params: {}
+    data: env
   })
 }
 
