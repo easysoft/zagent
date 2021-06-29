@@ -25,7 +25,7 @@ func (s AppiumService) Start(queue model.Queue) (result _domain.RpcResp) {
 	serial := queue.Serial
 	device := s.DeviceRepo.GetBySerial(serial)
 
-	build := model.NewBuildDetail(queue.ID, uint(0), queue.BuildType,
+	build := model.NewBuild(queue.ID, uint(0), queue.BuildType,
 		serial, queue.Priority, device.NodeIp, device.NodePort)
 	s.BuildRepo.Save(&build)
 

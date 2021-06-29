@@ -64,6 +64,8 @@ const locale = {
   'form.opt.log': '操作日志',
 
   'form.test.env': '测试环境',
+  'form.group': '分组ID',
+  'form.group.tips': '用于分组显示',
   'form.exec.cmd': '测试命令',
   'form.exec.cmd.tips': '输入执行测试的命令',
   'form.env.var': '环境变量',

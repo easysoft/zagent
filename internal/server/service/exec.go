@@ -33,10 +33,48 @@ func (s ExecService) CheckExec() {
 }
 
 func (s ExecService) CheckAndCall(queue model.Queue) {
-	if queue.BuildType == commConst.AutoAppium {
-		s.CheckAndCallAppiumTest(queue)
-	} else if queue.BuildType == commConst.AutoSelenium {
+	if queue.BuildType == commConst.AutoSelenium {
 		s.CheckAndCallSeleniumTest(queue)
+	} else if queue.BuildType == commConst.AutoAppium {
+		s.CheckAndCallAppiumTest(queue)
+	}
+}
+
+func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
+	originalProgress := queue.Progress
+	var newTaskProgress commConst.BuildProgress
+
+	if queue.Progress == commConst.ProgressCreated {
+		// looking for valid host
+		hostId, backingId := s.HostService.GetValidForQueue(queue)
+		if hostId != 0 {
+			// create kvm
+			result := s.VmService.CreateRemote(hostId, backingId, queue.ID)
+			if result.IsSuccess() { // success to create
+				newTaskProgress = commConst.ProgressInProgress
+			} else {
+				newTaskProgress = commConst.ProgressPending
+			}
+		}
+	} else if queue.Progress == commConst.ProgressLaunchVm {
+		vmId := queue.VmId
+		vm := s.VmRepo.GetById(vmId)
+
+		if vm.Status == commConst.VmActive { // find ready vm, begin to run test
+			result := s.SeleniumService.Start(queue)
+
+			if result.IsSuccess() {
+				s.QueueRepo.Start(queue)
+				newTaskProgress = commConst.ProgressInProgress
+			} else { // busy, pending
+				s.QueueRepo.Pending(queue.ID)
+				newTaskProgress = commConst.ProgressPending
+			}
+		}
+	}
+
+	if originalProgress != newTaskProgress { // queue's progress changed, update parent task
+		s.TaskRepo.SetProgress(queue.TaskId, newTaskProgress)
 	}
 }
 
@@ -64,43 +102,6 @@ func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {
 
 	if originalProgress != newProgress { // progress changed
 		s.TaskService.SetProgress(queue.TaskId, newProgress)
-	}
-}
-
-func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
-	originalProgress := queue.Progress
-	var newProgress commConst.BuildProgress
-
-	if queue.Progress == commConst.ProgressCreated {
-		// 寻找闲置且有能力的宿主机
-		hostId, backingImageId := s.HostService.GetValidForQueue(queue)
-		if hostId != 0 {
-			// create kvm
-			result := s.VmService.CreateRemote(hostId, backingImageId, queue.ID)
-			if result.IsSuccess() { // success to create
-				newProgress = commConst.ProgressInProgress
-			} else {
-				newProgress = commConst.ProgressPending
-			}
-		}
-	} else if queue.Progress == commConst.ProgressLaunchVm {
-		vmId := queue.VmId
-		vm := s.VmRepo.GetById(vmId)
-
-		if vm.Status == commConst.VmActive { // find ready vm, begin to run test
-			result := s.SeleniumService.Start(queue)
-			if result.IsSuccess() {
-				s.QueueRepo.Start(queue)
-				newProgress = commConst.ProgressInProgress
-			} else { // busy, pending
-				s.QueueRepo.Pending(queue.ID)
-				newProgress = commConst.ProgressPending
-			}
-		}
-	}
-
-	if originalProgress != newProgress { // queue's progress changed
-		s.TaskRepo.SetProgress(queue.TaskId, newProgress)
 	}
 }
 

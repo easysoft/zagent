@@ -29,16 +29,7 @@ type Build struct {
 	Status   commConst.BuildStatus   `json:"status"`
 }
 
-func NewBuild() Build {
-	build := Build{
-		Progress: commConst.ProgressCreated,
-		Status:   commConst.StatusCreated,
-	}
-
-	return build
-}
-
-func NewBuildDetail(queueId uint, vmId uint, buildType commConst.BuildType,
+func NewBuild(queueId uint, vmId uint, buildType commConst.BuildType,
 	serial string, priority int, nodeIp string, nodePort int) Build {
 	build := Build{
 		QueueId:   queueId,

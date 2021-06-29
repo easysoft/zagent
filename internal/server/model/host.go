@@ -28,6 +28,8 @@ type Host struct {
 
 	TaskCount        int        `json:"taskCount"`
 	LastRegisterDate *time.Time `json:"lastRegisterDate"`
+
+	Backings []VmBacking `gorm:"many2many:host_backing_r;"`
 }
 
 func NewHost() Host {

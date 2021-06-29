@@ -9,6 +9,8 @@ import (
 type TaskService struct {
 	TaskRepo  *repo.TaskRepo  `inject:""`
 	QueueRepo *repo.QueueRepo `inject:""`
+
+	QueueService *QueueService `inject:""`
 }
 
 func NewTaskService() *TaskService {
@@ -29,11 +31,15 @@ func (s *TaskService) Save(po *model.Task, userId uint) (err error) {
 	po.UserId = userId
 	err = s.TaskRepo.Save(po)
 
+	s.QueueService.GenerateFromTask(po)
+
 	return
 }
 
 func (s *TaskService) Update(po *model.Task) (err error) {
 	err = s.TaskRepo.Update(po)
+
+	s.QueueService.GenerateFromTask(po)
 
 	return
 }

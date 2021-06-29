@@ -65,6 +65,8 @@ const (
 	ProgressInProgress BuildProgress = "in_progress"
 	ProgressTimeout    BuildProgress = "timeout"
 	ProgressCompleted  BuildProgress = "completed"
+
+	ProgressCancel BuildProgress = "cancel"
 )
 
 func (e BuildProgress) ToString() string {

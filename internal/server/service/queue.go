@@ -18,17 +18,19 @@ func NewQueueService() *QueueService {
 	return &QueueService{}
 }
 
-func (s QueueService) GenerateFromTask(task model.Task) (count int) {
-	if task.BuildType == commConst.AutoAppium {
-		count = s.GenerateAppiumQueuesFromTask(task)
-	} else if task.BuildType == commConst.AutoSelenium {
+func (s QueueService) GenerateFromTask(task *model.Task) (count int) {
+	s.CancelQueuesNotExec(task)
+
+	if task.BuildType == commConst.AutoSelenium {
 		count = s.GenerateSeleniumQueuesFromTask(task)
+	} else if task.BuildType == commConst.AutoAppium {
+		count = s.GenerateAppiumQueuesFromTask(task)
 	}
 
 	return
 }
 
-func (s QueueService) GenerateAppiumQueuesFromTask(task model.Task) (count int) {
+func (s QueueService) GenerateAppiumQueuesFromTask(task *model.Task) (count int) {
 	if len(task.Serials) == 0 {
 		return
 	}
@@ -49,11 +51,11 @@ func (s QueueService) GenerateAppiumQueuesFromTask(task model.Task) (count int) 
 
 		device := s.DeviceRepo.GetBySerial(serial)
 		if device.ID != 0 {
-			queue := model.NewQueueDetail(serial, task.BuildType, groupId, task.ID, task.Priority,
+			queue := model.NewQueue(task.BuildType, groupId, task.ID, task.Priority,
 				"", "", "",
 				task.ScriptUrl, task.ScmAddress, task.ScmAccount, task.ScmPassword,
 				task.ResultFiles, task.KeepResultFiles, task.Name, task.UserName,
-				task.AppUrl, task.BuildCommands)
+				serial, task.AppUrl, task.BuildCommands)
 
 			s.QueueRepo.Save(&queue)
 			count++
@@ -65,10 +67,8 @@ func (s QueueService) GenerateAppiumQueuesFromTask(task model.Task) (count int) 
 	return
 }
 
-func (s QueueService) GenerateSeleniumQueuesFromTask(task model.Task) (count int) {
-	// windows,win10,cn_zh,chrome,84;
+func (s QueueService) GenerateSeleniumQueuesFromTask(task *model.Task) (count int) {
 	envs := task.Environments
-
 	if len(envs) == 0 {
 		return
 	}
@@ -85,12 +85,12 @@ func (s QueueService) GenerateSeleniumQueuesFromTask(task model.Task) (count int
 		osType := env.OsType
 		osLang := env.OsLang
 
-		queue := model.NewQueueDetail("", task.BuildType, groupId, task.ID, task.Priority,
-			commConst.OsCategory(osCategory), commConst.OsType(osType),
-			commConst.OsLang(osLang),
+		queue := model.NewQueue(
+			task.BuildType, groupId, task.ID, task.Priority,
+			osCategory, osType, osLang,
 			task.ScriptUrl, task.ScmAddress, task.ScmAccount, task.ScmPassword,
 			task.ResultFiles, task.KeepResultFiles, task.Name, task.UserName,
-			"", task.BuildCommands)
+			"", "", task.BuildCommands)
 
 		s.QueueRepo.Save(&queue)
 		count++
@@ -104,4 +104,10 @@ func (s QueueService) SetQueueResult(queueId uint, progress commConst.BuildProgr
 
 	s.QueueRepo.SetQueueStatus(queueId, progress, status)
 	s.TaskService.CheckCompleted(queue.TaskId)
+}
+
+func (s QueueService) CancelQueuesNotExec(task *model.Task) (count int) {
+	s.QueueRepo.CancelQueuesNotExec(task.ID)
+
+	return
 }

@@ -40,6 +40,11 @@
             <a-textarea v-model="model.desc" />
           </a-form-model-item>
 
+<!--          <a-form-model-item :label="$t('form.group')" prop="groupId" :labelCol="labelCol" :wrapperCol="wrapperCol">
+            <a-input-number v-model="model.groupId" />
+            <span>  {{ $t('form.group.tips') }}</span>
+          </a-form-model-item>-->
+
           <a-form-model-item :label="$t('form.test.env')" :labelCol="labelCol" :wrapperCol="wrapperCol">
             <div class="environments">
               <a-row :gutter="cols" class="title">

@@ -34,7 +34,7 @@ func (s HostService) Register(host commDomain.Host) (result _domain.RpcResp) {
 	return
 }
 
-func (s HostService) GetValidForQueue(queue model.Queue) (hostId, backingImageId uint) {
+func (s HostService) GetValidForQueue(queue model.Queue) (hostId, backingId uint) {
 	imageIds1 := s.BackingRepo.QueryByOs(queue.OsPlatform, queue.OsType, queue.OsLang)
 	imageIds2 := s.BackingRepo.QueryByBrowser(queue.BrowserType, queue.BrowserVersion)
 
@@ -54,7 +54,7 @@ func (s HostService) GetValidForQueue(queue model.Queue) (hostId, backingImageId
 		return
 	}
 
-	hostId, backingImageId = s.HostRepo.QueryByImages(images, hostIds)
+	hostId, backingId = s.HostRepo.QueryByImages(images, hostIds)
 
 	return
 }

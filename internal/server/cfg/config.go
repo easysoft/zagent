@@ -59,7 +59,7 @@ var Config = struct {
 }{}
 
 type DBConfig struct {
-	Prefix   string `yaml:"prefix" env:"DBPrefix" default:"ztest_"`
+	Prefix   string `yaml:"prefix" env:"DBPrefix" default:"biz_"`
 	Name     string `yaml:"name" env:"DBName" default:"ztest"`
 	Adapter  string `yaml:"adapter" env:"DBAdapter" default:"sqlite3"`
 	Host     string `yaml:"host" env:"DBHost" default:"localhost"`

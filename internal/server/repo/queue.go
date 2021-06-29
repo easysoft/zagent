@@ -3,7 +3,7 @@ package repo
 import (
 	commConst "github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/server/model"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 	"strings"
 	"time"
 )
@@ -20,8 +20,8 @@ func NewQueueRepo() *QueueRepo {
 func (r QueueRepo) QueryForExec() (queues []model.Queue) {
 	queues = make([]model.Queue, 0)
 
-	r.DB.Where("progress=? OR progress=?",
-		commConst.ProgressCreated, commConst.ProgressPending).Order("priority").Find(&queues)
+	r.DB.Where("progress=? OR progress=?", commConst.ProgressCreated, commConst.ProgressPending).
+		Order("priority").Find(&queues)
 
 	return
 }
@@ -96,5 +96,13 @@ func (r QueueRepo) SetQueueStatus(queueId uint, progress commConst.BuildProgress
 func (r QueueRepo) UpdateVm(queueId, vmId uint, status commConst.BuildProgress) {
 	r.DB.Model(&model.Queue{}).Where("id=?", queueId).Updates(
 		map[string]interface{}{"vmId": vmId, "progress": status, "updated_at": time.Now()})
+	return
+}
+
+func (r QueueRepo) CancelQueuesNotExec(taskId uint) {
+	r.DB.Model(&model.Queue{}).
+		Where("task_id=? AND (progress=? OR progress=?)",
+			taskId, commConst.ProgressCreated, commConst.ProgressPending).
+		Updates(map[string]interface{}{"progress": commConst.ProgressCancel})
 	return
 }

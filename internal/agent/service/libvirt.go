@@ -47,8 +47,8 @@ func (s *LibvirtService) CreateVm(vm *commDomain.Vm) (
 	srcXml := s.GetVmDef(vm.Tmpl)
 
 	backingPath := ""
-	if vm.Base != "" {
-		backingPath = filepath.Join(agentConf.Inst.DirBase, vm.Base)
+	if vm.Backing != "" {
+		backingPath = filepath.Join(agentConf.Inst.DirBase, vm.Backing)
 	}
 	backingPath += ".qcow2"
 
@@ -162,7 +162,7 @@ func (s *LibvirtService) setVmProps(vm *commDomain.Vm) {
 	osVersion := "x64-pro"
 	osLang := commConst.ZH_CN
 
-	vm.Base = fmt.Sprintf("%s/%s/%s-%s", osCategory.ToString(), osType.ToString(),
+	vm.Backing = fmt.Sprintf("%s/%s/%s-%s", osCategory.ToString(), osType.ToString(),
 		osVersion, osLang.ToString())
 
 	vm.Tmpl = fmt.Sprintf("tmpl-%s-%s-%s",

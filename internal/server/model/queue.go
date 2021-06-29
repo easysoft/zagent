@@ -46,24 +46,16 @@ type Queue struct {
 	GroupId uint `json:"groupId"`
 }
 
-func NewQueue() Queue {
-	Task := Queue{
-		Progress: commConst.ProgressCreated,
-		Status:   commConst.StatusCreated,
-	}
-	return Task
-}
-func NewQueueDetail(serial string, buildType commConst.BuildType, groupId uint, taskId uint, taskPriority int,
+func NewQueue(buildType commConst.BuildType, groupId uint, taskId uint, taskPriority int,
 	osCategory commConst.OsCategory, osType commConst.OsType, osLang commConst.OsLang,
 	scriptUrl string, scmAddress string, scmAccount string, scmPassword string,
 	resultFiles string, keepResultFiles bool, taskName string, userName string,
-	appUrl string, buildCommands string) Queue {
+	serial string, appUrl string, buildCommands string) Queue {
 
 	Task := Queue{
 		Progress: commConst.ProgressCreated,
 		Status:   commConst.StatusCreated,
 
-		Serial:     serial,
 		BuildType:  buildType,
 		OsLang:     osLang,
 		OsPlatform: osCategory,
@@ -81,6 +73,7 @@ func NewQueueDetail(serial string, buildType commConst.BuildType, groupId uint, 
 		TaskName:        taskName,
 		UserName:        userName,
 
+		Serial:        serial,
 		AppUrl:        appUrl,
 		BuildCommands: buildCommands,
 	}

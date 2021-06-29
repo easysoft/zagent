@@ -25,7 +25,7 @@ func (s SeleniumService) Start(queue model.Queue) (result _domain.RpcResp) {
 	vmId := queue.VmId
 	vm := s.VmRepo.GetById(vmId)
 
-	build := model.NewBuildDetail(queue.ID, vmId, queue.BuildType,
+	build := model.NewBuild(queue.ID, vmId, queue.BuildType,
 		"", queue.Priority, vm.PublicIp, vm.PublicPort)
 	s.BuildRepo.Save(&build)
 

@@ -22,12 +22,13 @@ var (
 
 		&Iso{},
 		&VmBacking{},
+		&Browser{},
 		&VmTmpl{},
 		&Vm{},
 		&Container{},
 
 		&Task{},
-		&Task{},
+		&Queue{},
 		&Environment{},
 		&Build{},
 

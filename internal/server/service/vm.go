@@ -49,25 +49,25 @@ func (s VmService) CreateRemote(hostId, backingId, queueId uint) (result _domain
 	mac := s.genValidMacAddress() // get a unique mac address
 	vmName := s.genVmName(backingImage.Name)
 
-	vmPo := model.Vm{MacAddress: mac, Name: vmName,
+	vm := model.Vm{MacAddress: mac, Name: vmName,
 		HostId: host.ID, BackingId: backingId,
 		DiskSize: backingImage.SuggestDiskSize, MemorySize: backingImage.SuggestMemorySize,
 		CdromSys: sysIsoPath, CdromDriver: driverIsoPath, Backing: backingImage.Path}
 
-	s.VmRepo.Save(vmPo) // save vm to db
+	s.VmRepo.Save(vm) // save vm to db
 
-	kvmRequest := model.GenKvmReq(vmPo)
+	kvmRequest := model.GenKvmReq(vm)
 	result = s.RpcService.CreateVm(kvmRequest)
 
 	if result.IsSuccess() { // success to create vm
 		vmInResp := result.Payload.(commDomain.Vm)
 		s.VmRepo.Launch(vmInResp) // update vm status, mac address
 
-		s.QueueRepo.UpdateVm(uint(queueId), vmPo.ID, commConst.ProgressLaunchVm)
+		s.QueueRepo.UpdateVm(queueId, vm.ID, commConst.ProgressLaunchVm)
 	} else {
-		s.VmRepo.FailToCreate(vmPo.ID, result.Msg)
+		s.VmRepo.FailToCreate(vm.ID, result.Msg)
 
-		s.QueueRepo.Pending(uint(queueId))
+		s.QueueRepo.Pending(queueId)
 	}
 
 	return

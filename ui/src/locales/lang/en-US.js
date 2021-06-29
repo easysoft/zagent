@@ -64,6 +64,8 @@ const locale = {
   'form.add': 'Add',
 
   'form.test.env': 'Test Environment',
+  'form.group': 'Group Id',
+  'form.group.tips': 'Used to group the queues.',
   'form.exec.cmd': 'Test Command',
   'form.exec.cmd.tips': 'Input the command to exec testing.',
   'form.env.var': 'Environment Variable',

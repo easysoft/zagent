@@ -12,7 +12,7 @@ type Vm struct {
 
 	Name        string
 	Tmpl        string
-	Base        string
+	Backing     string
 	ImagePath   string
 	BackingPath string
 

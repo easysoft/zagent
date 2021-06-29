@@ -26,8 +26,10 @@ type VmBacking struct {
 
 	SysIsoId    uint `json:"sysIsoId"`
 	DriverIsoId uint `json:"driverIsoId"`
+
+	Browsers []Browser `gorm:"many2many:backing_browser_r;"`
 }
 
 func (VmBacking) TableName() string {
-	return "biz_vm_base"
+	return "biz_vm_baking"
 }

@@ -177,7 +177,7 @@ func (s *QemuService) setVmProps(vm *commDomain.Vm) {
 	osVersion := "x64-pro"
 	osLang := commConst.ZH_CN
 
-	vm.Base = fmt.Sprintf("%s/%s/%s-%s", osCategory.ToString(), osType.ToString(),
+	vm.Backing = fmt.Sprintf("%s/%s/%s-%s", osCategory.ToString(), osType.ToString(),
 		osVersion, osLang.ToString())
 }
 
