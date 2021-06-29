@@ -153,7 +153,7 @@ export default {
 
       model: { environments: [] },
       envData: {},
-      environment: { osLang: 'zh_cn' },
+      environment: {},
       environmentIndex: -1,
       isInsert: false,
 
@@ -235,7 +235,7 @@ export default {
 
     addEnv (index) {
       console.log('addEnv', index)
-      this.environment = { osLang: 'zh_cn' }
+      this.environment = {}
       this.environmentIndex = index
       this.isInsert = true
 
