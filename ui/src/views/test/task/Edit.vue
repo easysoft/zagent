@@ -62,13 +62,13 @@
               </a-row>
               <a-row v-for="(item, index)  in model.environments" :key="index" :gutter="cols">
                 <a-col :offset="1" :span="col">
-                  <span>{{ item.osCategory }}</span>
+                  <span>{{ osCategories[item.osCategory] }}</span>
                 </a-col>
                 <a-col :span="col">
-                  <span>{{ item.osType }}</span>
+                  <span>{{ osTypes[item.osType] }}</span>
                 </a-col>
                 <a-col :span="col">
-                  <span>{{ item.osLang }}</span>
+                  <span>{{ osLangs[item.osLang] }}</span>
                 </a-col>
 
                 <a-col :span="col-1">
@@ -101,7 +101,7 @@
       <div>
         <a-form-model ref="editEnvForm" :model="environment" :rules="rules">
           <a-form-model-item :label="$t('form.os.category')" prop="osCategory" :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <a-select v-model="environment.osCategory">
+            <a-select v-model="environment.osCategory" @change="envChanged()">
               <a-select-option v-for="(value, key) in envData.categories" :value="value" :key="key">
                 {{ osCategories[value] }}
               </a-select-option>
@@ -109,7 +109,7 @@
           </a-form-model-item>
 
           <a-form-model-item :label="$t('form.os.type')" prop="osType" :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <a-select v-model="environment.osType">
+            <a-select v-model="environment.osType" @change="envChanged()">
               <a-select-option v-for="(value, key) in envData.types" :value="value" :key="key">
                 {{  osTypes[value] }}
               </a-select-option>
@@ -277,6 +277,9 @@ export default {
     cancelEnv () {
       console.log('cancelEnv')
       this.editEnvVisible = false
+    },
+    envChanged () {
+      this.loadTestEnvs()
     }
   }
 }
