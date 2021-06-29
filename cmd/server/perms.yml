@@ -30,3 +30,8 @@ perms:
     description: ""
     act: "DELETE"
 
+  - name: "/api/v1/test/envs"
+    displayname: "测试环境"
+    description: ""
+    act: "GET"
+

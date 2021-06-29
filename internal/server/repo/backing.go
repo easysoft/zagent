@@ -15,6 +15,11 @@ func NewBackingRepo() *BackingRepo {
 	return &BackingRepo{}
 }
 
+func (r BackingRepo) ListAll() (pos []*model.VmBacking) {
+	r.DB.Where("NOT Deleted AND NOT Disabled").Find(&pos)
+	return
+}
+
 func (r BackingRepo) Get(id uint) (image model.VmBacking) {
 	r.DB.Where("id=?", id).First(&image)
 	return

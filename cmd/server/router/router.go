@@ -33,6 +33,7 @@ type Router struct {
 	RoleCtrl *handler.RoleCtrl `inject:""`
 	UserCtrl *handler.UserCtrl `inject:""`
 
+	EnvCtrl   *handler.EnvCtrl   `inject:""`
 	ValidCtrl *handler.ValidCtrl `inject:""`
 	WsCtrl    *handler.WsCtrl    `inject:""`
 
@@ -102,6 +103,10 @@ func (r *Router) App() {
 					party.Post("/", r.TaskCtrl.Create).Name = "创建任务"
 					party.Put("/{id:uint}", r.TaskCtrl.Update).Name = "更新任务"
 					party.Delete("/{id:uint}", r.TaskCtrl.Delete).Name = "删除任务"
+				})
+
+				admin.PartyFunc("/envs", func(party iris.Party) {
+					party.Post("/", r.EnvCtrl.GetTree).Name = "获取测试环境数据"
 				})
 
 				admin.PartyFunc("/valid", func(party iris.Party) {

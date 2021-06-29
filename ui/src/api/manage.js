@@ -5,6 +5,7 @@ const testPrefix = '/v1/test'
 const api = {
   profile: `${testPrefix}/profile`,
   tasks: `${testPrefix}/tasks`,
+  envs: `${testPrefix}/envs`,
 
   user: `${testPrefix}/user`,
   role: `${testPrefix}/role`,
@@ -49,7 +50,7 @@ export function getProfile (parameter) {
   })
 }
 
-// 任务
+// Task
 export function listTask (params) {
   return request({
     url: api.tasks,
@@ -82,6 +83,15 @@ export function removeTask (model) {
   return request({
     url: api.tasks + '/' + model.id,
     method: 'delete',
+    params: {}
+  })
+}
+
+// Environment
+export function getTestEnvs () {
+  return request({
+    url: api.envs,
+    method: 'get',
     params: {}
   })
 }

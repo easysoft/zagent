@@ -133,7 +133,7 @@
 <script>
 import { labelCol, wrapperCol, wrapperFull } from '@/utils/const'
 import { getBuildTypes, getOsCategories, getOsTypes, getOsLangs } from '@/utils/testing'
-import { requestSuccess, getTask, saveTask } from '@/api/manage'
+import { requestSuccess, getTask, saveTask, getTestEnvs } from '@/api/manage'
 
 export default {
   name: 'TaskEdit',
@@ -150,7 +150,9 @@ export default {
       labelCol: labelCol,
       wrapperCol: wrapperCol,
       wrapperFull: wrapperFull,
+
       model: { environments: [] },
+      envData: {},
       environment: { osLang: 'zh_cn' },
       environmentIndex: -1,
       isInsert: false,
@@ -185,9 +187,15 @@ export default {
     this.osLangs = getOsLangs(this)
   },
   mounted () {
+    this.loadTestEnvs()
     this.loadData()
   },
   methods: {
+    loadTestEnvs () {
+      getTestEnvs().then(json => {
+        this.envData = json.data
+      })
+    },
     loadData () {
       if (!this.id) {
         return
