@@ -33,9 +33,9 @@ type Router struct {
 	RoleCtrl *handler.RoleCtrl `inject:""`
 	UserCtrl *handler.UserCtrl `inject:""`
 
-	EnvCtrl   *handler.EnvCtrl   `inject:""`
-	ValidCtrl *handler.ValidCtrl `inject:""`
-	WsCtrl    *handler.WsCtrl    `inject:""`
+	Environment *handler.EnvironmentCtrl `inject:""`
+	ValidCtrl   *handler.ValidCtrl       `inject:""`
+	WsCtrl      *handler.WsCtrl          `inject:""`
 
 	TokenRepo *repo.TokenRepo `inject:""`
 }
@@ -106,7 +106,7 @@ func (r *Router) App() {
 				})
 
 				admin.PartyFunc("/envs", func(party iris.Party) {
-					party.Post("/", r.EnvCtrl.GetMap).Name = "获取测试环境数据"
+					party.Post("/", r.Environment.GetData).Name = "获取测试环境数据"
 				})
 
 				admin.PartyFunc("/valid", func(party iris.Party) {

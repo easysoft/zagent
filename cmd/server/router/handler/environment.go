@@ -7,17 +7,17 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
-type EnvCtrl struct {
+type EnvironmentCtrl struct {
 	BaseCtrl
 
 	EnvironmentService *service.EnvironmentService `inject:""`
 }
 
-func NewEnvCtrl() *EnvCtrl {
-	return &EnvCtrl{}
+func NewEnvironmentCtrl() *EnvironmentCtrl {
+	return &EnvironmentCtrl{}
 }
 
-func (c *EnvCtrl) GetMap(ctx iris.Context) {
+func (c *EnvironmentCtrl) GetData(ctx iris.Context) {
 	model := model.Environment{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
