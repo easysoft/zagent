@@ -45,18 +45,18 @@ func (r *TaskRepo) Query(keywords, status string, pageNo int, pageSize int) (pos
 }
 
 func (r *TaskRepo) Get(id uint) (po model.Task) {
-	r.DB.Where("id = ?", id).First(&po)
+	r.DB.Preload("Environments").Where("id = ?", id).First(&po)
 
 	return
 }
 
 func (r *TaskRepo) Save(po *model.Task) (err error) {
-	err = r.DB.Model(&po).Omit("").Create(&po).Error
+	err = r.DB.Model(&po).Create(&po).Error
 	return
 }
 
 func (r *TaskRepo) Update(po *model.Task) (err error) {
-	err = r.DB.Omit("").Save(&po).Error
+	err = r.DB.Session(&gorm.Session{FullSaveAssociations: true}).Updates(&po).Error
 	return
 }
 

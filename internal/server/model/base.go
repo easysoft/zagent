@@ -28,6 +28,7 @@ var (
 
 		&Task{},
 		&Task{},
+		&Environment{},
 		&Build{},
 
 		&User{},

@@ -21,6 +21,11 @@
             </a-select>
           </a-form-model-item>
 
+          <a-form-model-item :label="$t('form.exec.cmd')" prop="BuildCommands" :labelCol="labelCol" :wrapperCol="wrapperCol">
+            <a-textarea v-model="model.buildCommands" />
+            <span>{{ $t('form.exec.cmd.tips') }}</span>
+          </a-form-model-item>
+
           <a-form-model-item :label="$t('form.env.var')" prop="envVars" :labelCol="labelCol" :wrapperCol="wrapperCol">
             <a-textarea v-model="model.envVars" />
             <span>{{ $t('form.env.var.tips') }}</span>
@@ -43,14 +48,14 @@
                 <a-col :span="col">{{ $t('form.os.lang') }}</a-col>
                 <a-col :span="col-1">{{ $t('form.opt') }}</a-col>
               </a-row>
-              <a-row v-if="!environments || environments.length == 0" :gutter="cols">
+              <a-row v-if="!model.environments || model.environments.length == 0" :gutter="cols">
                 <a-col :offset="col * 3 + 1" :span="col-1">
                   <a class="edit">
                     <a @click="addEnv(0)" class="edit">{{ $t('form.add') }}</a>
                   </a>
                 </a-col>
               </a-row>
-              <a-row v-for="(item, index)  in environments" :key="index" :gutter="cols">
+              <a-row v-for="(item, index)  in model.environments" :key="index" :gutter="cols">
                 <a-col :offset="1" :span="col">
                   <span>{{ item.osCategory }}</span>
                 </a-col>
@@ -140,8 +145,7 @@ export default {
       labelCol: labelCol,
       wrapperCol: wrapperCol,
       wrapperFull: wrapperFull,
-      model: {},
-      environments: [],
+      model: { environments: [] },
       environment: { osLang: 'zh_cn' },
       environmentIndex: -1,
       isInsert: false,
@@ -211,7 +215,6 @@ export default {
       })
     },
     reset () {
-      this.model = {}
       this.$refs.form.resetFields()
     },
     back () {
@@ -227,7 +230,7 @@ export default {
     },
     editEnv (index) {
       console.log('editEnv', index)
-      this.environment = this.environments[index]
+      this.environment = this.model.environments[index]
       this.environmentIndex = index
       this.isInsert = false
       this.editEnvVisible = true
@@ -235,7 +238,7 @@ export default {
     removeEnv (index) {
       console.log('removeEnv', index)
       this.isInsert = false
-      this.environments.splice(index, 1)
+      this.model.environments.splice(index, 1)
     },
     saveEnv () {
       console.log('saveEnv')
@@ -247,9 +250,9 @@ export default {
         }
 
         if (this.isInsert) {
-          this.environments.splice(this.environmentIndex + 1, 0, this.environment)
+          this.model.environments.splice(this.environmentIndex + 1, 0, this.environment)
         } else {
-          this.environments[this.environmentIndex] = this.environment
+          this.model.environments[this.environmentIndex] = this.environment
         }
 
         this.editEnvVisible = false

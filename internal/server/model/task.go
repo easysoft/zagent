@@ -11,10 +11,10 @@ type Task struct {
 	Name string `json:"name"`
 	Desc string `json:"desc"`
 
-	Priority     int                 `json:"priority"`
-	Serials      string              `json:"serials"`      // for appium test
-	Environments string              `json:"environments"` // for selenium test
 	BuildType    commConst.BuildType `json:"buildType"`
+	Priority     int                 `json:"priority"`
+	Serials      string              `json:"serials"`                                // for appium test
+	Environments []Environment       `json:"environments" gorm:"foreignKey:task_id"` // for selenium test
 
 	ScriptUrl   string `json:"scriptUrl"`
 	ScmAddress  string `json:"scmAddress"`

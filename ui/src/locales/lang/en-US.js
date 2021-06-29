@@ -64,6 +64,8 @@ const locale = {
   'form.add': 'Add',
 
   'form.test.env': 'Test Environment',
+  'form.exec.cmd': 'Test Command',
+  'form.exec.cmd.tips': 'Input the command to exec testing.',
   'form.env.var': 'Environment Variable',
   'form.env.var.tips': 'Environment variables need to passed, format NAME=value.',
   'form.result.files': 'Result Files',
