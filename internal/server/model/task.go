@@ -30,9 +30,9 @@ type Task struct {
 	Progress commConst.BuildProgress `json:"progress"`
 	Status   commConst.BuildStatus   `json:"status"`
 
-	StartTime   time.Time `json:"startTime"`
-	PendingTime time.Time `json:"pendingTime"`
-	ResultTime  time.Time `json:"resultTime"`
+	StartTime   *time.Time `json:"startTime"`
+	PendingTime *time.Time `json:"pendingTime"`
+	ResultTime  *time.Time `json:"resultTime"`
 
 	UserName string `json:"userName"`
 	UserId   uint   `json:"userId"`
