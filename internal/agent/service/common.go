@@ -15,7 +15,7 @@ func NewCommonService() *CommonService {
 	return &CommonService{}
 }
 
-func (s *CommonService) SetBuildWorkDir(build *commDomain.IntfTest) {
+func (s *CommonService) SetBuildWorkDir(build *commDomain.Build) {
 	build.WorkDir = agentConf.Inst.WorkDir + uuid.NewV4().String() + _const.PthSep
 	_fileUtils.MkDirIfNeeded(build.WorkDir)
 }

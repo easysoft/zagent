@@ -3,24 +3,15 @@ package commDomain
 type KvmReq struct {
 	StartAfterCreated bool `json:"startAfterCreated"`
 
-	VmPublicIp   string `json:"vmPublicIp"`
-	VmPrivateIp  string `json:"vmPrivateIp"`
-	VmPublicPort int    `json:"vmPublicPort"`
+	VmMacAddress string `json:"vmMacAddress"`
+	VmBacking    string `json:"vmBacking"`
+	VmTemplate   string `json:"vmTemplate"`
 
-	VmMacAddress   string `json:"vmMacAddress"`
-	VmTemplate     string `json:"vmTemplate"`
-	VmUniqueName   string `json:"vmUniqueName"`
-	VmMemorySize   int    `json:"vmMemorySize"`
-	VmDiskSize     int    `json:"vmDiskSize"`
-	VmCdromSys     string `json:"vmCdromSys"`
-	VmCdromDriver  string `json:"vmCdromDriver"`
-	VmBackingImage string `json:"vmBackingImage"`
-
-	HostId           int `json:"hostId"`
-	VmId             int `json:"vmId"`
-	VmBackingImageId int `json:"vmBackingImageId"`
-	VmCdromSysId     int `json:"vmCdromSysId"`
-	VmCdromDriverId  int `json:"vmCdromDriverId"`
+	VmUniqueName  string `json:"vmUniqueName"`
+	VmMemorySize  int    `json:"vmMemorySize"`
+	VmDiskSize    int    `json:"vmDiskSize"`
+	VmCdromSys    string `json:"vmCdromSys"`
+	VmCdromDriver string `json:"vmCdromDriver"`
 }
 
 type KvmResponse struct {

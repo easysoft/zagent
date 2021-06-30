@@ -50,4 +50,8 @@ type Build struct {
 
 	Progress commConst.BuildProgress `json:"progress"`
 	Status   commConst.BuildStatus   `json:"status"`
+
+	// interface test
+	TestScenario TestScenario `json:"testScenario,omitempty"`
+	TestSet      TestSet      `json:"testSet,omitempty"`
 }

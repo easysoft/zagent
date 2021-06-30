@@ -9,14 +9,17 @@ import (
 type Vm struct {
 	BaseModel
 
-	BackingId uint `json:"baseId"`
-	HostId    uint `json:"hostId"`
+	Name      string `json:"name"`
+	Desc      string `json:"desc"`
+	ImagePath string `json:"imagePath"`
 
-	Name        string `json:"name"`
-	Desc        string `json:"desc"`
-	Tmpl        string `json:"tmpl"`
-	Backing     string `json:"backing"`
-	ImagePath   string `json:"imagePath"`
+	HostId   uint   `json:"hostId"`
+	HostName string `json:"hostName"`
+
+	TmplId   uint   `json:"tmplId"`
+	TmplName string `json:"tmplName"`
+
+	BackingId   uint   `json:"backingId"`
 	BackingPath string `json:"backingPath"`
 
 	OsCategory commConst.OsCategory `json:"osCategory"`
@@ -47,9 +50,11 @@ type Vm struct {
 
 func GenKvmReq(po Vm) (req commDomain.KvmReq) {
 	req = commDomain.KvmReq{
-		VmMacAddress: po.MacAddress, VmId: int(po.ID), VmUniqueName: po.Name,
+		VmMacAddress: po.MacAddress, VmUniqueName: po.Name,
+		VmBacking: po.BackingPath, VmTemplate: po.TmplName,
+
 		VmDiskSize: po.DiskSize, VmMemorySize: po.MemorySize,
-		VmCdromSys: po.CdromSys, VmCdromDriver: po.CdromDriver, VmBackingImage: po.Backing}
+		VmCdromSys: po.CdromSys, VmCdromDriver: po.CdromDriver}
 
 	return
 }

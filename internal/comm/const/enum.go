@@ -216,6 +216,7 @@ func (e CodeChallengeMethod) ToString() string {
 type TestType string
 
 const (
+	Auto      TestType = "auto"
 	Interface TestType = "interface"
 	Case      TestType = "case"
 	Scenario  TestType = "scenario"
@@ -228,7 +229,6 @@ func (e TestType) ToString() string {
 type PreviewType string
 
 const (
-	Auto PreviewType = "auto"
 	Json PreviewType = "json"
 	Html PreviewType = "html"
 	Xml  PreviewType = "xml"

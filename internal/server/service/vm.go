@@ -6,18 +6,16 @@ import (
 	commConst "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
-	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
 	serverConf "github.com/easysoft/zagent/internal/server/cfg"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
-	"strings"
 )
 
 type VmService interface {
 	Register(vm commDomain.Vm) (result _domain.RpcResp)
-	CreateRemote(hostId, backingId, queueId uint) (result _domain.RpcResp)
-	genVmName(imageName string) (name string)
+	CreateRemote(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp)
+	genVmName(backing model.VmBacking, vmId uint) (name string)
 	genValidMacAddress() (mac string)
 	genRandomMac() (mac string)
 }
@@ -28,6 +26,7 @@ type KvmNativeService struct {
 	HostRepo    *repo.HostRepo    `inject:""`
 	IsoRepo     *repo.IsoRepo     `inject:""`
 	BackingRepo *repo.BackingRepo `inject:""`
+	TmplRepo    *repo.TmplRepo    `inject:""`
 
 	RpcService *RpcService `inject:""`
 }
@@ -50,27 +49,34 @@ func (s KvmNativeService) Register(vm commDomain.Vm) (result _domain.RpcResp) {
 	return
 }
 
-func (s KvmNativeService) CreateRemote(hostId, backingId, queueId uint) (result _domain.RpcResp) {
+func (s KvmNativeService) CreateRemote(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp) {
 	host := s.HostRepo.Get(hostId)
-	backingImage := s.BackingRepo.Get(backingId)
-	sysIso := s.IsoRepo.Get(backingImage.SysIsoId)
+	backing := s.BackingRepo.Get(backingId)
+	sysIso := s.IsoRepo.Get(backing.SysIsoId)
 	sysIsoPath := sysIso.Path
 
 	driverIsoPath := ""
-	if backingImage.OsCategory == commConst.Windows {
-		driverIso := s.IsoRepo.Get(backingImage.DriverIsoId)
+	if backing.OsCategory == commConst.Windows {
+		driverIso := s.IsoRepo.Get(backing.DriverIsoId)
 		driverIsoPath = driverIso.Path
 	}
 
-	mac := s.genValidMacAddress() // get a unique mac address
-	vmName := s.genVmName(backingImage.Name)
+	tmpl := s.TmplRepo.Get(tmplId)
 
-	vm := model.Vm{MacAddress: mac, Name: vmName,
-		HostId: host.ID, BackingId: backingId,
-		DiskSize: backingImage.SuggestDiskSize, MemorySize: backingImage.SuggestMemorySize,
-		CdromSys: sysIsoPath, CdromDriver: driverIsoPath, Backing: backingImage.Path}
+	mac := s.genValidMacAddress() // get a unique mac address
+
+	vm := model.Vm{
+		MacAddress: mac,
+		BackingId:  backing.ID, BackingPath: backing.Path,
+		TmplId: tmpl.ID, TmplName: tmpl.Name,
+
+		HostId: host.ID, HostName: host.Name,
+		DiskSize: backing.SuggestDiskSize, MemorySize: backing.SuggestMemorySize,
+		CdromSys: sysIsoPath, CdromDriver: driverIsoPath}
 
 	s.VmRepo.Save(&vm) // save vm to db
+	vm.Name = s.genVmName(backing, vm.ID)
+	s.VmRepo.UpdateVmName(vm)
 
 	kvmReq := model.GenKvmReq(vm)
 	result = s.RpcService.CreateVm(host.Ip, host.Port, kvmReq)
@@ -89,9 +95,8 @@ func (s KvmNativeService) CreateRemote(hostId, backingId, queueId uint) (result 
 	return
 }
 
-func (s KvmNativeService) genVmName(imageName string) (name string) {
-	uuid := strings.Replace(_stringUtils.NewUuid(), "-", "", -1)
-	name = strings.Replace(imageName, "backing", uuid, -1)
+func (s KvmNativeService) genVmName(backing model.VmBacking, vmId uint) (name string) {
+	name = fmt.Sprintf("%s-%s-%s-%d", backing.OsType, backing.OsVersion, backing.OsLang, vmId)
 
 	return
 }
@@ -117,6 +122,6 @@ func (s KvmNativeService) genRandomMac() (mac string) {
 	}
 
 	buf[0] |= 2
-	mac = fmt.Sprintf("%02x:%02x:%02x:%02x:%02x:%02x\n", buf[0], buf[1], buf[2], buf[3], buf[4], buf[5])
+	mac = fmt.Sprintf("%02x:%02x:%02x:%02x:%02x:%02x", buf[0], buf[1], buf[2], buf[3], buf[4], buf[5])
 	return
 }

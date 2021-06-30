@@ -49,10 +49,10 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 		queue.Progress == commConst.ProgressPending {
 
 		// looking for valid host
-		hostId, backingId := s.HostService.GetValidForQueue(queue)
-		if hostId != 0 {
+		hostId, backingId, tmplId, found := s.HostService.GetValidForQueue(queue)
+		if found {
 			// create kvm
-			result := s.VmService.CreateRemote(hostId, backingId, queue.ID)
+			result := s.VmService.CreateRemote(hostId, backingId, tmplId, queue.ID)
 			if result.IsSuccess() { // success to create
 				newTaskProgress = commConst.ProgressInProgress
 			} else {

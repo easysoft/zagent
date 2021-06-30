@@ -41,6 +41,10 @@ func (r VmRepo) Save(po *model.Vm) {
 	return
 }
 
+func (r VmRepo) UpdateVmName(vm model.Vm) {
+	r.DB.Model(&vm).Where("id=?", vm.ID).Update("name", vm.Name)
+}
+
 func (r VmRepo) Launch(vm commDomain.Vm) {
 	r.DB.Model(&vm).Where("id=?", vm.Id).
 		Updates(

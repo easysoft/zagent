@@ -13,7 +13,7 @@ func NewInterfaceTestService() *InterfaceTestService {
 	return &InterfaceTestService{}
 }
 
-func (s *InterfaceTestService) ExecScenario(build *commDomain.IntfTest) (result commDomain.TestResult) {
+func (s *InterfaceTestService) ExecScenario(build *commDomain.Build) (result commDomain.TestResult) {
 	scenario := build.TestScenario
 	s.ExecService.ExecProcessor(build, &scenario.Processor)
 
@@ -24,7 +24,7 @@ func (s *InterfaceTestService) ExecScenario(build *commDomain.IntfTest) (result 
 	return
 }
 
-func (s *InterfaceTestService) ExecSet(build *commDomain.IntfTest, result *commDomain.TestResult) {
+func (s *InterfaceTestService) ExecSet(build *commDomain.Build, result *commDomain.TestResult) {
 	set := build.TestSet
 
 	// TODO:

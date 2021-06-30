@@ -15,7 +15,7 @@ func NewAutomatedTestService() *AutomatedTestService {
 	return &AutomatedTestService{}
 }
 
-func (s *AutomatedTestService) Exec(build *commDomain.IntfTest) {
+func (s *AutomatedTestService) Exec(build *commDomain.Build) {
 	result := commDomain.TestResult{}
 
 	s.SetBuildWorkDir(build)
@@ -28,27 +28,19 @@ func (s *AutomatedTestService) Exec(build *commDomain.IntfTest) {
 	}
 
 	// exec test
-	parseBuildCommand(build)
+	prepareEnvVars(build)
+
 	result = s.ExecService.ExcCommand(build)
 	if !result.IsSuccess() {
 		result.Fail(fmt.Sprintf("failed to ext test,\n dir: %s\n  cmd: \n%s",
-			build.ProjectDir, build.AutomatedTest.BuildCommands))
+			build.ProjectDir, build.BuildCommands))
 	}
 
 	// submit result
-	result.Name = build.AutomatedTest.Name
+	result.Name = build.Name
 	s.ExecService.UploadResult(*build, result)
 }
 
-func parseBuildCommand(build *commDomain.IntfTest) {
-	// mvn clean test -Dtestng.suite=target/test-classes/baidu-test.xml
-	//		 		  -DdriverPath=${driverPath}
+func prepareEnvVars(build *commDomain.Build) {
 
-	//dir := ""
-	//if _commonUtils.IsWin() {
-	//	dir = agentConst.ResPathWin
-	//} else {
-	//	dir = agentConst.ResPathLinux
-	//}
-	//build.BuildCommands = build.BuildCommands
 }

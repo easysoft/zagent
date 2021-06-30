@@ -15,10 +15,10 @@ func NewBuildService() *BuildService {
 	return &BuildService{}
 }
 
-func (s *BuildService) Exec(build commDomain.IntfTest) {
+func (s *BuildService) Exec(build commDomain.Build) {
 	s.TaskService.StartTask()
 
-	if build.BuildType == commConst.AutomatedTest {
+	if build.BuildType == commConst.AutoSelenium || build.BuildType == commConst.AutoAppium {
 		s.AutomatedTestService.Exec(&build)
 	}
 

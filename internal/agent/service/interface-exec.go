@@ -21,7 +21,7 @@ func NewInterfaceExecService() *InterfaceExecService {
 	return &InterfaceExecService{}
 }
 
-func (s *InterfaceExecService) ExecProcessor(build *commDomain.IntfTest, processor *commDomain.TestProcessor) {
+func (s *InterfaceExecService) ExecProcessor(build *commDomain.Build, processor *commDomain.TestProcessor) {
 
 	for _, child := range processor.Children {
 		childMap := child.(map[string]interface{})
@@ -41,12 +41,12 @@ func (s *InterfaceExecService) ExecProcessor(build *commDomain.IntfTest, process
 	}
 }
 
-func (s *InterfaceExecService) UploadResult(build commDomain.IntfTest, result commDomain.TestResult) {
+func (s *InterfaceExecService) UploadResult(build commDomain.Build, result commDomain.TestResult) {
 	zipFile := build.WorkDir + "testResult.zip"
-	err := _fileUtils.ZipFiles(zipFile, build.ProjectDir, strings.Split(build.AutomatedTest.ResultFiles, ","))
+	err := _fileUtils.ZipFiles(zipFile, build.ProjectDir, strings.Split(build.ResultFiles, ","))
 	if err != nil {
 		_logUtils.Errorf(_i118Utils.Sprintf("fail_to_zip_test_result",
-			zipFile, build.ProjectDir, build.AutomatedTest.ResultFiles, err))
+			zipFile, build.ProjectDir, build.ResultFiles, err))
 	}
 
 	result.Payload = build
