@@ -31,7 +31,7 @@ func (s HostService) Register(host commDomain.Host) (result _domain.RpcResp) {
 	return
 }
 
-func (s HostService) GetValidForQueue(queue model.Queue) (hostId, backingId int) {
+func (s HostService) GetValidForQueue(queue model.Queue) (hostId, backingId uint) {
 	backingIdsByBrowser := s.BackingRepo.QueryByBrowser(queue.BrowserType, queue.BrowserVersion)
 	backingIds, found := s.BackingRepo.QueryByOs(queue.OsPlatform, queue.OsType, queue.OsLang, backingIdsByBrowser)
 
@@ -49,11 +49,11 @@ func (s HostService) GetValidForQueue(queue model.Queue) (hostId, backingId int)
 	return
 }
 
-func (s HostService) getIdleHost() (ids []int) {
+func (s HostService) getIdleHost() (ids []uint) {
 	// keys: hostId, vmCount
-	hostToVmCountList := s.HostRepo.QueryIdle(commConst.MaxVmOnHost)
+	hostToVmCountList := s.HostRepo.QueryIdle()
 
-	hostIds := make([]int, 0)
+	hostIds := make([]uint, 0)
 	for _, mp := range hostToVmCountList {
 		hostId := mp["hostId"]
 		hostIds = append(hostIds, hostId)

@@ -10,9 +10,9 @@ type CommonRepo struct {
 }
 
 func (r CommonRepo) FindAssetByOs(osCategory commConst.OsCategory, osType commConst.OsType, osLang commConst.OsLang,
-	items []commDomain.VmAssert, backingIds []int) (assertIds []int, found bool) {
+	items []commDomain.VmAssert, backingIds []uint) (assertIds []uint, found bool) {
 
-	mp := map[int][]int{}
+	mp := map[int][]uint{}
 	similarity := 0
 	for _, item := range items {
 		itemCategory := item.OsCategory
@@ -20,20 +20,20 @@ func (r CommonRepo) FindAssetByOs(osCategory commConst.OsCategory, osType commCo
 		itemLang := item.OsLang
 
 		if similarity < 3 && (itemCategory == osCategory && itemType == osType && itemLang == osLang) &&
-			_intUtils.FindInArr(int(item.ID), backingIds) {
+			_intUtils.FindUintInArr(item.ID, backingIds) {
 
 			similarity = 3
-			mp[similarity] = append(mp[similarity], int(item.ID))
+			mp[similarity] = append(mp[similarity], item.ID)
 		} else if similarity < 2 && (itemCategory == osCategory && itemType == osType) &&
-			_intUtils.FindInArr(int(item.ID), backingIds) {
+			_intUtils.FindUintInArr(item.ID, backingIds) {
 
 			similarity = 2
-			mp[similarity] = append(mp[similarity], int(item.ID))
+			mp[similarity] = append(mp[similarity], item.ID)
 		} else if similarity < 1 && (itemCategory == osCategory) &&
-			_intUtils.FindInArr(int(item.ID), backingIds) {
+			_intUtils.FindUintInArr(item.ID, backingIds) {
 
 			similarity = 1
-			mp[similarity] = append(mp[similarity], int(item.ID))
+			mp[similarity] = append(mp[similarity], item.ID)
 		}
 	}
 

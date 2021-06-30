@@ -28,7 +28,7 @@ func (r BackingRepo) Get(id uint) (image model.VmBacking) {
 }
 
 func (r BackingRepo) QueryByOs(osCategory commConst.OsCategory, osType commConst.OsType, osLang commConst.OsLang,
-	backingIdsByBrowser []int) (backingIds []int, found bool) {
+	backingIdsByBrowser []uint) (backingIds []uint, found bool) {
 
 	asserts := make([]commDomain.VmAssert, 0)
 	r.DB.Model(model.VmBacking{}).
@@ -40,12 +40,13 @@ func (r BackingRepo) QueryByOs(osCategory commConst.OsCategory, osType commConst
 	return
 }
 
-func (r BackingRepo) QueryByBrowser(browserType commConst.BrowserType, version string) (ids []int) {
+func (r BackingRepo) QueryByBrowser(browserType commConst.BrowserType, version string) (ids []uint) {
 
-	sql := "SELECT r.backingImageId id " +
-		"FROM BizBackingImageCapability_Relation r " +
-		"LEFT JOIN BizBrowser browser ON browser.id = r.browserId " +
+	sql := "SELECT r.vm_backing_id id " +
+		"FROM biz_backing_browser_r r " +
+		"LEFT JOIN biz_browser browser ON browser.id = r.browser_id " +
 		"WHERE NOT browser.disabled AND NOT browser.deleted "
+
 	if browserType != "" {
 		sql += "AND browser.type = ? "
 	}

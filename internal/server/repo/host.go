@@ -7,7 +7,6 @@ import (
 	_commonUtils "github.com/easysoft/zagent/internal/pkg/lib/common"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/jinzhu/gorm"
-	"strconv"
 	"strings"
 )
 
@@ -36,8 +35,8 @@ func (r HostRepo) Get(id uint) (host model.Host) {
 	return
 }
 
-func (r HostRepo) QueryByBackings(backingIds []int, hostIds []int) (hostId, backingId int) {
-	list := make([]map[string]int, 0)
+func (r HostRepo) QueryByBackings(backingIds []uint, hostIds []uint) (hostId, backingId uint) {
+	list := make([]map[string]uint, 0)
 
 	sql := fmt.Sprintf(`SELECT r.host_id hostId, r.vm_backing_id backingId
 			FROM biz_host_backing_r r 
@@ -46,8 +45,8 @@ func (r HostRepo) QueryByBackings(backingIds []int, hostIds []int) (hostId, back
 	        WHERE host.status = 'active' 
 			AND r.vm_backing_id IN (%s) AND host.id IN (%s) LIMIT 1`,
 
-		strings.Join(_commonUtils.IntToStrArr(backingIds), ","),
-		strings.Join(_commonUtils.IntToStrArr(hostIds), ","))
+		strings.Join(_commonUtils.UintToStrArr(backingIds), ","),
+		strings.Join(_commonUtils.UintToStrArr(hostIds), ","))
 
 	r.DB.Raw(sql).Find(&list)
 
@@ -63,20 +62,20 @@ func (r HostRepo) QueryByBackings(backingIds []int, hostIds []int) (hostId, back
 	return
 }
 
-func (r HostRepo) QueryIdle(host int) (ret []map[string]int) {
-	sql := `SELECT temp.hostId, temp.vmCount 
-			FROM (
-				SELECT DISTINCT host.id hostId, IFNULL(sub.num, 0) vmCount
-				FROM BizHost host
-				LEFT JOIN
-					(SELECT hostId, COUNT(1) num
-						FROM BizVm
-						WHERE status != 'destroy' AND NOT deleted AND NOT disabled
-						GROUP BY hostId) sub
-					ON host.id = sub.hostId
-			) temp
-			WHERE temp.vmCount <= ` + strconv.Itoa(commConst.MaxVmOnHost)
+func (r HostRepo) QueryIdle() (ret []map[string]uint) {
+	list := make([]map[string]uint, 0)
+	r.DB.Raw(`SELECT host_id, COUNT(1) num
+					FROM biz_vm
+					WHERE status != 'destroy' AND NOT deleted AND NOT disabled
+					GROUP BY host_id
+					ORDER BY num`).
+		Scan(&list)
 
-	r.DB.Raw(sql).Scan(&ret)
+	for _, item := range list {
+		if item["num"] <= commConst.MaxVmOnHost {
+			ret = append(ret, item)
+		}
+	}
+
 	return
 }
