@@ -6,7 +6,7 @@ import (
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_commonUtils "github.com/easysoft/zagent/internal/pkg/lib/common"
 	"github.com/easysoft/zagent/internal/server/model"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 	"strings"
 )
 
@@ -35,26 +35,28 @@ func (r HostRepo) Get(id uint) (host model.Host) {
 	return
 }
 
-func (r HostRepo) QueryByBackings(backingIds []uint, hostIds []uint) (hostId, backingId uint) {
-	list := make([]map[string]uint, 0)
+func (r HostRepo) QueryByBackings(backingIds []uint, busyHostIds []uint) (hostId, backingId uint) {
+	list := make([]commDomain.VmHost, 0)
 
-	sql := fmt.Sprintf(`SELECT r.host_id hostId, r.vm_backing_id backingId
+	sql := fmt.Sprintf(`SELECT r.host_id, r.vm_backing_id
 			FROM biz_host_backing_r r 
 		    INNER JOIN biz_host host on r.host_id = host.id 
 
 	        WHERE host.status = 'active' 
-			AND r.vm_backing_id IN (%s) AND host.id IN (%s) LIMIT 1`,
+			AND r.vm_backing_id IN (%s) AND host.id NOT IN (%s) LIMIT 1`,
 
 		strings.Join(_commonUtils.UintToStrArr(backingIds), ","),
-		strings.Join(_commonUtils.UintToStrArr(hostIds), ","))
+		strings.Join(_commonUtils.UintToStrArr(busyHostIds), ","))
 
 	r.DB.Raw(sql).Find(&list)
 
 	for _, id := range backingIds { // get the most fittest one by backing order
 		for _, item := range list {
-			if id == item["hostId"] {
-				hostId = item["hostId"]
-				backingId = item["backingId"]
+			if id == item.HostId {
+				hostId = item.HostId
+				backingId = item.VmBackingId
+
+				return
 			}
 		}
 	}
@@ -62,9 +64,9 @@ func (r HostRepo) QueryByBackings(backingIds []uint, hostIds []uint) (hostId, ba
 	return
 }
 
-func (r HostRepo) QueryIdle() (ret []map[string]uint) {
+func (r HostRepo) QueryBusy() (ret []map[string]uint) {
 	list := make([]map[string]uint, 0)
-	r.DB.Raw(`SELECT host_id, COUNT(1) num
+	r.DB.Raw(`SELECT host_id, COUNT(id) num
 					FROM biz_vm
 					WHERE status != 'destroy' AND NOT deleted AND NOT disabled
 					GROUP BY host_id
@@ -72,7 +74,7 @@ func (r HostRepo) QueryIdle() (ret []map[string]uint) {
 		Scan(&list)
 
 	for _, item := range list {
-		if item["num"] <= commConst.MaxVmOnHost {
+		if item["num"] > commConst.MaxVmOnHost {
 			ret = append(ret, item)
 		}
 	}

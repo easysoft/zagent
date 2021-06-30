@@ -33,7 +33,7 @@ func (r BackingRepo) QueryByOs(osCategory commConst.OsCategory, osType commConst
 	asserts := make([]commDomain.VmAssert, 0)
 	r.DB.Model(model.VmBacking{}).
 		Where("NOT disabled AND NOT deleted").Order("id ASC").
-		Scan(&asserts)
+		Find(&asserts)
 
 	backingIds, found = r.FindAssetByOs(osCategory, osType, osLang, asserts, backingIdsByBrowser)
 

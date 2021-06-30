@@ -39,19 +39,15 @@ func (s HostService) GetValidForQueue(queue model.Queue) (hostId, backingId uint
 		return
 	}
 
-	hostIds := s.getIdleHost()
-	if len(hostIds) == 0 {
-		return
-	}
-
-	hostId, backingId = s.HostRepo.QueryByBackings(backingIds, hostIds)
+	busyHostIds := s.getBusyHosts()
+	hostId, backingId = s.HostRepo.QueryByBackings(backingIds, busyHostIds)
 
 	return
 }
 
-func (s HostService) getIdleHost() (ids []uint) {
+func (s HostService) getBusyHosts() (ids []uint) {
 	// keys: hostId, vmCount
-	hostToVmCountList := s.HostRepo.QueryIdle()
+	hostToVmCountList := s.HostRepo.QueryBusy()
 
 	hostIds := make([]uint, 0)
 	for _, mp := range hostToVmCountList {

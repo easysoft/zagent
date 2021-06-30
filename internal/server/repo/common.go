@@ -42,7 +42,7 @@ func (r CommonRepo) FindAssetByOs(osCategory commConst.OsCategory, osType commCo
 			continue
 		}
 
-		for _, id := range assertIds {
+		for _, id := range mp[i] {
 			assertIds = append(assertIds, id)
 		}
 	}

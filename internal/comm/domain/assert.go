@@ -12,3 +12,8 @@ type VmAssert struct {
 	OsVersion  string
 	OsLang     commConst.OsLang
 }
+
+type VmHost struct {
+	HostId      uint
+	VmBackingId uint
+}
