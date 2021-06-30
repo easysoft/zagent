@@ -13,6 +13,7 @@ type Vm struct {
 	HostId    uint `json:"hostId"`
 
 	Name        string `json:"name"`
+	Desc        string `json:"desc"`
 	Tmpl        string `json:"tmpl"`
 	Backing     string `json:"backing"`
 	ImagePath   string `json:"imagePath"`

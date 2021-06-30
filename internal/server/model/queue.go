@@ -32,7 +32,7 @@ type Queue struct {
 	Progress commConst.BuildProgress `json:"progress"`
 	Status   commConst.BuildStatus   `json:"status"`
 
-	Retry int `json:"retry"`
+	Retry int `json:"retry" gorm:"default:0"`
 
 	TaskName string `json:"taskName"`
 	UserName string `json:"userName"`

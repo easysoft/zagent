@@ -73,5 +73,6 @@ func (r VmRepo) DestroyMissedVmsStatus(vms []string, hostId uint) {
 func (r VmRepo) FailToCreate(id uint, msg string) {
 	r.DB.Model(&model.Vm{}).
 		Where("id=?", id).
-		Updates(map[string]interface{}{"msg": commConst.VmFailToCreate, "updatedAt": time.Now()})
+		Updates(map[string]interface{}{
+			"status": commConst.VmFailToCreate, "desc": msg})
 }

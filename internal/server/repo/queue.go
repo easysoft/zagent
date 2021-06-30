@@ -2,6 +2,7 @@ package repo
 
 import (
 	commConst "github.com/easysoft/zagent/internal/comm/const"
+	serverConf "github.com/easysoft/zagent/internal/server/cfg"
 	"github.com/easysoft/zagent/internal/server/model"
 	"gorm.io/gorm"
 	"strings"
@@ -57,8 +58,18 @@ func (r QueueRepo) Start(queue model.Queue) (err error) {
 	return
 }
 func (r QueueRepo) Pending(queueId uint) (err error) {
-	r.DB.Model(&model.Queue{}).Where("id=?", queueId).Updates(
-		map[string]interface{}{"progress": commConst.ProgressPending, "pending_time": time.Now()})
+	r.DB.Model(&model.Queue{}).
+		Where("id=?", queueId).
+		Updates(map[string]interface{}{
+			"progress": commConst.ProgressPending,
+		})
+
+	r.DB.Model(&model.Queue{}). // only update once, used for timeout checking
+					Where("id=? AND pending_time IS NULL", queueId).
+					Updates(map[string]interface{}{
+			"pending_time": time.Now(),
+		})
+
 	return
 }
 
@@ -71,8 +82,16 @@ func (r QueueRepo) SetTimeout(id uint) (err error) {
 func (r QueueRepo) QueryTimeout() (queues []model.Queue) {
 	queues = make([]model.Queue, 0)
 
-	r.DB.Where("(progress = ? AND unix_timestamp(NOW()) - unix_timestamp(pending_time) > ?)"+
-		" OR (progress = ? AND unix_timestamp(NOW()) - unix_timestamp(start_time) > ?)",
+	where := ""
+	if serverConf.Config.DB.Adapter == "sqlite3" {
+		where = "(progress = ? AND strftime('%s','now') - strftime('%s',pending_time) > ?)" +
+			" OR (progress = ? AND strftime('%s','now') - strftime('%s',start_time) > ?)"
+	} else if serverConf.Config.DB.Adapter == "mysql" {
+		where = "(progress = ? AND unix_timestamp(NOW()) - unix_timestamp(pending_time) > ?)" +
+			" OR (progress = ? AND unix_timestamp(NOW()) - unix_timestamp(start_time) > ?)"
+	}
+
+	r.DB.Where(where,
 		commConst.ProgressPending, commConst.WaitForExecTime*60*1000,
 		commConst.ProgressInProgress, commConst.WaitForResultTime*60*1000).
 		Order("priority").Find(&queues)
@@ -81,7 +100,7 @@ func (r QueueRepo) QueryTimeout() (queues []model.Queue) {
 func (r QueueRepo) QueryTimeoutOrFailedForRetry() (queues []model.Queue) {
 	queues = make([]model.Queue, 0)
 
-	r.DB.Where("retry < ?"+" AND (progress = ? OR status = ? )",
+	r.DB.Where("retry < ? AND (progress = ? OR status = ? )",
 		commConst.QueueRetryTime, commConst.ProgressTimeout, commConst.StatusFail).
 		Order("priority").Find(&queues)
 	return
