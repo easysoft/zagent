@@ -37,7 +37,7 @@ func (r CommonRepo) FindAssetByOs(osCategory commConst.OsCategory, osType commCo
 		}
 	}
 
-	for i := 3; i > 0; i-- {
+	for i := 3; i > 0; i-- { // order by similarity desc
 		if mp[i] == nil {
 			continue
 		}

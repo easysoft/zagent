@@ -36,8 +36,8 @@ func (r HostRepo) Get(id uint) (host model.Host) {
 	return
 }
 
-func (r HostRepo) QueryByBackings(backingIds []int, hostIds []int) (hostId, backingId uint) {
-	mp := map[string]uint{}
+func (r HostRepo) QueryByBackings(backingIds []int, hostIds []int) (hostId, backingId int) {
+	list := make([]map[string]int, 0)
 
 	sql := fmt.Sprintf(`SELECT r.host_id hostId, r.vm_backing_id backingId
 			FROM biz_host_backing_r r 
@@ -49,10 +49,16 @@ func (r HostRepo) QueryByBackings(backingIds []int, hostIds []int) (hostId, back
 		strings.Join(_commonUtils.IntToStrArr(backingIds), ","),
 		strings.Join(_commonUtils.IntToStrArr(hostIds), ","))
 
-	r.DB.Raw(sql).Scan(&mp)
+	r.DB.Raw(sql).Find(&list)
 
-	hostId = mp["hostId"]
-	backingId = mp["backingId"]
+	for _, id := range backingIds { // get the most fittest one by backing order
+		for _, item := range list {
+			if id == item["hostId"] {
+				hostId = item["hostId"]
+				backingId = item["backingId"]
+			}
+		}
+	}
 
 	return
 }

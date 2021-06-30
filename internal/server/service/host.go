@@ -31,7 +31,7 @@ func (s HostService) Register(host commDomain.Host) (result _domain.RpcResp) {
 	return
 }
 
-func (s HostService) GetValidForQueue(queue model.Queue) (hostId, backingId uint) {
+func (s HostService) GetValidForQueue(queue model.Queue) (hostId, backingId int) {
 	backingIdsByBrowser := s.BackingRepo.QueryByBrowser(queue.BrowserType, queue.BrowserVersion)
 	backingIds, found := s.BackingRepo.QueryByOs(queue.OsPlatform, queue.OsType, queue.OsLang, backingIdsByBrowser)
 
