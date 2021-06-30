@@ -9,7 +9,7 @@ import (
 )
 
 type VmRepo struct {
-	CommonRepo
+	BaseRepo
 	DB *gorm.DB `inject:""`
 }
 

@@ -5,8 +5,6 @@ import (
 	commConst "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
-	_intUtils "github.com/easysoft/zagent/internal/pkg/lib/int"
-	bizCasbin "github.com/easysoft/zagent/internal/server/biz/casbin"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 )
@@ -14,9 +12,8 @@ import (
 type HostService struct {
 	HostRepo    *repo.HostRepo    `inject:""`
 	BackingRepo *repo.BackingRepo `inject:""`
+	TmplRepo    *repo.TmplRepo    `inject:""`
 	VmRepo      *repo.VmRepo      `inject:""`
-
-	CasbinService *bizCasbin.CasbinService `inject:""`
 }
 
 func NewHostService() *HostService {
@@ -35,17 +32,10 @@ func (s HostService) Register(host commDomain.Host) (result _domain.RpcResp) {
 }
 
 func (s HostService) GetValidForQueue(queue model.Queue) (hostId, backingId uint) {
-	imageIds1 := s.BackingRepo.QueryByOs(queue.OsPlatform, queue.OsType, queue.OsLang)
-	imageIds2 := s.BackingRepo.QueryByBrowser(queue.BrowserType, queue.BrowserVersion)
+	backingIdsByBrowser := s.BackingRepo.QueryByBrowser(queue.BrowserType, queue.BrowserVersion)
+	backingIds, found := s.BackingRepo.QueryByOs(queue.OsPlatform, queue.OsType, queue.OsLang, backingIdsByBrowser)
 
-	images := make([]int, 0)
-	for id := range imageIds1 {
-		if _intUtils.FindInArr(id, imageIds2) {
-			images = append(images, id)
-		}
-	}
-
-	if len(images) == 0 {
+	if !found {
 		return
 	}
 
@@ -54,7 +44,7 @@ func (s HostService) GetValidForQueue(queue model.Queue) (hostId, backingId uint
 		return
 	}
 
-	hostId, backingId = s.HostRepo.QueryByImages(images, hostIds)
+	hostId, backingId = s.HostRepo.QueryByBackings(backingIds, hostIds)
 
 	return
 }

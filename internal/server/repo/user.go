@@ -11,7 +11,7 @@ import (
 )
 
 type UserRepo struct {
-	CommonRepo
+	BaseRepo
 	DB *gorm.DB `inject:""`
 }
 

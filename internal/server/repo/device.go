@@ -7,7 +7,7 @@ import (
 )
 
 type DeviceRepo struct {
-	CommonRepo
+	BaseRepo
 	DB *gorm.DB `inject:""`
 }
 

@@ -6,7 +6,7 @@ import (
 )
 
 type BrowserRepo struct {
-	CommonRepo
+	BaseRepo
 	DB *gorm.DB `inject:""`
 }
 

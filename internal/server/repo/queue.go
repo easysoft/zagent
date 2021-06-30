@@ -9,7 +9,7 @@ import (
 )
 
 type QueueRepo struct {
-	CommonRepo
+	BaseRepo
 	DB *gorm.DB `inject:""`
 }
 

@@ -98,7 +98,7 @@ func injectObj(router *router.Router) {
 		// repo
 		&inject.Object{Value: repo.NewTaskRepo()},
 
-		&inject.Object{Value: repo.NewCommonRepo()},
+		&inject.Object{Value: repo.NewBaseRepo()},
 		&inject.Object{Value: repo.NewPermRepo()},
 		&inject.Object{Value: repo.NewRoleRepo()},
 		&inject.Object{Value: repo.NewTokenRepo()},

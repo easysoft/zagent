@@ -2,11 +2,13 @@ package repo
 
 import (
 	commConst "github.com/easysoft/zagent/internal/comm/const"
+	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"gorm.io/gorm"
 )
 
 type BackingRepo struct {
+	BaseRepo
 	CommonRepo
 	DB *gorm.DB `inject:""`
 }
@@ -25,19 +27,15 @@ func (r BackingRepo) Get(id uint) (image model.VmBacking) {
 	return
 }
 
-func (r BackingRepo) QueryByOs(osCategory commConst.OsCategory, osType commConst.OsType, osLang commConst.OsLang) (ids []int) {
-	var db = r.DB.Model(model.VmBacking{}).Where("NOT disabled AND NOT deleted")
-	if osCategory != "" {
-		db.Where("osPlatform = ?", osCategory)
-	}
-	if osType != "" {
-		db.Where("osType = ?", osType)
-	}
-	if osCategory != "" {
-		db.Where("osLang = ?", osLang)
-	}
+func (r BackingRepo) QueryByOs(osCategory commConst.OsCategory, osType commConst.OsType, osLang commConst.OsLang,
+	backingIdsByBrowser []int) (backingIds []int, found bool) {
 
-	db.Order("id ASC, createdAt ASC").Find(&ids)
+	asserts := make([]commDomain.VmAssert, 0)
+	r.DB.Model(model.VmBacking{}).
+		Where("NOT disabled AND NOT deleted").Order("id ASC").
+		Scan(&asserts)
+
+	backingIds, found = r.FindAssetByOs(osCategory, osType, osLang, asserts, backingIdsByBrowser)
 
 	return
 }

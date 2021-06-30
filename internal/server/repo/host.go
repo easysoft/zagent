@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"fmt"
 	commConst "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_commonUtils "github.com/easysoft/zagent/internal/pkg/lib/common"
@@ -11,7 +12,7 @@ import (
 )
 
 type HostRepo struct {
-	CommonRepo
+	BaseRepo
 	DB *gorm.DB `inject:""`
 }
 
@@ -35,19 +36,24 @@ func (r HostRepo) Get(id uint) (host model.Host) {
 	return
 }
 
-func (r HostRepo) QueryByImages(images []int, ids []int) (hostId, backingImageId uint) {
-	sql := `SELECT r.hostId, r.backingImageId imageId 
-			FROM BizHostCapability_relation r 
-		    INNER JOIN BizHost host on r.hostId = host.id 
+func (r HostRepo) QueryByBackings(backingIds []int, hostIds []int) (hostId, backingId uint) {
+	mp := map[string]uint{}
+
+	sql := fmt.Sprintf(`SELECT r.host_id hostId, r.vm_backing_id backingId
+			FROM biz_host_backing_r r 
+		    INNER JOIN biz_host host on r.host_id = host.id 
 
 	        WHERE host.status = 'active' 
-			AND r.backingImageId IN (` +
-		strings.Join(_commonUtils.IntToStrArr(images), ",") +
-		`) AND host.id IN ("` +
-		strings.Join(_commonUtils.IntToStrArr(ids), ",") +
-		`) LIMIT 1`
+			AND r.vm_backing_id IN (%s) AND host.id IN (%s) LIMIT 1`,
 
-	r.DB.Raw(sql).Scan(&ids)
+		strings.Join(_commonUtils.IntToStrArr(backingIds), ","),
+		strings.Join(_commonUtils.IntToStrArr(hostIds), ","))
+
+	r.DB.Raw(sql).Scan(&mp)
+
+	hostId = mp["hostId"]
+	backingId = mp["backingId"]
+
 	return
 }
 

@@ -6,7 +6,7 @@ import (
 )
 
 type IsoRepo struct {
-	CommonRepo
+	BaseRepo
 	DB *gorm.DB `inject:""`
 }
 

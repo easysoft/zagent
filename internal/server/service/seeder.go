@@ -23,10 +23,10 @@ type SeederService struct {
 	RoleService *RoleService `inject:""`
 	UserService *UserService `inject:""`
 
-	CommonRepo *repo.CommonRepo `inject:""`
-	UserRepo   *repo.UserRepo   `inject:""`
-	RoleRepo   *repo.RoleRepo   `inject:""`
-	PermRepo   *repo.PermRepo   `inject:""`
+	CommonRepo *repo.BaseRepo `inject:""`
+	UserRepo   *repo.UserRepo `inject:""`
+	RoleRepo   *repo.RoleRepo `inject:""`
+	PermRepo   *repo.PermRepo `inject:""`
 }
 
 func NewSeeder() *SeederService {

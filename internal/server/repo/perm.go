@@ -13,7 +13,7 @@ import (
 )
 
 type PermRepo struct {
-	CommonRepo
+	BaseRepo
 	DB *gorm.DB `inject:""`
 }
 

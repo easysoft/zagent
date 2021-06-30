@@ -9,7 +9,7 @@ import (
 )
 
 type CommonService struct {
-	CommonRepo    *repo.CommonRepo         `inject:""`
+	CommonRepo    *repo.BaseRepo           `inject:""`
 	CasbinService *bizCasbin.CasbinService `inject:""`
 }
 

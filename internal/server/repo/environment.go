@@ -6,7 +6,7 @@ import (
 )
 
 type EnvironmentRepo struct {
-	CommonRepo
+	BaseRepo
 	DB *gorm.DB `inject:""`
 }
 
