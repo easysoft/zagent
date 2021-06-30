@@ -3,9 +3,9 @@ package commDomain
 type KvmReq struct {
 	StartAfterCreated bool `json:"startAfterCreated"`
 
-	VmMacAddress string `json:"vmMacAddress"`
-	VmBacking    string `json:"vmBacking"`
-	VmTemplate   string `json:"vmTemplate"`
+	VmMacAddress   string `json:"vmMacAddress"`
+	VmBackingPath  string `json:"vmBacking"`
+	VmTemplateName string `json:"vmTemplate"`
 
 	VmUniqueName  string `json:"vmUniqueName"`
 	VmMemorySize  int    `json:"vmMemorySize"`

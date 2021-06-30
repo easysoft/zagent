@@ -40,7 +40,16 @@ func NewLibvirtService() *LibvirtService {
 	return s
 }
 
-func (s *LibvirtService) CreateVm(vm *commDomain.Vm) (
+func (s *LibvirtService) CreateVm(req *commDomain.KvmReq) (dom *libvirt.Domain, vncPort int, err error) {
+	vmMacAddress := req.VmMacAddress
+	vmUniqueName := req.VmUniqueName
+	vmBackingPath := req.VmBackingPath
+	vmTemplateName := req.VmTemplateName
+
+	return
+}
+
+func (s *LibvirtService) CreateVmTest(vm *commDomain.Vm) (
 	dom *libvirt.Domain, macAddress string, vncPort int, err error) {
 	s.setVmProps(vm)
 

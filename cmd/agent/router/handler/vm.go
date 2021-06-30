@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	agentService "github.com/easysoft/zagent/internal/agent/service"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
@@ -8,7 +9,8 @@ import (
 )
 
 type VmCtrl struct {
-	VmService *agentService.VmService `inject:""`
+	VmService      *agentService.VmService      `inject:""`
+	LibvirtService *agentService.LibvirtService `inject:""`
 }
 
 func NewVmCtrl() *VmCtrl {
@@ -16,11 +18,15 @@ func NewVmCtrl() *VmCtrl {
 }
 
 func (c *VmCtrl) Create(ctx context.Context, req commDomain.KvmReq, reply *_domain.RpcResp) error {
+	dom, vncPort, err := c.LibvirtService.CreateVm(&req)
+	if err == nil {
+		reply.Success("success to create vm.")
+	} else {
+		reply.Fail(fmt.Sprintf("fail to create vm, error: %s", err.Error()))
+	}
 
-	//reply.Success("Success to add job.")
-	//reply.Fail(fmt.Sprintf("already has %d jobs to be done.", size))
-
-	reply.Payload = "vm"
+	vmName, _ := dom.GetName()
+	reply.Payload = map[string]interface{}{"vmName": vmName, "vncPort": vncPort}
 
 	return nil
 }

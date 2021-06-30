@@ -51,7 +51,7 @@ type Vm struct {
 func GenKvmReq(po Vm) (req commDomain.KvmReq) {
 	req = commDomain.KvmReq{
 		VmMacAddress: po.MacAddress, VmUniqueName: po.Name,
-		VmBacking: po.BackingPath, VmTemplate: po.TmplName,
+		VmBackingPath: po.BackingPath, VmTemplateName: po.TmplName,
 
 		VmDiskSize: po.DiskSize, VmMemorySize: po.MemorySize,
 		VmCdromSys: po.CdromSys, VmCdromDriver: po.CdromDriver}
