@@ -7,12 +7,22 @@ import (
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
+	serverConf "github.com/easysoft/zagent/internal/server/cfg"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
+	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
 	"strings"
 )
 
-type VmService struct {
+type VmService interface {
+	Register(vm commDomain.Vm) (result _domain.RpcResp)
+	CreateRemote(hostId, backingId, queueId uint) (result _domain.RpcResp)
+	genVmName(imageName string) (name string)
+	genValidMacAddress() (mac string)
+	genRandomMac() (mac string)
+}
+
+type KvmNativeService struct {
 	QueueRepo   *repo.QueueRepo   `inject:""`
 	VmRepo      *repo.VmRepo      `inject:""`
 	HostRepo    *repo.HostRepo    `inject:""`
@@ -22,11 +32,17 @@ type VmService struct {
 	RpcService *RpcService `inject:""`
 }
 
-func NewVmService() *VmService {
-	return &VmService{}
+func NewKvmService() VmService {
+	var service VmService
+
+	if serverConf.Config.Adapter.VmPlatform == serverConst.KvmNative {
+		service = &KvmNativeService{}
+	}
+
+	return service
 }
 
-func (s VmService) Register(vm commDomain.Vm) (result _domain.RpcResp) {
+func (s KvmNativeService) Register(vm commDomain.Vm) (result _domain.RpcResp) {
 	err := s.VmRepo.Register(vm)
 	if err != nil {
 		result.Fail(fmt.Sprintf("fail to register host %s ", vm.MacAddress))
@@ -34,7 +50,7 @@ func (s VmService) Register(vm commDomain.Vm) (result _domain.RpcResp) {
 	return
 }
 
-func (s VmService) CreateRemote(hostId, backingId, queueId uint) (result _domain.RpcResp) {
+func (s KvmNativeService) CreateRemote(hostId, backingId, queueId uint) (result _domain.RpcResp) {
 	host := s.HostRepo.Get(hostId)
 	backingImage := s.BackingRepo.Get(backingId)
 	sysIso := s.IsoRepo.Get(backingImage.SysIsoId)
@@ -56,8 +72,8 @@ func (s VmService) CreateRemote(hostId, backingId, queueId uint) (result _domain
 
 	s.VmRepo.Save(vm) // save vm to db
 
-	kvmRequest := model.GenKvmReq(vm)
-	result = s.RpcService.CreateVm(kvmRequest)
+	kvmReq := model.GenKvmReq(vm)
+	result = s.RpcService.CreateVm(host.Ip, host.Port, kvmReq)
 
 	if result.IsSuccess() { // success to create vm
 		vmInResp := result.Payload.(commDomain.Vm)
@@ -73,14 +89,14 @@ func (s VmService) CreateRemote(hostId, backingId, queueId uint) (result _domain
 	return
 }
 
-func (s VmService) genVmName(imageName string) (name string) {
+func (s KvmNativeService) genVmName(imageName string) (name string) {
 	uuid := strings.Replace(_stringUtils.NewUuid(), "-", "", -1)
 	name = strings.Replace(imageName, "backing", uuid, -1)
 
 	return
 }
 
-func (s VmService) genValidMacAddress() (mac string) {
+func (s KvmNativeService) genValidMacAddress() (mac string) {
 	for i := 0; i < 10; i++ {
 		mac := s.genRandomMac()
 		vm := s.VmRepo.GetByMac(mac)
@@ -92,7 +108,7 @@ func (s VmService) genValidMacAddress() (mac string) {
 	return "N/A"
 }
 
-func (s VmService) genRandomMac() (mac string) {
+func (s KvmNativeService) genRandomMac() (mac string) {
 	buf := make([]byte, 6)
 	_, err := rand.Read(buf)
 	if err != nil {

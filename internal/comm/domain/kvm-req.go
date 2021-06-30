@@ -3,9 +3,6 @@ package commDomain
 type KvmReq struct {
 	StartAfterCreated bool `json:"startAfterCreated"`
 
-	NodeIp   string `json:"-"`
-	NodePort int    `json:"-"`
-
 	VmPublicIp   string `json:"vmPublicIp"`
 	VmPrivateIp  string `json:"vmPrivateIp"`
 	VmPublicPort int    `json:"vmPublicPort"`

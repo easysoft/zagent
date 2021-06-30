@@ -18,7 +18,8 @@ type ExecService struct {
 	AppiumService   *AppiumService   `inject:""`
 	TaskService     *TaskService     `inject:""`
 	HostService     *HostService     `inject:""`
-	VmService       *VmService       `inject:""`
+
+	VmService VmService `inject:""`
 }
 
 func NewExecService() *ExecService {

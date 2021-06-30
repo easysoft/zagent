@@ -20,12 +20,14 @@ var Config = struct {
 	Https    bool   `default:"false" env:"Https"`
 	CertPath string `default:"" env:"CertPath"`
 	CertKey  string `default:"" env:"CertKey"`
-	Port     int    `default:"8085" env:"Port"`
 	Host     string `default:"0.0.0.0" env:"HostId"`
-	Adapter  struct {
-		VmPlatform        serverConst.VmPlatform        `yaml:"vmPlatform" env:"VmPlatform" default:"pve"`
-		ContainerPlatform serverConst.ContainerPlatform `yaml:"containerPlatform" env:"ContainerPlatform" default:"portainer"`
+	Port     int    `default:"8085" env:"Port"`
+
+	Adapter struct {
+		VmPlatform        serverConst.VmPlatform        `yaml:"vmPlatform" env:"VmPlatform" default:"kvmNative"`
+		ContainerPlatform serverConst.ContainerPlatform `yaml:"containerPlatform" env:"ContainerPlatform" default:"dockerNative"`
 	} `yaml:"adapter,flow"`
+
 	Admin struct {
 		UserName        string `env:"AdminUserName" default:"admin"`
 		Name            string `env:"AdminName" default:"admin"`

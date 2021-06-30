@@ -12,12 +12,12 @@ const (
 
 	TrainingTimeout = 60 * 60 // sec
 
-	PageSize            = 15
-	Kvm      VmPlatform = "kvm"
-	Pve      VmPlatform = "pve"
+	PageSize             = 15
+	KvmNative VmPlatform = "kvmNative"
+	Pve       VmPlatform = "pve"
 
-	Docker    ContainerPlatform = "docker"
-	Portainer ContainerPlatform = "portainer"
+	DockerNative ContainerPlatform = "dockerNative"
+	Portainer    ContainerPlatform = "portainer"
 )
 
 var (

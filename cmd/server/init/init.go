@@ -96,13 +96,11 @@ func injectObj(router *router.Router) {
 		&inject.Object{Value: db.GetInst().DB()},
 
 		// repo
-		&inject.Object{Value: repo.NewTaskRepo()},
-
 		&inject.Object{Value: repo.NewBaseRepo()},
 		&inject.Object{Value: repo.NewPermRepo()},
 		&inject.Object{Value: repo.NewRoleRepo()},
-		&inject.Object{Value: repo.NewTokenRepo()},
 		&inject.Object{Value: repo.NewUserRepo()},
+		&inject.Object{Value: repo.NewTokenRepo()},
 
 		// middleware
 		&inject.Object{Value: bizCasbin.NewEnforcer()},
@@ -111,24 +109,24 @@ func injectObj(router *router.Router) {
 		&inject.Object{Value: bizCasbin.NewCasbinService()},
 
 		// service
-		&inject.Object{Value: service.NewTaskService()},
-
 		&inject.Object{Value: serverCron.NewServerCron()},
 		&inject.Object{Value: service.NewWebSocketService()},
 		&inject.Object{Value: service.NewCommonService()},
+		&inject.Object{Value: service.NewKvmService()},
+		&inject.Object{Value: service.NewExecService()},
 
 		&inject.Object{Value: service.NewPermService()},
 		&inject.Object{Value: service.NewRoleService()},
-		&inject.Object{Value: service.NewSeeder()},
 		&inject.Object{Value: service.NewUserService()},
+		&inject.Object{Value: service.NewSeeder()},
 
 		// controller
-		&inject.Object{Value: handler.NewTaskCtrl()},
-		&inject.Object{Value: handler.NewFileCtrl()},
 		&inject.Object{Value: handler.NewPermCtrl()},
+		&inject.Object{Value: handler.NewRoleCtrl()},
 		&inject.Object{Value: handler.NewUserCtrl()},
 
-		&inject.Object{Value: handler.NewRoleCtrl()},
+		&inject.Object{Value: handler.NewTaskCtrl()},
+		&inject.Object{Value: handler.NewFileCtrl()},
 
 		// router
 		&inject.Object{Value: router},

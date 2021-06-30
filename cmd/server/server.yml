@@ -5,6 +5,10 @@ https: false
 host: 0.0.0.0
 port: 8085
 
+adapter:
+  vmPlatform: kvmNative
+  containerPlatform: dockerNative
+
 admin:
   username: admin
   rolename: administrator

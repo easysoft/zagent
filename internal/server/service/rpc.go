@@ -44,30 +44,32 @@ func (s RpcService) SeleniumTest(build model.Build) (result _domain.RpcResp) {
 	return
 }
 
-func (s RpcService) CreateVm(req commDomain.KvmReq) (result _domain.RpcResp) {
+func (s RpcService) CreateVm(hostIp string, hostPort int, req commDomain.KvmReq) (result _domain.RpcResp) {
 	obj := interface{}(req)
-	result = s.Request(req.NodeIp, req.NodePort, "vm", "Create", &obj)
-
-	result.Success(fmt.Sprintf("success to create vm via rpc %#v.", req))
+	result = s.Request(hostIp, hostPort, "vm", "Create", &obj)
 	return
 }
 
-func (s RpcService) DestroyVm(req commDomain.KvmReq) (result _domain.RpcResp) {
+func (s RpcService) DestroyVm(hostIp string, hostPort int, req commDomain.KvmReq) (result _domain.RpcResp) {
 	obj := interface{}(req)
-	s.Request(req.NodeIp, req.NodePort, "vm", "Destroy", &obj)
+	s.Request(hostIp, hostPort, "vm", "Destroy", &obj)
 
 	result.Success(fmt.Sprintf("success to destroy vm via rpc %#v.", req))
 	return
 }
 
-func (s RpcService) Request(ip string, port int, apiPath string, method string, param *interface{}) (rpcResult _domain.RpcResp) {
+func (s RpcService) Request(ip string, port int, apiPath string, method string, param *interface{}) (
+	rpcResult _domain.RpcResp) {
+
 	cc := &codec.MsgpackCodec{}
 
 	data, _ := cc.Encode(param)
 	url := fmt.Sprintf("http://%s:%d/", ip, port)
 	req, err := http.NewRequest("POST", url, bytes.NewReader(data))
 	if err != nil {
-		_logUtils.Errorf("Fail to create request: %#v", err)
+		msg := fmt.Sprintf("Fail to create request: %s", err.Error())
+		_logUtils.Errorf(msg)
+		rpcResult.Fail(msg)
 		return
 	}
 
@@ -81,21 +83,30 @@ func (s RpcService) Request(ip string, port int, apiPath string, method string, 
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		_logUtils.Errorf("fail to call: %#v.", err)
+		msg := fmt.Sprintf("fail to call, err: %s", err.Error())
+		_logUtils.Errorf(msg)
+		rpcResult.Fail(msg)
+		return
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		_logUtils.Errorf("fail to read response: %#v.", err)
+		msg := fmt.Sprintf("fail to read response, err: %s", err.Error())
+		_logUtils.Errorf(msg)
+		rpcResult.Fail(msg)
+
 	}
 
 	err = cc.Decode(body, &rpcResult)
 	if err != nil {
-		_logUtils.Errorf("fail to decode reply: %s.", err.Error())
+		msg := fmt.Sprintf("fail to decode reply, err: %s", err.Error())
+		_logUtils.Errorf(msg)
+		rpcResult.Fail(msg)
 	}
 
 	msg := fmt.Sprintf("agent return %d-%s.", rpcResult.Code, rpcResult.Msg)
 	_logUtils.Info(msg)
+
 	return
 }
