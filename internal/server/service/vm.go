@@ -70,7 +70,7 @@ func (s KvmNativeService) CreateRemote(hostId, backingId, queueId uint) (result 
 		DiskSize: backingImage.SuggestDiskSize, MemorySize: backingImage.SuggestMemorySize,
 		CdromSys: sysIsoPath, CdromDriver: driverIsoPath, Backing: backingImage.Path}
 
-	s.VmRepo.Save(vm) // save vm to db
+	s.VmRepo.Save(&vm) // save vm to db
 
 	kvmReq := model.GenKvmReq(vm)
 	result = s.RpcService.CreateVm(host.Ip, host.Port, kvmReq)

@@ -45,7 +45,9 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 	originalProgress := queue.Progress
 	var newTaskProgress commConst.BuildProgress
 
-	if queue.Progress == commConst.ProgressCreated {
+	if queue.Progress == commConst.ProgressCreated ||
+		queue.Progress == commConst.ProgressPending {
+
 		// looking for valid host
 		hostId, backingId := s.HostService.GetValidForQueue(queue)
 		if hostId != 0 {
@@ -57,6 +59,7 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 				newTaskProgress = commConst.ProgressPending
 			}
 		}
+
 	} else if queue.Progress == commConst.ProgressLaunchVm {
 		vmId := queue.VmId
 		vm := s.VmRepo.GetById(vmId)

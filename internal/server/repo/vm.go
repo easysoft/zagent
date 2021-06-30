@@ -36,8 +36,8 @@ func (r VmRepo) GetByMac(mac string) (vm model.Vm) {
 	return
 }
 
-func (r VmRepo) Save(po model.Vm) {
-	r.DB.Model(&po).Omit("").Create(&po)
+func (r VmRepo) Save(po *model.Vm) {
+	r.DB.Model(po).Omit("").Create(po)
 	return
 }
 
