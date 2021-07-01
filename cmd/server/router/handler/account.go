@@ -7,7 +7,7 @@ import (
 	jwt2 "github.com/easysoft/zagent/internal/server/biz/jwt"
 	"github.com/easysoft/zagent/internal/server/biz/redis"
 	"github.com/easysoft/zagent/internal/server/biz/validate"
-	"github.com/easysoft/zagent/internal/server/cfg"
+	"github.com/easysoft/zagent/internal/server/conf"
 	"github.com/easysoft/zagent/internal/server/repo"
 	"github.com/easysoft/zagent/internal/server/service"
 	"github.com/go-playground/validator/v10"
@@ -16,7 +16,7 @@ import (
 )
 
 type AccountCtrl struct {
-	UserService *service.UserService `inject:""`
+	UserService *serverService.UserService `inject:""`
 
 	UserRepo  *repo.UserRepo  `inject:""`
 	TokenRepo *repo.TokenRepo `inject:""`

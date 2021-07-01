@@ -1,4 +1,4 @@
-package commConst
+package consts
 
 const (
 	RegisterExpireTime = 5  // min

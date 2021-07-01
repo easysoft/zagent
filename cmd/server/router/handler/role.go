@@ -11,7 +11,7 @@ import (
 )
 
 type RoleCtrl struct {
-	RoleService *service.RoleService `inject:""`
+	RoleService *serverService.RoleService `inject:""`
 
 	UserRepo *repo.UserRepo `inject:""`
 	RoleRepo *repo.RoleRepo `inject:""`

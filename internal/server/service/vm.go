@@ -1,4 +1,4 @@
-package service
+package serverService
 
 import (
 	"crypto/rand"
@@ -6,7 +6,7 @@ import (
 	commConst "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
-	serverConf "github.com/easysoft/zagent/internal/server/cfg"
+	serverConf "github.com/easysoft/zagent/internal/server/conf"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 	serverConst "github.com/easysoft/zagent/internal/server/utils/const"

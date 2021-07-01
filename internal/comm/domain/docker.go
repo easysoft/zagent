@@ -1,4 +1,4 @@
-package commDomain
+package domain
 
 type ContainerInfo struct {
 	Name      string `json:"name" yaml:"name"`

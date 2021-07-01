@@ -6,7 +6,7 @@ import (
 	"fmt"
 	ini "github.com/easysoft/zagent/cmd/server/init"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
-	"github.com/easysoft/zagent/internal/server/cfg"
+	"github.com/easysoft/zagent/internal/server/conf"
 	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
 	"os"
 )

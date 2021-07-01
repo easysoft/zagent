@@ -1,4 +1,4 @@
-package commDomain
+package domain
 
 import (
 	_const "github.com/easysoft/zagent/internal/pkg/const"

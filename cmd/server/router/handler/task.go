@@ -13,7 +13,7 @@ import (
 type TaskCtrl struct {
 	BaseCtrl
 
-	TaskService *service.TaskService `inject:""`
+	TaskService *serverService.TaskService `inject:""`
 }
 
 func NewTaskCtrl() *TaskCtrl {

@@ -1,4 +1,4 @@
-package commDomain
+package domain
 
 type HeaderTempl struct {
 	Version   float64 `json:"version" yaml:"version"`

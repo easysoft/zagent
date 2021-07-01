@@ -1,4 +1,4 @@
-package commDomain
+package domain
 
 type TestEnv struct {
 	Version float64 `json:"version" yaml:"version"`

@@ -41,10 +41,10 @@ func NewLibvirtService() *LibvirtService {
 }
 
 func (s *LibvirtService) CreateVm(req *commDomain.KvmReq) (dom *libvirt.Domain, vncPort int, err error) {
-	vmMacAddress := req.VmMacAddress
-	vmUniqueName := req.VmUniqueName
-	vmBackingPath := req.VmBackingPath
-	vmTemplateName := req.VmTemplateName
+	//vmMacAddress := req.VmMacAddress
+	//vmUniqueName := req.VmUniqueName
+	//vmBackingPath := req.VmBackingPath
+	//vmTemplateName := req.VmTemplateName
 
 	return
 }

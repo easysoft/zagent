@@ -1,4 +1,4 @@
-package service
+package serverService
 
 import (
 	"fmt"
@@ -17,7 +17,7 @@ func NewInitService() {
 
 func (s *InitService) Init() {
 	if !_commonUtils.IsRelease() {
-		err := db.GetInst().DB().AutoMigrate(
+		err := _db.GetInst().DB().AutoMigrate(
 			model.Models...,
 		)
 		if err != nil {

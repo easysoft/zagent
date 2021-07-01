@@ -6,7 +6,7 @@ import (
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
 	bizCasbin "github.com/easysoft/zagent/internal/server/biz/casbin"
 	"github.com/easysoft/zagent/internal/server/biz/jwt"
-	"github.com/easysoft/zagent/internal/server/cfg"
+	"github.com/easysoft/zagent/internal/server/conf"
 	"github.com/easysoft/zagent/internal/server/repo"
 	"github.com/easysoft/zagent/internal/server/service"
 	gorillaWs "github.com/gorilla/websocket"
@@ -20,10 +20,10 @@ import (
 type Router struct {
 	api *iris.Application
 
-	InitService   *service.InitService     `inject:""`
-	JwtService    *jwt.JwtService          `inject:""`
-	TokenService  *jwt.TokenService        `inject:""`
-	CasbinService *bizCasbin.CasbinService `inject:""`
+	InitService   *serverService.InitService `inject:""`
+	JwtService    *jwt.JwtService            `inject:""`
+	TokenService  *jwt.TokenService          `inject:""`
+	CasbinService *bizCasbin.CasbinService   `inject:""`
 
 	AccountCtrl *handler.AccountCtrl `inject:""`
 	FileCtrl    *handler.FileCtrl    `inject:""`

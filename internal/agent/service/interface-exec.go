@@ -14,7 +14,7 @@ import (
 
 type InterfaceExecService struct {
 	CommonService
-	InterfaceRequestService *InterfaceRequestService `inject:""`
+	InterfaceRequestService *InterfaceReqService `inject:""`
 }
 
 func NewInterfaceExecService() *InterfaceExecService {

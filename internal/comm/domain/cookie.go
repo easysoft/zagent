@@ -1,4 +1,4 @@
-package commDomain
+package domain
 
 import "time"
 

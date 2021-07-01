@@ -13,6 +13,42 @@ import (
 	"strings"
 )
 
+func Init() {
+	exeDir := _fileUtils.GetExeDir()
+	configPath := ""
+	if _commonUtils.IsRelease() {
+		configPath = filepath.Join(exeDir, "server.yml")
+		if !_fileUtils.FileExist(configPath) {
+			bytes, _ := serverRes.Asset("res/server/server.yml")
+			_fileUtils.WriteFile(configPath, string(bytes))
+		}
+	} else {
+		configPath = filepath.Join(exeDir, "cmd", "server", "server.yml")
+	}
+
+	_logUtils.Infof("从文件%s加载server配置", configPath)
+	if err := configor.Load(&Config, configPath); err != nil {
+		logger.Println(fmt.Sprintf("Config Path:%s ,Error:%s", configPath, err.Error()))
+		return
+	}
+
+	if Config.Debug {
+		fmt.Println(fmt.Sprintf("配置项：%+v", Config))
+	}
+}
+
+func GetRedisUris() []string {
+	addrs := make([]string, 0, 0)
+	hosts := strings.Split(Config.Redis.Host, ";")
+	ports := strings.Split(Config.Redis.Port, ";")
+	for _, h := range hosts {
+		for _, p := range ports {
+			addrs = append(addrs, fmt.Sprintf("%s:%s", h, p))
+		}
+	}
+	return addrs
+}
+
 var Config = struct {
 	LogLevel string `yaml:"logLevel" env:"LogLevel" default:"info"`
 	Debug    bool   `yaml:"debug" env:"Debug" default:"false"`
@@ -68,40 +104,4 @@ type DBConfig struct {
 	Port     string `yaml:"port" env:"DBPort" default:"3306"`
 	User     string `yaml:"user" env:"DBUser" default:"root"`
 	Password string `yaml:"password" env:"DBPassword" default:"P2ssw0rd"`
-}
-
-func Init() {
-	exeDir := _fileUtils.GetExeDir()
-	configPath := ""
-	if _commonUtils.IsRelease() {
-		configPath = filepath.Join(exeDir, "server.yml")
-		if !_fileUtils.FileExist(configPath) {
-			bytes, _ := serverRes.Asset("res/server/server.yml")
-			_fileUtils.WriteFile(configPath, string(bytes))
-		}
-	} else {
-		configPath = filepath.Join(exeDir, "cmd", "server", "server.yml")
-	}
-
-	_logUtils.Infof("从文件%s加载server配置", configPath)
-	if err := configor.Load(&Config, configPath); err != nil {
-		logger.Println(fmt.Sprintf("Config Path:%s ,Error:%s", configPath, err.Error()))
-		return
-	}
-
-	if Config.Debug {
-		fmt.Println(fmt.Sprintf("配置项：%+v", Config))
-	}
-}
-
-func GetRedisUris() []string {
-	addrs := make([]string, 0, 0)
-	hosts := strings.Split(Config.Redis.Host, ";")
-	ports := strings.Split(Config.Redis.Port, ";")
-	for _, h := range hosts {
-		for _, p := range ports {
-			addrs = append(addrs, fmt.Sprintf("%s:%s", h, p))
-		}
-	}
-	return addrs
 }

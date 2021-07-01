@@ -1,4 +1,4 @@
-package commDomain
+package domain
 
 type SumRes struct {
 	Total int64 `json:"total"`

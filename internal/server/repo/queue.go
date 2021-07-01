@@ -2,7 +2,7 @@ package repo
 
 import (
 	commConst "github.com/easysoft/zagent/internal/comm/const"
-	serverConf "github.com/easysoft/zagent/internal/server/cfg"
+	"github.com/easysoft/zagent/internal/server/conf"
 	"github.com/easysoft/zagent/internal/server/model"
 	"gorm.io/gorm"
 	"strings"

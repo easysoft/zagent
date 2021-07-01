@@ -10,7 +10,7 @@ import (
 
 func Init(router *router.Router) {
 	agentConf.Init()
-	db.InitDB("agent")
+	_db.InitDB("agent")
 	injectObj(router)
 	router.App()
 }

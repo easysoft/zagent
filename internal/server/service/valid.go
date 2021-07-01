@@ -1,4 +1,4 @@
-package service
+package serverService
 
 import (
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"

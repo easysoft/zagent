@@ -1,4 +1,4 @@
-package commDomain
+package domain
 
 type KvmReq struct {
 	StartAfterCreated bool `json:"startAfterCreated"`

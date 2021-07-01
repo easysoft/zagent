@@ -1,4 +1,4 @@
-package service
+package serverService
 
 import (
 	"github.com/easysoft/zagent/internal/server/repo"

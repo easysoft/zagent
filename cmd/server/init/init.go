@@ -9,7 +9,7 @@ import (
 	bizCasbin "github.com/easysoft/zagent/internal/server/biz/casbin"
 	"github.com/easysoft/zagent/internal/server/biz/jwt"
 	"github.com/easysoft/zagent/internal/server/biz/redis"
-	"github.com/easysoft/zagent/internal/server/cfg"
+	"github.com/easysoft/zagent/internal/server/conf"
 	serverCron "github.com/easysoft/zagent/internal/server/cron"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
@@ -27,7 +27,7 @@ import (
 )
 
 func Init(version string, printVersion, printRouter *bool) {
-	db.InitDB("server")
+	_db.InitDB("server")
 
 	irisServer := NewServer(nil)
 	if irisServer == nil {
@@ -54,7 +54,7 @@ func Init(version string, printVersion, printRouter *bool) {
 	}
 
 	iris.RegisterOnInterrupt(func() {
-		defer db.GetInst().Close()
+		defer _db.GetInst().Close()
 	})
 
 	// deal with the command
@@ -93,7 +93,7 @@ func injectObj(router *router.Router) {
 
 	if err := g.Provide(
 		// db
-		&inject.Object{Value: db.GetInst().DB()},
+		&inject.Object{Value: _db.GetInst().DB()},
 
 		// repo
 		&inject.Object{Value: repo.NewBaseRepo()},
@@ -110,15 +110,15 @@ func injectObj(router *router.Router) {
 
 		// service
 		&inject.Object{Value: serverCron.NewServerCron()},
-		&inject.Object{Value: service.NewWebSocketService()},
-		&inject.Object{Value: service.NewCommonService()},
-		&inject.Object{Value: service.NewKvmService()},
-		&inject.Object{Value: service.NewExecService()},
+		&inject.Object{Value: serverService.NewWebSocketService()},
+		&inject.Object{Value: serverService.NewCommonService()},
+		&inject.Object{Value: serverService.NewKvmService()},
+		&inject.Object{Value: serverService.NewExecService()},
 
-		&inject.Object{Value: service.NewPermService()},
-		&inject.Object{Value: service.NewRoleService()},
-		&inject.Object{Value: service.NewUserService()},
-		&inject.Object{Value: service.NewSeeder()},
+		&inject.Object{Value: serverService.NewPermService()},
+		&inject.Object{Value: serverService.NewRoleService()},
+		&inject.Object{Value: serverService.NewUserService()},
+		&inject.Object{Value: serverService.NewSeeder()},
 
 		// controller
 		&inject.Object{Value: handler.NewPermCtrl()},

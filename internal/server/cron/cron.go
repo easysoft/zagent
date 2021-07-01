@@ -9,7 +9,7 @@ import (
 )
 
 type ServerCron struct {
-	ExecService *service.ExecService `inject:""`
+	ExecService *serverService.ExecService `inject:""`
 }
 
 func NewServerCron() *ServerCron {

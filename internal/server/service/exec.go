@@ -1,4 +1,4 @@
-package service
+package serverService
 
 import (
 	commConst "github.com/easysoft/zagent/internal/comm/const"

@@ -2,21 +2,21 @@ package agentService
 
 import (
 	"fmt"
-	agentHttpUtils "github.com/easysoft/zagent/internal/agent/utils/request"
+	interfaceUtils "github.com/easysoft/zagent/internal/agent/utils/interface"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 )
 
-type InterfaceRequestService struct {
+type InterfaceReqService struct {
 	CommonService
 }
 
-func NewInterfaceRequestService() *InterfaceRequestService {
-	return &InterfaceRequestService{}
+func NewInterfaceRequestService() *InterfaceReqService {
+	return &InterfaceReqService{}
 }
 
-func (s *InterfaceRequestService) Request(build *commDomain.Build, interf *commDomain.TestInterface) (respStr string) {
+func (s *InterfaceReqService) Request(build *commDomain.Build, interf *commDomain.TestInterface) (respStr string) {
 	method := interf.Request.Method
 	if method == _const.Get {
 		respStr = s.Get(*interf)
@@ -28,7 +28,7 @@ func (s *InterfaceRequestService) Request(build *commDomain.Build, interf *commD
 	return
 }
 
-func (s *InterfaceRequestService) Get(interf commDomain.TestInterface) (respStr string) {
+func (s *InterfaceReqService) Get(interf commDomain.TestInterface) (respStr string) {
 	reqObj := interf.Request
 	urlObj := reqObj.URL
 
@@ -40,7 +40,7 @@ func (s *InterfaceRequestService) Get(interf commDomain.TestInterface) (respStr 
 	}
 	url = url + urlObj.Path
 
-	respStr, _ = agentHttpUtils.Get(reqObj.Header, url, urlObj.Params)
+	respStr, _ = interfaceUtils.Get(reqObj.Header, url, urlObj.Params)
 
 	return
 }

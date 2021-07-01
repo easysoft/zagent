@@ -1,4 +1,4 @@
-package agentHttpUtils
+package interfaceUtils
 
 import (
 	"encoding/json"

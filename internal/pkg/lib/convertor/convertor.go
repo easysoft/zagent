@@ -1,4 +1,4 @@
-package convertor
+package _convertor
 
 import (
 	"errors"

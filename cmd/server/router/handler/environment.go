@@ -10,7 +10,7 @@ import (
 type EnvironmentCtrl struct {
 	BaseCtrl
 
-	EnvironmentService *service.EnvironmentService `inject:""`
+	EnvironmentService *serverService.EnvironmentService `inject:""`
 }
 
 func NewEnvironmentCtrl() *EnvironmentCtrl {

@@ -13,7 +13,7 @@ type WsCtrl struct {
 	Namespace         string
 	*websocket.NSConn `stateless:"true"`
 
-	WebSocketService *service.WebSocketService `inject:""`
+	WebSocketService *serverService.WebSocketService `inject:""`
 }
 
 func NewWsCtrl() *WsCtrl {

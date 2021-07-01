@@ -1,4 +1,4 @@
-package commConst
+package consts
 
 type HostStatus string
 

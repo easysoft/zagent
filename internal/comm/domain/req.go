@@ -1,4 +1,4 @@
-package commDomain
+package domain
 
 type VmReq struct {
 	TemplId uint `json:"id"`

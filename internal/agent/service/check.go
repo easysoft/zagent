@@ -1,7 +1,7 @@
 package agentService
 
 import (
-	agentConf "github.com/easysoft/zagent/internal/agent/conf"
+	agentUtils "github.com/easysoft/zagent/internal/agent/utils/common"
 )
 
 type CheckService struct {
@@ -18,13 +18,13 @@ func NewCheckService() *CheckService {
 }
 
 func (s *CheckService) Check() {
-	if agentConf.IsHostAgent() { // host
+	if agentUtils.IsHostAgent() { // host
 		s.HostService.Register()
 
-	} else if agentConf.IsVmAgent() { // vm
+	} else if agentUtils.IsVmAgent() { // vm
 		s.CheckVm()
 
-	} else if agentConf.IsDeviceAgent() { // device
+	} else if agentUtils.IsDeviceAgent() { // device
 		s.CheckDevice()
 
 	}

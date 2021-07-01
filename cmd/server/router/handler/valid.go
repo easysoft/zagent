@@ -8,7 +8,7 @@ import (
 )
 
 type ValidCtrl struct {
-	ValidService *service.ValidService `inject:""`
+	ValidService *serverService.ValidService `inject:""`
 }
 
 func NewValidCtrl() *ValidCtrl {

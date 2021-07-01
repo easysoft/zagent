@@ -2,7 +2,7 @@ package jwt
 
 import (
 	bizConst "github.com/easysoft/zagent/internal/server/biz/const"
-	"github.com/easysoft/zagent/internal/server/cfg"
+	"github.com/easysoft/zagent/internal/server/conf"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/sessions"
 )

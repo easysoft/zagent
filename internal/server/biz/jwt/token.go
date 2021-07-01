@@ -7,7 +7,7 @@ import (
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
 	bizConst "github.com/easysoft/zagent/internal/server/biz/const"
 	"github.com/easysoft/zagent/internal/server/biz/redis"
-	"github.com/easysoft/zagent/internal/server/cfg"
+	"github.com/easysoft/zagent/internal/server/conf"
 	"github.com/easysoft/zagent/internal/server/repo"
 	"github.com/kataras/iris/v12"
 	"net/http"

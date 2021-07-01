@@ -1,10 +1,10 @@
-package db
+package _db
 
 import (
 	"fmt"
 	"github.com/easysoft/zagent/internal/pkg/lib/file"
 	"github.com/easysoft/zagent/internal/pkg/lib/log"
-	"github.com/easysoft/zagent/internal/server/cfg"
+	serverConf "github.com/easysoft/zagent/internal/server/conf"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"

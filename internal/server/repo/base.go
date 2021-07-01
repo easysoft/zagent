@@ -28,7 +28,7 @@ func (r *BaseRepo) Defer(tx *gorm.DB, code *int) {
 
 // GetAll 批量查询
 func (r *BaseRepo) GetAll(model interface{}, s *commDomain.Search) *gorm.DB {
-	db := db.GetInst().DB().Model(model)
+	db := _db.GetInst().DB().Model(model)
 	sort := "desc"
 	orderBy := "created_at"
 	if len(s.Sort) > 0 {
@@ -47,7 +47,7 @@ func (r *BaseRepo) GetAll(model interface{}, s *commDomain.Search) *gorm.DB {
 
 // Found 查询条件
 func (r *BaseRepo) Found(s *commDomain.Search) *gorm.DB {
-	return db.GetInst().DB().Scopes(r.Relation(s.Relations), r.FoundByWhere(s.Fields))
+	return _db.GetInst().DB().Scopes(r.Relation(s.Relations), r.FoundByWhere(s.Fields))
 }
 
 // IsNotFound 判断是否是查询不存在错误
@@ -61,7 +61,7 @@ func (r *BaseRepo) IsNotFound(err error) bool {
 
 // UpdateObj 更新
 func (r *BaseRepo) UpdateObj(v, d interface{}, id uint) error {
-	if err := db.GetInst().DB().Model(v).Where("id = ?", id).Updates(d).Error; err != nil {
+	if err := _db.GetInst().DB().Model(v).Where("id = ?", id).Updates(d).Error; err != nil {
 		color.Red(fmt.Sprintf("UpdateObj %+v to %+v\n", v, d))
 		return err
 	}

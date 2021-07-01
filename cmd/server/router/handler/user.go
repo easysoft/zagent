@@ -18,10 +18,10 @@ import (
 )
 
 type UserCtrl struct {
-	UserService *service.UserService `inject:""`
-	RoleService *service.RoleService `inject:""`
-	UserRepo    *repo.UserRepo       `inject:""`
-	RoleRepo    *repo.RoleRepo       `inject:""`
+	UserService *serverService.UserService `inject:""`
+	RoleService *serverService.RoleService `inject:""`
+	UserRepo    *repo.UserRepo             `inject:""`
+	RoleRepo    *repo.RoleRepo             `inject:""`
 }
 
 func NewUserCtrl() *UserCtrl {
@@ -292,7 +292,7 @@ func (c *UserCtrl) usersTransform(users []*model.User) []*transformer.User {
 
 func (c *UserCtrl) userTransform(user *model.User) *transformer.User {
 	u := &transformer.User{}
-	g := convertor.NewTransform(u, user, time.RFC3339)
+	g := _convertor.NewTransform(u, user, time.RFC3339)
 	_ = g.Transformer()
 
 	roleIds := c.RoleService.GetRolesForUser(user.ID)

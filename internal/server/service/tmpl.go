@@ -1,4 +1,4 @@
-package service
+package serverService
 
 type BackingService struct {
 }

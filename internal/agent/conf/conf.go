@@ -1,7 +1,6 @@
 package agentConf
 
 import (
-	"github.com/easysoft/zagent/internal/agent/domain"
 	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
 	_commonUtils "github.com/easysoft/zagent/internal/pkg/lib/common"
@@ -13,7 +12,7 @@ import (
 )
 
 var (
-	Inst = domain.Config{}
+	Inst = Config{}
 )
 
 func Init() {
@@ -49,4 +48,26 @@ func Init() {
 	_fileUtils.MkDirIfNeeded(Inst.DirIso)
 	_fileUtils.MkDirIfNeeded(Inst.DirBase)
 	_fileUtils.MkDirIfNeeded(Inst.DirImage)
+}
+
+type Config struct {
+	Host string
+	User string
+
+	RunMode  agentConst.RunMode `yaml:"runMode"`
+	Server   string             `yaml:"Server"`
+	NodeIp   string             `yaml:"ip"`
+	NodePort int                `yaml:"port"`
+
+	Language string
+	NodeName string
+	WorkDir  string
+	LogDir   string
+
+	DirKvm   string
+	DirIso   string
+	DirImage string
+	DirBase  string
+	//DirDef   string
+	//DirTempl string
 }

@@ -13,7 +13,7 @@ import (
 )
 
 func NewEnforcer() *casbin.Enforcer {
-	adapter, err := NewAdapterByDB(db.GetInst().DB())
+	adapter, err := NewAdapterByDB(_db.GetInst().DB())
 	if err != nil {
 		logrus.Println(fmt.Sprintf("NewAdapter 错误: %v", err))
 	}

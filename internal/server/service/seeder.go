@@ -1,11 +1,11 @@
-package service
+package serverService
 
 import (
 	"fmt"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_commonUtils "github.com/easysoft/zagent/internal/pkg/lib/common"
 	_fileUtils "github.com/easysoft/zagent/internal/pkg/lib/file"
-	"github.com/easysoft/zagent/internal/server/cfg"
+	"github.com/easysoft/zagent/internal/server/conf"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 	serverRes "github.com/easysoft/zagent/res/server"
