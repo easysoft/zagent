@@ -26,6 +26,7 @@ type Queue struct {
 
 	AppUrl          string `json:"appUrl"`
 	BuildCommands   string `json:"buildCommands"`
+	EnvVars         string `json:"envVars"`
 	ResultFiles     string `json:"resultFiles"`
 	KeepResultFiles bool   `json:"keepResultFiles"`
 
@@ -50,7 +51,7 @@ func NewQueue(buildType commConst.BuildType, groupId uint, taskId uint, taskPrio
 	osCategory commConst.OsCategory, osType commConst.OsType, osLang commConst.OsLang,
 	scriptUrl string, scmAddress string, scmAccount string, scmPassword string,
 	resultFiles string, keepResultFiles bool, taskName string, userName string,
-	serial string, appUrl string, buildCommands string) Queue {
+	serial, appUrl, buildCommands, envVars string) Queue {
 
 	Task := Queue{
 		Progress: commConst.ProgressCreated,
@@ -76,6 +77,7 @@ func NewQueue(buildType commConst.BuildType, groupId uint, taskId uint, taskPrio
 		Serial:        serial,
 		AppUrl:        appUrl,
 		BuildCommands: buildCommands,
+		EnvVars:       envVars,
 	}
 	return Task
 }

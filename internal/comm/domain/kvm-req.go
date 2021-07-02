@@ -1,17 +1,24 @@
 package domain
 
-type KvmReq struct {
-	StartAfterCreated bool `json:"startAfterCreated"`
+import commConst "github.com/easysoft/zagent/internal/comm/const"
 
+type KvmReq struct {
 	VmMacAddress   string `json:"vmMacAddress"`
 	VmBackingPath  string `json:"vmBacking"`
 	VmTemplateName string `json:"vmTemplate"`
 
 	VmUniqueName  string `json:"vmUniqueName"`
-	VmMemorySize  int    `json:"vmMemorySize"`
-	VmDiskSize    int    `json:"vmDiskSize"`
+	VmMemorySize  uint   `json:"vmMemorySize"`
+	VmDiskSize    uint   `json:"vmDiskSize"`
 	VmCdromSys    string `json:"vmCdromSys"`
 	VmCdromDriver string `json:"vmCdromDriver"`
+
+	OsCategory commConst.OsCategory `json:"osCategory"`
+	OsType     commConst.OsType     `json:"osType"`
+	OsVersion  string               `json:"osVersion"`
+	OsLang     commConst.OsLang     `json:"osLang"`
+
+	StartAfterCreated bool `json:"startAfterCreated"`
 }
 
 type KvmResponse struct {

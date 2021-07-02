@@ -40,6 +40,7 @@ type Build struct {
 
 	AppUrl          string `json:"appUrl,omitempty"`
 	BuildCommands   string `json:"buildCommands,omitempty"`
+	EnvVars         string `json:"envVars,omitempty"`
 	ResultFiles     string `json:"resultFiles,omitempty"`
 	KeepResultFiles bool   `json:"keepResultFiles,omitempty"`
 	ResultPath      string `json:"resultPath,omitempty"`

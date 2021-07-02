@@ -3,6 +3,8 @@ package agentService
 import (
 	"fmt"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
+	"os"
+	"strings"
 )
 
 type AutomatedTestService struct {
@@ -27,9 +29,10 @@ func (s *AutomatedTestService) Exec(build *commDomain.Build) {
 		return
 	}
 
-	// exec test
-	prepareEnvVars(build)
+	// set environment var
+	setEnvVars(build)
 
+	// exec test
 	result = s.ExecService.ExcCommand(build)
 	if !result.IsSuccess() {
 		result.Fail(fmt.Sprintf("failed to ext test,\n dir: %s\n  cmd: \n%s",
@@ -41,6 +44,19 @@ func (s *AutomatedTestService) Exec(build *commDomain.Build) {
 	s.ExecService.UploadResult(*build, result)
 }
 
-func prepareEnvVars(build *commDomain.Build) {
+func setEnvVars(build *commDomain.Build) {
+	for _, env := range strings.Split(build.EnvVars, "\n") {
+		arr := strings.Split(env, "=")
+		if len(arr) < 2 {
+			continue
+		}
 
+		name := strings.TrimSpace(arr[0])
+		val := strings.TrimSpace(arr[1])
+		if name == "" || val == "" {
+			continue
+		}
+
+		os.Setenv(name, val)
+	}
 }

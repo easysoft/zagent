@@ -63,12 +63,17 @@ func (s KvmNativeService) CreateRemote(hostId, backingId, tmplId, queueId uint) 
 
 	tmpl := s.TmplRepo.Get(tmplId)
 
-	mac := s.genValidMacAddress() // get a unique mac address
+	macAddress := s.genValidMacAddress() // get a unique mac address
 
 	vm := model.Vm{
-		MacAddress: mac,
+		MacAddress: macAddress,
 		BackingId:  backing.ID, BackingPath: backing.Path,
 		TmplId: tmpl.ID, TmplName: tmpl.Name,
+
+		OsCategory: backing.OsCategory,
+		OsType:     backing.OsType,
+		OsVersion:  backing.OsVersion,
+		OsLang:     backing.OsLang,
 
 		HostId: host.ID, HostName: host.Name,
 		DiskSize: backing.SuggestDiskSize, MemorySize: backing.SuggestMemorySize,

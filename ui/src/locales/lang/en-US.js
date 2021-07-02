@@ -67,7 +67,7 @@ const locale = {
   'form.group': 'Group Id',
   'form.group.tips': 'Used to group the queues.',
   'form.exec.cmd': 'Test Command',
-  'form.exec.cmd.tips': 'Input the command to exec testing.',
+  'form.exec.cmd.tips': 'Input the command, may use environment variables in it.',
   'form.env.var': 'Environment Variable',
   'form.env.var.tips': 'Environment variables need to passed, format NAME=value.',
   'form.result.files': 'Result Files',
@@ -108,6 +108,8 @@ const locale = {
   'valid.required.osType': 'Please select OS type.',
   'valid.required.osVersion': 'Please select OS version.',
   'valid.required.osLang': 'Please select OS Language.',
+  'valid.required.buildCommands': 'Please input test command.',
+  'valid.required.resultFiles': 'Please input result files.',
 
   'common.status': '状态',
   'common.login': 'Login',

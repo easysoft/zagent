@@ -24,7 +24,7 @@ func (s *ServerCron) Init() {
 		fmt.Sprintf("@every %ds", _const.WebCheckQueueInterval),
 		func() {
 			s.ExecService.CheckExec()
-			s.ExecService.SetTimeout()
+			s.ExecService.CheckTimeout()
 			s.ExecService.RetryTimeoutOrFailed()
 		},
 	)

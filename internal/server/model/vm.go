@@ -53,6 +53,11 @@ func GenKvmReq(po Vm) (req commDomain.KvmReq) {
 		VmMacAddress: po.MacAddress, VmUniqueName: po.Name,
 		VmBackingPath: po.BackingPath, VmTemplateName: po.TmplName,
 
+		OsCategory: po.OsCategory,
+		OsType:     po.OsType,
+		OsVersion:  po.OsVersion,
+		OsLang:     po.OsLang,
+
 		VmDiskSize: po.DiskSize, VmMemorySize: po.MemorySize,
 		VmCdromSys: po.CdromSys, VmCdromDriver: po.CdromDriver}
 

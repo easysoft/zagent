@@ -1,0 +1,123 @@
+<domain type='kvm'>
+    <name>${name}</name>
+    <uuid/>
+    <genid/>
+
+    <memory unit='KiB'>${memory}</memory>
+    <currentMemory unit='KiB'>${memory}</currentMemory>
+
+    <vcpu placement='static'>3</vcpu>
+    <os>
+        <type>hvm</type>
+        <boot dev='hd'/>
+        <boot dev='cdrom'/>
+        <bootmenu enable='yes'/>
+    </os>
+    <features>
+        <acpi/>
+        <apic/>
+        <hyperv>
+            <relaxed state='on'/>
+            <vapic state='on'/>
+            <spinlocks state='on' retries='8191'/>
+        </hyperv>
+        <vmport state='off'/>
+    </features>
+    <cpu mode='custom' match='exact' check='partial'>
+        <model fallback='allow'>Broadwell-IBRS</model>
+    </cpu>
+    <clock offset='localtime'>
+        <timer name='rtc' tickpolicy='catchup'/>
+        <timer name='pit' tickpolicy='delay'/>
+        <timer name='hpet' present='no'/>
+        <timer name='hypervclock' present='yes'/>
+    </clock>
+    <on_poweroff>destroy</on_poweroff>
+    <on_reboot>restart</on_reboot>
+    <on_crash>destroy</on_crash>
+    <pm>
+        <suspend-to-mem enabled='no'/>
+        <suspend-to-disk enabled='no'/>
+    </pm>
+    <devices>
+        <emulator>/usr/bin/kvm-spice</emulator>
+        <disk type='file' device='disk'>
+            <driver name='qemu' type='qcow2'/>
+            <source file='${rawPath}'/>
+            <target dev='hda' bus='ide'/>
+            <address type='drive' controller='0' bus='0' target='0' unit='0'/>
+        </disk>
+
+        <disk type='file' device='disk'>
+            <driver name='qemu' type='qcow2'/>
+            <source file='${share}'/>
+            <target dev='hdb' bus='ide'/>
+            <address type='drive' controller='0' bus='0' target='0' unit='1'/>
+        </disk>
+
+        <disk type='file' device='cdrom'>
+            <driver name='qemu' type='raw'/>
+            <source file='${cdrom}'/>
+            <target dev='hdc' bus='ide'/>
+            <address type='drive' controller='0' bus='1' target='0' unit='0'/>
+            <readonly/>
+        </disk>
+        <disk type='file' device='cdrom'>
+            <driver name='qemu' type='raw'/>
+            <source file='${cdrom2}'/>
+            <target dev='hdd' bus='ide'/>
+            <readonly/>
+            <address type='drive' controller='0' bus='1' target='0' unit='1'/>
+        </disk>
+
+        <controller type='usb' index='0' model='piix3-uhci'>
+            <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x2'/>
+        </controller>
+        <controller type='pci' index='0' model='pci-root'/>
+        <controller type='ide' index='0'>
+            <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x1'/>
+        </controller>
+        <controller type='virtio-serial' index='0'>
+            <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x0'/>
+        </controller>
+
+        <interface type='bridge'>
+            <source bridge='br0'/>
+            <model type='virtio'/>
+            <mac address='${mac}'/>
+            <address type='pci' domain='0x0000' bus='0x00' slot='0x03' function='0x0'/>
+        </interface>
+        <serial type='pty'>
+            <target type='isa-serial' port='0'>
+                <model name='isa-serial'/>
+            </target>
+        </serial>
+        <console type='pty'>
+            <target type='serial' port='0'/>
+        </console>
+        <channel type='spicevmc'>
+            <target type='virtio' name='com.redhat.spice.0'/>
+            <address type='virtio-serial' controller='0' bus='0' port='1'/>
+        </channel>
+        <input type='tablet' bus='usb'>
+            <address type='usb' bus='0' port='1'/>
+        </input>
+        <input type='mouse' bus='ps2'/>
+        <input type='keyboard' bus='ps2'/>
+        <graphics type='vnc' port='-1' autoport='yes' listen='0.0.0.0'>
+            <listen type='address' address='0.0.0.0'/>
+        </graphics>
+        <sound model='ich6'>
+            <address type='pci' domain='0x0000' bus='0x00' slot='0x04' function='0x0'/>
+        </sound>
+        <video>
+            <model type='qxl' ram='65536' vram='65536' vgamem='16384' heads='1' primary='yes'/>
+            <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0'/>
+        </video>
+        <memballoon model='virtio'>
+            <address type='pci' domain='0x0000' bus='0x00' slot='0x07' function='0x0'/>
+        </memballoon>
+    </devices>
+</domain>
+
+

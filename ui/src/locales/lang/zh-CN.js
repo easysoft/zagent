@@ -67,7 +67,7 @@ const locale = {
   'form.group': '分组ID',
   'form.group.tips': '用于分组显示',
   'form.exec.cmd': '测试命令',
-  'form.exec.cmd.tips': '输入执行测试的命令',
+  'form.exec.cmd.tips': '输入执行测试的命令，可引用环境变量。',
   'form.env.var': '环境变量',
   'form.env.var.tips': '需要传递的环境变量，格式"变量名=取值"，支持多行。',
   'form.result.files': '结果文件',
@@ -108,6 +108,8 @@ const locale = {
   'valid.required.osType': '请选择系统类型',
   'valid.required.osVersion': '请选择系统版本',
   'valid.required.osLang': '请选择系统语言',
+  'valid.required.buildCommands': '构建命令不能为空',
+  'valid.required.resultFiles': '结果文件不能为空',
 
   'common.status': '状态',
   'common.info': '消息',

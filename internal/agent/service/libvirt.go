@@ -40,11 +40,40 @@ func NewLibvirtService() *LibvirtService {
 	return s
 }
 
-func (s *LibvirtService) CreateVm(req *commDomain.KvmReq) (dom *libvirt.Domain, vncPort int, err error) {
-	//vmMacAddress := req.VmMacAddress
-	//vmUniqueName := req.VmUniqueName
-	//vmBackingPath := req.VmBackingPath
-	//vmTemplateName := req.VmTemplateName
+func (s *LibvirtService) CreateVm(req *commDomain.KvmReq) (dom *libvirt.Domain, vmVncPort int, err error) {
+	vmMacAddress := req.VmMacAddress
+	vmUniqueName := req.VmUniqueName
+	vmBackingPath := req.VmBackingPath
+	vmTemplateName := req.VmTemplateName
+	vmMemorySize := req.VmMemorySize
+	vmDiskSize := req.VmDiskSize
+
+	tmplXml := s.GetVmDef(vmTemplateName)
+	vmXml, _ := s.QemuService.GenVmDef(tmplXml, vmMacAddress, vmUniqueName, vmBackingPath, vmMemorySize)
+
+	if err != nil {
+		_logUtils.Errorf("err gen vm xml, err %s", err.Error())
+		return
+	}
+
+	diskSize := s.getDiskSize(req.OsCategory, vmDiskSize)
+	s.QemuService.createDiskFile(vmBackingPath, vmUniqueName, diskSize)
+
+	dom, err = LibvirtConn.DomainCreateXML(vmXml, 0)
+
+	if err == nil {
+		newXml := ""
+		newXml, err = dom.GetXMLDesc(0)
+		if err != nil {
+			return
+		}
+
+		newDomCfg := &libvirtxml.Domain{}
+		err = newDomCfg.Unmarshal(newXml)
+
+		vmMacAddress = newDomCfg.Devices.Interfaces[0].MAC.Address
+		vmVncPort = newDomCfg.Devices.Graphics[0].VNC.Port
+	}
 
 	return
 }
@@ -63,7 +92,7 @@ func (s *LibvirtService) CreateVmTest(vm *commDomain.Vm) (
 
 	vmXml := ""
 	rawPath := filepath.Join(agentConf.Inst.DirImage, vm.Name+".qcow2")
-	vmXml, vm.MacAddress, _ = s.QemuService.GenVmDef(srcXml, vm.Name, rawPath, backingPath, 0)
+	vmXml, vm.MacAddress, _ = s.QemuService.GenVmDefTest(srcXml, vm.Name, rawPath, backingPath, 0)
 
 	if err != nil || vm.DiskSize == 0 {
 		_logUtils.Errorf("wrong vm disk size %d, err %s", vm.DiskSize, err.Error())
@@ -178,4 +207,21 @@ func (s *LibvirtService) setVmProps(vm *commDomain.Vm) {
 		osType.ToString(), osVersion, osLang.ToString())
 	vm.Name = fmt.Sprintf("test-%s-%s-%s-%s",
 		osType.ToString(), osVersion, osLang.ToString(), _stringUtils.NewUuid())
+}
+
+func (s *LibvirtService) getDiskSize(category commConst.OsCategory, size uint) (vmDiskSize uint) {
+	if size > 0 {
+		vmDiskSize = size
+		return
+	}
+
+	if category == commConst.Windows {
+		vmDiskSize = commConst.DiskSizeWindows
+	} else if category == commConst.Linux {
+		vmDiskSize = commConst.DiskSizeLinux
+	} else {
+		vmDiskSize = commConst.DiskSizeDefault
+	}
+
+	return
 }

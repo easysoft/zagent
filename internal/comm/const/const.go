@@ -8,4 +8,8 @@ const (
 
 	MaxVmOnHost    = 3
 	QueueRetryTime = 3
+
+	DiskSizeWindows = 40 // G
+	DiskSizeLinux   = 30
+	DiskSizeDefault = 30
 )

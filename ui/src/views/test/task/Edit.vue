@@ -21,19 +21,19 @@
             </a-select>
           </a-form-model-item>
 
-          <a-form-model-item :label="$t('form.exec.cmd')" prop="BuildCommands" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-form-model-item :label="$t('form.exec.cmd')" prop="buildCommands" :labelCol="labelCol" :wrapperCol="wrapperCol">
             <a-textarea v-model="model.buildCommands" />
             <span>{{ $t('form.exec.cmd.tips') }}</span>
-          </a-form-model-item>
-
-          <a-form-model-item :label="$t('form.env.var')" prop="envVars" :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <a-textarea v-model="model.envVars" />
-            <span>{{ $t('form.env.var.tips') }}</span>
           </a-form-model-item>
 
           <a-form-model-item :label="$t('form.result.files')" prop="resultFiles" :labelCol="labelCol" :wrapperCol="wrapperCol">
             <a-textarea v-model="model.resultFiles" />
             <span>{{ $t('form.result.files.tips') }}</span>
+          </a-form-model-item>
+
+          <a-form-model-item :label="$t('form.env.var')" prop="envVars" :labelCol="labelCol" :wrapperCol="wrapperCol">
+            <a-textarea v-model="model.envVars" />
+            <span>{{ $t('form.env.var.tips') }}</span>
           </a-form-model-item>
 
           <a-form-model-item :label="$t('form.desc')" prop="desc" :labelCol="labelCol" :wrapperCol="wrapperCol">
@@ -167,7 +167,9 @@ export default {
         buildType: [{ required: true, message: this.$t('valid.required.buildType'), trigger: 'blur' }],
         osCategory: [{ required: true, message: this.$t('valid.required.osCategory'), trigger: 'blur' }],
         osType: [{ required: true, message: this.$t('valid.required.osType'), trigger: 'blur' }],
-        osLang: [{ required: true, message: this.$t('valid.required.osLang'), trigger: 'blur' }]
+        osLang: [{ required: true, message: this.$t('valid.required.osLang'), trigger: 'blur' }],
+        buildCommands: [{ required: true, message: this.$t('valid.required.buildCommands'), trigger: 'blur' }],
+        resultFiles: [{ required: true, message: this.$t('valid.required.resultFiles'), trigger: 'blur' }]
       },
 
       cols: 24,

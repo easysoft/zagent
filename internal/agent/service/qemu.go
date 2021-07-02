@@ -22,7 +22,81 @@ func NewQemuService() *QemuService {
 	return &QemuService{}
 }
 
-func (s *QemuService) GenVmDef(src, vmName, rawPath, backingPath string, vmMemory uint) (
+func (s *QemuService) GenVmDef(tmplXml, macAddress, vmName, backingPath string, vmMemory uint) (
+	vmXml string, err error) {
+
+	rawPath := filepath.Join(agentConf.Inst.DirImage, vmName+".qcow2")
+
+	domCfg := &libvirtxml.Domain{}
+	err = domCfg.Unmarshal(tmplXml)
+	if err != nil {
+		return
+	}
+
+	mainDiskIndex := s.getMainDiskIndex(domCfg)
+
+	domCfg.Name = vmName
+	domCfg.UUID = _stringUtils.NewUuidWithSep()
+	domCfg.Devices.Disks[mainDiskIndex].Source.File = &libvirtxml.DomainDiskSourceFile{
+		File: rawPath,
+	}
+	domCfg.Devices.Disks[mainDiskIndex].BackingStore = &libvirtxml.DomainDiskBackingStore{
+		Index: 0,
+		Format: &libvirtxml.DomainDiskFormat{
+			Type: "qcow2",
+		},
+		Source: &libvirtxml.DomainDiskSource{
+			File: &libvirtxml.DomainDiskSourceFile{
+				File: backingPath,
+			},
+		},
+	}
+
+	//<graphics type="vnc" port="-1" autoport="yes" listen="0.0.0.0" passwd="P2ssw0rd">
+	//<listen type="address" address="0.0.0.0"/>
+	//</graphics>
+	domCfg.Devices.Graphics = []libvirtxml.DomainGraphic{
+		{
+			VNC: &libvirtxml.DomainGraphicVNC{
+				AutoPort: "yes",
+				Port:     -1,
+				Listen:   "0.0.0.0",
+				Passwd:   "P2ssw0rd",
+				Listeners: []libvirtxml.DomainGraphicListener{
+					{
+						Address: &libvirtxml.DomainGraphicListenerAddress{
+							Address: "0.0.0.0",
+						},
+					},
+				},
+			},
+		},
+	}
+
+	domCfg.Devices.Controllers = s.removeUnnecessaryPciCtrl(domCfg)
+
+	if vmMemory != 0 {
+		domCfg.Memory = &libvirtxml.DomainMemory{
+			Unit:     "M",
+			Value:    vmMemory,
+			DumpCore: "yes",
+		}
+		domCfg.CurrentMemory = &libvirtxml.DomainCurrentMemory{
+			Unit:  "M",
+			Value: vmMemory,
+		}
+	}
+
+	domCfg.Devices.Interfaces[0].MAC.Address = macAddress
+
+	//domCfg.OS.Type.Machine = s.GenMachine()
+
+	vmXml, _ = domCfg.Marshal()
+
+	return
+}
+
+func (s *QemuService) GenVmDefTest(src, vmName, rawPath, backingPath string, vmMemory uint) (
 	xml, macAddress string, err error) {
 
 	domCfg := &libvirtxml.Domain{}
@@ -128,7 +202,7 @@ func (s *QemuService) GetBaseImagePath(vm commDomain.Vm) (path string) {
 	return
 }
 
-func (s *QemuService) createDiskFile(basePath, vmName string, diskSize int) {
+func (s *QemuService) createDiskFile(basePath, vmName string, diskSize uint) {
 	vmRawPath := filepath.Join(agentConf.Inst.DirImage, vmName+".qcow2")
 
 	var cmd string

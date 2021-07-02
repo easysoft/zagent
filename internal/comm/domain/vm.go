@@ -34,8 +34,8 @@ type Vm struct {
 	WorkDir    string
 
 	DefPath          string
-	DiskSize         int // M
-	MemorySize       int // M
+	DiskSize         uint // M
+	MemorySize       uint // M
 	CdromSys         string
 	CdromDriver      string
 	ResolutionHeight int

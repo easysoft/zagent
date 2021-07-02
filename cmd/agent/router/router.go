@@ -13,6 +13,7 @@ import (
 type Router struct {
 	ArithCtrl *handler.ArithCtrl `inject:""`
 	TaskCtrl  *handler.TaskCtrl  `inject:""`
+	VmCtrl    *handler.VmCtrl    `inject:""`
 }
 
 func NewRouter() *Router {
@@ -27,6 +28,7 @@ func (r *Router) App() {
 	if agentConf.Inst.RunMode == agentConst.Host {
 		srv.RegisterName("arith", r.ArithCtrl, "")
 		srv.RegisterName("task", r.TaskCtrl, "")
+		srv.RegisterName("vm", r.VmCtrl, "")
 
 		_logUtils.Info(_i118Utils.Sprintf("start_server", addr))
 		err := srv.Serve("tcp", addr)

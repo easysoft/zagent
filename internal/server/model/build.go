@@ -68,6 +68,7 @@ func NewBuildTo(build Build) commDomain.Build {
 		ScmPassword: build.ScmPassword,
 
 		BuildCommands:   build.BuildCommands,
+		EnvVars:         build.EnvVars,
 		ResultFiles:     build.ResultFiles,
 		KeepResultFiles: build.KeepResultFiles,
 	}

@@ -46,7 +46,8 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 	var newTaskProgress commConst.BuildProgress
 
 	if queue.Progress == commConst.ProgressCreated ||
-		queue.Progress == commConst.ProgressPending {
+		queue.Progress == commConst.ProgressPending ||
+		queue.Progress == commConst.ProgressTimeout {
 
 		// looking for valid host
 		hostId, backingId, tmplId, found := s.HostService.GetValidForQueue(queue)
@@ -77,7 +78,7 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 		}
 	}
 
-	if originalProgress != newTaskProgress { // queue's progress changed, update parent task
+	if newTaskProgress != "" && originalProgress != newTaskProgress { // queue's progress changed, update parent task
 		s.TaskRepo.SetProgress(queue.TaskId, newTaskProgress)
 	}
 }
@@ -109,7 +110,7 @@ func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {
 	}
 }
 
-func (s ExecService) SetTimeout() {
+func (s ExecService) CheckTimeout() {
 	queues := s.QueueRepo.QueryTimeout()
 
 	for _, queue := range queues {
