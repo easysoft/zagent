@@ -1,4 +1,4 @@
-package agentService
+package testingService
 
 import (
 	"encoding/json"
@@ -6,6 +6,7 @@ import (
 	"fmt"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
+	_const "github.com/easysoft/zagent/internal/pkg/const"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	_fileUtils "github.com/easysoft/zagent/internal/pkg/lib/file"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
@@ -13,17 +14,18 @@ import (
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zagent/internal/pkg/lib/shell"
 	"github.com/satori/go.uuid"
+	"os"
 	"strings"
 )
 
-type AutomatedExecService struct {
+type ExecService struct {
 }
 
-func NewAutomatedExecService() *AutomatedExecService {
-	return &AutomatedExecService{}
+func NewExecService() *ExecService {
+	return &ExecService{}
 }
 
-func (s *AutomatedExecService) ExcCommand(build *commDomain.Build) (err error) {
+func (s *ExecService) ExcCommand(build *commDomain.Build) (err error) {
 	cmdStr := build.BuildCommands
 	var out []string
 	out, err = _shellUtils.ExeShellWithOutputInDir(cmdStr, build.ProjectDir)
@@ -35,7 +37,7 @@ func (s *AutomatedExecService) ExcCommand(build *commDomain.Build) (err error) {
 	return
 }
 
-func (s *AutomatedExecService) GetTestApp(build *commDomain.Build) _domain.RpcResp {
+func (s *ExecService) GetTestApp(build *commDomain.Build) _domain.RpcResp {
 	result := _domain.RpcResp{}
 
 	if strings.Index(build.AppUrl, "http://") == 0 {
@@ -53,13 +55,13 @@ func (s *AutomatedExecService) GetTestApp(build *commDomain.Build) _domain.RpcRe
 	return result
 }
 
-func (s *AutomatedExecService) DownloadApp(build *commDomain.Build) {
+func (s *ExecService) DownloadApp(build *commDomain.Build) {
 	path := build.WorkDir + uuid.NewV4().String() + _fileUtils.GetExtName(build.AppUrl)
 	_fileUtils.Download(build.AppUrl, path)
 	build.AppPath = path
 }
 
-func (s *AutomatedExecService) UploadResult(build commDomain.Build, result commDomain.TestResult) {
+func (s *ExecService) UploadResult(build commDomain.Build, result commDomain.TestResult) {
 	zipFile := build.WorkDir + "testResult.zip"
 	err := _fileUtils.ZipFiles(zipFile, build.ProjectDir, strings.Split(build.ResultFiles, ","))
 	if err != nil {
@@ -76,4 +78,32 @@ func (s *AutomatedExecService) UploadResult(build commDomain.Build, result commD
 	extraParams["result"] = string(json)
 
 	_fileUtils.Upload(uploadResultUrl, files, extraParams)
+}
+
+func (s *ExecService) SetBuildWorkDir(build *commDomain.Build) {
+	build.WorkDir = agentConf.Inst.WorkDir + uuid.NewV4().String() + _const.PthSep
+	_fileUtils.MkDirIfNeeded(build.WorkDir)
+}
+
+func (s *ExecService) setEnvVars(build *commDomain.Build) (err error) {
+	for _, env := range strings.Split(build.EnvVars, "\n") {
+		arr := strings.Split(env, "=")
+		if len(arr) < 2 {
+			continue
+		}
+
+		name := strings.TrimSpace(arr[0])
+		val := strings.TrimSpace(arr[1])
+		if name == "" || val == "" {
+			continue
+		}
+
+		err = os.Setenv(name, val)
+
+		if err != nil {
+			break
+		}
+	}
+
+	return
 }

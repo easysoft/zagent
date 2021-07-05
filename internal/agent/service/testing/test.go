@@ -1,29 +1,26 @@
-package agentService
+package testingService
 
 import (
 	consts "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	"os"
-	"strings"
 )
 
-type AutomatedTestService struct {
-	CommonService
+type TestService struct {
+	ExecService *ExecService `inject:""`
 
-	SeleniumService *SeleniumService      `inject:""`
-	ScmService      *ScmService           `inject:""`
-	ExecService     *AutomatedExecService `inject:""`
+	SeleniumService *SeleniumService `inject:""`
+	ScmService      *ScmService      `inject:""`
 }
 
-func NewAutomatedTestService() *AutomatedTestService {
-	return &AutomatedTestService{}
+func NewService() *TestService {
+	return &TestService{}
 }
 
-func (s *AutomatedTestService) Exec(build *commDomain.Build) {
+func (s *TestService) Run(build *commDomain.Build) {
 	result := commDomain.TestResult{}
 	result.Name = build.Name
 
-	s.SetBuildWorkDir(build)
+	s.ExecService.SetBuildWorkDir(build)
 
 	var err error
 
@@ -41,7 +38,7 @@ func (s *AutomatedTestService) Exec(build *commDomain.Build) {
 	}
 
 	// set environment var
-	err = setEnvVars(build)
+	err = s.ExecService.setEnvVars(build)
 	if err != nil {
 		result.Failf("failed to set envs, err %s。", err.Error())
 		s.ExecService.UploadResult(*build, result)
@@ -67,27 +64,4 @@ func (s *AutomatedTestService) Exec(build *commDomain.Build) {
 
 	// submit result
 	s.ExecService.UploadResult(*build, result)
-}
-
-func setEnvVars(build *commDomain.Build) (err error) {
-	for _, env := range strings.Split(build.EnvVars, "\n") {
-		arr := strings.Split(env, "=")
-		if len(arr) < 2 {
-			continue
-		}
-
-		name := strings.TrimSpace(arr[0])
-		val := strings.TrimSpace(arr[1])
-		if name == "" || val == "" {
-			continue
-		}
-
-		err = os.Setenv(name, val)
-
-		if err != nil {
-			break
-		}
-	}
-
-	return
 }

@@ -1,13 +1,15 @@
 package agentService
 
 import (
+	deviceService "github.com/easysoft/zagent/internal/agent/service/device"
+	kvmService "github.com/easysoft/zagent/internal/agent/service/kvm"
 	agentUtils "github.com/easysoft/zagent/internal/agent/utils/common"
 )
 
 type CheckService struct {
-	HostService   *HostService   `inject:""`
-	VmService     *VmService     `inject:""`
-	DeviceService *DeviceService `inject:""`
+	HostService   *kvmService.HostService      `inject:""`
+	VmService     *kvmService.VmService        `inject:""`
+	DeviceService *deviceService.DeviceService `inject:""`
 
 	TaskService  *TaskService  `inject:""`
 	BuildService *BuildService `inject:""`

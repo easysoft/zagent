@@ -1,11 +1,10 @@
-package agentService
+package interfaceService
 
 import (
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 )
 
 type InterfaceTestService struct {
-	CommonService
 	ExecService *InterfaceExecService `inject:""`
 }
 

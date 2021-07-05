@@ -1,4 +1,4 @@
-package agentService
+package testingService
 
 import (
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
@@ -13,7 +13,6 @@ import (
 )
 
 type SeleniumService struct {
-	CommonService
 }
 
 func NewSeleniumService() *SeleniumService {

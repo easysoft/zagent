@@ -1,4 +1,4 @@
-package agentService
+package kvmService
 
 import "C"
 import (

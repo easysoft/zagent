@@ -1,4 +1,4 @@
-package agentService
+package interfaceService
 
 import (
 	"encoding/json"
@@ -13,7 +13,6 @@ import (
 )
 
 type InterfaceExecService struct {
-	CommonService
 	InterfaceRequestService *InterfaceReqService `inject:""`
 }
 

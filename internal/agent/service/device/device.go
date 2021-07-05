@@ -1,4 +1,4 @@
-package agentService
+package deviceService
 
 type DeviceService struct {
 }

@@ -1,4 +1,4 @@
-package agentService
+package interfaceService
 
 import (
 	"fmt"
@@ -9,7 +9,6 @@ import (
 )
 
 type InterfaceReqService struct {
-	CommonService
 }
 
 func NewInterfaceRequestService() *InterfaceReqService {

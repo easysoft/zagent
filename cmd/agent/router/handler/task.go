@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	agentService "github.com/easysoft/zagent/internal/agent/service"
+	interfaceService "github.com/easysoft/zagent/internal/agent/service/interface"
 	commConst "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
@@ -11,8 +12,8 @@ import (
 )
 
 type TaskCtrl struct {
-	TaskService          *agentService.TaskService          `inject:""`
-	InterfaceTestService *agentService.InterfaceTestService `inject:""`
+	TaskService          *agentService.TaskService              `inject:""`
+	InterfaceTestService *interfaceService.InterfaceTestService `inject:""`
 }
 
 func NewTaskCtrl() *TaskCtrl {
