@@ -13,23 +13,23 @@ type MyMap struct {
 	sync.RWMutex
 }
 
-func (this *MyMap) Put(key uint, value int) {
-	this.Lock()
-	defer this.Unlock()
+func (m *MyMap) Put(key uint, value int) {
+	m.Lock()
+	defer m.Unlock()
 
-	if this.v == nil {
-		this.v = map[uint]int{}
+	if m.v == nil {
+		m.v = map[uint]int{}
 	}
 
-	this.v[key] = value
+	m.v[key] = value
 }
-func (this *MyMap) Get(key uint) int {
-	this.RLock()
-	defer this.RUnlock()
+func (m *MyMap) Get(key uint) int {
+	m.RLock()
+	defer m.RUnlock()
 
-	if this.v == nil {
-		this.v = map[uint]int{}
+	if m.v == nil {
+		m.v = map[uint]int{}
 	}
 
-	return this.v[key]
+	return m.v[key]
 }

@@ -47,26 +47,28 @@ func (s *VmService) Register(isBusy bool) {
 	}
 }
 
-func (s *VmService) UpdateVms(vms []commDomain.Vm) {
+func (s *VmService) UpdateVmsStatus(vms []commDomain.Vm) {
 	names := map[string]bool{}
 
 	for _, vm := range vms {
 		name := vm.Name
 		names[name] = true
 
-		if _, ok := s.VmMap[name]; ok {
+		if _, ok := s.VmMap[name]; ok { // update status in map
 			v := s.VmMap[name]
 			v.Status = vm.Status
 			s.VmMap[name] = v
-		} else {
-			s.add(name, vm)
+		} else { // update time then add
+			if vm.FirstDetectedTime.IsZero() {
+				vm.FirstDetectedTime = time.Now()
+			}
+			s.VmMap[name] = vm
 		}
 	}
 
 	keys := s.getKeys(s.VmMap)
 	for _, key := range keys {
-		// remove vms in map but not found this time
-		if !names[key] {
+		if !names[key] { // remove vm in map but not found this time
 			delete(s.VmMap, key)
 			continue
 		}
@@ -78,13 +80,6 @@ func (s *VmService) UpdateVms(vms []commDomain.Vm) {
 			delete(s.VmMap, key)
 		}
 	}
-}
-
-func (s *VmService) add(name string, vm commDomain.Vm) {
-	if vm.FirstDetectedTime.IsZero() {
-		vm.FirstDetectedTime = time.Now()
-	}
-	s.VmMap[name] = vm
 }
 
 func (s *VmService) getKeys(m map[string]commDomain.Vm) []string {

@@ -6,12 +6,12 @@ import (
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
-	_shellUtils "github.com/easysoft/zagent/internal/pkg/lib/shell"
-	"strings"
+	"github.com/libvirt/libvirt-go"
 )
 
 type HostService struct {
-	VmService *VmService `inject:""`
+	VmService      *VmService      `inject:""`
+	LibvirtService *LibvirtService `inject:""`
 }
 
 func NewHostService() *HostService {
@@ -24,7 +24,7 @@ func (s *HostService) Register() {
 		HostStatus: commConst.HostActive,
 	}
 	host.Vms = s.getVms()
-	s.VmService.UpdateVms(host.Vms)
+	s.VmService.UpdateVmsStatus(host.Vms)
 
 	url := _httpUtils.GenUrl(agentConf.Inst.Server, "host/register")
 	resp, ok := _httpUtils.Post(url, host)
@@ -41,32 +41,17 @@ func (s *HostService) Register() {
 }
 
 func (s *HostService) getVms() (vms []commDomain.Vm) {
-	cmd := "virsh list --all"
-	out, _ := _shellUtils.ExeShell(cmd)
+	domains := s.LibvirtService.ListVm()
 
-	lines := strings.Split(out, "\n")
-	for _, line := range lines {
-		line = strings.TrimSpace(line)
-
-		if strings.Index(line, "Id") == 0 || strings.Index(line, "---") == 0 {
-			continue
-		}
-
-		cols := strings.Split(line, " ")
-		name := strings.TrimSpace(cols[1])
-		status := strings.TrimSpace(cols[2])
-
-		if len(name) < 32 { // not created by farm
-			continue
-		}
-
+	for _, dom := range domains {
 		vm := commDomain.Vm{}
-		vm.Name = name
+		vm.Name, _ = dom.GetName()
 
 		vm.Status = commConst.VmUnknown
-		if status == "running" {
+		domainState, _, _ := dom.GetState()
+		if domainState == libvirt.DOMAIN_RUNNING {
 			vm.Status = commConst.VmRunning
-		} else if status == "shut off" {
+		} else if domainState == libvirt.DOMAIN_SHUTOFF {
 			vm.Status = commConst.VmDestroy
 		}
 
