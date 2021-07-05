@@ -1,4 +1,4 @@
-package rpcService
+package commonService
 
 import (
 	"bytes"

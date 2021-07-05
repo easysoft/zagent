@@ -9,7 +9,7 @@ import (
 	serverConf "github.com/easysoft/zagent/internal/server/conf"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
-	rpcService "github.com/easysoft/zagent/internal/server/service/rpc"
+	commonService "github.com/easysoft/zagent/internal/server/service/common"
 	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
 )
 
@@ -29,7 +29,7 @@ type KvmNativeService struct {
 	BackingRepo *repo.BackingRepo `inject:""`
 	TmplRepo    *repo.TmplRepo    `inject:""`
 
-	RpcService *rpcService.RpcService `inject:""`
+	RpcService *commonService.RpcService `inject:""`
 }
 
 func NewKvmService() VmService {

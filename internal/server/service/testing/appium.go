@@ -7,7 +7,7 @@ import (
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 	serverService "github.com/easysoft/zagent/internal/server/service"
-	rpcService "github.com/easysoft/zagent/internal/server/service/rpc"
+	commonService "github.com/easysoft/zagent/internal/server/service/common"
 	"github.com/mitchellh/mapstructure"
 )
 
@@ -16,7 +16,7 @@ type AppiumService struct {
 	BuildRepo  *repo.BuildRepo  `inject:""`
 
 	QueueService *serverService.QueueService `inject:""`
-	RpcService   *rpcService.RpcService      `inject:""`
+	RpcService   *commonService.RpcService   `inject:""`
 }
 
 func NewAppiumService() *AppiumService {

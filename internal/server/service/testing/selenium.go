@@ -7,7 +7,7 @@ import (
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 	serverService "github.com/easysoft/zagent/internal/server/service"
-	rpcService "github.com/easysoft/zagent/internal/server/service/rpc"
+	commonService "github.com/easysoft/zagent/internal/server/service/common"
 	"github.com/mitchellh/mapstructure"
 )
 
@@ -15,7 +15,7 @@ type SeleniumService struct {
 	BuildRepo *repo.BuildRepo `inject:""`
 	VmRepo    *repo.VmRepo    `inject:""`
 
-	RpcService   *rpcService.RpcService      `inject:""`
+	RpcService   *commonService.RpcService   `inject:""`
 	QueueService *serverService.QueueService `inject:""`
 }
 
