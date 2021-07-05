@@ -40,11 +40,12 @@ func main() {
 
 	flagSet.BoolVar(&help, "h", false, "")
 
-	if len(os.Args) == 1 {
-		os.Args = append(os.Args, "-h")
+	action := ""
+	if len(os.Args) > 1 {
+		action = os.Args[1]
 	}
 
-	switch os.Args[1] {
+	switch action {
 	case "help", "-h":
 		agentUtils.PrintUsage()
 
