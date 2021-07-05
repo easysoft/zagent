@@ -11,7 +11,7 @@ type CronService struct {
 	CheckService *agentService.CheckService `inject:""`
 }
 
-func NewCronService() *CronService {
+func NewAgentCron() *CronService {
 	inst := &CronService{}
 	inst.Init()
 	return inst
