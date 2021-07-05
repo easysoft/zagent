@@ -3,7 +3,7 @@ package handler
 import (
 	"fmt"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
-	"github.com/easysoft/zagent/internal/server/service"
+	initService "github.com/easysoft/zagent/internal/server/service/init"
 	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
 	"github.com/kataras/iris/v12/websocket"
 )
@@ -13,7 +13,7 @@ type WsCtrl struct {
 	Namespace         string
 	*websocket.NSConn `stateless:"true"`
 
-	WebSocketService *serverService.WebSocketService `inject:""`
+	WebSocketService *initService.WebSocketService `inject:""`
 }
 
 func NewWsCtrl() *WsCtrl {

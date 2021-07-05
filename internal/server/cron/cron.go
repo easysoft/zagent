@@ -4,12 +4,12 @@ import (
 	"fmt"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
 	_cronUtils "github.com/easysoft/zagent/internal/pkg/lib/cron"
-	"github.com/easysoft/zagent/internal/server/service"
+	execService "github.com/easysoft/zagent/internal/server/service/exec"
 	"github.com/kataras/iris/v12"
 )
 
 type ServerCron struct {
-	ExecService *serverService.ExecService `inject:""`
+	ExecService *execService.ExecService `inject:""`
 }
 
 func NewServerCron() *ServerCron {

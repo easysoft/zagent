@@ -7,6 +7,7 @@ import (
 	"github.com/easysoft/zagent/internal/server/biz/transformer"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
+	commonService "github.com/easysoft/zagent/internal/server/service/common"
 	"github.com/fatih/color"
 	gf "github.com/snowlyg/gotransformer"
 	"strconv"
@@ -14,7 +15,7 @@ import (
 )
 
 type RoleService struct {
-	CommonService
+	commonService.CommonService
 
 	RoleRepo *repo.RoleRepo `inject:""`
 	PermRepo *repo.PermRepo `inject:""`

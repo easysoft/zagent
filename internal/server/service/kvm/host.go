@@ -1,4 +1,4 @@
-package serverService
+package kvmService
 
 import (
 	"fmt"

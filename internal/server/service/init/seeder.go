@@ -1,4 +1,4 @@
-package serverService
+package initService
 
 import (
 	"fmt"
@@ -8,6 +8,7 @@ import (
 	"github.com/easysoft/zagent/internal/server/conf"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
+	serverService "github.com/easysoft/zagent/internal/server/service"
 	serverRes "github.com/easysoft/zagent/res/server"
 	logger "github.com/sirupsen/logrus"
 	"math/rand"
@@ -19,9 +20,9 @@ import (
 )
 
 type SeederService struct {
-	InitService *InitService `inject:""`
-	RoleService *RoleService `inject:""`
-	UserService *UserService `inject:""`
+	InitService *InitService               `inject:""`
+	RoleService *serverService.RoleService `inject:""`
+	UserService *serverService.UserService `inject:""`
 
 	CommonRepo *repo.BaseRepo `inject:""`
 	UserRepo   *repo.UserRepo `inject:""`

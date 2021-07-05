@@ -1,4 +1,4 @@
-package serverService
+package kvmService
 
 import (
 	"crypto/rand"
@@ -9,6 +9,7 @@ import (
 	serverConf "github.com/easysoft/zagent/internal/server/conf"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
+	rpcService "github.com/easysoft/zagent/internal/server/service/rpc"
 	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
 )
 
@@ -28,7 +29,7 @@ type KvmNativeService struct {
 	BackingRepo *repo.BackingRepo `inject:""`
 	TmplRepo    *repo.TmplRepo    `inject:""`
 
-	RpcService *RpcService `inject:""`
+	RpcService *rpcService.RpcService `inject:""`
 }
 
 func NewKvmService() VmService {

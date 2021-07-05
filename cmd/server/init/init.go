@@ -12,8 +12,8 @@ import (
 	"github.com/easysoft/zagent/internal/server/conf"
 	serverCron "github.com/easysoft/zagent/internal/server/cron"
 	"github.com/easysoft/zagent/internal/server/model"
-	"github.com/easysoft/zagent/internal/server/repo"
-	"github.com/easysoft/zagent/internal/server/service"
+	initService "github.com/easysoft/zagent/internal/server/service/init"
+	kvmService "github.com/easysoft/zagent/internal/server/service/kvm"
 	serverRes "github.com/easysoft/zagent/res/server"
 	assetfs "github.com/elazarl/go-bindata-assetfs"
 	"github.com/facebookgo/inject"
@@ -89,29 +89,15 @@ func injectObj(router *router.Router) {
 		&inject.Object{Value: _db.GetInst().DB()},
 
 		// repo
-		&inject.Object{Value: repo.NewBaseRepo()},
-		&inject.Object{Value: repo.NewPermRepo()},
-		&inject.Object{Value: repo.NewRoleRepo()},
-		&inject.Object{Value: repo.NewUserRepo()},
-		&inject.Object{Value: repo.NewTokenRepo()},
 
 		// middleware
 		&inject.Object{Value: bizCasbin.NewEnforcer()},
 		&inject.Object{Value: jwt.NewJwtService()},
-		&inject.Object{Value: jwt.NewTokenService()},
-		&inject.Object{Value: bizCasbin.NewCasbinService()},
 
 		// service
+		&inject.Object{Value: initService.NewSeeder()},
 		&inject.Object{Value: serverCron.NewServerCron()},
-		&inject.Object{Value: serverService.NewWebSocketService()},
-		&inject.Object{Value: serverService.NewCommonService()},
-		&inject.Object{Value: serverService.NewKvmService()},
-		&inject.Object{Value: serverService.NewExecService()},
-
-		&inject.Object{Value: serverService.NewPermService()},
-		&inject.Object{Value: serverService.NewRoleService()},
-		&inject.Object{Value: serverService.NewUserService()},
-		&inject.Object{Value: serverService.NewSeeder()},
+		&inject.Object{Value: kvmService.NewKvmService()},
 
 		// controller
 		&inject.Object{Value: handler.NewPermCtrl()},

@@ -1,4 +1,4 @@
-package serverService
+package testing
 
 import (
 	"github.com/easysoft/zagent/internal/comm/const"
@@ -6,6 +6,8 @@ import (
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
+	serverService "github.com/easysoft/zagent/internal/server/service"
+	rpcService "github.com/easysoft/zagent/internal/server/service/rpc"
 	"github.com/mitchellh/mapstructure"
 )
 
@@ -13,8 +15,8 @@ type AppiumService struct {
 	DeviceRepo *repo.DeviceRepo `inject:""`
 	BuildRepo  *repo.BuildRepo  `inject:""`
 
-	QueueService *QueueService `inject:""`
-	RpcService   *RpcService   `inject:""`
+	QueueService *serverService.QueueService `inject:""`
+	RpcService   *rpcService.RpcService      `inject:""`
 }
 
 func NewAppiumService() *AppiumService {

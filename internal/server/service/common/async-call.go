@@ -1,4 +1,4 @@
-package serverService
+package commonService
 
 import (
 	"context"

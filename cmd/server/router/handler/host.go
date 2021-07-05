@@ -3,14 +3,14 @@ package handler
 import (
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
-	"github.com/easysoft/zagent/internal/server/service"
+	kvmService "github.com/easysoft/zagent/internal/server/service/kvm"
 	"github.com/kataras/iris/v12"
 )
 
 type HostCtrl struct {
 	BaseCtrl
 
-	HostService *serverService.HostService `inject:""`
+	HostService *kvmService.HostService `inject:""`
 }
 
 func NewHostCtrl() *HostCtrl {

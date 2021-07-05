@@ -1,4 +1,4 @@
-package serverService
+package rpcService
 
 import (
 	"bytes"
@@ -14,7 +14,6 @@ import (
 )
 
 type RpcService struct {
-	CommonService
 }
 
 func NewRpcService() *RpcService {

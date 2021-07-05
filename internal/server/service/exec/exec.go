@@ -1,9 +1,13 @@
-package serverService
+package execService
 
 import (
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
+	serverService "github.com/easysoft/zagent/internal/server/service"
+	kvmService "github.com/easysoft/zagent/internal/server/service/kvm"
+	"github.com/easysoft/zagent/internal/server/service/testing"
+	testingService "github.com/easysoft/zagent/internal/server/service/testing"
 )
 
 type ExecService struct {
@@ -13,13 +17,13 @@ type ExecService struct {
 	DeviceRepo *repo.DeviceRepo `inject:""`
 	VmRepo     *repo.VmRepo     `inject:""`
 
-	DeviceService   *DeviceService   `inject:""`
-	SeleniumService *SeleniumService `inject:""`
-	AppiumService   *AppiumService   `inject:""`
-	TaskService     *TaskService     `inject:""`
-	HostService     *HostService     `inject:""`
+	DeviceService   *serverService.DeviceService  `inject:""`
+	TaskService     *serverService.TaskService    `inject:""`
+	SeleniumService *testing.SeleniumService      `inject:""`
+	AppiumService   *testingService.AppiumService `inject:""`
+	HostService     *kvmService.HostService       `inject:""`
 
-	VmService VmService `inject:""`
+	VmService kvmService.VmService `inject:""`
 }
 
 func NewExecService() *ExecService {

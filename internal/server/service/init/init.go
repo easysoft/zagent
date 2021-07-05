@@ -1,4 +1,4 @@
-package serverService
+package initService
 
 import (
 	"fmt"
