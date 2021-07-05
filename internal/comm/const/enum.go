@@ -20,6 +20,7 @@ const (
 	VmActive        VmStatus = "active"
 	VmBusy          VmStatus = "busy"
 	VmDestroy       VmStatus = "destroy"
+	VmShutOff       VmStatus = "shutoff"
 	VmFailToCreate  VmStatus = "fail_to_create"
 	VmFailToDestroy VmStatus = "fail_to_destroy"
 	VmUnknown       VmStatus = "unknown"

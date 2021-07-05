@@ -52,7 +52,7 @@ func (s *HostService) getVms() (vms []commDomain.Vm) {
 		if domainState == libvirt.DOMAIN_RUNNING {
 			vm.Status = commConst.VmRunning
 		} else if domainState == libvirt.DOMAIN_SHUTOFF {
-			vm.Status = commConst.VmDestroy
+			vm.Status = commConst.VmShutOff
 		}
 
 		vms = append(vms, vm)

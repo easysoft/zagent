@@ -20,6 +20,7 @@ type VmService struct {
 func NewVmService() *VmService {
 	s := VmService{}
 	s.TimeStamp = time.Now().Unix()
+	s.VmMap = map[string]commDomain.Vm{}
 
 	return &s
 }
