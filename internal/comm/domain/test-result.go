@@ -26,11 +26,11 @@ type TestResult struct {
 	Payload interface{} `json:"payload"`
 }
 
-func (result *TestResult) Success(msg string) {
+func (result *TestResult) Pass(msg string) {
 	result.Code = _const.ResultSuccess.Int()
 	result.Msg = msg
 }
-func (result *TestResult) Successf(str string, args ...interface{}) {
+func (result *TestResult) Passf(str string, args ...interface{}) {
 	result.Code = _const.ResultSuccess.Int()
 	result.Msg = fmt.Sprintf(str+"\n", args...)
 }

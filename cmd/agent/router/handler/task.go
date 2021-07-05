@@ -23,7 +23,7 @@ func (c *TaskCtrl) Add(ctx context.Context, task commDomain.Build, reply *_domai
 	size := c.TaskService.GetTaskSize()
 	if size == 0 {
 		c.TaskService.AddTask(task)
-		reply.Success("Success to add job.")
+		reply.Success("Pass to add job.")
 	} else {
 		reply.Fail(fmt.Sprintf("already has %d jobs to be done.", size))
 	}
@@ -42,7 +42,7 @@ func (c *TaskCtrl) Exec(ctx context.Context, build commDomain.Build, reply *_dom
 		c.InterfaceTestService.ExecSet(&build, &result)
 	}
 
-	reply.Success("Success to exec processor.")
+	reply.Success("Pass to exec processor.")
 	reply.Payload = result
 
 	return nil
