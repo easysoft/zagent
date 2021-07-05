@@ -34,7 +34,7 @@ func main() {
 	flagSet.StringVar(&runMode, "t", agentConst.Host.ToString(), "")
 	flagSet.StringVar(&agentConf.Inst.Server, "s", "http://localhost:8085", "")
 	flagSet.StringVar(&agentConf.Inst.NodeName, "n", "", "")
-	flagSet.StringVar(&agentConf.Inst.NodeIp, "i", "127.0.0.1", "")
+	flagSet.StringVar(&agentConf.Inst.NodeIp, "i", "192.168.0.104", "")
 	flagSet.IntVar(&agentConf.Inst.NodePort, "p", 8848, "")
 	flagSet.StringVar(&agentConf.Inst.Language, "l", "zh", "")
 
