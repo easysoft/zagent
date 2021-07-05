@@ -63,8 +63,10 @@ func (r *Router) App() {
 
 		v1 := app.Party("/v1")
 		{
-			v1.PartyFunc("/host", func(party iris.Party) {
-				party.Post("/register", r.HostCtrl.Register).Name = "注册主机"
+			v1.PartyFunc("/client", func(client iris.Party) {
+				client.PartyFunc("/host", func(party iris.Party) {
+					party.Post("/register", r.HostCtrl.Register).Name = "注册主机"
+				})
 			})
 
 			v1.PartyFunc("/admin", func(admin iris.Party) {

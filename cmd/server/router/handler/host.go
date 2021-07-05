@@ -28,6 +28,6 @@ func (c *HostCtrl) Register(ctx iris.Context) {
 
 	rpcResp := c.HostService.Register(model)
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", rpcResp))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(int64(rpcResp.Code), "操作成功", rpcResp))
 	return
 }

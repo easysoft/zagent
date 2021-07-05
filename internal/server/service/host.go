@@ -29,6 +29,8 @@ func (s HostService) Register(host commDomain.Host) (result _domain.RpcResp) {
 
 	s.updateVmsStatus(host, hostPo.ID)
 
+	result.Success("")
+
 	return
 }
 
