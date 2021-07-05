@@ -4,6 +4,7 @@ import (
 	"github.com/easysoft/zagent/cmd/agent/router"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	agentCron "github.com/easysoft/zagent/internal/agent/cron"
+	agentService "github.com/easysoft/zagent/internal/agent/service"
 	"github.com/easysoft/zagent/internal/pkg/db"
 	"github.com/facebookgo/inject"
 	"github.com/sirupsen/logrus"
@@ -24,7 +25,10 @@ func injectObj(router *router.Router) {
 	if err := g.Provide(
 		// db
 		&inject.Object{Value: _db.GetInst().DB()},
+
+		// service
 		&inject.Object{Value: agentCron.NewAgentCron()},
+		&inject.Object{Value: agentService.NewLibvirtService()},
 
 		&inject.Object{Value: router},
 	); err != nil {
