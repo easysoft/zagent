@@ -28,6 +28,7 @@ func injectObj(router *router.Router) {
 
 		// cron
 		&inject.Object{Value: agentCron.NewAgentCron()},
+
 		// service
 		&inject.Object{Value: agentService.NewLibvirtService()},
 
