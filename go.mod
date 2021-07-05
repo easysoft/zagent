@@ -28,9 +28,7 @@ require (
 	github.com/go-playground/validator/v10 v10.6.1
 	github.com/gofrs/uuid v3.3.0+incompatible // indirect
 	github.com/goinggo/mapstructure v0.0.0-20140717182941-194205d9b4a9 // indirect
-	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/gomodule/redigo v1.8.4
-	github.com/google/go-cmp v0.5.4 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20200217142428-fce0ec30dd00 // indirect
 	github.com/gorilla/websocket v1.4.2
 	github.com/huandu/go-clone v1.1.4 // indirect
@@ -63,7 +61,6 @@ require (
 	github.com/sirupsen/logrus v1.7.0
 	github.com/smallnest/rpcx v0.0.0-20200512151426-9e5976a9d1d6
 	github.com/smartystreets/assertions v1.2.0 // indirect
-	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/snowlyg/gotransformer v0.1.0
 	github.com/tdewolff/parse/v2 v2.5.6 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
@@ -71,7 +68,6 @@ require (
 	golang.org/x/crypto v0.0.0-20210616213533-5ff15b29337e
 	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110
 	golang.org/x/text v0.3.5
-	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
 	gorm.io/driver/mysql v1.0.3
