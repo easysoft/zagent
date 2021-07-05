@@ -9,43 +9,62 @@
       </div>
       <a-card :body-style="{padding: '24px 32px'}" :bordered="false">
         <a-form-model ref="form" :model="model" :rules="rules">
-          <a-form-model-item :label="$t('form.name')" prop="name" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-form-model-item :label="$t('form.name')" prop="name" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
             <a-input v-model="model.name" />
           </a-form-model-item>
 
-          <a-form-model-item :label="$t('form.test.type')" prop="buildType" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-form-model-item :label="$t('form.test.type')" prop="buildType" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
             <a-select v-model="model.buildType">
-              <a-select-option v-for="(value, key) in buildTypes" :value="value[0]" :key="key">
-                {{ value[1] }}
+              <a-select-option v-for="(value, key) in buildTypes" :value="key" :key="key">
+                {{value}}
               </a-select-option>
             </a-select>
           </a-form-model-item>
 
-          <a-form-model-item :label="$t('form.exec.cmd')" prop="buildCommands" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-form-model-item :label="$t('form.test.code')" prop="scriptUrl" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
+            <a-textarea v-model="model.scriptUrl" @change="scriptUrlChanged" />
+            <span>{{ $t('form.test.code.tips') }}</span>
+          </a-form-model-item>
+
+          <a-row v-if="isScm" :gutter="colsFull">
+            <a-col :span="colsHalf">
+              <a-form-model-item :label="$t('form.scm.account')" prop="scmAccount" :labelCol="labelColHalf" :wrapperCol="wrapperColHalf">
+                <a-input v-model="model.scmAccount" />
+              </a-form-model-item>
+            </a-col>
+
+            <a-col :span="colsHalf">
+              <a-form-model-item :label="$t('form.scm.password')" prop="scmPassword" :labelCol="labelColHalf2" :wrapperCol="wrapperColHalf">
+                <a-input v-model="model.scmPassword" />
+              </a-form-model-item>
+            </a-col>
+          </a-row>
+
+          <a-form-model-item :label="$t('form.exec.cmd')" prop="buildCommands" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
             <a-textarea v-model="model.buildCommands" />
             <span>{{ $t('form.exec.cmd.tips') }}</span>
           </a-form-model-item>
 
-          <a-form-model-item :label="$t('form.result.files')" prop="resultFiles" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-form-model-item :label="$t('form.result.files')" prop="resultFiles" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
             <a-textarea v-model="model.resultFiles" />
             <span>{{ $t('form.result.files.tips') }}</span>
           </a-form-model-item>
 
-          <a-form-model-item :label="$t('form.env.var')" prop="envVars" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-form-model-item :label="$t('form.env.var')" prop="envVars" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
             <a-textarea v-model="model.envVars" />
             <span>{{ $t('form.env.var.tips') }}</span>
           </a-form-model-item>
 
-          <a-form-model-item :label="$t('form.desc')" prop="desc" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-form-model-item :label="$t('form.desc')" prop="desc" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
             <a-textarea v-model="model.desc" />
           </a-form-model-item>
 
-<!--          <a-form-model-item :label="$t('form.group')" prop="groupId" :labelCol="labelCol" :wrapperCol="wrapperCol">
+<!--          <a-form-model-item :label="$t('form.group')" prop="groupId" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
             <a-input-number v-model="model.groupId" />
             <span>  {{ $t('form.group.tips') }}</span>
           </a-form-model-item>-->
 
-          <a-form-model-item :label="$t('form.test.env')" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-form-model-item :label="$t('form.test.env')" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
             <div class="environments">
               <a-row :gutter="cols" class="title">
                 <a-col :offset="1" :span="col">{{ $t('form.os.category') }}</a-col>
@@ -60,7 +79,7 @@
                   </a>
                 </a-col>
               </a-row>
-              <a-row v-for="(item, index)  in model.environments" :key="index" :gutter="cols">
+              <a-row v-for="(item, index) in model.environments" :key="index" :gutter="cols">
                 <a-col :offset="1" :span="col">
                   <span>{{ osCategories[item.osCategory] }}</span>
                 </a-col>
@@ -82,7 +101,7 @@
             </div>
           </a-form-model-item>
 
-          <a-form-item :wrapperCol="wrapperFull" style="text-align: center">
+          <a-form-item :wrapperCol="wrapperColFull" style="text-align: center">
             <a-button @click="save()" htmlType="submit" type="primary">{{ $t('form.save') }}</a-button>
             <a-button @click="reset()" style="margin-left: 8px">{{ $t('form.reset') }}</a-button>
           </a-form-item>
@@ -100,7 +119,7 @@
       @cancel="cancelEnv">
       <div>
         <a-form-model ref="editEnvForm" :model="environment" :rules="rules">
-          <a-form-model-item :label="$t('form.os.category')" prop="osCategory" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-form-model-item :label="$t('form.os.category')" prop="osCategory" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
             <a-select v-model="environment.osCategory" @change="envChanged()">
               <a-select-option v-for="(value, key) in envData.categories" :value="value" :key="key">
                 {{ osCategories[value] }}
@@ -108,15 +127,15 @@
             </a-select>
           </a-form-model-item>
 
-          <a-form-model-item :label="$t('form.os.type')" prop="osType" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-form-model-item :label="$t('form.os.type')" prop="osType" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
             <a-select v-model="environment.osType" @change="envChanged()">
               <a-select-option v-for="(value, key) in envData.types" :value="value" :key="key">
-                {{  osTypes[value] }}
+                {{ osTypes[value] }}
               </a-select-option>
             </a-select>
           </a-form-model-item>
 
-          <a-form-model-item :label="$t('form.os.lang')" prop="osLang" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-form-model-item :label="$t('form.os.lang')" prop="osLang" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
             <a-select v-model="environment.osLang">
               <a-select-option v-for="(value, key) in envData.langs" :value="value" :key="key">
                 {{ osLangs[value] }}
@@ -131,7 +150,15 @@
 </template>
 
 <script>
-import { labelCol, wrapperCol, wrapperFull } from '@/utils/const'
+import {
+  wrapperColFull,
+  colsFull,
+  colsHalf,
+  labelColHalf,
+  labelColHalf2,
+  wrapperColHalf,
+  labelColFull
+} from '@/utils/const'
 import { getBuildTypes, getOsCategories, getOsTypes, getOsLangs } from '@/utils/testing'
 import { requestSuccess, getTask, saveTask, getTestEnvs } from '@/api/manage'
 
@@ -145,16 +172,25 @@ export default {
       }
     }
   },
+  computed: {
+  },
   data () {
     return {
-      labelCol: labelCol,
-      wrapperCol: wrapperCol,
-      wrapperFull: wrapperFull,
+      colsFull: colsFull,
+      colsHalf: colsHalf,
+
+      labelColFull: labelColFull,
+      wrapperColFull: wrapperColFull,
+
+      labelColHalf: labelColHalf,
+      labelColHalf2: labelColHalf2,
+      wrapperColHalf: wrapperColHalf,
 
       model: { environments: [] },
       envData: {},
       environment: {},
       environmentIndex: -1,
+      isScm: false,
       isInsert: false,
 
       editEnvVisible: false,
@@ -168,6 +204,7 @@ export default {
         osCategory: [{ required: true, message: this.$t('valid.required.osCategory'), trigger: 'blur' }],
         osType: [{ required: true, message: this.$t('valid.required.osType'), trigger: 'blur' }],
         osLang: [{ required: true, message: this.$t('valid.required.osLang'), trigger: 'blur' }],
+        scriptUrl: [{ required: true, message: this.$t('valid.required.scriptUrl'), trigger: 'blur' }],
         buildCommands: [{ required: true, message: this.$t('valid.required.buildCommands'), trigger: 'blur' }],
         resultFiles: [{ required: true, message: this.$t('valid.required.resultFiles'), trigger: 'blur' }]
       },
@@ -282,6 +319,14 @@ export default {
     },
     envChanged () {
       this.loadTestEnvs()
+    },
+
+    scriptUrlChanged () {
+      if (this.model.scriptUrl.indexOf('.zip') > -1) {
+        this.isScm = false
+      } else {
+        this.isScm = true
+      }
     }
   }
 }

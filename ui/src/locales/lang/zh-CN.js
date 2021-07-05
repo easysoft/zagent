@@ -66,6 +66,10 @@ const locale = {
   'form.test.env': '测试环境',
   'form.group': '分组ID',
   'form.group.tips': '用于分组显示',
+  'form.test.code': '测试项目',
+  'form.test.code.tips': '输入项目Git仓库或Zip文件的下载地址。',
+  'form.scm.account': 'Git账号',
+  'form.scm.password': 'Git账号密码',
   'form.exec.cmd': '测试命令',
   'form.exec.cmd.tips': '输入执行测试的命令，可引用环境变量。',
   'form.env.var': '环境变量',
@@ -108,6 +112,7 @@ const locale = {
   'valid.required.osType': '请选择系统类型',
   'valid.required.osVersion': '请选择系统版本',
   'valid.required.osLang': '请选择系统语言',
+  'valid.required.scriptUrl': '请输入测试项目的地址',
   'valid.required.buildCommands': '构建命令不能为空',
   'valid.required.resultFiles': '结果文件不能为空',
 

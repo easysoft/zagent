@@ -62,17 +62,17 @@ func CheckoutCodes(task *commDomain.Build) {
 	task.ProjectDir = projectDir
 }
 
-func DownloadCodes(task *commDomain.Build) {
-	zipPath := task.WorkDir + uuid.NewV4().String() + _fileUtils.GetExtName(task.ScriptUrl)
-	_fileUtils.Download(task.ScriptUrl, zipPath)
+func DownloadCodes(build *commDomain.Build) {
+	zipPath := build.WorkDir + uuid.NewV4().String() + _fileUtils.GetExtName(build.ScriptUrl)
+	_fileUtils.Download(build.ScriptUrl, zipPath)
 
 	scriptFolder := _fileUtils.GetZipSingleDir(zipPath)
 	if scriptFolder != "" { // single dir in zip
-		task.ProjectDir = task.WorkDir + scriptFolder
-		archiver.Unarchive(zipPath, task.WorkDir)
+		build.ProjectDir = build.WorkDir + scriptFolder
+		archiver.Unarchive(zipPath, build.WorkDir)
 	} else { // more then one dir, unzip to a folder
 		fileNameWithoutExt := _fileUtils.GetFileNameWithoutExt(zipPath)
-		task.ProjectDir = task.WorkDir + fileNameWithoutExt + _const.PthSep
-		archiver.Unarchive(zipPath, task.ProjectDir)
+		build.ProjectDir = build.WorkDir + fileNameWithoutExt + _const.PthSep
+		archiver.Unarchive(zipPath, build.ProjectDir)
 	}
 }

@@ -60,6 +60,10 @@ func HostFromDomain(h domain.Host) (po Host) {
 		Status:  h.Status,
 	}
 
+	if po.Name == "" {
+		po.Name = po.Ip
+	}
+
 	for _, v := range h.Vms {
 		vm := VmFromDomain(v)
 		po.Vms = append(po.Vms, vm)

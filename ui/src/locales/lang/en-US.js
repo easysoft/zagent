@@ -66,6 +66,11 @@ const locale = {
   'form.test.env': 'Test Environment',
   'form.group': 'Group Id',
   'form.group.tips': 'Used to group the queues.',
+  'form.test.code': 'Test Project.',
+  'form.test.code.tips': 'Input Git repo or Zip file url of the test project.',
+  'form.scm.account': 'Git Account',
+  'form.scm.password': 'Git Password',
+
   'form.exec.cmd': 'Test Command',
   'form.exec.cmd.tips': 'Input the command, may use environment variables in it.',
   'form.env.var': 'Environment Variable',
@@ -108,6 +113,7 @@ const locale = {
   'valid.required.osType': 'Please select OS type.',
   'valid.required.osVersion': 'Please select OS version.',
   'valid.required.osLang': 'Please select OS Language.',
+  'valid.required.scriptUrl': 'Please input test project address.',
   'valid.required.buildCommands': 'Please input test command.',
   'valid.required.resultFiles': 'Please input result files.',
 

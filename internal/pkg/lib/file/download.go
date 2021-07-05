@@ -6,10 +6,14 @@ import (
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"io/ioutil"
 	"net/http"
+	"path/filepath"
 )
 
 func Download(url string, dst string) {
-	fmt.Printf("DownloadToFile From: %s.\n", url)
+	fmt.Printf("DownloadToFile From: %s to %s.\n", url, dst)
+
+	MkDirIfNeeded(filepath.Dir(dst))
+
 	d, err := HTTPDownload(url)
 	if err == nil {
 		_logUtils.Info(_i118Utils.Sprintf("file_downloaded", url))

@@ -35,14 +35,7 @@ func Init(version string, printVersion, printRouter *bool) {
 	}
 	irisServer.App.Logger().SetLevel(serverConf.Config.LogLevel)
 
-	if _commonUtils.IsRelease() {
-		irisServer.App.HandleDir("/",
-			&assetfs.AssetFS{Asset: serverRes.Asset, AssetDir: serverRes.AssetDir, AssetInfo: serverRes.AssetInfo,
-				Prefix: "ui/dist"}, iris.DirOptions{
-				IndexName: "index.html",
-				Compress:  false,
-			})
-	}
+	mapStaticRes(irisServer)
 
 	router := router.NewRouter(irisServer.App)
 	injectObj(router)
@@ -211,6 +204,21 @@ func getPathNames(routeReadOnly []context.RouteReadOnly) []*PathName {
 	}
 
 	return pns
+}
+
+func mapStaticRes(irisServer *Server) {
+	// ui
+	if _commonUtils.IsRelease() {
+		irisServer.App.HandleDir("/",
+			&assetfs.AssetFS{Asset: serverRes.Asset, AssetDir: serverRes.AssetDir, AssetInfo: serverRes.AssetInfo,
+				Prefix: "ui/dist"}, iris.DirOptions{
+				IndexName: "index.html",
+				Compress:  false,
+			})
+	}
+
+	// testing res
+	irisServer.App.HandleDir("/down", "down")
 }
 
 // 过滤非必要权限

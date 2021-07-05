@@ -55,7 +55,7 @@ func (r VmRepo) Launch(vm domain.Vm) {
 }
 
 func (r VmRepo) UpdateStatusByNames(vms []string, status consts.VmStatus) {
-	db := r.DB.Model(&model.Vm{}).Where("name = IN (?)", vms)
+	db := r.DB.Model(&model.Vm{}).Where("name IN (?)", vms)
 
 	if status == consts.VmRunning {
 		db.Where("AND status != 'active'")
@@ -65,7 +65,7 @@ func (r VmRepo) UpdateStatusByNames(vms []string, status consts.VmStatus) {
 }
 
 func (r VmRepo) DestroyMissedVmsStatus(vms []string, hostId uint) {
-	db := r.DB.Model(&model.Vm{}).Where("hostId=? AND status!=?", hostId, consts.VmDestroy)
+	db := r.DB.Model(&model.Vm{}).Where("host_id=? AND status!=?", hostId, consts.VmDestroy)
 
 	if len(vms) > 0 {
 		db.Where("AND name NOT IN (?)", vms)
