@@ -1,7 +1,6 @@
 package agentService
 
 import (
-	"fmt"
 	consts "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	"os"
@@ -22,40 +21,55 @@ func NewAutomatedTestService() *AutomatedTestService {
 
 func (s *AutomatedTestService) Exec(build *commDomain.Build) {
 	result := commDomain.TestResult{}
+	result.Name = build.Name
 
 	s.SetBuildWorkDir(build)
 
+	var err error
+
 	// download res
 	if build.BuildType == consts.AutoSelenium {
-		s.SeleniumService.DownloadDriver(build)
+		err = s.SeleniumService.DownloadDriver(build)
+		if err != nil {
+			result.Failf("fail to download driver, err: %s", err.Error())
+			s.ExecService.UploadResult(*build, result)
+			return
+		}
 
 		build.EnvVars += "\nDriverType=" + build.SeleniumDriverType.ToString()
 		build.EnvVars += "\nDriverPath=" + build.SeleniumDriverPath
 	}
 
 	// set environment var
-	setEnvVars(build)
+	err = setEnvVars(build)
+	if err != nil {
+		result.Failf("failed to set envs, err %s。", err.Error())
+		s.ExecService.UploadResult(*build, result)
+		return
+	}
 
 	// get script
-	s.ScmService.GetTestScript(build)
-	if build.ProjectDir == "" {
-		result.Fail(fmt.Sprintf("failed to get test script, %#v。", build))
+	err = s.ScmService.GetTestScript(build)
+	if err != nil || build.ProjectDir == "" {
+		result.Failf("failed to get test script, err %s。", err.Error())
+		s.ExecService.UploadResult(*build, result)
 		return
 	}
 
 	// exec test
-	result = s.ExecService.ExcCommand(build)
-	if !result.IsSuccess() {
-		result.Fail(fmt.Sprintf("failed to ext test,\n dir: %s\n  cmd: \n%s",
-			build.ProjectDir, build.BuildCommands))
+	err = s.ExecService.ExcCommand(build)
+	if err != nil {
+		result.Failf("failed to exec testing,\n dir: %s\n  cmd: \n%s, err: %s",
+			build.ProjectDir, build.BuildCommands, err.Error())
+		s.ExecService.UploadResult(*build, result)
+		return
 	}
 
 	// submit result
-	result.Name = build.Name
 	s.ExecService.UploadResult(*build, result)
 }
 
-func setEnvVars(build *commDomain.Build) {
+func setEnvVars(build *commDomain.Build) (err error) {
 	for _, env := range strings.Split(build.EnvVars, "\n") {
 		arr := strings.Split(env, "=")
 		if len(arr) < 2 {
@@ -68,6 +82,12 @@ func setEnvVars(build *commDomain.Build) {
 			continue
 		}
 
-		os.Setenv(name, val)
+		err = os.Setenv(name, val)
+
+		if err != nil {
+			break
+		}
 	}
+
+	return
 }

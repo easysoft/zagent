@@ -9,20 +9,23 @@ import (
 	"path/filepath"
 )
 
-func Download(url string, dst string) {
+func Download(url string, dst string) (err error) {
 	fmt.Printf("DownloadToFile From: %s to %s.\n", url, dst)
 
 	MkDirIfNeeded(filepath.Dir(dst))
 
-	d, err := HTTPDownload(url)
+	var data []byte
+	data, err = HTTPDownload(url)
 	if err == nil {
 		_logUtils.Info(_i118Utils.Sprintf("file_downloaded", url))
 
-		err = WriteDownloadFile(dst, d)
+		err = WriteDownloadFile(dst, data)
 		if err == nil {
 			_logUtils.Info(_i118Utils.Sprintf("file_download_saved", url, dst))
 		}
 	}
+
+	return
 }
 
 func HTTPDownload(uri string) ([]byte, error) {

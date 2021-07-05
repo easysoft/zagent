@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"fmt"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
 	"time"
 )
@@ -29,10 +30,19 @@ func (result *TestResult) Success(msg string) {
 	result.Code = _const.ResultSuccess.Int()
 	result.Msg = msg
 }
+func (result *TestResult) Successf(str string, args ...interface{}) {
+	result.Code = _const.ResultSuccess.Int()
+	result.Msg = fmt.Sprintf(str+"\n", args...)
+}
 
 func (result *TestResult) Fail(msg string) {
 	result.Code = _const.ResultFail.Int()
 	result.Msg = msg
+}
+
+func (result *TestResult) Failf(str string, args ...interface{}) {
+	result.Code = _const.ResultFail.Int()
+	result.Msg = fmt.Sprintf(str+"\n", args...)
 }
 
 func (result *TestResult) IsSuccess() bool {

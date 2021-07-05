@@ -20,8 +20,7 @@ func NewSeleniumService() *SeleniumService {
 	return &SeleniumService{}
 }
 
-func (s *SeleniumService) DownloadDriver(build *commDomain.Build) {
-	// download res
+func (s *SeleniumService) DownloadDriver(build *commDomain.Build) (err error) {
 	// http://127.0.0.1:8085/down/driver/chrome/windows/92/chrome.exe
 
 	fileName := consts.ResDriverName
@@ -35,6 +34,13 @@ func (s *SeleniumService) DownloadDriver(build *commDomain.Build) {
 	url := path.Join(agentConf.Inst.Server, relatePath)
 	filePath := filepath.Join(agentConf.Inst.WorkDir, strings.Replace(relatePath, "/", _const.PthSep, -1))
 
-	_fileUtils.Download(url, filePath)
-	build.SeleniumDriverPath = filePath
+	if !_fileUtils.FileExist(filePath) {
+		err = _fileUtils.Download(url, filePath)
+	}
+
+	if err == nil {
+		build.SeleniumDriverPath = filePath
+	}
+
+	return
 }

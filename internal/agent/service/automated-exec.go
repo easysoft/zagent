@@ -2,6 +2,7 @@ package agentService
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
@@ -22,18 +23,16 @@ func NewAutomatedExecService() *AutomatedExecService {
 	return &AutomatedExecService{}
 }
 
-func (s *AutomatedExecService) ExcCommand(build *commDomain.Build) commDomain.TestResult {
+func (s *AutomatedExecService) ExcCommand(build *commDomain.Build) (err error) {
 	cmdStr := build.BuildCommands
-	out, err := _shellUtils.ExeShellWithOutputInDir(cmdStr, build.ProjectDir)
+	var out []string
+	out, err = _shellUtils.ExeShellWithOutputInDir(cmdStr, build.ProjectDir)
 
-	result := commDomain.TestResult{}
-	if err == nil {
-		result.Success(strings.Join(out, "\n"))
-	} else {
-		result.Fail(fmt.Sprintf("fail to exec command, out %s, errpr %#v", out, err))
+	if err != nil {
+		errors.New(fmt.Sprintf("fail to exec command, out %s, err: %s", out, err.Error()))
 	}
 
-	return result
+	return
 }
 
 func (s *AutomatedExecService) GetTestApp(build *commDomain.Build) _domain.RpcResp {

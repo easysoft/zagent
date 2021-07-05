@@ -3,7 +3,6 @@ package agentService
 import (
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
-	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	_fileUtils "github.com/easysoft/zagent/internal/pkg/lib/file"
 	_gitUtils "github.com/easysoft/zagent/internal/pkg/lib/git"
 	"github.com/go-git/go-git/v5"
@@ -21,21 +20,20 @@ func NewScmService() *ScmService {
 	return &ScmService{}
 }
 
-func (s *ScmService) GetTestScript(build *commDomain.Build) _domain.RpcResp {
+func (s *ScmService) GetTestScript(build *commDomain.Build) (err error) {
 	if build.ScmAddress != "" {
-		CheckoutCodes(build)
+		err = CheckoutCodes(build)
 	} else if strings.Index(build.ScriptUrl, "http://") == 0 {
-		DownloadCodes(build)
-	} else {
-		build.ProjectDir = _fileUtils.AddPathSepIfNeeded(build.ScriptUrl)
+		err = DownloadCodes(build)
 	}
+	//else {
+	//	build.ProjectDir = _fileUtils.AddPathSepIfNeeded(build.ScriptUrl)
+	//}
 
-	result := _domain.RpcResp{}
-	result.Success("")
-	return result
+	return
 }
 
-func CheckoutCodes(task *commDomain.Build) {
+func CheckoutCodes(task *commDomain.Build) (err error) {
 	url := task.ScmAddress
 	userName := task.ScmAccount
 	password := task.ScmPassword
@@ -54,25 +52,33 @@ func CheckoutCodes(task *commDomain.Build) {
 			Password: password,
 		}
 	}
-	_, err := git.PlainClone(projectDir, false, &options)
+	_, err = git.PlainClone(projectDir, false, &options)
 	if err != nil {
 		return
 	}
 
 	task.ProjectDir = projectDir
+
+	return
 }
 
-func DownloadCodes(build *commDomain.Build) {
+func DownloadCodes(build *commDomain.Build) (err error) {
 	zipPath := build.WorkDir + uuid.NewV4().String() + _fileUtils.GetExtName(build.ScriptUrl)
-	_fileUtils.Download(build.ScriptUrl, zipPath)
+	err = _fileUtils.Download(build.ScriptUrl, zipPath)
+
+	if err != nil {
+		return
+	}
 
 	scriptFolder := _fileUtils.GetZipSingleDir(zipPath)
 	if scriptFolder != "" { // single dir in zip
 		build.ProjectDir = build.WorkDir + scriptFolder
-		archiver.Unarchive(zipPath, build.WorkDir)
+		err = archiver.Unarchive(zipPath, build.WorkDir)
 	} else { // more then one dir, unzip to a folder
 		fileNameWithoutExt := _fileUtils.GetFileNameWithoutExt(zipPath)
 		build.ProjectDir = build.WorkDir + fileNameWithoutExt + _const.PthSep
-		archiver.Unarchive(zipPath, build.ProjectDir)
+		err = archiver.Unarchive(zipPath, build.ProjectDir)
 	}
+
+	return
 }
