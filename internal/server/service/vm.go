@@ -3,8 +3,8 @@ package serverService
 import (
 	"crypto/rand"
 	"fmt"
-	commConst "github.com/easysoft/zagent/internal/comm/const"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	serverConf "github.com/easysoft/zagent/internal/server/conf"
 	"github.com/easysoft/zagent/internal/server/model"
@@ -13,7 +13,7 @@ import (
 )
 
 type VmService interface {
-	Register(vm commDomain.Vm) (result _domain.RpcResp)
+	Register(vm domain.Vm) (result _domain.RpcResp)
 	CreateRemote(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp)
 	genVmName(backing model.VmBacking, vmId uint) (name string)
 	genValidMacAddress() (mac string)
@@ -41,7 +41,7 @@ func NewKvmService() VmService {
 	return service
 }
 
-func (s KvmNativeService) Register(vm commDomain.Vm) (result _domain.RpcResp) {
+func (s KvmNativeService) Register(vm domain.Vm) (result _domain.RpcResp) {
 	err := s.VmRepo.Register(vm)
 	if err != nil {
 		result.Fail(fmt.Sprintf("fail to register host %s ", vm.MacAddress))
@@ -56,7 +56,7 @@ func (s KvmNativeService) CreateRemote(hostId, backingId, tmplId, queueId uint) 
 	sysIsoPath := sysIso.Path
 
 	driverIsoPath := ""
-	if backing.OsCategory == commConst.Windows {
+	if backing.OsCategory == consts.Windows {
 		driverIso := s.IsoRepo.Get(backing.DriverIsoId)
 		driverIsoPath = driverIso.Path
 	}
@@ -87,10 +87,10 @@ func (s KvmNativeService) CreateRemote(hostId, backingId, tmplId, queueId uint) 
 	result = s.RpcService.CreateVm(host.Ip, host.Port, kvmReq)
 
 	if result.IsSuccess() { // success to create vm
-		vmInResp := result.Payload.(commDomain.Vm)
+		vmInResp := result.Payload.(domain.Vm)
 		s.VmRepo.Launch(vmInResp) // update vm status, mac address
 
-		s.QueueRepo.UpdateVm(queueId, vm.ID, commConst.ProgressLaunchVm)
+		s.QueueRepo.UpdateVm(queueId, vm.ID, consts.ProgressLaunchVm)
 	} else {
 		s.VmRepo.FailToCreate(vm.ID, result.Msg)
 

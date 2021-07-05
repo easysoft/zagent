@@ -1,14 +1,14 @@
 package model
 
-import commConst "github.com/easysoft/zagent/internal/comm/const"
+import "github.com/easysoft/zagent/internal/comm/const"
 
 type Browser struct {
 	BaseModel
 
-	Name    string                `json:"name"`
-	Type    commConst.BrowserType `json:"type"`
-	Version string                `json:"version"`
-	Lang    commConst.OsLang      `json:"lang"`
+	Name    string             `json:"name"`
+	Type    consts.BrowserType `json:"type"`
+	Version string             `json:"version"`
+	Lang    consts.OsLang      `json:"lang"`
 }
 
 func (Browser) TableName() string {

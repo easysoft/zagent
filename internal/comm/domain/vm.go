@@ -1,7 +1,7 @@
 package domain
 
 import (
-	commConst "github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/const"
 	"time"
 )
 
@@ -16,14 +16,14 @@ type Vm struct {
 	ImagePath   string
 	BackingPath string
 
-	OsCategory commConst.OsCategory
-	OsType     commConst.OsType
+	OsCategory consts.OsCategory
+	OsType     consts.OsType
 	OsVersion  string
-	OsLang     commConst.OsLang
+	OsLang     consts.OsLang
 
-	Status            commConst.VmStatus
-	DestroyAt         *time.Time
-	FirstDetectedTime *time.Time
+	Status            consts.VmStatus
+	DestroyAt         time.Time
+	FirstDetectedTime time.Time
 
 	PublicIp   string
 	PublicPort int

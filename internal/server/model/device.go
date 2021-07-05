@@ -1,15 +1,15 @@
 package model
 
 import (
-	commConst "github.com/easysoft/zagent/internal/comm/const"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
 )
 
 type Device struct {
 	BaseModel
 
 	// from node register
-	commDomain.DeviceInst
+	domain.DeviceInst
 
 	// info to maintain
 	Name   string
@@ -23,7 +23,7 @@ type Device struct {
 	Storage         int
 	BatteryCapacity int
 
-	OsType    commConst.OsDevice
+	OsType    consts.OsDevice
 	OsLevel   string
 	OsVersion string
 }

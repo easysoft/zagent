@@ -2,8 +2,8 @@ package agentService
 
 import (
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
-	commConst "github.com/easysoft/zagent/internal/comm/const"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"github.com/libvirt/libvirt-go"
@@ -19,9 +19,9 @@ func NewHostService() *HostService {
 }
 
 func (s *HostService) Register() {
-	host := commDomain.HostNode{
-		Node:       commDomain.Node{Ip: agentConf.Inst.NodeIp, Port: agentConf.Inst.NodePort},
-		HostStatus: commConst.HostActive,
+	host := domain.HostNode{
+		Node:       domain.Node{Ip: agentConf.Inst.NodeIp, Port: agentConf.Inst.NodePort},
+		HostStatus: consts.HostActive,
 	}
 	host.Vms = s.getVms()
 	s.VmService.UpdateVmsStatus(host.Vms)
@@ -40,19 +40,19 @@ func (s *HostService) Register() {
 	}
 }
 
-func (s *HostService) getVms() (vms []commDomain.Vm) {
+func (s *HostService) getVms() (vms []domain.Vm) {
 	domains := s.LibvirtService.ListVm()
 
 	for _, dom := range domains {
-		vm := commDomain.Vm{}
+		vm := domain.Vm{}
 		vm.Name, _ = dom.GetName()
 
-		vm.Status = commConst.VmUnknown
+		vm.Status = consts.VmUnknown
 		domainState, _, _ := dom.GetState()
 		if domainState == libvirt.DOMAIN_RUNNING {
-			vm.Status = commConst.VmRunning
+			vm.Status = consts.VmRunning
 		} else if domainState == libvirt.DOMAIN_SHUTOFF {
-			vm.Status = commConst.VmShutOff
+			vm.Status = consts.VmShutOff
 		}
 
 		vms = append(vms, vm)

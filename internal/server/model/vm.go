@@ -1,8 +1,8 @@
 package model
 
 import (
-	commConst "github.com/easysoft/zagent/internal/comm/const"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	"time"
 )
 
@@ -22,14 +22,14 @@ type Vm struct {
 	BackingId   uint   `json:"backingId"`
 	BackingPath string `json:"backingPath"`
 
-	OsCategory commConst.OsCategory `json:"osCategory"`
-	OsType     commConst.OsType     `json:"osType"`
-	OsVersion  string               `json:"osVersion"`
-	OsLang     commConst.OsLang     `json:"osLang"`
+	OsCategory consts.OsCategory `json:"osCategory"`
+	OsType     consts.OsType     `json:"osType"`
+	OsVersion  string            `json:"osVersion"`
+	OsLang     consts.OsLang     `json:"osLang"`
 
-	Status            commConst.VmStatus `json:"status"`
-	DestroyAt         *time.Time         `json:"destroyAt"`
-	FirstDetectedTime *time.Time         `json:"firstDetectedTime"`
+	Status            consts.VmStatus `json:"status"`
+	DestroyAt         *time.Time      `json:"destroyAt"`
+	FirstDetectedTime *time.Time      `json:"firstDetectedTime"`
 
 	PublicIp   string `json:"publicIp"`
 	PublicPort int    `json:"publicPort"`
@@ -48,8 +48,8 @@ type Vm struct {
 	ResolutionWidth  int    `json:"resolutionWidth"`
 }
 
-func GenKvmReq(po Vm) (req commDomain.KvmReq) {
-	req = commDomain.KvmReq{
+func GenKvmReq(po Vm) (req domain.KvmReq) {
+	req = domain.KvmReq{
 		VmMacAddress: po.MacAddress, VmUniqueName: po.Name,
 		VmBackingPath: po.BackingPath, VmTemplateName: po.TmplName,
 
@@ -64,10 +64,10 @@ func GenKvmReq(po Vm) (req commDomain.KvmReq) {
 	return
 }
 
-func VmFromDomain(v commDomain.Vm) (po Vm) {
+func VmFromDomain(v domain.Vm) (po Vm) {
 	po = Vm{
 		Status:    v.Status,
-		DestroyAt: v.DestroyAt,
+		DestroyAt: &v.DestroyAt,
 
 		PublicIp:   v.PublicIp,
 		PublicPort: v.PublicPort,

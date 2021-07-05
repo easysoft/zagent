@@ -1,7 +1,7 @@
 package domain
 
 import (
-	commConst "github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/const"
 	"time"
 )
 
@@ -12,11 +12,11 @@ type Build struct {
 	Name    string  `json:"name,omitempty"`
 	Desc    string  `json:"desc,omitempty"`
 
-	BuildType  commConst.BuildType  `json:"buildType,omitempty"`
-	OsCateGory commConst.OsCategory `json:"osCateGory,omitempty"`
-	OsType     commConst.OsType     `json:"osType,omitempty"`
-	OsVersion  string               `json:"osVersion,omitempty"`
-	OsLang     commConst.OsLang     `json:"osLang,omitempty"`
+	BuildType  consts.BuildType  `json:"buildType,omitempty"`
+	OsCateGory consts.OsCategory `json:"osCateGory,omitempty"`
+	OsType     consts.OsType     `json:"osType,omitempty"`
+	OsVersion  string            `json:"osVersion,omitempty"`
+	OsLang     consts.OsLang     `json:"osLang,omitempty"`
 
 	WorkDir    string `json:"workDir,omitempty"`
 	ProjectDir string `json:"projectDir,omitempty"`
@@ -27,10 +27,10 @@ type Build struct {
 	NodePort int    `json:"nodePort,omitempty"`
 	DeviceIp string `json:"deviceIp,omitempty"`
 
-	AppiumPort            int                   `json:"appiumPort,omitempty"`
-	SeleniumDriverType    commConst.BrowserType `json:"seleniumDriverType,omitempty"`
-	SeleniumDriverVersion string                `json:"seleniumDriverVersion,omitempty"`
-	SeleniumDriverPath    string                `json:"seleniumDriverPath,omitempty"`
+	AppiumPort            int                `json:"appiumPort,omitempty"`
+	SeleniumDriverType    consts.BrowserType `json:"seleniumDriverType,omitempty"`
+	SeleniumDriverVersion string             `json:"seleniumDriverVersion,omitempty"`
+	SeleniumDriverPath    string             `json:"seleniumDriverPath,omitempty"`
 
 	AppPath     string `json:"appPath,omitempty"`
 	ScriptUrl   string `json:"scriptUrl,omitempty"`
@@ -49,8 +49,8 @@ type Build struct {
 	StartTime    *time.Time `json:"startTime,omitempty"`
 	CompleteTime *time.Time `json:"completeTime,omitempty"`
 
-	Progress commConst.BuildProgress `json:"progress"`
-	Status   commConst.BuildStatus   `json:"status"`
+	Progress consts.BuildProgress `json:"progress"`
+	Status   consts.BuildStatus   `json:"status"`
 
 	// interface test
 	TestScenario TestScenario `json:"testScenario,omitempty"`

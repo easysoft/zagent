@@ -1,8 +1,8 @@
 package serverService
 
 import (
-	commConst "github.com/easysoft/zagent/internal/comm/const"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
@@ -44,21 +44,21 @@ func (s AppiumService) Start(queue model.Queue) (result _domain.RpcResp) {
 }
 
 func (s AppiumService) SaveResult(buildResult _domain.RpcResp, resultPath string) {
-	appiumTestTo := commDomain.Build{}
+	appiumTestTo := domain.Build{}
 	mp := buildResult.Payload.(map[string]interface{})
 	mapstructure.Decode(mp, &appiumTestTo)
 
-	progress := commConst.ProgressCompleted
-	var status commConst.BuildStatus
+	progress := consts.ProgressCompleted
+	var status consts.BuildStatus
 	if buildResult.IsSuccess() {
-		status = commConst.StatusPass
+		status = consts.StatusPass
 	} else {
-		status = commConst.StatusFail
+		status = consts.StatusFail
 	}
 
 	s.BuildRepo.SaveResult(appiumTestTo, resultPath, progress, status, buildResult.Msg)
 	s.QueueService.SetQueueResult(appiumTestTo.QueueId, progress, status)
-	if progress == commConst.ProgressTimeout {
+	if progress == consts.ProgressTimeout {
 		s.BuildRepo.SetTimeoutByQueueId(appiumTestTo.QueueId)
 	}
 }

@@ -1,7 +1,7 @@
 package model
 
 import (
-	commConst "github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/const"
 )
 
 type VmTmpl struct {
@@ -11,12 +11,12 @@ type VmTmpl struct {
 
 	Name string `json:"name"`
 
-	OsCategory commConst.OsCategory `json:"osCategory"`
-	OsType     commConst.OsType     `json:"osType"`
-	OsVersion  string               `json:"osVersion"`
-	OsLang     commConst.OsLang     `json:"osLang"`
+	OsCategory consts.OsCategory `json:"osCategory"`
+	OsType     consts.OsType     `json:"osType"`
+	OsVersion  string            `json:"osVersion"`
+	OsLang     consts.OsLang     `json:"osLang"`
 
-	Status commConst.VmStatus `json:"status"`
+	Status consts.VmStatus `json:"status"`
 }
 
 func (VmTmpl) TableName() string {

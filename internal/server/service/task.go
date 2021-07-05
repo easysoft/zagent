@@ -1,7 +1,7 @@
 package serverService
 
 import (
-	commConst "github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 )
@@ -56,29 +56,29 @@ func (s *TaskService) Delete(id uint) (err error) {
 	return
 }
 
-func (s *TaskService) SetProgress(id uint, progress commConst.BuildProgress) {
+func (s *TaskService) SetProgress(id uint, progress consts.BuildProgress) {
 	s.TaskRepo.SetProgress(id, progress)
 }
 
 func (s *TaskService) CheckCompleted(taskId uint) {
 	queues := s.QueueRepo.QueryByTask(taskId)
 
-	progress := commConst.ProgressCompleted
-	status := commConst.StatusPass
+	progress := consts.ProgressCompleted
+	status := consts.StatusPass
 	isAllQueuesCompleted := true
 
 	for _, queue := range queues {
-		if queue.Progress != commConst.ProgressCompleted && queue.Progress != commConst.ProgressTimeout { // 有queue在进行中
+		if queue.Progress != consts.ProgressCompleted && queue.Progress != consts.ProgressTimeout { // 有queue在进行中
 			isAllQueuesCompleted = false
 			break
 		}
 
-		if queue.Progress == commConst.ProgressTimeout { // 有一个超时，就超时
-			progress = commConst.ProgressTimeout
+		if queue.Progress == consts.ProgressTimeout { // 有一个超时，就超时
+			progress = consts.ProgressTimeout
 		}
 
-		if queue.Status == commConst.StatusFail { // 有一个失败，就失败
-			status = commConst.StatusFail
+		if queue.Status == consts.StatusFail { // 有一个失败，就失败
+			status = consts.StatusFail
 		}
 	}
 

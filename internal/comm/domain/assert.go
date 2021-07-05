@@ -1,16 +1,16 @@
 package domain
 
 import (
-	commConst "github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/const"
 )
 
 type VmAssert struct {
 	ID uint
 
-	OsCategory commConst.OsCategory
-	OsType     commConst.OsType
+	OsCategory consts.OsCategory
+	OsType     consts.OsType
 	OsVersion  string
-	OsLang     commConst.OsLang
+	OsLang     consts.OsLang
 }
 
 type VmHost struct {

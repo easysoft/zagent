@@ -1,15 +1,15 @@
 package model
 
-import commConst "github.com/easysoft/zagent/internal/comm/const"
+import "github.com/easysoft/zagent/internal/comm/const"
 
 type Environment struct {
 	BaseModel
 
-	OsCategory commConst.OsCategory `json:"osCategory"`
-	OsType     commConst.OsType     `json:"osType"`
+	OsCategory consts.OsCategory `json:"osCategory"`
+	OsType     consts.OsType     `json:"osType"`
 
-	OsVersion string           `json:"osVersion"`
-	OsLang    commConst.OsLang `json:"osLang"`
+	OsVersion string        `json:"osVersion"`
+	OsLang    consts.OsLang `json:"osLang"`
 
 	TaskId string `json:"taskId"`
 }

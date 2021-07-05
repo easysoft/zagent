@@ -1,6 +1,6 @@
 package domain
 
-import commConst "github.com/easysoft/zagent/internal/comm/const"
+import "github.com/easysoft/zagent/internal/comm/const"
 
 type KvmReq struct {
 	VmMacAddress   string `json:"vmMacAddress"`
@@ -13,10 +13,10 @@ type KvmReq struct {
 	VmCdromSys    string `json:"vmCdromSys"`
 	VmCdromDriver string `json:"vmCdromDriver"`
 
-	OsCategory commConst.OsCategory `json:"osCategory"`
-	OsType     commConst.OsType     `json:"osType"`
-	OsVersion  string               `json:"osVersion"`
-	OsLang     commConst.OsLang     `json:"osLang"`
+	OsCategory consts.OsCategory `json:"osCategory"`
+	OsType     consts.OsType     `json:"osType"`
+	OsVersion  string            `json:"osVersion"`
+	OsLang     consts.OsLang     `json:"osLang"`
 
 	StartAfterCreated bool `json:"startAfterCreated"`
 }

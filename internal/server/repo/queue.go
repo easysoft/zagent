@@ -1,7 +1,7 @@
 package repo
 
 import (
-	commConst "github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/server/conf"
 	"github.com/easysoft/zagent/internal/server/model"
 	"gorm.io/gorm"
@@ -21,7 +21,7 @@ func NewQueueRepo() *QueueRepo {
 func (r QueueRepo) QueryForExec() (queues []model.Queue) {
 	queues = make([]model.Queue, 0)
 
-	r.DB.Where("progress=? OR progress=?", commConst.ProgressCreated, commConst.ProgressPending).
+	r.DB.Where("progress=? OR progress=?", consts.ProgressCreated, consts.ProgressPending).
 		Order("priority").Find(&queues)
 
 	return
@@ -54,14 +54,14 @@ func (r QueueRepo) DeleteInSameGroup(groupId uint, serials []string) (err error)
 
 func (r QueueRepo) Start(queue model.Queue) (err error) {
 	r.DB.Model(&queue).Where("id=?", queue.ID).Updates(
-		map[string]interface{}{"progress": commConst.ProgressInProgress, "start_time": time.Now(), "retry": gorm.Expr("retry +1")})
+		map[string]interface{}{"progress": consts.ProgressInProgress, "start_time": time.Now(), "retry": gorm.Expr("retry +1")})
 	return
 }
 func (r QueueRepo) Pending(queueId uint) (err error) {
 	r.DB.Model(&model.Queue{}).
 		Where("id=?", queueId).
 		Updates(map[string]interface{}{
-			"progress": commConst.ProgressPending,
+			"progress": consts.ProgressPending,
 		})
 
 	r.DB.Model(&model.Queue{}). // only update once, used for timeout checking
@@ -75,7 +75,7 @@ func (r QueueRepo) Pending(queueId uint) (err error) {
 
 func (r QueueRepo) SetTimeout(id uint) (err error) {
 	r.DB.Model(&model.Queue{}).Where("id=?", id).Updates(
-		map[string]interface{}{"progress": commConst.ProgressTimeout, "timeout_time": time.Now()})
+		map[string]interface{}{"progress": consts.ProgressTimeout, "timeout_time": time.Now()})
 	return
 }
 
@@ -92,8 +92,8 @@ func (r QueueRepo) QueryTimeout() (queues []model.Queue) {
 	}
 
 	r.DB.Where(where,
-		commConst.ProgressPending, commConst.WaitForExecTime*60,
-		commConst.ProgressInProgress, commConst.WaitForResultTime*60).
+		consts.ProgressPending, consts.WaitForExecTime*60,
+		consts.ProgressInProgress, consts.WaitForResultTime*60).
 		Order("priority").Find(&queues)
 	return
 }
@@ -101,18 +101,18 @@ func (r QueueRepo) QueryTimeoutOrFailedForRetry() (queues []model.Queue) {
 	queues = make([]model.Queue, 0)
 
 	r.DB.Where("retry < ? AND (progress = ? OR status = ? )",
-		commConst.QueueRetryTime, commConst.ProgressTimeout, commConst.StatusFail).
+		consts.QueueRetryTime, consts.ProgressTimeout, consts.StatusFail).
 		Order("priority").Find(&queues)
 	return
 }
 
-func (r QueueRepo) SetQueueStatus(queueId uint, progress commConst.BuildProgress, status commConst.BuildStatus) {
+func (r QueueRepo) SetQueueStatus(queueId uint, progress consts.BuildProgress, status consts.BuildStatus) {
 	r.DB.Model(&model.Queue{}).Where("id=?", queueId).Updates(
 		map[string]interface{}{"progress": progress, "status": status, "result_time": time.Now(), "updated_at": time.Now()})
 	return
 }
 
-func (r QueueRepo) UpdateVm(queueId, vmId uint, status commConst.BuildProgress) {
+func (r QueueRepo) UpdateVm(queueId, vmId uint, status consts.BuildProgress) {
 	r.DB.Model(&model.Queue{}).Where("id=?", queueId).Updates(
 		map[string]interface{}{"vmId": vmId, "progress": status, "updated_at": time.Now()})
 	return
@@ -121,7 +121,7 @@ func (r QueueRepo) UpdateVm(queueId, vmId uint, status commConst.BuildProgress) 
 func (r QueueRepo) CancelQueuesNotExec(taskId uint) {
 	r.DB.Model(&model.Queue{}).
 		Where("task_id=? AND (progress=? OR progress=?)",
-			taskId, commConst.ProgressCreated, commConst.ProgressPending).
-		Updates(map[string]interface{}{"progress": commConst.ProgressCancel})
+			taskId, consts.ProgressCreated, consts.ProgressPending).
+		Updates(map[string]interface{}{"progress": consts.ProgressCancel})
 	return
 }

@@ -1,16 +1,16 @@
 package repo
 
 import (
-	commConst "github.com/easysoft/zagent/internal/comm/const"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	_intUtils "github.com/easysoft/zagent/internal/pkg/lib/int"
 )
 
 type CommonRepo struct {
 }
 
-func (r CommonRepo) FindAssetByOs(osCategory commConst.OsCategory, osType commConst.OsType, osLang commConst.OsLang,
-	items []commDomain.VmAssert, inIds []uint) (assertIds []uint, found bool) {
+func (r CommonRepo) FindAssetByOs(osCategory consts.OsCategory, osType consts.OsType, osLang consts.OsLang,
+	items []domain.VmAssert, inIds []uint) (assertIds []uint, found bool) {
 
 	mp := map[int][]uint{}
 	similarity := 0

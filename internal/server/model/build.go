@@ -1,8 +1,8 @@
 package model
 
 import (
-	commConst "github.com/easysoft/zagent/internal/comm/const"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	"time"
 )
 
@@ -12,8 +12,8 @@ type Build struct {
 	QueueId uint `json:"queueId"`
 	Queue   `json:"queue" sql:"-" gorm:"foreignkey:QueueId"`
 
-	BuildType commConst.BuildType `json:"buildType"`
-	VmId      uint                `json:"vmId"`
+	BuildType consts.BuildType `json:"buildType"`
+	VmId      uint             `json:"vmId"`
 
 	Serial   string `json:"serial"`
 	Priority int    `json:"priority"`
@@ -25,11 +25,11 @@ type Build struct {
 	StartTime    *time.Time `json:"startTime"`
 	CompleteTime *time.Time `json:"completeTime"`
 
-	Progress commConst.BuildProgress `json:"progress"`
-	Status   commConst.BuildStatus   `json:"status"`
+	Progress consts.BuildProgress `json:"progress"`
+	Status   consts.BuildStatus   `json:"status"`
 }
 
-func NewBuild(queueId uint, vmId uint, buildType commConst.BuildType,
+func NewBuild(queueId uint, vmId uint, buildType consts.BuildType,
 	serial string, priority int, nodeIp string, nodePort int) Build {
 	build := Build{
 		QueueId:   queueId,
@@ -40,15 +40,15 @@ func NewBuild(queueId uint, vmId uint, buildType commConst.BuildType,
 		NodeIp:    nodeIp,
 		NodePort:  nodePort,
 
-		Progress: commConst.ProgressCreated,
-		Status:   commConst.StatusCreated,
+		Progress: consts.ProgressCreated,
+		Status:   consts.StatusCreated,
 	}
 
 	return build
 }
 
-func NewBuildTo(build Build) commDomain.Build {
-	toValue := commDomain.Build{
+func NewBuildTo(build Build) domain.Build {
+	toValue := domain.Build{
 		ID:        build.ID,
 		QueueId:   build.QueueId,
 		BuildType: build.BuildType,
@@ -59,8 +59,8 @@ func NewBuildTo(build Build) commDomain.Build {
 
 		AppUrl: build.AppUrl,
 
-		Progress: commConst.ProgressCreated,
-		Status:   commConst.StatusCreated,
+		Progress: consts.ProgressCreated,
+		Status:   consts.StatusCreated,
 
 		ScriptUrl:   build.ScriptUrl,
 		ScmAddress:  build.ScmAddress,

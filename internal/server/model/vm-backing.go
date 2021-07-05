@@ -1,7 +1,7 @@
 package model
 
 import (
-	commConst "github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/const"
 )
 
 type VmBacking struct {
@@ -11,9 +11,9 @@ type VmBacking struct {
 	Path string `json:"path"`
 	Size int    `json:"size"`
 
-	OsCategory commConst.OsCategory `json:"osCategory"`
-	OsType     commConst.OsType     `json:"osType"`
-	OsLang     commConst.OsLang     `json:"osLang"`
+	OsCategory consts.OsCategory `json:"osCategory"`
+	OsType     consts.OsType     `json:"osType"`
+	OsLang     consts.OsLang     `json:"osLang"`
 
 	OsVersion string `json:"osVersion"`
 	OsBuild   string `json:"osBuild"`

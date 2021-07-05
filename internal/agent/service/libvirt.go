@@ -4,8 +4,8 @@ import "C"
 import (
 	"fmt"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
-	commConst "github.com/easysoft/zagent/internal/comm/const"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
 	"github.com/libvirt/libvirt-go"
@@ -40,7 +40,7 @@ func NewLibvirtService() *LibvirtService {
 	return s
 }
 
-func (s *LibvirtService) CreateVm(req *commDomain.KvmReq) (dom *libvirt.Domain, vmVncPort int, err error) {
+func (s *LibvirtService) CreateVm(req *domain.KvmReq) (dom *libvirt.Domain, vmVncPort int, err error) {
 	vmMacAddress := req.VmMacAddress
 	vmUniqueName := req.VmUniqueName
 	vmBackingPath := req.VmBackingPath
@@ -78,7 +78,7 @@ func (s *LibvirtService) CreateVm(req *commDomain.KvmReq) (dom *libvirt.Domain, 
 	return
 }
 
-func (s *LibvirtService) CreateVmTest(vm *commDomain.Vm) (
+func (s *LibvirtService) CreateVmTest(vm *domain.Vm) (
 	dom *libvirt.Domain, macAddress string, vncPort int, err error) {
 	s.setVmProps(vm)
 
@@ -210,11 +210,11 @@ func (s *LibvirtService) Connect(str string) {
 	return
 }
 
-func (s *LibvirtService) setVmProps(vm *commDomain.Vm) {
-	osCategory := commConst.Windows
-	osType := commConst.Win10
+func (s *LibvirtService) setVmProps(vm *domain.Vm) {
+	osCategory := consts.Windows
+	osType := consts.Win10
 	osVersion := "x64-pro"
-	osLang := commConst.ZH_CN
+	osLang := consts.ZH_CN
 
 	vm.Backing = fmt.Sprintf("%s/%s/%s-%s", osCategory.ToString(), osType.ToString(),
 		osVersion, osLang.ToString())
@@ -225,18 +225,18 @@ func (s *LibvirtService) setVmProps(vm *commDomain.Vm) {
 		osType.ToString(), osVersion, osLang.ToString(), _stringUtils.NewUuid())
 }
 
-func (s *LibvirtService) getDiskSize(category commConst.OsCategory, size uint) (vmDiskSize uint) {
+func (s *LibvirtService) getDiskSize(category consts.OsCategory, size uint) (vmDiskSize uint) {
 	if size > 0 {
 		vmDiskSize = size
 		return
 	}
 
-	if category == commConst.Windows {
-		vmDiskSize = commConst.DiskSizeWindows
-	} else if category == commConst.Linux {
-		vmDiskSize = commConst.DiskSizeLinux
+	if category == consts.Windows {
+		vmDiskSize = consts.DiskSizeWindows
+	} else if category == consts.Linux {
+		vmDiskSize = consts.DiskSizeLinux
 	} else {
-		vmDiskSize = commConst.DiskSizeDefault
+		vmDiskSize = consts.DiskSizeDefault
 	}
 
 	return

@@ -2,7 +2,7 @@ package repo
 
 import (
 	"fmt"
-	commConst "github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_commonUtils "github.com/easysoft/zagent/internal/pkg/lib/common"
 	"github.com/easysoft/zagent/internal/server/model"
@@ -20,6 +20,8 @@ func NewHostRepo() *HostRepo {
 }
 
 func (r HostRepo) Register(host model.Host) (po model.Host, err error) {
+	host.Status = consts.HostActive
+
 	err = r.DB.Where("ip = ?", host.Ip).First(&po).Error
 	if err == gorm.ErrRecordNotFound {
 		err = r.DB.Model(&host).Omit("").Create(&host).Error
@@ -74,7 +76,7 @@ func (r HostRepo) QueryBusy() (ret []map[string]uint) {
 		Scan(&list)
 
 	for _, item := range list {
-		if item["num"] > commConst.MaxVmOnHost {
+		if item["num"] > consts.MaxVmOnHost {
 			ret = append(ret, item)
 		}
 	}

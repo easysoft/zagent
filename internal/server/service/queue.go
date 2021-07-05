@@ -1,7 +1,7 @@
 package serverService
 
 import (
-	commConst "github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 	"strings"
@@ -21,9 +21,9 @@ func NewQueueService() *QueueService {
 func (s QueueService) GenerateFromTask(task *model.Task) (count int) {
 	s.CancelQueuesNotExec(task)
 
-	if task.BuildType == commConst.AutoSelenium {
+	if task.BuildType == consts.AutoSelenium {
 		count = s.GenerateSeleniumQueuesFromTask(task)
-	} else if task.BuildType == commConst.AutoAppium {
+	} else if task.BuildType == consts.AutoAppium {
 		count = s.GenerateAppiumQueuesFromTask(task)
 	}
 
@@ -99,7 +99,7 @@ func (s QueueService) GenerateSeleniumQueuesFromTask(task *model.Task) (count in
 	return
 }
 
-func (s QueueService) SetQueueResult(queueId uint, progress commConst.BuildProgress, status commConst.BuildStatus) {
+func (s QueueService) SetQueueResult(queueId uint, progress consts.BuildProgress, status consts.BuildStatus) {
 	queue := s.QueueRepo.GetQueue(queueId)
 
 	s.QueueRepo.SetQueueStatus(queueId, progress, status)

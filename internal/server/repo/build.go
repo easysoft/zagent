@@ -1,8 +1,8 @@
 package repo
 
 import (
-	commConst "github.com/easysoft/zagent/internal/comm/const"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"gorm.io/gorm"
 	"time"
@@ -34,7 +34,7 @@ func (r BuildRepo) Save(build *model.Build) (err error) {
 
 func (r BuildRepo) Start(build model.Build) (err error) {
 	r.DB.Model(&build).Where("id=?", build.ID).Updates(
-		map[string]interface{}{"progress": commConst.ProgressInProgress, "start_time": time.Now()})
+		map[string]interface{}{"progress": consts.ProgressInProgress, "start_time": time.Now()})
 	return
 }
 
@@ -43,8 +43,8 @@ func (r BuildRepo) Delete(build model.Build) (err error) {
 	return
 }
 
-func (r BuildRepo) SaveResult(appiumTestTo commDomain.Build, resultPath string,
-	progress commConst.BuildProgress, status commConst.BuildStatus, msg string) {
+func (r BuildRepo) SaveResult(appiumTestTo domain.Build, resultPath string,
+	progress consts.BuildProgress, status consts.BuildStatus, msg string) {
 
 	r.DB.Model(&model.Build{}).Where("id=?", appiumTestTo.ID).Updates(
 		map[string]interface{}{"progress": progress, "status": status, "resultPath": resultPath, "resultMsg": msg,
@@ -54,6 +54,6 @@ func (r BuildRepo) SaveResult(appiumTestTo commDomain.Build, resultPath string,
 
 func (r BuildRepo) SetTimeoutByQueueId(queueId uint) {
 	r.DB.Model(&model.Build{}).Where("queue_id=?", queueId).Updates(
-		map[string]interface{}{"progress": commConst.ProgressTimeout})
+		map[string]interface{}{"progress": consts.ProgressTimeout})
 	return
 }

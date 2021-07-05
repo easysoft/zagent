@@ -1,8 +1,8 @@
 package repo
 
 import (
-	commConst "github.com/easysoft/zagent/internal/comm/const"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"gorm.io/gorm"
 )
@@ -27,10 +27,10 @@ func (r BackingRepo) Get(id uint) (image model.VmBacking) {
 	return
 }
 
-func (r BackingRepo) QueryByOs(osCategory commConst.OsCategory, osType commConst.OsType, osLang commConst.OsLang,
+func (r BackingRepo) QueryByOs(osCategory consts.OsCategory, osType consts.OsType, osLang consts.OsLang,
 	backingIdsByBrowser []uint) (backingIds []uint, found bool) {
 
-	asserts := make([]commDomain.VmAssert, 0)
+	asserts := make([]domain.VmAssert, 0)
 	r.DB.Model(model.VmBacking{}).
 		Where("NOT disabled AND NOT deleted").Order("id ASC").
 		Find(&asserts)
@@ -40,7 +40,7 @@ func (r BackingRepo) QueryByOs(osCategory commConst.OsCategory, osType commConst
 	return
 }
 
-func (r BackingRepo) QueryByBrowser(browserType commConst.BrowserType, version string) (ids []uint) {
+func (r BackingRepo) QueryByBrowser(browserType consts.BrowserType, version string) (ids []uint) {
 
 	sql := "SELECT r.vm_backing_id id " +
 		"FROM biz_backing_browser_r r " +

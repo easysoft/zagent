@@ -2,9 +2,9 @@ package serverService
 
 import (
 	"fmt"
-	commConst "github.com/easysoft/zagent/internal/comm/const"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	_domain "github.com/easysoft/zagent/internal/pkg/domain"
+	"github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 )
@@ -20,7 +20,7 @@ func NewHostService() *HostService {
 	return &HostService{}
 }
 
-func (s HostService) Register(host commDomain.Host) (result _domain.RpcResp) {
+func (s HostService) Register(host domain.Host) (result _domain.RpcResp) {
 	po := model.HostFromDomain(host)
 	hostPo, err := s.HostRepo.Register(po)
 	if err != nil {
@@ -62,18 +62,18 @@ func (s HostService) getBusyHosts() (ids []uint) {
 	return hostIds
 }
 
-func (s HostService) updateVmsStatus(host commDomain.Host, hostId uint) {
+func (s HostService) updateVmsStatus(host domain.Host, hostId uint) {
 	vmNames := make([]string, 0)
 	runningVms, shutOffVms, unknownVms := s.getVmsByStatus(host, vmNames)
 
 	if len(runningVms) > 0 {
-		s.VmRepo.UpdateStatusByNames(runningVms, commConst.VmRunning)
+		s.VmRepo.UpdateStatusByNames(runningVms, consts.VmRunning)
 	}
 	if len(shutOffVms) > 0 {
-		s.VmRepo.UpdateStatusByNames(shutOffVms, commConst.VmShutOff)
+		s.VmRepo.UpdateStatusByNames(shutOffVms, consts.VmShutOff)
 	}
 	if len(unknownVms) > 0 {
-		s.VmRepo.UpdateStatusByNames(unknownVms, commConst.VmUnknown)
+		s.VmRepo.UpdateStatusByNames(unknownVms, consts.VmUnknown)
 	}
 
 	// destroy vms already removed on agent side
@@ -82,7 +82,7 @@ func (s HostService) updateVmsStatus(host commDomain.Host, hostId uint) {
 	return
 }
 
-func (s HostService) getVmsByStatus(host commDomain.Host, vmNames []string) (runningVms, shutOffVms, unknownVms []string) {
+func (s HostService) getVmsByStatus(host domain.Host, vmNames []string) (runningVms, shutOffVms, unknownVms []string) {
 	vms := host.Vms
 
 	for _, vm := range vms {
@@ -90,11 +90,11 @@ func (s HostService) getVmsByStatus(host commDomain.Host, vmNames []string) (run
 		status := vm.Status
 		vmNames = append(vmNames, name)
 
-		if status == commConst.VmRunning {
+		if status == consts.VmRunning {
 			runningVms = append(runningVms, name)
-		} else if status == commConst.VmShutOff {
+		} else if status == consts.VmShutOff {
 			shutOffVms = append(shutOffVms, name)
-		} else if status == commConst.VmUnknown {
+		} else if status == consts.VmUnknown {
 			unknownVms = append(unknownVms, name)
 		}
 	}

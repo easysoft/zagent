@@ -1,19 +1,19 @@
 package domain
 
 import (
-	commConst "github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/const"
 	"time"
 )
 
 type DeviceInst struct {
 	DeviceSpec
 
-	NodeIp           string                  `json:"nodeIp"`
-	NodePort         int                     `json:"rpcPort"`
-	AppiumPort       int                     `json:"appiumPort"`
-	DeviceStatus     commConst.DeviceStatus  `json:"deviceStatus"`
-	AppiumStatus     commConst.ServiceStatus `json:"appiumStatus"`
-	LastRegisterDate time.Time               `json:"lastRegisterDate"`
+	NodeIp           string               `json:"nodeIp"`
+	NodePort         int                  `json:"rpcPort"`
+	AppiumPort       int                  `json:"appiumPort"`
+	DeviceStatus     consts.DeviceStatus  `json:"deviceStatus"`
+	AppiumStatus     consts.ServiceStatus `json:"appiumStatus"`
+	LastRegisterDate time.Time            `json:"lastRegisterDate"`
 }
 
 type DeviceSpec struct {

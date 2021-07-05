@@ -2,8 +2,8 @@ package serverService
 
 import (
 	"fmt"
-	commConst "github.com/easysoft/zagent/internal/comm/const"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
@@ -22,7 +22,7 @@ func NewDeviceService() *DeviceService {
 	return &DeviceService{}
 }
 
-func (s DeviceService) Register(devices []commDomain.DeviceInst) (result _domain.RpcResp) {
+func (s DeviceService) Register(devices []domain.DeviceInst) (result _domain.RpcResp) {
 	for _, device := range devices {
 		device.LastRegisterDate = time.Now()
 		err := s.DeviceRepo.Register(device)
@@ -45,8 +45,8 @@ func (s DeviceService) IsDeviceReady(device model.Device) bool {
 	deviceStatus := device.DeviceStatus
 	appiumStatus := device.DeviceStatus
 
-	registerExpire := time.Now().Unix()-device.LastRegisterDate.Unix() > commConst.RegisterExpireTime*60*1000
+	registerExpire := time.Now().Unix()-device.LastRegisterDate.Unix() > consts.RegisterExpireTime*60*1000
 
-	ret := deviceStatus == commConst.DeviceActive && appiumStatus == commConst.DeviceActive && !registerExpire
+	ret := deviceStatus == consts.DeviceActive && appiumStatus == consts.DeviceActive && !registerExpire
 	return ret
 }

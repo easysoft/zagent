@@ -1,7 +1,7 @@
 package model
 
 import (
-	commConst "github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/const"
 )
 
 type Iso struct {
@@ -11,9 +11,9 @@ type Iso struct {
 	Path string `json:"path"`
 	Size int    `json:"size"`
 
-	OsPlatform commConst.OsCategory `json:"osPlatform"`
-	OsType     commConst.OsType     `json:"osType"`
-	OsLang     commConst.OsLang     `json:"osLang"`
+	OsPlatform consts.OsCategory `json:"osPlatform"`
+	OsType     consts.OsType     `json:"osType"`
+	OsLang     consts.OsLang     `json:"osLang"`
 
 	OsVersion string `json:"osVersion"`
 	OsBuild   string `json:"osBuild"`

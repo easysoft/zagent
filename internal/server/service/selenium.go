@@ -1,8 +1,8 @@
 package serverService
 
 import (
-	commConst "github.com/easysoft/zagent/internal/comm/const"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
@@ -43,21 +43,21 @@ func (s SeleniumService) Start(queue model.Queue) (result _domain.RpcResp) {
 }
 
 func (s SeleniumService) SaveResult(buildResult _domain.RpcResp, resultPath string) {
-	seleniumTestTo := commDomain.Build{}
+	seleniumTestTo := domain.Build{}
 	mp := buildResult.Payload.(map[string]interface{})
 	mapstructure.Decode(mp, &seleniumTestTo)
 
-	progress := commConst.ProgressCompleted
-	var result commConst.BuildStatus
+	progress := consts.ProgressCompleted
+	var result consts.BuildStatus
 	if buildResult.IsSuccess() {
-		result = commConst.StatusPass
+		result = consts.StatusPass
 	} else {
-		result = commConst.StatusFail
+		result = consts.StatusFail
 	}
 
 	s.BuildRepo.SaveResult(seleniumTestTo, resultPath, progress, result, buildResult.Msg)
 	s.QueueService.SetQueueResult(seleniumTestTo.QueueId, progress, result)
-	if progress == commConst.ProgressTimeout {
+	if progress == consts.ProgressTimeout {
 		s.BuildRepo.SetTimeoutByQueueId(seleniumTestTo.QueueId)
 	}
 }

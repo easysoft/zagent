@@ -1,7 +1,7 @@
 package serverService
 
 import (
-	commConst "github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 )
@@ -34,20 +34,20 @@ func (s ExecService) CheckExec() {
 }
 
 func (s ExecService) CheckAndCall(queue model.Queue) {
-	if queue.BuildType == commConst.AutoSelenium {
+	if queue.BuildType == consts.AutoSelenium {
 		s.CheckAndCallSeleniumTest(queue)
-	} else if queue.BuildType == commConst.AutoAppium {
+	} else if queue.BuildType == consts.AutoAppium {
 		s.CheckAndCallAppiumTest(queue)
 	}
 }
 
 func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 	originalProgress := queue.Progress
-	var newTaskProgress commConst.BuildProgress
+	var newTaskProgress consts.BuildProgress
 
-	if queue.Progress == commConst.ProgressCreated ||
-		queue.Progress == commConst.ProgressPending ||
-		queue.Progress == commConst.ProgressTimeout {
+	if queue.Progress == consts.ProgressCreated ||
+		queue.Progress == consts.ProgressPending ||
+		queue.Progress == consts.ProgressTimeout {
 
 		// looking for valid host
 		hostId, backingId, tmplId, found := s.HostService.GetValidForQueue(queue)
@@ -55,25 +55,25 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 			// create kvm
 			result := s.VmService.CreateRemote(hostId, backingId, tmplId, queue.ID)
 			if result.IsSuccess() { // success to create
-				newTaskProgress = commConst.ProgressInProgress
+				newTaskProgress = consts.ProgressInProgress
 			} else {
-				newTaskProgress = commConst.ProgressPending
+				newTaskProgress = consts.ProgressPending
 			}
 		}
 
-	} else if queue.Progress == commConst.ProgressLaunchVm {
+	} else if queue.Progress == consts.ProgressLaunchVm {
 		vmId := queue.VmId
 		vm := s.VmRepo.GetById(vmId)
 
-		if vm.Status == commConst.VmActive { // find ready vm, begin to run test
+		if vm.Status == consts.VmActive { // find ready vm, begin to run test
 			result := s.SeleniumService.Start(queue)
 
 			if result.IsSuccess() {
 				s.QueueRepo.Start(queue)
-				newTaskProgress = commConst.ProgressInProgress
+				newTaskProgress = consts.ProgressInProgress
 			} else { // busy, pending
 				s.QueueRepo.Pending(queue.ID)
-				newTaskProgress = commConst.ProgressPending
+				newTaskProgress = consts.ProgressPending
 			}
 		}
 	}
@@ -88,21 +88,21 @@ func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {
 	device := s.DeviceRepo.GetBySerial(serial)
 
 	originalProgress := queue.Progress
-	var newProgress commConst.BuildProgress
+	var newProgress consts.BuildProgress
 
 	if s.DeviceService.IsDeviceReady(device) {
 		rpcResult := s.AppiumService.Start(queue)
 
 		if rpcResult.IsSuccess() {
 			s.QueueRepo.Start(queue) // start
-			newProgress = commConst.ProgressInProgress
+			newProgress = consts.ProgressInProgress
 		} else {
 			s.QueueRepo.Pending(queue.ID) // pending
-			newProgress = commConst.ProgressPending
+			newProgress = consts.ProgressPending
 		}
 	} else {
 		s.QueueRepo.Pending(queue.ID) // pending
-		newProgress = commConst.ProgressPending
+		newProgress = consts.ProgressPending
 	}
 
 	if originalProgress != newProgress { // progress changed

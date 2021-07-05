@@ -1,8 +1,8 @@
 package repo
 
 import (
-	commConst "github.com/easysoft/zagent/internal/comm/const"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"gorm.io/gorm"
 	"time"
@@ -17,7 +17,7 @@ func NewVmRepo() *VmRepo {
 	return &VmRepo{}
 }
 
-func (r VmRepo) Register(vm commDomain.Vm) (err error) {
+func (r VmRepo) Register(vm domain.Vm) (err error) {
 	// just update status by mac for exist vm
 	r.DB.Model(&vm).Where("mac=?", vm.MacAddress).
 		Updates(
@@ -45,7 +45,7 @@ func (r VmRepo) UpdateVmName(vm model.Vm) {
 	r.DB.Model(&vm).Where("id=?", vm.ID).Update("name", vm.Name)
 }
 
-func (r VmRepo) Launch(vm commDomain.Vm) {
+func (r VmRepo) Launch(vm domain.Vm) {
 	r.DB.Model(&vm).Where("id=?", vm.Id).
 		Updates(
 			map[string]interface{}{"status": "launch", "imagePath": vm.ImagePath,
@@ -54,10 +54,10 @@ func (r VmRepo) Launch(vm commDomain.Vm) {
 	return
 }
 
-func (r VmRepo) UpdateStatusByNames(vms []string, status commConst.VmStatus) {
+func (r VmRepo) UpdateStatusByNames(vms []string, status consts.VmStatus) {
 	db := r.DB.Model(&model.Vm{}).Where("name = IN (?)", vms)
 
-	if status == commConst.VmRunning {
+	if status == consts.VmRunning {
 		db.Where("AND status != 'active'")
 	}
 
@@ -65,18 +65,18 @@ func (r VmRepo) UpdateStatusByNames(vms []string, status commConst.VmStatus) {
 }
 
 func (r VmRepo) DestroyMissedVmsStatus(vms []string, hostId uint) {
-	db := r.DB.Model(&model.Vm{}).Where("hostId=? AND status!=?", hostId, commConst.VmDestroy)
+	db := r.DB.Model(&model.Vm{}).Where("hostId=? AND status!=?", hostId, consts.VmDestroy)
 
 	if len(vms) > 0 {
 		db.Where("AND name NOT IN (?)", vms)
 	}
 
-	db.Updates(map[string]interface{}{"status": commConst.VmDestroy})
+	db.Updates(map[string]interface{}{"status": consts.VmDestroy})
 }
 
 func (r VmRepo) FailToCreate(id uint, msg string) {
 	r.DB.Model(&model.Vm{}).
 		Where("id=?", id).
 		Updates(map[string]interface{}{
-			"status": commConst.VmFailToCreate, "desc": msg})
+			"status": consts.VmFailToCreate, "desc": msg})
 }

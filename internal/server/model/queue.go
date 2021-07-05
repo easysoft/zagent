@@ -1,7 +1,7 @@
 package model
 
 import (
-	commConst "github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/const"
 	"time"
 )
 
@@ -12,12 +12,12 @@ type Queue struct {
 	Serial   string `json:"serial"`
 	VmId     uint   `json:"vmId"`
 
-	BuildType      commConst.BuildType   `json:"buildType"`
-	OsPlatform     commConst.OsCategory  `json:"osPlatform"`
-	OsType         commConst.OsType      `json:"osType"`
-	OsLang         commConst.OsLang      `json:"osLang"`
-	BrowserType    commConst.BrowserType `json:"browserType"`
-	BrowserVersion string                `json:"browserVersion"`
+	BuildType      consts.BuildType   `json:"buildType"`
+	OsPlatform     consts.OsCategory  `json:"osPlatform"`
+	OsType         consts.OsType      `json:"osType"`
+	OsLang         consts.OsLang      `json:"osLang"`
+	BrowserType    consts.BrowserType `json:"browserType"`
+	BrowserVersion string             `json:"browserVersion"`
 
 	ScriptUrl   string `json:"scriptUrl"`
 	ScmAddress  string `json:"ScmAddress"`
@@ -30,8 +30,8 @@ type Queue struct {
 	ResultFiles     string `json:"resultFiles"`
 	KeepResultFiles bool   `json:"keepResultFiles"`
 
-	Progress commConst.BuildProgress `json:"progress"`
-	Status   commConst.BuildStatus   `json:"status"`
+	Progress consts.BuildProgress `json:"progress"`
+	Status   consts.BuildStatus   `json:"status"`
 
 	Retry int `json:"retry" gorm:"default:0"`
 
@@ -47,15 +47,15 @@ type Queue struct {
 	GroupId uint `json:"groupId"`
 }
 
-func NewQueue(buildType commConst.BuildType, groupId uint, taskId uint, taskPriority int,
-	osCategory commConst.OsCategory, osType commConst.OsType, osLang commConst.OsLang,
+func NewQueue(buildType consts.BuildType, groupId uint, taskId uint, taskPriority int,
+	osCategory consts.OsCategory, osType consts.OsType, osLang consts.OsLang,
 	scriptUrl string, scmAddress string, scmAccount string, scmPassword string,
 	resultFiles string, keepResultFiles bool, taskName string, userName string,
 	serial, appUrl, buildCommands, envVars string) Queue {
 
 	Task := Queue{
-		Progress: commConst.ProgressCreated,
-		Status:   commConst.StatusCreated,
+		Progress: consts.ProgressCreated,
+		Status:   consts.StatusCreated,
 
 		BuildType:  buildType,
 		OsLang:     osLang,

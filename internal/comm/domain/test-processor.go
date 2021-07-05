@@ -1,16 +1,16 @@
 package domain
 
 import (
-	commConst "github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/const"
 )
 
 type TestProcessor struct {
 	DataLoopProcessor
 	ExtractorProcessor
 
-	Name     string                  `json:"name" yaml:"name"`
-	Comments string                  `json:"comments" yaml:"comments"`
-	Type     commConst.ProcessorType `json:"type" yaml:"type"`
+	Name     string               `json:"name" yaml:"name"`
+	Comments string               `json:"comments" yaml:"comments"`
+	Type     consts.ProcessorType `json:"type" yaml:"type"`
 
 	ParentId uint `json:"parentId" yaml:"parentId"`
 
@@ -27,8 +27,8 @@ type TestProcessor struct {
 // automated cookie management
 
 type DataLoopProcessor struct {
-	Src  commConst.DataSource `json:"src,omitempty" yaml:"src,omitempty"`
-	Path string               `json:"path,omitempty" yaml:"path,omitempty"`
+	Src  consts.DataSource `json:"src,omitempty" yaml:"src,omitempty"`
+	Path string            `json:"path,omitempty" yaml:"path,omitempty"`
 
 	Loop           int    `json:"loop,omitempty" yaml:"loop,omitempty"`
 	StartIndex     int    `json:"startIndex,omitempty" yaml:"startIndex,omitempty"`
@@ -42,7 +42,7 @@ type ExtractorProcessor struct {
 	VarName string `json:"varName,omitempty" yaml:"varName,omitempty"`
 	Default string `json:"default,omitempty" yaml:"default,omitempty"`
 
-	Source commConst.ExtractorSource `json:"source,omitempty" yaml:"source,omitempty"`
-	Type   commConst.ExtractorType   `json:"type,omitempty" yaml:"type,omitempty"`
-	Expr   string                    `json:"expr,omitempty" yaml:"expr,omitempty"`
+	Source consts.ExtractorSource `json:"source,omitempty" yaml:"source,omitempty"`
+	Type   consts.ExtractorType   `json:"type,omitempty" yaml:"type,omitempty"`
+	Expr   string                 `json:"expr,omitempty" yaml:"expr,omitempty"`
 }

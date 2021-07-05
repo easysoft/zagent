@@ -4,8 +4,8 @@ import "C"
 import (
 	"fmt"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
-	commConst "github.com/easysoft/zagent/internal/comm/const"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zagent/internal/pkg/lib/shell"
 	_sshUtils "github.com/easysoft/zagent/internal/pkg/lib/ssh"
@@ -193,7 +193,7 @@ func (s *QemuService) GenMachine() string {
 	return machine
 }
 
-func (s *QemuService) GetBaseImagePath(vm commDomain.Vm) (path string) {
+func (s *QemuService) GetBaseImagePath(vm domain.Vm) (path string) {
 	dir := filepath.Join(agentConf.Inst.DirBase, vm.OsCategory.ToString(), vm.OsType.ToString())
 	name := fmt.Sprintf("%s-%s", vm.OsVersion, vm.OsLang.ToString())
 
@@ -245,11 +245,11 @@ func (s *QemuService) createDiskFile(basePath, vmName string, diskSize uint) {
 	}
 }
 
-func (s *QemuService) setVmProps(vm *commDomain.Vm) {
-	osCategory := commConst.Windows
-	osType := commConst.Win10
+func (s *QemuService) setVmProps(vm *domain.Vm) {
+	osCategory := consts.Windows
+	osType := consts.Win10
 	osVersion := "x64-pro"
-	osLang := commConst.ZH_CN
+	osLang := consts.ZH_CN
 
 	vm.Backing = fmt.Sprintf("%s/%s/%s-%s", osCategory.ToString(), osType.ToString(),
 		osVersion, osLang.ToString())
