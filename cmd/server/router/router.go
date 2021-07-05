@@ -28,6 +28,7 @@ type Router struct {
 	AccountCtrl *handler.AccountCtrl `inject:""`
 	FileCtrl    *handler.FileCtrl    `inject:""`
 	TaskCtrl    *handler.TaskCtrl    `inject:""`
+	HostCtrl    *handler.HostCtrl    `inject:""`
 
 	PermCtrl *handler.PermCtrl `inject:""`
 	RoleCtrl *handler.RoleCtrl `inject:""`
@@ -53,7 +54,7 @@ func (r *Router) App() {
 
 	app := r.api.Party("/api").AllowMethods(iris.MethodOptions)
 	{
-		// 二进制模式 ， 启用项目入口
+		// 二进制模式
 		//if serverConf.Config.BinData {
 		//	app.GetDetail("/", func(ctx iris.Context) { // 首页模块
 		//		_ = ctx.View("index.html")
@@ -62,6 +63,10 @@ func (r *Router) App() {
 
 		v1 := app.Party("/v1")
 		{
+			v1.PartyFunc("/host", func(party iris.Party) {
+				party.Post("/register", r.HostCtrl.Register).Name = "注册主机"
+			})
+
 			v1.PartyFunc("/admin", func(admin iris.Party) {
 				admin.Post("/login", r.AccountCtrl.UserLogin)
 

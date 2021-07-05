@@ -2,6 +2,7 @@ package model
 
 import (
 	commConst "github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	"time"
 )
 
@@ -30,11 +31,41 @@ type Host struct {
 	LastRegisterDate *time.Time `json:"lastRegisterDate"`
 
 	Backings []VmBacking `gorm:"many2many:host_backing_r;"`
+	Vms      []Vm        `json:"vms" gorm:"-"`
 }
 
 func NewHost() Host {
 	host := Host{}
 	return host
+}
+
+func HostFromDomain(h domain.Host) (po Host) {
+	po = Host{
+		Name: h.Name,
+
+		OsCategory: h.OsCategory,
+		OsType:     h.OsType,
+		OsLang:     h.OsLang,
+
+		OsVersion: h.OsVersion,
+		OsBuild:   h.OsBuild,
+		OsBits:    h.OsBits,
+
+		Ip:      h.Ip,
+		Port:    h.Port,
+		WorkDir: h.WorkDir,
+
+		SshPort: h.SshPort,
+		VncPort: h.VncPort,
+		Status:  h.Status,
+	}
+
+	for _, v := range h.Vms {
+		vm := VmFromDomain(v)
+		po.Vms = append(po.Vms, vm)
+	}
+
+	return
 }
 
 func (Host) TableName() string {

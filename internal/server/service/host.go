@@ -21,7 +21,8 @@ func NewHostService() *HostService {
 }
 
 func (s HostService) Register(host commDomain.Host) (result _domain.RpcResp) {
-	hostPo, err := s.HostRepo.Register(host)
+	po := model.HostFromDomain(host)
+	hostPo, err := s.HostRepo.Register(po)
 	if err != nil {
 		result.Fail(fmt.Sprintf("fail to register host %s ", host.Ip))
 	}
@@ -61,13 +62,13 @@ func (s HostService) getBusyHosts() (ids []uint) {
 
 func (s HostService) updateVmsStatus(host commDomain.Host, hostId uint) {
 	vmNames := make([]string, 0)
-	runningVms, destroyVms, unknownVms := s.getVmsByStatus(host, vmNames)
+	runningVms, shutOffVms, unknownVms := s.getVmsByStatus(host, vmNames)
 
 	if len(runningVms) > 0 {
 		s.VmRepo.UpdateStatusByNames(runningVms, commConst.VmRunning)
 	}
-	if len(destroyVms) > 0 {
-		s.VmRepo.UpdateStatusByNames(destroyVms, commConst.VmDestroy)
+	if len(shutOffVms) > 0 {
+		s.VmRepo.UpdateStatusByNames(shutOffVms, commConst.VmShutOff)
 	}
 	if len(unknownVms) > 0 {
 		s.VmRepo.UpdateStatusByNames(unknownVms, commConst.VmUnknown)
@@ -79,7 +80,7 @@ func (s HostService) updateVmsStatus(host commDomain.Host, hostId uint) {
 	return
 }
 
-func (s HostService) getVmsByStatus(host commDomain.Host, vmNames []string) (runningVms, destroyVms, unknownVms []string) {
+func (s HostService) getVmsByStatus(host commDomain.Host, vmNames []string) (runningVms, shutOffVms, unknownVms []string) {
 	vms := host.Vms
 
 	for _, vm := range vms {
@@ -89,8 +90,8 @@ func (s HostService) getVmsByStatus(host commDomain.Host, vmNames []string) (run
 
 		if status == commConst.VmRunning {
 			runningVms = append(runningVms, name)
-		} else if status == commConst.VmDestroy {
-			destroyVms = append(destroyVms, name)
+		} else if status == commConst.VmShutOff {
+			shutOffVms = append(shutOffVms, name)
 		} else if status == commConst.VmUnknown {
 			unknownVms = append(unknownVms, name)
 		}

@@ -27,5 +27,5 @@ type Host struct {
 	TaskCount        int        `json:"taskCount"`
 	LastRegisterDate *time.Time `json:"lastRegisterDate"`
 
-	Vms []Vm
+	Vms []Vm `json:"vms" gorm:"-"`
 }

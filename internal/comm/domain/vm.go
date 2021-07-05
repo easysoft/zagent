@@ -22,8 +22,8 @@ type Vm struct {
 	OsLang     commConst.OsLang
 
 	Status            commConst.VmStatus
-	DestroyAt         time.Time
-	FirstDetectedTime time.Time
+	DestroyAt         *time.Time
+	FirstDetectedTime *time.Time
 
 	PublicIp   string
 	PublicPort int

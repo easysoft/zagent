@@ -40,8 +40,8 @@ type Vm struct {
 	WorkDir    string `json:"workDir"`
 
 	DefPath          string `json:"defPath"`
-	DiskSize         int    `json:"diskSize"`   // M
-	MemorySize       int    `json:"memorySize"` // M
+	DiskSize         uint   `json:"diskSize"`   // M
+	MemorySize       uint   `json:"memorySize"` // M
 	CdromSys         string `json:"cdromSys"`
 	CdromDriver      string `json:"cdromDriver"`
 	ResolutionHeight int    `json:"resolutionHeight"`
@@ -60,6 +60,23 @@ func GenKvmReq(po Vm) (req commDomain.KvmReq) {
 
 		VmDiskSize: po.DiskSize, VmMemorySize: po.MemorySize,
 		VmCdromSys: po.CdromSys, VmCdromDriver: po.CdromDriver}
+
+	return
+}
+
+func VmFromDomain(v commDomain.Vm) (po Vm) {
+	po = Vm{
+		Status:    v.Status,
+		DestroyAt: v.DestroyAt,
+
+		PublicIp:   v.PublicIp,
+		PublicPort: v.PublicPort,
+		MacAddress: v.MacAddress,
+		RpcPort:    v.RpcPort,
+		SshPort:    v.SshPort,
+		VncPort:    v.VncPort,
+		WorkDir:    v.WorkDir,
+	}
 
 	return
 }

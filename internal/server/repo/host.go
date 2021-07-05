@@ -19,13 +19,13 @@ func NewHostRepo() *HostRepo {
 	return &HostRepo{}
 }
 
-func (r HostRepo) Register(host commDomain.Host) (po model.Host, err error) {
+func (r HostRepo) Register(host model.Host) (po model.Host, err error) {
 	err = r.DB.Where("ip = ?", host.Ip).First(&po).Error
-	if err != gorm.ErrRecordNotFound {
+	if err == gorm.ErrRecordNotFound {
 		err = r.DB.Model(&host).Omit("").Create(&host).Error
 		return
 	} else {
-		err = r.DB.Model(&host).Updates(host).Error
+		err = r.DB.Model(&host).Where("ip = ?", host.Ip).Updates(host).Error
 		return
 	}
 }

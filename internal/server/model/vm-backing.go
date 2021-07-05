@@ -19,10 +19,10 @@ type VmBacking struct {
 	OsBuild   string `json:"osBuild"`
 	OsBits    string `json:"osBits"`
 
-	ResolutionHeight  int `json:"resolutionHeight"`
-	ResolutionWidth   int `json:"resolutionWidth"`
-	SuggestDiskSize   int `json:"suggestDiskSize"`
-	SuggestMemorySize int `json:"suggestMemorySize"`
+	ResolutionHeight  int  `json:"resolutionHeight"`
+	ResolutionWidth   int  `json:"resolutionWidth"`
+	SuggestDiskSize   uint `json:"suggestDiskSize"`
+	SuggestMemorySize uint `json:"suggestMemorySize"`
 
 	SysIsoId    uint `json:"sysIsoId"`
 	DriverIsoId uint `json:"driverIsoId"`

@@ -22,7 +22,7 @@ func (r VmRepo) Register(vm commDomain.Vm) (err error) {
 	r.DB.Model(&vm).Where("mac=?", vm.MacAddress).
 		Updates(
 			map[string]interface{}{"status": vm.Status, "ip": vm.PublicIp, "port": vm.PublicPort, "workDir": vm.WorkDir,
-				"lastRegisterDate": time.Now(), "updatedAt": time.Now()})
+				"lastRegisterDate": time.Now()})
 
 	return
 }
@@ -49,7 +49,7 @@ func (r VmRepo) Launch(vm commDomain.Vm) {
 	r.DB.Model(&vm).Where("id=?", vm.Id).
 		Updates(
 			map[string]interface{}{"status": "launch", "imagePath": vm.ImagePath,
-				"defPath": vm.DefPath, "updatedAt": time.Now()})
+				"defPath": vm.DefPath})
 
 	return
 }
@@ -57,21 +57,21 @@ func (r VmRepo) Launch(vm commDomain.Vm) {
 func (r VmRepo) UpdateStatusByNames(vms []string, status commConst.VmStatus) {
 	db := r.DB.Model(&model.Vm{}).Where("name = IN (?)", vms)
 
-	if status == "running" {
+	if status == commConst.VmRunning {
 		db.Where("AND status != 'active'")
 	}
 
-	db.Updates(map[string]interface{}{"status": status, "updatedAt": time.Now()})
+	db.Updates(map[string]interface{}{"status": status})
 }
 
 func (r VmRepo) DestroyMissedVmsStatus(vms []string, hostId uint) {
-	db := r.DB.Model(&model.Vm{}).Where("hostId=? AND status!=?", hostId, "destroy")
+	db := r.DB.Model(&model.Vm{}).Where("hostId=? AND status!=?", hostId, commConst.VmDestroy)
 
 	if len(vms) > 0 {
 		db.Where("AND name NOT IN (?)", vms)
 	}
 
-	db.Updates(map[string]interface{}{"status": "destroy", "updatedAt": time.Now()})
+	db.Updates(map[string]interface{}{"status": commConst.VmDestroy})
 }
 
 func (r VmRepo) FailToCreate(id uint, msg string) {
