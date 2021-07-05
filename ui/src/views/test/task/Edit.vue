@@ -23,14 +23,14 @@
           <a-row v-if="model.buildType=='selenium'" :gutter="colsFull">
             <a-col :span="colsHalf">
               <a-form-model-item :label="$t('form.driver.type')" prop="seleniumDriverType" :labelCol="labelColHalf" :wrapperCol="wrapperColHalf">
-                <a-input v-model="model.seleniumDriverType" />
+                <a-input v-model="model.browserType" />
                 <span>{{ $t('form.driver.type.tips') }}</span>
               </a-form-model-item>
             </a-col>
 
             <a-col :span="colsHalf">
               <a-form-model-item :label="$t('form.driver.version')" prop="seleniumDriverVersion" :labelCol="labelColHalf2" :wrapperCol="wrapperColHalf">
-                <a-input v-model="model.seleniumDriverVersion" />
+                <a-input v-model="model.browserVersion" />
                 <span>{{ $t('form.driver.version.tips') }}</span>
               </a-form-model-item>
             </a-col>
@@ -201,7 +201,16 @@ export default {
       labelColHalf2: labelColHalf2,
       wrapperColHalf: wrapperColHalf,
 
-      model: { environments: [] },
+      model: {
+        'name': 'test',
+        'buildType': 'selenium',
+        'browserType': 'chrome',
+        'browserVersion': '92',
+        'scriptUrl': 'https://gitee.com/ngtesting/ci_test_selenium.git',
+        'buildCommands': 'mvn clean test -Dtestng.suite=target/test-classes/baidu-test.xml',
+        'resultFiles': 'target/surefire-reports',
+        environments: [ { 'osCategory': 'windows', 'osType': 'win10', 'osLang': 'zh_cn' } ]
+      },
       envData: {},
       environment: {},
       environmentIndex: -1,

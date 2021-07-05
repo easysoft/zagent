@@ -4,6 +4,7 @@ import (
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
+	"strings"
 )
 
 type TaskService struct {
@@ -28,6 +29,11 @@ func (s *TaskService) Get(id uint) (po model.Task) {
 }
 
 func (s *TaskService) Save(po *model.Task, userId uint) (err error) {
+	if strings.Index(po.ScriptUrl, ".zip") < 0 {
+		po.ScmAddress = po.ScriptUrl
+		po.ScriptUrl = ""
+	}
+
 	po.UserId = userId
 	err = s.TaskRepo.Save(po)
 

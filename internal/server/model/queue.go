@@ -51,7 +51,9 @@ func NewQueue(buildType consts.BuildType, groupId uint, taskId uint, taskPriorit
 	osCategory consts.OsCategory, osType consts.OsType, osLang consts.OsLang,
 	scriptUrl string, scmAddress string, scmAccount string, scmPassword string,
 	resultFiles string, keepResultFiles bool, taskName string, userName string,
-	serial, appUrl, buildCommands, envVars string) Queue {
+	serial, appUrl, buildCommands, envVars string,
+	browserType consts.BrowserType, browserVersion string,
+) Queue {
 
 	Task := Queue{
 		Progress: consts.ProgressCreated,
@@ -78,6 +80,9 @@ func NewQueue(buildType consts.BuildType, groupId uint, taskId uint, taskPriorit
 		AppUrl:        appUrl,
 		BuildCommands: buildCommands,
 		EnvVars:       envVars,
+
+		BrowserType:    browserType,
+		BrowserVersion: browserVersion,
 	}
 	return Task
 }

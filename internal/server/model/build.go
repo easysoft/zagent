@@ -20,7 +20,9 @@ type Build struct {
 	NodeIp   string `json:"nodeIp"`
 	NodePort int    `json:"nodePort"`
 
-	AppiumPort int `json:"appiumPort"`
+	AppiumPort     int                `json:"appiumPort"`
+	BrowserType    consts.BrowserType `json:"browserType"`
+	BrowserVersion string             `json:"browserVersion"`
 
 	StartTime    *time.Time `json:"startTime"`
 	CompleteTime *time.Time `json:"completeTime"`
@@ -74,4 +76,8 @@ func NewBuildTo(build Build) domain.Build {
 	}
 
 	return toValue
+}
+
+func (Build) TableName() string {
+	return "biz_build"
 }

@@ -55,7 +55,8 @@ func (s QueueService) GenerateAppiumQueuesFromTask(task *model.Task) (count int)
 				"", "", "",
 				task.ScriptUrl, task.ScmAddress, task.ScmAccount, task.ScmPassword,
 				task.ResultFiles, task.KeepResultFiles, task.Name, task.UserName,
-				serial, task.AppUrl, task.BuildCommands, task.EnvVars)
+				serial, task.AppUrl, task.BuildCommands, task.EnvVars,
+				task.BrowserType, task.BrowserVersion)
 
 			s.QueueRepo.Save(&queue)
 			count++
@@ -90,7 +91,9 @@ func (s QueueService) GenerateSeleniumQueuesFromTask(task *model.Task) (count in
 			osCategory, osType, osLang,
 			task.ScriptUrl, task.ScmAddress, task.ScmAccount, task.ScmPassword,
 			task.ResultFiles, task.KeepResultFiles, task.Name, task.UserName,
-			"", "", task.BuildCommands, task.EnvVars)
+			"", "", task.BuildCommands, task.EnvVars,
+			task.BrowserType, task.BrowserVersion,
+		)
 
 		s.QueueRepo.Save(&queue)
 		count++
