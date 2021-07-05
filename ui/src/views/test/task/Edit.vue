@@ -20,6 +20,21 @@
               </a-select-option>
             </a-select>
           </a-form-model-item>
+          <a-row v-if="model.buildType=='selenium'" :gutter="colsFull">
+            <a-col :span="colsHalf">
+              <a-form-model-item :label="$t('form.driver.type')" prop="seleniumDriverType" :labelCol="labelColHalf" :wrapperCol="wrapperColHalf">
+                <a-input v-model="model.seleniumDriverType" />
+                <span>{{ $t('form.driver.type.tips') }}</span>
+              </a-form-model-item>
+            </a-col>
+
+            <a-col :span="colsHalf">
+              <a-form-model-item :label="$t('form.driver.version')" prop="seleniumDriverVersion" :labelCol="labelColHalf2" :wrapperCol="wrapperColHalf">
+                <a-input v-model="model.seleniumDriverVersion" />
+                <span>{{ $t('form.driver.version.tips') }}</span>
+              </a-form-model-item>
+            </a-col>
+          </a-row>
 
           <a-form-model-item :label="$t('form.test.code')" prop="scriptUrl" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
             <a-textarea v-model="model.scriptUrl" @change="scriptUrlChanged" />

@@ -21,6 +21,9 @@ type Task struct {
 	ScmAccount  string `json:"scmAccount"`
 	ScmPassword string `json:"scmPassword"`
 
+	SeleniumDriverType    consts.BrowserType `json:"seleniumDriverType,omitempty"`
+	SeleniumDriverVersion string             `json:"seleniumDriverVersion,omitempty"`
+
 	AppUrl          string `json:"appUrl"`
 	BuildCommands   string `json:"buildCommands"`
 	EnvVars         string `json:"envVars"`
