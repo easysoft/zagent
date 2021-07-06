@@ -60,6 +60,9 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 			} else {
 				newTaskProgress = consts.ProgressPending
 			}
+		} else {
+			s.QueueRepo.Pending(queue.ID) // pending
+			newTaskProgress = consts.ProgressPending
 		}
 
 	} else if queue.Progress == consts.ProgressLaunchVm {
@@ -86,25 +89,25 @@ func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {
 	device := s.DeviceRepo.GetBySerial(serial)
 
 	originalProgress := queue.Progress
-	var newProgress consts.BuildProgress
+	var newTaskProgress consts.BuildProgress
 
 	if s.DeviceService.IsDeviceReady(device) {
 		rpcResult := s.AppiumService.Start(queue)
 
 		if rpcResult.IsSuccess() {
 			s.QueueRepo.Start(queue) // start
-			newProgress = consts.ProgressInProgress
+			newTaskProgress = consts.ProgressInProgress
 		} else {
 			s.QueueRepo.SetQueueStatus(queue.ID, consts.ProgressAppiumServiceFail, consts.StatusFail)
-			newProgress = consts.ProgressPending
+			newTaskProgress = consts.ProgressPending
 		}
 	} else {
 		s.QueueRepo.Pending(queue.ID) // pending
-		newProgress = consts.ProgressPending
+		newTaskProgress = consts.ProgressPending
 	}
 
-	if originalProgress != newProgress { // progress changed
-		s.TaskService.SetProgress(queue.TaskId, newProgress)
+	if newTaskProgress != "" && originalProgress != newTaskProgress { // progress changed
+		s.TaskService.SetProgress(queue.TaskId, newTaskProgress)
 	}
 }
 

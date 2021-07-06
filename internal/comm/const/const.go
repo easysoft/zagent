@@ -7,7 +7,6 @@ const (
 	WaitTestCompletedTimeout = 30 // min
 	VmLifecycleTimeout       = 20 // min
 
-	MaxVmOnHost    = 3
 	QueueRetryTime = 3
 
 	DiskSizeWindows = 40 // G
