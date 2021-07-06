@@ -126,12 +126,6 @@ func (s *LibvirtService) CreateVmTest(vm *domain.Vm) (
 }
 
 func (s *LibvirtService) ListVm() (doms []libvirt.Domain) {
-	defer func() {
-		if res, _ := LibvirtConn.Close(); res != 0 {
-			_logUtils.Errorf("close() == %d, expected 0", res)
-		}
-	}()
-
 	doms, err := LibvirtConn.ListAllDomains(0)
 	if err != nil {
 		_logUtils.Errorf(err.Error())
@@ -142,12 +136,6 @@ func (s *LibvirtService) ListVm() (doms []libvirt.Domain) {
 }
 
 func (s *LibvirtService) GetVm(name string) (dom *libvirt.Domain, err error) {
-	defer func() {
-		if res, _ := LibvirtConn.Close(); res != 0 {
-			_logUtils.Errorf("close() == %d, expected 0", res)
-		}
-	}()
-
 	dom, err = LibvirtConn.LookupDomainByName(name)
 	if err != nil {
 		_logUtils.Errorf(err.Error())
