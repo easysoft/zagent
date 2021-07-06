@@ -40,7 +40,7 @@ func NewLibvirtService() *LibvirtService {
 	return s
 }
 
-func (s *LibvirtService) CreateVm(req *domain.KvmReq) (dom *libvirt.Domain,
+func (s *LibvirtService) CreateVm(req *domain.KvmReq, removeSameName bool) (dom *libvirt.Domain,
 	vmVncPort int, vmRawPath, vmBackingPath string, err error) {
 	vmMacAddress := req.VmMacAddress
 	vmUniqueName := req.VmUniqueName
@@ -48,6 +48,10 @@ func (s *LibvirtService) CreateVm(req *domain.KvmReq) (dom *libvirt.Domain,
 	vmTemplateName := req.VmTemplateName
 	vmMemorySize := req.VmMemorySize
 	vmDiskSize := req.VmDiskSize
+
+	if removeSameName {
+		s.DestroyVmByName(vmUniqueName)
+	}
 
 	tmplXml := s.GetVmDef(vmTemplateName)
 	vmXml := ""
