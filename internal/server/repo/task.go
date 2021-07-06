@@ -18,7 +18,7 @@ func NewTaskRepo() *TaskRepo {
 }
 
 func (r *TaskRepo) Query(keywords, status string, pageNo int, pageSize int) (pos []model.Task, total int64) {
-	query := r.DB.Select("*").Order("id ASC")
+	query := r.DB.Model(&model.Task{}).Select("*").Order("id ASC")
 	if status == "true" {
 		query = query.Where("NOT disabled")
 	} else if status == "false" {
@@ -46,19 +46,19 @@ func (r *TaskRepo) Query(keywords, status string, pageNo int, pageSize int) (pos
 }
 
 func (r *TaskRepo) Get(id uint) (po model.Task) {
-	r.DB.Preload("Environments").Where("id = ?", id).First(&po)
+	r.DB.Model(&model.Task{}).Preload("Environments").Where("id = ?", id).First(&po)
 
 	return
 }
 
 func (r *TaskRepo) Save(po *model.Task) (err error) {
-	err = r.DB.Model(&po).Create(&po).Error
+	err = r.DB.Model(&model.Task{}).Create(&po).Error
 	return
 }
 
 func (r *TaskRepo) Update(po *model.Task) (err error) {
-	err = r.DB.Where("task_id = ?", po.ID).Delete(&model.Environment{}).Error
-	err = r.DB.Session(&gorm.Session{FullSaveAssociations: true}).Updates(&po).Error
+	err = r.DB.Model(&model.Task{}).Where("task_id = ?", po.ID).Delete(&model.Environment{}).Error
+	err = r.DB.Model(&model.Task{}).Session(&gorm.Session{FullSaveAssociations: true}).Updates(&po).Error
 	return
 }
 
@@ -101,7 +101,7 @@ func (r *TaskRepo) SetProgress(taskId uint, progress consts.BuildProgress) (err 
 		data = map[string]interface{}{"progress": progress, "pending_time": time.Now()}
 	}
 
-	r.DB.Model(model.Task{}).Where("id=?", taskId).Updates(data)
+	r.DB.Model(&model.Task{}).Where("id=?", taskId).Updates(data)
 	return
 }
 

@@ -22,18 +22,18 @@ func NewHostRepo() *HostRepo {
 func (r HostRepo) Register(host model.Host) (po model.Host, err error) {
 	host.Status = consts.HostActive
 
-	err = r.DB.Where("ip = ?", host.Ip).First(&po).Error
+	err = r.DB.Model(&model.Host{}).Where("ip = ?", host.Ip).First(&po).Error
 	if err == gorm.ErrRecordNotFound {
-		err = r.DB.Model(&host).Omit("").Create(&host).Error
+		err = r.DB.Model(&model.Host{}).Omit("").Create(&host).Error
 		return
 	} else {
-		err = r.DB.Model(&host).Where("ip = ?", host.Ip).Updates(host).Error
+		err = r.DB.Model(&model.Host{}).Where("ip = ?", host.Ip).Updates(host).Error
 		return
 	}
 }
 
 func (r HostRepo) Get(id uint) (host model.Host) {
-	r.DB.Where("id=?", id).First(&host)
+	r.DB.Model(&model.Host{}).Where("id=?", id).First(&host)
 	return
 }
 

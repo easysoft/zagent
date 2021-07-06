@@ -22,5 +22,5 @@ const (
 	SepOfMacAddress = ":"
 
 	UserTokenExpireTime   = 365 * 24 * 60 * 60 * 1000
-	WebCheckQueueInterval = 5
+	WebCheckQueueInterval = 3 * 60
 )

@@ -16,11 +16,11 @@ func NewExecRepo() *ExecRepo {
 }
 
 func (r ExecRepo) Save(queue model.Queue) (err error) {
-	err = r.DB.Model(&queue).Omit("StartTime", "PendingTime").Create(&queue).Error
+	err = r.DB.Model(&model.Queue{}).Omit("StartTime", "PendingTime").Create(&queue).Error
 	return
 }
 
 func (r ExecRepo) DeleteInSameGroup(groupId uint, serials []string) (err error) {
-	r.DB.Where("group_id=? AND serial IN (?)", groupId, strings.Join(serials, ",")).Delete(&model.Queue{})
+	r.DB.Model(&model.Queue{}).Where("group_id=? AND serial IN (?)", groupId, strings.Join(serials, ",")).Delete(&model.Queue{})
 	return
 }

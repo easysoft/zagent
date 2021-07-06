@@ -21,7 +21,7 @@ func NewQueueRepo() *QueueRepo {
 func (r QueueRepo) QueryForExec() (queues []model.Queue) {
 	queues = make([]model.Queue, 0)
 
-	r.DB.Where("progress=? OR progress=? OR progress=?",
+	r.DB.Model(&model.Queue{}).Where("progress=? OR progress=? OR progress=?",
 		consts.ProgressCreated, consts.ProgressPending, consts.ProgressLaunchVm).
 		Order("priority").Find(&queues)
 
@@ -30,13 +30,13 @@ func (r QueueRepo) QueryForExec() (queues []model.Queue) {
 func (r QueueRepo) QueryByTask(taskID uint) (queues []model.Queue) {
 	queues = make([]model.Queue, 0)
 
-	r.DB.Where("task_id=?", taskID).Order("id").Find(&queues)
+	r.DB.Model(&model.Queue{}).Where("task_id=?", taskID).Order("id").Find(&queues)
 
 	return
 }
 
 func (r QueueRepo) GetQueue(id uint) (queue model.Queue) {
-	r.DB.Where("id=?", id).First(&queue)
+	r.DB.Model(&model.Queue{}).Where("id=?", id).First(&queue)
 
 	return
 }
@@ -49,7 +49,7 @@ func (r QueueRepo) Save(queue *model.Queue) (err error) {
 }
 
 func (r QueueRepo) DeleteInSameGroup(groupId uint, serials []string) (err error) {
-	r.DB.Where("group_id=? AND serial IN (?)", groupId, strings.Join(serials, ",")).Delete(&model.Queue{})
+	r.DB.Model(&model.Queue{}).Where("group_id=? AND serial IN (?)", groupId, strings.Join(serials, ",")).Delete(&model.Queue{})
 	return
 }
 
@@ -94,7 +94,7 @@ func (r QueueRepo) QueryTimeout() (queues []model.Queue) {
 			" OR (progress = ? AND unix_timestamp(NOW()) - unix_timestamp(start_time) > ?)"
 	}
 
-	r.DB.Where(where,
+	r.DB.Model(&model.Queue{}).Where(where,
 		consts.ProgressPending, consts.WaitToExecTime*60,
 		consts.ProgressLaunchVm, consts.WaitForVmLaunchTime*60,
 		consts.ProgressInProgress, consts.WaitForResultTime*60).
@@ -104,7 +104,7 @@ func (r QueueRepo) QueryTimeout() (queues []model.Queue) {
 func (r QueueRepo) QueryTimeoutOrFailedForRetry() (queues []model.Queue) {
 	queues = make([]model.Queue, 0)
 
-	r.DB.Where("retry < ? AND (progress = ? OR status = ? )",
+	r.DB.Model(&model.Queue{}).Where("retry < ? AND (progress = ? OR status = ? )",
 		consts.QueueRetryTime, consts.ProgressTimeout, consts.StatusFail).
 		Order("priority").Find(&queues)
 	return

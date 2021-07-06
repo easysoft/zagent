@@ -15,7 +15,7 @@ func NewBrowserRepo() *BrowserRepo {
 }
 
 func (r BrowserRepo) ListByBacking(backingId uint) (pos []*model.Browser) {
-	r.DB.Raw("SELECT * FROM biz_browser WHERE id "+
+	r.DB.Model(&model.Browser{}).Raw("SELECT * FROM biz_browser WHERE id "+
 		"IN (SELECT browser_id FROM biz_backing_browser_r WHERE vm_backing_id = ?)", backingId).
 		Scan(&pos)
 

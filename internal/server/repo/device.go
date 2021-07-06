@@ -21,18 +21,18 @@ func (r DeviceRepo) Register(device commDomain.DeviceInst) (err error) {
 	defer Defer(tx, &code)
 
 	var po model.Device
-	r.DB.Where("serial = ?", device.Serial).First(&po)
+	r.DB.Model(&model.Device{}).Where("serial = ?", device.Serial).First(&po)
 
 	if po.ID == 0 {
-		err := r.DB.Model(&device).Omit("Ip").Create(&device).Error
+		err := r.DB.Model(&model.Device{}).Omit("Ip").Create(&device).Error
 		return err
 	} else {
-		r.DB.Model(&device).Updates(device)
+		r.DB.Model(&model.Device{}).Updates(device)
 		return nil
 	}
 }
 
 func (r DeviceRepo) GetBySerial(serial string) (device model.Device) {
-	r.DB.Where("serial=?", serial).First(&device)
+	r.DB.Model(&model.Device{}).Where("serial=?", serial).First(&device)
 	return
 }

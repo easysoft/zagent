@@ -20,7 +20,7 @@ func NewBuildRepo() *BuildRepo {
 type buildRepository struct{}
 
 func (r BuildRepo) GetBuild(id uint) (build model.Build) {
-	r.DB.Preload("Queue").Where("ID=?", id).First(&build)
+	r.DB.Model(&model.Build{}).Preload("Queue").Where("ID=?", id).First(&build)
 
 	return
 }
@@ -33,13 +33,13 @@ func (r BuildRepo) Save(build *model.Build) (err error) {
 }
 
 func (r BuildRepo) Start(build model.Build) (err error) {
-	r.DB.Model(&build).Where("id=?", build.ID).Updates(
+	r.DB.Model(&model.Build{}).Where("id=?", build.ID).Updates(
 		map[string]interface{}{"progress": consts.ProgressInProgress, "start_time": time.Now()})
 	return
 }
 
 func (r BuildRepo) Delete(build model.Build) (err error) {
-	r.DB.Delete(&build)
+	r.DB.Model(&model.Build{}).Delete(&build)
 	return
 }
 

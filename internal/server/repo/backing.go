@@ -18,12 +18,12 @@ func NewBackingRepo() *BackingRepo {
 }
 
 func (r BackingRepo) ListAll() (pos []*model.VmBacking) {
-	r.DB.Where("NOT Deleted AND NOT Disabled").Find(&pos)
+	r.DB.Model(&model.VmBacking{}).Where("NOT Deleted AND NOT Disabled").Find(&pos)
 	return
 }
 
 func (r BackingRepo) Get(id uint) (image model.VmBacking) {
-	r.DB.Where("id=?", id).First(&image)
+	r.DB.Model(&model.VmBacking{}).Where("id=?", id).First(&image)
 	return
 }
 
@@ -31,7 +31,7 @@ func (r BackingRepo) QueryByOs(osCategory consts.OsCategory, osType consts.OsTyp
 	backingIdsByBrowser []uint) (backingIds []uint, found bool) {
 
 	asserts := make([]domain.VmAssert, 0)
-	r.DB.Model(model.VmBacking{}).
+	r.DB.Model(&model.VmBacking{}).
 		Where("NOT disabled AND NOT deleted").Order("id ASC").
 		Find(&asserts)
 

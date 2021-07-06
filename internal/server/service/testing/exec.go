@@ -48,8 +48,7 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 	var newTaskProgress consts.BuildProgress
 
 	if queue.Progress == consts.ProgressCreated ||
-		queue.Progress == consts.ProgressPending ||
-		queue.Progress == consts.ProgressTimeout {
+		queue.Progress == consts.ProgressPending {
 
 		// looking for valid host
 		hostId, backingId, tmplId, found := s.HostService.GetValidForQueue(queue)

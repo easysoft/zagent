@@ -18,7 +18,7 @@ func NewTmplRepo() *TmplRepo {
 }
 
 func (r *TmplRepo) Get(id uint) (po model.VmTmpl) {
-	r.DB.Where("id = ?", id).First(&po)
+	r.DB.Model(&model.VmTmpl{}).Where("id = ?", id).First(&po)
 
 	return
 }

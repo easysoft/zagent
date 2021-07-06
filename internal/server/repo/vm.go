@@ -19,7 +19,7 @@ func NewVmRepo() *VmRepo {
 
 func (r VmRepo) Register(vm domain.Vm) (err error) {
 	// just update status by mac for exist vm
-	r.DB.Model(&vm).Where("mac=?", vm.MacAddress).
+	r.DB.Model(&model.Vm{}).Where("mac=?", vm.MacAddress).
 		Updates(
 			map[string]interface{}{"status": vm.Status, "ip": vm.PublicIp, "port": vm.PublicPort, "workDir": vm.WorkDir,
 				"lastRegisterDate": time.Now()})
@@ -28,21 +28,21 @@ func (r VmRepo) Register(vm domain.Vm) (err error) {
 }
 
 func (r VmRepo) GetById(id uint) (vm model.Vm) {
-	r.DB.Where("ID=?", id).First(&vm)
+	r.DB.Model(&model.Vm{}).Where("ID=?", id).First(&vm)
 	return
 }
 func (r VmRepo) GetByMac(mac string) (vm model.Vm) {
-	r.DB.Where("mac=?", mac).First(&vm)
+	r.DB.Model(&model.Vm{}).Where("mac=?", mac).First(&vm)
 	return
 }
 
 func (r VmRepo) Save(po *model.Vm) {
-	r.DB.Model(po).Omit("").Create(po)
+	r.DB.Model(&model.Vm{}).Omit("").Create(po)
 	return
 }
 
 func (r VmRepo) UpdateVmName(vm model.Vm) {
-	r.DB.Model(&vm).Where("id=?", vm.ID).Update("name", vm.Name)
+	r.DB.Model(&model.Vm{}).Where("id=?", vm.ID).Update("name", vm.Name)
 }
 
 func (r VmRepo) Launch(vm domain.Vm, id uint) {
