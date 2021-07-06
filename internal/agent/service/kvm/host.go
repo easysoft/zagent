@@ -7,6 +7,7 @@ import (
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"github.com/libvirt/libvirt-go"
+	"strings"
 )
 
 type HostService struct {
@@ -46,6 +47,9 @@ func (s *HostService) getVms() (vms []domain.Vm) {
 	for _, dom := range domains {
 		vm := domain.Vm{}
 		vm.Name, _ = dom.GetName()
+		if strings.Index(vm.Name, "test-") != 0 {
+			continue
+		}
 
 		vm.Status = consts.VmUnknown
 		domainState, _, _ := dom.GetState()

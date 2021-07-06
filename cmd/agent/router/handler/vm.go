@@ -18,7 +18,7 @@ func NewVmCtrl() *VmCtrl {
 }
 
 func (c *VmCtrl) Create(ctx context.Context, req commDomain.KvmReq, reply *_domain.RpcResp) error {
-	dom, vncPort, err := c.LibvirtService.CreateVm(&req)
+	dom, vncPort, vmRawPath, vmBackingPath, err := c.LibvirtService.CreateVm(&req)
 	if err == nil {
 		reply.Success("success to create vm.")
 	} else {
@@ -26,7 +26,14 @@ func (c *VmCtrl) Create(ctx context.Context, req commDomain.KvmReq, reply *_doma
 	}
 
 	vmName, _ := dom.GetName()
-	reply.Payload = map[string]interface{}{"vmName": vmName, "vncPort": vncPort}
+	vm := commDomain.Vm{
+		Name:        vmName,
+		VncPort:     vncPort,
+		ImagePath:   vmRawPath,
+		BackingPath: vmBackingPath,
+	}
+
+	reply.Payload = vm
 
 	return nil
 }

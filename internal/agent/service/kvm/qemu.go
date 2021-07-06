@@ -23,9 +23,9 @@ func NewQemuService() *QemuService {
 }
 
 func (s *QemuService) GenVmDef(tmplXml, macAddress, vmName, backingPath string, vmMemory uint) (
-	vmXml string, err error) {
+	vmXml string, rawPath string, err error) {
 
-	rawPath := filepath.Join(agentConf.Inst.DirImage, vmName+".qcow2")
+	rawPath = filepath.Join(agentConf.Inst.DirImage, vmName+".qcow2")
 
 	domCfg := &libvirtxml.Domain{}
 	err = domCfg.Unmarshal(tmplXml)
@@ -77,9 +77,8 @@ func (s *QemuService) GenVmDef(tmplXml, macAddress, vmName, backingPath string, 
 
 	if vmMemory != 0 {
 		domCfg.Memory = &libvirtxml.DomainMemory{
-			Unit:     "M",
-			Value:    vmMemory,
-			DumpCore: "yes",
+			Unit:  "M",
+			Value: vmMemory,
 		}
 		domCfg.CurrentMemory = &libvirtxml.DomainCurrentMemory{
 			Unit:  "M",
