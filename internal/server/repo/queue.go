@@ -22,7 +22,7 @@ func (r QueueRepo) QueryForExec() (queues []model.Queue) {
 	queues = make([]model.Queue, 0)
 
 	r.DB.Model(&model.Queue{}).Where("progress=? OR progress=? OR progress=?",
-		consts.ProgressCreated, consts.ProgressPending, consts.ProgressLaunchVm).
+		consts.ProgressCreated, consts.ProgressPendingRes, consts.ProgressLaunchVm).
 		Order("priority").Find(&queues)
 
 	return
@@ -55,14 +55,14 @@ func (r QueueRepo) DeleteInSameGroup(groupId uint, serials []string) (err error)
 
 func (r QueueRepo) Start(queue model.Queue) (err error) {
 	r.DB.Model(&queue).Where("id=?", queue.ID).Updates(
-		map[string]interface{}{"progress": consts.ProgressInProgress, "start_time": time.Now(), "retry": gorm.Expr("retry +1")})
+		map[string]interface{}{"progress": consts.ProgressRunning, "start_time": time.Now(), "retry": gorm.Expr("retry +1")})
 	return
 }
 func (r QueueRepo) Pending(queueId uint) (err error) {
 	r.DB.Model(&model.Queue{}).
 		Where("id=?", queueId).
 		Updates(map[string]interface{}{
-			"progress": consts.ProgressPending,
+			"progress": consts.ProgressPendingRes,
 		})
 
 	r.DB.Model(&model.Queue{}). // only update once, used for timeout checking
@@ -95,9 +95,9 @@ func (r QueueRepo) QueryTimeout() (queues []model.Queue) {
 	}
 
 	r.DB.Model(&model.Queue{}).Where(where,
-		consts.ProgressPending, consts.WaitResPendingTimeout*60,
+		consts.ProgressPendingRes, consts.WaitResPendingTimeout*60,
 		consts.ProgressLaunchVm, consts.WaitForVmReadyTimeout*60,
-		consts.ProgressInProgress, consts.WaitTestCompletedTimeout*60).
+		consts.ProgressRunning, consts.WaitTestCompletedTimeout*60).
 		Order("priority").Find(&queues)
 	return
 }
@@ -125,7 +125,7 @@ func (r QueueRepo) UpdateProgressAndVm(queueId, vmId uint, progress consts.Build
 func (r QueueRepo) CancelQueuesNotExec(taskId uint) {
 	r.DB.Model(&model.Queue{}).
 		Where("task_id=? AND (progress=? OR progress=?)",
-			taskId, consts.ProgressCreated, consts.ProgressPending).
+			taskId, consts.ProgressCreated, consts.ProgressPendingRes).
 		Updates(map[string]interface{}{"progress": consts.ProgressCancel})
 	return
 }

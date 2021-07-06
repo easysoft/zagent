@@ -25,16 +25,16 @@ func (s *ServerCron) Init() {
 		func() {
 			/**
 			query queue by status:
-				consts.ProgressCreated, consts.ProgressPending: to create vm on host
+				consts.ProgressCreated, consts.ProgressPendingRes: to create vm on host
 				consts.ProgressLaunchVm:                        to exec testing on vm
 			*/
 			s.ExecService.CheckExec()
 
 			/**
 			query queue by progress timeout:
-				consts.ProgressPending: consts.WaitResPendingTimeout
+				consts.ProgressPendingRes: consts.WaitResPendingTimeout
 				consts.ProgressLaunchVm: consts.WaitForVmReadyTimeout
-				consts.ProgressInProgress: consts.WaitTestCompletedTimeout
+				consts.ProgressRunning: consts.WaitTestCompletedTimeout
 			*/
 			s.ExecService.CheckTimeout()
 

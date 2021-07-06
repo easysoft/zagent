@@ -34,7 +34,7 @@ func (r BuildRepo) Save(build *model.Build) (err error) {
 
 func (r BuildRepo) Start(build model.Build) (err error) {
 	r.DB.Model(&model.Build{}).Where("id=?", build.ID).Updates(
-		map[string]interface{}{"progress": consts.ProgressInProgress, "start_time": time.Now()})
+		map[string]interface{}{"progress": consts.ProgressRunning, "start_time": time.Now()})
 	return
 }
 

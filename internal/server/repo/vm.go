@@ -80,5 +80,5 @@ func (r VmRepo) FailToCreate(id uint, msg string) {
 	r.DB.Model(&model.Vm{}).
 		Where("id=?", id).
 		Updates(map[string]interface{}{
-			"status": consts.VmFailToCreate, "desc": msg})
+			"status": consts.VmFailCreate, "desc": msg})
 }

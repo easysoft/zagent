@@ -48,7 +48,7 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 	var newTaskProgress consts.BuildProgress
 
 	if queue.Progress == consts.ProgressCreated ||
-		queue.Progress == consts.ProgressPending {
+		queue.Progress == consts.ProgressPendingRes {
 
 		// looking for valid host
 		hostId, backingId, tmplId, found := s.HostService.GetValidForQueue(queue)
@@ -56,13 +56,13 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 			// create kvm
 			result := s.VmService.CreateRemote(hostId, backingId, tmplId, queue.ID)
 			if result.IsSuccess() { // success to create
-				newTaskProgress = consts.ProgressInProgress
+				newTaskProgress = consts.ProgressRunning
 			} else {
-				newTaskProgress = consts.ProgressPending
+				newTaskProgress = consts.ProgressPendingRes
 			}
 		} else {
 			s.QueueRepo.Pending(queue.ID) // pending
-			newTaskProgress = consts.ProgressPending
+			newTaskProgress = consts.ProgressPendingRes
 		}
 
 	} else if queue.Progress == consts.ProgressLaunchVm {
@@ -74,7 +74,7 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 
 			if result.IsSuccess() {
 				s.QueueRepo.Start(queue)
-				newTaskProgress = consts.ProgressInProgress
+				newTaskProgress = consts.ProgressRunning
 			}
 		}
 	}
@@ -96,14 +96,14 @@ func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {
 
 		if rpcResult.IsSuccess() {
 			s.QueueRepo.Start(queue) // start
-			newTaskProgress = consts.ProgressInProgress
+			newTaskProgress = consts.ProgressRunning
 		} else {
 			s.QueueRepo.SetQueueStatus(queue.ID, consts.ProgressAppiumServiceFail, consts.StatusFail)
-			newTaskProgress = consts.ProgressPending
+			newTaskProgress = consts.ProgressPendingRes
 		}
 	} else {
 		s.QueueRepo.Pending(queue.ID) // pending
-		newTaskProgress = consts.ProgressPending
+		newTaskProgress = consts.ProgressPendingRes
 	}
 
 	if newTaskProgress != "" && originalProgress != newTaskProgress { // progress changed

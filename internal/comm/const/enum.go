@@ -14,9 +14,9 @@ func (e HostStatus) ToString() string {
 type VmStatus string
 
 const (
-	VmCreated      VmStatus = "created"        // set first time created
-	VmLaunch       VmStatus = "launch"         // set after success to call vm creating remotely
-	VmFailToCreate VmStatus = "fail_to_create" // set after fail to call vm creating remotely
+	VmCreated    VmStatus = "created"        // set first time created
+	VmLaunch     VmStatus = "launch"         // set after success to call vm creating remotely
+	VmFailCreate VmStatus = "vm_fail_create" // set after fail to call vm creating remotely
 
 	VmRunning VmStatus = "running" // report by agent on host
 	VmDestroy VmStatus = "destroy" // report by agent on host
@@ -61,18 +61,17 @@ func (e ServiceStatus) ToString() string {
 type BuildProgress string
 
 const (
-	ProgressCreated  BuildProgress = "created"
-	ProgressPending  BuildProgress = "pending"
-	ProgressLaunchVm BuildProgress = "launch_vm"
+	ProgressCreated    BuildProgress = "created"
+	ProgressPendingRes BuildProgress = "pending_res"
+	ProgressLaunchVm   BuildProgress = "launch_vm"
 
 	ProgressCreateVmFail      BuildProgress = "create_vm_fail"
 	ProgressAppiumServiceFail BuildProgress = "appium_service_fail"
 
-	ProgressInProgress BuildProgress = "in_progress"
-	ProgressTimeout    BuildProgress = "timeout"
-	ProgressCompleted  BuildProgress = "completed"
-
-	ProgressCancel BuildProgress = "cancel"
+	ProgressRunning   BuildProgress = "running"
+	ProgressTimeout   BuildProgress = "timeout"
+	ProgressCompleted BuildProgress = "completed"
+	ProgressCancel    BuildProgress = "cancel"
 )
 
 func (e BuildProgress) ToString() string {

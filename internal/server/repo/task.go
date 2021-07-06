@@ -95,7 +95,7 @@ func (r *TaskRepo) Delete(id uint) (err error) {
 
 func (r *TaskRepo) SetProgress(taskId uint, progress consts.BuildProgress) (err error) {
 	var data map[string]interface{}
-	if progress == consts.ProgressInProgress {
+	if progress == consts.ProgressRunning {
 		data = map[string]interface{}{"progress": progress, "start_time": time.Now()}
 	} else {
 		data = map[string]interface{}{"progress": progress, "pending_time": time.Now()}
