@@ -80,6 +80,16 @@ func (s KvmNativeService) CreateRemote(hostId, backingId, tmplId, queueId uint) 
 		DiskSize: backing.SuggestDiskSize, MemorySize: backing.SuggestMemorySize,
 		CdromSys: sysIsoPath, CdromDriver: driverIsoPath}
 
+	if backing.SuggestDiskSize == 0 {
+		if vm.OsCategory == consts.Windows {
+			vm.DiskSize = consts.DiskSizeWindows
+		} else if vm.OsCategory == consts.Linux {
+			vm.DiskSize = consts.DiskSizeLinux
+		} else {
+			vm.DiskSize = consts.DiskSizeDefault
+		}
+	}
+
 	s.VmRepo.Save(&vm) // save vm to db
 	vm.Name = s.genVmName(backing, vm.ID)
 	s.VmRepo.UpdateVmName(vm)

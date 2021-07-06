@@ -56,8 +56,7 @@ func (s *LibvirtService) CreateVm(req *domain.KvmReq) (dom *libvirt.Domain, vmVn
 		return
 	}
 
-	diskSize := s.getDiskSize(req.OsCategory, vmDiskSize)
-	s.QemuService.createDiskFile(vmBackingPath, vmUniqueName, diskSize)
+	s.QemuService.createDiskFile(vmBackingPath, vmUniqueName, vmDiskSize)
 
 	dom, err = LibvirtConn.DomainCreateXML(vmXml, 0)
 
@@ -223,21 +222,4 @@ func (s *LibvirtService) setVmProps(vm *domain.Vm) {
 		osType.ToString(), osVersion, osLang.ToString())
 	vm.Name = fmt.Sprintf("test-%s-%s-%s-%s",
 		osType.ToString(), osVersion, osLang.ToString(), _stringUtils.NewUuid())
-}
-
-func (s *LibvirtService) getDiskSize(category consts.OsCategory, size uint) (vmDiskSize uint) {
-	if size > 0 {
-		vmDiskSize = size
-		return
-	}
-
-	if category == consts.Windows {
-		vmDiskSize = consts.DiskSizeWindows
-	} else if category == consts.Linux {
-		vmDiskSize = consts.DiskSizeLinux
-	} else {
-		vmDiskSize = consts.DiskSizeDefault
-	}
-
-	return
 }
