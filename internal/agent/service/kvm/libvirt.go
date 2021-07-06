@@ -50,7 +50,7 @@ func (s *LibvirtService) CreateVm(req *domain.KvmReq, removeSameName bool) (dom 
 	vmDiskSize := req.VmDiskSize
 
 	if removeSameName {
-		s.DestroyVmByName(vmUniqueName)
+		s.DestroyVmByName(vmUniqueName, true)
 	}
 
 	tmplXml := s.GetVmDef(vmTemplateName)
