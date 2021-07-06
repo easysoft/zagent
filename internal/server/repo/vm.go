@@ -46,10 +46,11 @@ func (r VmRepo) UpdateVmName(vm model.Vm) {
 }
 
 func (r VmRepo) Launch(vm domain.Vm) {
-	r.DB.Model(&vm).Where("id=?", vm.Id).
+	r.DB.Model(&model.Vm{}).Where("id=?", vm.Id).
 		Updates(
-			map[string]interface{}{"status": "launch", "imagePath": vm.ImagePath,
-				"defPath": vm.DefPath})
+			map[string]interface{}{"status": consts.VmLaunch,
+				"image_path":   vm.ImagePath,
+				"backing_path": vm.BackingPath})
 
 	return
 }
@@ -65,7 +66,8 @@ func (r VmRepo) UpdateStatusByNames(vms []string, status consts.VmStatus) {
 }
 
 func (r VmRepo) DestroyMissedVmsStatus(vms []string, hostId uint) {
-	db := r.DB.Model(&model.Vm{}).Where("host_id=? AND status!=?", hostId, consts.VmDestroy)
+	db := r.DB.Model(&model.Vm{}).
+		Where("host_id=? AND status!=?", hostId, consts.VmDestroy)
 
 	if len(vms) > 0 {
 		db.Where("AND name NOT IN (?)", vms)

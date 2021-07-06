@@ -67,7 +67,7 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 		vmId := queue.VmId
 		vm := s.VmRepo.GetById(vmId)
 
-		if vm.Status == consts.VmActive { // find ready vm, begin to run test
+		if vm.Status == consts.VmReady { // find ready vm, begin to run test
 			result := s.SeleniumService.Start(queue)
 
 			if result.IsSuccess() {

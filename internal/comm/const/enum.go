@@ -17,7 +17,7 @@ const (
 	VmCreated       VmStatus = "created"
 	VmLaunch        VmStatus = "launch"
 	VmRunning       VmStatus = "running"
-	VmActive        VmStatus = "active"
+	VmReady         VmStatus = "ready"
 	VmBusy          VmStatus = "busy"
 	VmDestroy       VmStatus = "destroy"
 	VmShutOff       VmStatus = "shutoff"
