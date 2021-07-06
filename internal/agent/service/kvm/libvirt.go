@@ -73,7 +73,6 @@ func (s *LibvirtService) CreateVm(req *domain.KvmReq) (dom *libvirt.Domain, vmVn
 		vmMacAddress = newDomCfg.Devices.Interfaces[0].MAC.Address
 		vmVncPort = newDomCfg.Devices.Graphics[0].VNC.Port
 	}
-
 	return
 }
 
