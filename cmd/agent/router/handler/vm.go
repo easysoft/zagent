@@ -18,7 +18,7 @@ func NewVmCtrl() *VmCtrl {
 }
 
 func (c *VmCtrl) Create(ctx context.Context, req domain.KvmReq, reply *_domain.RpcResp) error {
-	dom, vncPort, vmRawPath, vmBackingPath, err := c.LibvirtService.CreateVm(&req)
+	dom, vncPort, vmRawPath, vmBackingPath, err := c.LibvirtService.CreateVm(&req, true)
 	if err == nil {
 		reply.Success("success to create vm.")
 
