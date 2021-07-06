@@ -178,6 +178,7 @@ func (s *LibvirtService) DestroyVmByName(name string, removeDiskImage bool) (err
 }
 func (s *LibvirtService) UndefineVm(dom *libvirt.Domain) (err error) {
 	err = dom.Undefine()
+
 	return
 }
 
