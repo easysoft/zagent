@@ -111,7 +111,6 @@ func (s KvmNativeService) CreateRemote(hostId, backingId, tmplId, queueId uint) 
 		s.VmRepo.FailToCreate(vm.ID, result.Msg)
 		s.QueueRepo.SetQueueStatus(queueId, consts.ProgressCreateVmFail, consts.StatusFail)
 	}
-
 	return
 }
 
