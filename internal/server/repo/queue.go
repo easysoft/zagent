@@ -114,7 +114,7 @@ func (r QueueRepo) SetQueueStatus(queueId uint, progress consts.BuildProgress, s
 
 func (r QueueRepo) UpdateVm(queueId, vmId uint, status consts.BuildProgress) {
 	r.DB.Model(&model.Queue{}).Where("id=?", queueId).Updates(
-		map[string]interface{}{"vmId": vmId, "progress": status, "updated_at": time.Now()})
+		map[string]interface{}{"vm_id": vmId, "progress": status})
 	return
 }
 
