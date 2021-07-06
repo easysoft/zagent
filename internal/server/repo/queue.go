@@ -21,7 +21,8 @@ func NewQueueRepo() *QueueRepo {
 func (r QueueRepo) QueryForExec() (queues []model.Queue) {
 	queues = make([]model.Queue, 0)
 
-	r.DB.Where("progress=? OR progress=?", consts.ProgressCreated, consts.ProgressPending).
+	r.DB.Where("progress=? OR progress=? OR progress=?",
+		consts.ProgressCreated, consts.ProgressPending, consts.ProgressLaunchVm).
 		Order("priority").Find(&queues)
 
 	return
