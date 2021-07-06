@@ -95,9 +95,9 @@ func (r QueueRepo) QueryTimeout() (queues []model.Queue) {
 	}
 
 	r.DB.Model(&model.Queue{}).Where(where,
-		consts.ProgressPending, consts.WaitToExecTime*60,
-		consts.ProgressLaunchVm, consts.WaitForVmLaunchTime*60,
-		consts.ProgressInProgress, consts.WaitForResultTime*60).
+		consts.ProgressPending, consts.WaitResPendingTimeout*60,
+		consts.ProgressLaunchVm, consts.WaitForVmReadyTimeout*60,
+		consts.ProgressInProgress, consts.WaitTestCompletedTimeout*60).
 		Order("priority").Find(&queues)
 	return
 }

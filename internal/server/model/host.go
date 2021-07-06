@@ -28,6 +28,7 @@ type Host struct {
 	Status  consts.HostStatus `json:"status"`
 
 	TaskCount        int        `json:"taskCount"`
+	MaxVmNum         int        `json:"maxVmNum"`
 	LastRegisterDate *time.Time `json:"lastRegisterDate"`
 
 	Backings []VmBacking `gorm:"many2many:host_backing_r;"`

@@ -67,18 +67,28 @@ func (r HostRepo) QueryByBackings(backingIds []uint, busyHostIds []uint) (hostId
 }
 
 func (r HostRepo) QueryBusy() (ret []map[string]uint) {
-	list := make([]map[string]uint, 0)
-	r.DB.Raw(`SELECT host_id, COUNT(id) num
-					FROM biz_vm
-					WHERE status != 'destroy' AND NOT deleted AND NOT disabled
-					GROUP BY host_id
-					ORDER BY num`).
-		Scan(&list)
+	hosts := make([]map[string]uint, 0)
+	r.DB.Raw(`SELECT host.id hostId, host.max_vm_num maxVmNum
+					FROM biz_host
+					AND NOT deleted AND NOT disabled`).
+		Scan(&hosts)
 
-	for _, item := range list {
-		if item["num"] > consts.MaxVmOnHost {
-			ret = append(ret, item)
-		}
+	for _, host := range hosts {
+		//items := make([]map[string]uint, 0)
+		r.DB.Raw(`SELECT host_id hostId, COUNT(id) vmCount
+					FROM biz_vm
+					WHERE status == ? AND host_id = ?
+					GROUP BY hostId
+					HAVING vmCount > ?
+					ORDER BY vmCount`,
+			consts.VmRunning, host["hostId"], host["maxVmNum"]-1).
+			Scan(&ret)
+
+		//for _, item := range items {
+		//	if item["vmCount"] >= consts.MaxVmOnHost {
+		//		ret = append(ret, item)
+		//	}
+		//}
 	}
 
 	return

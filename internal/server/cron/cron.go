@@ -23,8 +23,26 @@ func (s *ServerCron) Init() {
 		"check",
 		fmt.Sprintf("@every %ds", _const.WebCheckQueueInterval),
 		func() {
+			/**
+			query queue by status:
+				consts.ProgressCreated, consts.ProgressPending: to create vm on host
+				consts.ProgressLaunchVm:                        to exec testing on vm
+			*/
 			s.ExecService.CheckExec()
+
+			/**
+			query queue by progress timeout:
+				consts.ProgressPending: consts.WaitResPendingTimeout
+				consts.ProgressLaunchVm: consts.WaitForVmReadyTimeout
+				consts.ProgressInProgress: consts.WaitTestCompletedTimeout
+			*/
 			s.ExecService.CheckTimeout()
+
+			/**
+				query queue for retry:
+					process = consts.ProgressTimeout ||
+			    	status = consts.StatusFail
+			*/
 			s.ExecService.RetryTimeoutOrFailed()
 		},
 	)
