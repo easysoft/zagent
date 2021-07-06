@@ -50,7 +50,7 @@ func (s *LibvirtService) CreateVm(req *domain.KvmReq, removeSameName bool) (dom 
 	vmDiskSize := req.VmDiskSize
 
 	if removeSameName {
-		s.DestroyVmByName(vmUniqueName)
+		s.DestroyVmByName(vmUniqueName, true)
 	}
 
 	tmplXml := s.GetVmDef(vmTemplateName)
@@ -141,14 +141,14 @@ func (s *LibvirtService) ListVm() (doms []libvirt.Domain) {
 	return
 }
 
-func (s *LibvirtService) GetVm(name string) (dom *libvirt.Domain) {
+func (s *LibvirtService) GetVm(name string) (dom *libvirt.Domain, err error) {
 	defer func() {
 		if res, _ := LibvirtConn.Close(); res != 0 {
 			_logUtils.Errorf("close() == %d, expected 0", res)
 		}
 	}()
 
-	dom, err := LibvirtConn.LookupDomainByName(name)
+	dom, err = LibvirtConn.LookupDomainByName(name)
 	if err != nil {
 		_logUtils.Errorf(err.Error())
 		return
@@ -166,8 +166,12 @@ func (s *LibvirtService) DestroyVm(dom *libvirt.Domain) (err error) {
 
 	return
 }
-func (s *LibvirtService) DestroyVmByName(name string, removeDiskImage bool) (err error) {
-	dom := s.GetVm(name)
+func (s *LibvirtService) DestroyVmByName(name string, removeDiskImage bool) {
+	dom, err := s.GetVm(name)
+	if err != nil {
+		return
+	}
+
 	err = dom.Destroy()
 
 	if removeDiskImage {
@@ -182,8 +186,8 @@ func (s *LibvirtService) UndefineVm(dom *libvirt.Domain) (err error) {
 }
 
 func (s *LibvirtService) GetVmDef(name string) (xml string) {
-	dom := s.GetVm(name)
-	if dom == nil {
+	dom, err := s.GetVm(name)
+	if err != nil {
 		return
 	}
 

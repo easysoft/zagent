@@ -27,7 +27,7 @@ func (s *HostService) Register() {
 	host.Vms = s.getVms()
 	s.VmService.UpdateVmsStatus(host.Vms)
 
-	url := _httpUtils.GenUrl(agentConf.Inst.Server, "host/register")
+	url := _httpUtils.GenUrl(agentConf.Inst.Server, "client/host/register")
 	resp, ok := _httpUtils.Post(url, host)
 
 	msg := ""
