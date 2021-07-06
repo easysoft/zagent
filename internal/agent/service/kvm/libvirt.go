@@ -40,16 +40,18 @@ func NewLibvirtService() *LibvirtService {
 	return s
 }
 
-func (s *LibvirtService) CreateVm(req *domain.KvmReq) (dom *libvirt.Domain, vmVncPort int, err error) {
+func (s *LibvirtService) CreateVm(req *domain.KvmReq) (dom *libvirt.Domain,
+	vmVncPort int, vmRawPath, vmBackingPath string, err error) {
 	vmMacAddress := req.VmMacAddress
 	vmUniqueName := req.VmUniqueName
-	vmBackingPath := filepath.Join(agentConf.Inst.DirKvm, req.VmBackingPath)
+	vmBackingPath = filepath.Join(agentConf.Inst.DirKvm, req.VmBackingPath)
 	vmTemplateName := req.VmTemplateName
 	vmMemorySize := req.VmMemorySize
 	vmDiskSize := req.VmDiskSize
 
 	tmplXml := s.GetVmDef(vmTemplateName)
-	vmXml, _ := s.QemuService.GenVmDef(tmplXml, vmMacAddress, vmUniqueName, vmBackingPath, vmMemorySize)
+	vmXml := ""
+	vmXml, vmRawPath, _ = s.QemuService.GenVmDef(tmplXml, vmMacAddress, vmUniqueName, vmBackingPath, vmMemorySize)
 
 	if err != nil {
 		_logUtils.Errorf("err gen vm xml, err %s", err.Error())
@@ -73,6 +75,7 @@ func (s *LibvirtService) CreateVm(req *domain.KvmReq) (dom *libvirt.Domain, vmVn
 		vmMacAddress = newDomCfg.Devices.Interfaces[0].MAC.Address
 		vmVncPort = newDomCfg.Devices.Graphics[0].VNC.Port
 	}
+
 	return
 }
 
