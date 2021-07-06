@@ -6,7 +6,7 @@ import (
 )
 
 type Vm struct {
-	Id        int
+	ID        int
 	BackingId int
 	HostId    int
 

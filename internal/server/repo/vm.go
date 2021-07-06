@@ -45,8 +45,8 @@ func (r VmRepo) UpdateVmName(vm model.Vm) {
 	r.DB.Model(&vm).Where("id=?", vm.ID).Update("name", vm.Name)
 }
 
-func (r VmRepo) Launch(vm domain.Vm) {
-	r.DB.Model(&model.Vm{}).Where("id=?", vm.Id).
+func (r VmRepo) Launch(vm domain.Vm, id uint) {
+	r.DB.Model(&model.Vm{}).Where("id=?", id).
 		Updates(
 			map[string]interface{}{"status": consts.VmLaunch,
 				"image_path":   vm.ImagePath,
