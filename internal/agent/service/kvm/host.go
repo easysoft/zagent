@@ -25,7 +25,7 @@ func (s *HostService) Register() {
 		HostStatus: consts.HostActive,
 	}
 	host.Vms = s.getVms()
-	s.VmService.UpdateVmsStatus(host.Vms)
+	s.VmService.UpdateVmMapAndDestroyTimeout(host.Vms)
 
 	url := _httpUtils.GenUrl(agentConf.Inst.Server, "client/host/register")
 	resp, ok := _httpUtils.Post(url, host)

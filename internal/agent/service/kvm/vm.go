@@ -11,7 +11,7 @@ import (
 )
 
 type VmService struct {
-	VmMap     map[string]domain.Vm
+	VmMapVar  map[string]domain.Vm
 	TimeStamp int64
 
 	LibvirtService *LibvirtService `inject:""`
@@ -20,7 +20,7 @@ type VmService struct {
 func NewVmService() *VmService {
 	s := VmService{}
 	s.TimeStamp = time.Now().Unix()
-	s.VmMap = map[string]domain.Vm{}
+	s.VmMapVar = map[string]domain.Vm{}
 
 	return &s
 }
@@ -48,37 +48,37 @@ func (s *VmService) Register(isBusy bool) {
 	}
 }
 
-func (s *VmService) UpdateVmsStatus(vms []domain.Vm) {
+func (s *VmService) UpdateVmMapAndDestroyTimeout(vms []domain.Vm) {
 	names := map[string]bool{}
 
 	for _, vm := range vms {
 		name := vm.Name
 		names[name] = true
 
-		if _, ok := s.VmMap[name]; ok { // update status in map
-			v := s.VmMap[name]
+		if _, ok := s.VmMapVar[name]; ok { // update status in map
+			v := s.VmMapVar[name]
 			v.Status = vm.Status
-			s.VmMap[name] = v
+			s.VmMapVar[name] = v
 		} else { // update time then add
 			if vm.FirstDetectedTime.IsZero() {
 				vm.FirstDetectedTime = time.Now()
 			}
-			s.VmMap[name] = vm
+			s.VmMapVar[name] = vm
 		}
 	}
 
-	keys := s.getKeys(s.VmMap)
+	keys := s.getKeys(s.VmMapVar)
 	for _, key := range keys {
 		if !names[key] { // remove vm in map but not found this time
-			delete(s.VmMap, key)
+			delete(s.VmMapVar, key)
 			continue
 		}
 
 		// destroy and remove timeout vm
-		v := s.VmMap[key]
+		v := s.VmMapVar[key]
 		if time.Now().Unix()-v.FirstDetectedTime.Unix() > consts.VmLifecycleTimeout*60 { // timeout
 			s.LibvirtService.DestroyVmByName(v.Name, true)
-			delete(s.VmMap, key)
+			delete(s.VmMapVar, key)
 		}
 	}
 }
