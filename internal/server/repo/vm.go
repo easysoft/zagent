@@ -59,7 +59,7 @@ func (r VmRepo) UpdateStatusByNames(vms []string, status consts.VmStatus) {
 	db := r.DB.Model(&model.Vm{}).Where("name IN (?)", vms)
 
 	if status == consts.VmRunning {
-		db.Where("AND status != 'active'")
+		db.Where("status != 'active'") // not to update active vm status
 	}
 
 	db.Updates(map[string]interface{}{"status": status})
