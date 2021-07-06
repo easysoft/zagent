@@ -14,16 +14,17 @@ func (e HostStatus) ToString() string {
 type VmStatus string
 
 const (
-	VmCreated       VmStatus = "created" // first time created
-	VmLaunch        VmStatus = "launch"  // after success to call vm creating remotely
-	VmRunning       VmStatus = "running" // report by agent on host
-	VmReady         VmStatus = "ready"   // report by agent in vm
-	VmBusy          VmStatus = "busy"
-	VmDestroy       VmStatus = "destroy" // report by agent on host
-	VmShutOff       VmStatus = "shutoff" // report by agent on host
-	VmFailToCreate  VmStatus = "fail_to_create"
-	VmFailToDestroy VmStatus = "fail_to_destroy"
-	VmUnknown       VmStatus = "unknown" // report by agent on host, not running, destroy and shutoff
+	VmCreated      VmStatus = "created"        // set first time created
+	VmLaunch       VmStatus = "launch"         // set after success to call vm creating remotely
+	VmFailToCreate VmStatus = "fail_to_create" // set after fail to call vm creating remotely
+
+	VmRunning VmStatus = "running" // report by agent on host
+	VmDestroy VmStatus = "destroy" // report by agent on host
+	VmShutOff VmStatus = "shutoff" // report by agent on host
+
+	VmReady VmStatus = "ready" // report by agent in vm
+
+	VmUnknown VmStatus = "unknown" // report by agent on host, not running, destroy and shutoff
 )
 
 func (e VmStatus) ToString() string {
