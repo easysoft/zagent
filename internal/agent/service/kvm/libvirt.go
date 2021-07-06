@@ -159,11 +159,17 @@ func (s *LibvirtService) StartVm(dom *libvirt.Domain) (err error) {
 }
 func (s *LibvirtService) DestroyVm(dom *libvirt.Domain) (err error) {
 	err = dom.Destroy()
+
 	return
 }
-func (s *LibvirtService) DestroyVmByName(name string) (err error) {
+func (s *LibvirtService) DestroyVmByName(name string, removeDiskImage bool) (err error) {
 	dom := s.GetVm(name)
 	err = dom.Destroy()
+
+	if removeDiskImage {
+		s.QemuService.RemoveDisk(dom)
+	}
+
 	return
 }
 func (s *LibvirtService) UndefineVm(dom *libvirt.Domain) (err error) {

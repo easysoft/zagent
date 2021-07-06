@@ -11,6 +11,7 @@ import (
 	"github.com/easysoft/zagent/internal/server/repo"
 	commonService "github.com/easysoft/zagent/internal/server/service/common"
 	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
+	"github.com/mitchellh/mapstructure"
 )
 
 type VmService interface {
@@ -78,7 +79,9 @@ func (s KvmNativeService) CreateRemote(hostId, backingId, tmplId, queueId uint) 
 
 		HostId: host.ID, HostName: host.Name,
 		DiskSize: backing.SuggestDiskSize, MemorySize: backing.SuggestMemorySize,
-		CdromSys: sysIsoPath, CdromDriver: driverIsoPath}
+		CdromSys: sysIsoPath, CdromDriver: driverIsoPath,
+		Status: consts.VmCreated,
+	}
 
 	if backing.SuggestDiskSize == 0 {
 		if vm.OsCategory == consts.Windows {
@@ -98,21 +101,22 @@ func (s KvmNativeService) CreateRemote(hostId, backingId, tmplId, queueId uint) 
 	result = s.RpcService.CreateVm(host.Ip, host.Port, kvmReq)
 
 	if result.IsSuccess() { // success to create vm
-		vmInResp := result.Payload.(domain.Vm)
-		s.VmRepo.Launch(vmInResp) // update vm status, mac address
+		mp := result.Payload.(map[string]interface{})
+		vmInResp := domain.Vm{}
+		mapstructure.Decode(mp, &vmInResp)
 
-		s.QueueRepo.UpdateVm(queueId, vm.ID, consts.ProgressLaunchVm)
+		s.VmRepo.Launch(vmInResp, vm.ID) // update vm status, mac address
+		s.QueueRepo.UpdateProgressAndVm(queueId, vm.ID, consts.ProgressLaunchVm)
 	} else {
 		s.VmRepo.FailToCreate(vm.ID, result.Msg)
-
-		s.QueueRepo.Pending(queueId)
+		s.QueueRepo.SetQueueStatus(queueId, consts.ProgressCreateVmFail, consts.StatusFail)
 	}
 
 	return
 }
 
 func (s KvmNativeService) genVmName(backing model.VmBacking, vmId uint) (name string) {
-	name = fmt.Sprintf("%s-%s-%s-%d", backing.OsType, backing.OsVersion, backing.OsLang, vmId)
+	name = fmt.Sprintf("test-%s-%s-%s-%d", backing.OsType, backing.OsVersion, backing.OsLang, vmId)
 
 	return
 }
@@ -138,6 +142,6 @@ func (s KvmNativeService) genRandomMac() (mac string) {
 	}
 
 	buf[0] |= 2
-	mac = fmt.Sprintf("%02x:%02x:%02x:%02x:%02x:%02x", buf[0], buf[1], buf[2], buf[3], buf[4], buf[5])
+	mac = fmt.Sprintf("%02x:%02x:%02x:%02x:%02x:%02x", 0xfa, 0x92, buf[2], buf[3], buf[4], buf[5])
 	return
 }

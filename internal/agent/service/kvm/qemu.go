@@ -6,10 +6,12 @@ import (
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/comm/domain"
+	_fileUtils "github.com/easysoft/zagent/internal/pkg/lib/file"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zagent/internal/pkg/lib/shell"
 	_sshUtils "github.com/easysoft/zagent/internal/pkg/lib/ssh"
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
+	"github.com/libvirt/libvirt-go"
 	"github.com/libvirt/libvirt-go-xml"
 	"path/filepath"
 	"strings"
@@ -284,6 +286,28 @@ func (s *QemuService) removeUnnecessaryPciCtrl(domCfg *libvirtxml.Domain) (ret [
 		//item.Model = "pci-root"
 		ret = append(ret, item)
 	}
+
+	return
+}
+
+func (s *QemuService) RemoveDisk(dom *libvirt.Domain) (err error) {
+	xml := ""
+
+	xml, err = dom.GetXMLDesc(0)
+	if err != nil {
+		return
+	}
+
+	domCfg := &libvirtxml.Domain{}
+	err = domCfg.Unmarshal(xml)
+	if err != nil {
+		return
+	}
+
+	mainDiskIndex := s.getMainDiskIndex(domCfg)
+	rawPath := domCfg.Devices.Disks[mainDiskIndex].Source.File.File
+
+	err = _fileUtils.RmDir(rawPath)
 
 	return
 }
