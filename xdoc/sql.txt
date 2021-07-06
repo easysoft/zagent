@@ -1,0 +1,6 @@
+delete from biz_build where 1=1;
+delete from biz_vm where 1=1;
+delete from biz_queue where 1=1;
+delete from biz_environment where 1=1;
+delete from biz_task where 1=1;
+
