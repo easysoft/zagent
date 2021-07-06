@@ -85,14 +85,17 @@ func (r QueueRepo) QueryTimeout() (queues []model.Queue) {
 	where := ""
 	if serverConf.Config.DB.Adapter == "sqlite3" {
 		where = "(progress = ? AND strftime('%s','now') - strftime('%s',pending_time) > ?)" +
+			" OR (progress = ? AND strftime('%s','now') - strftime('%s',start_time) > ?)" +
 			" OR (progress = ? AND strftime('%s','now') - strftime('%s',start_time) > ?)"
 	} else if serverConf.Config.DB.Adapter == "mysql" {
 		where = "(progress = ? AND unix_timestamp(NOW()) - unix_timestamp(pending_time) > ?)" +
+			" OR (progress = ? AND unix_timestamp(NOW()) - unix_timestamp(start_time) > ?)" +
 			" OR (progress = ? AND unix_timestamp(NOW()) - unix_timestamp(start_time) > ?)"
 	}
 
 	r.DB.Where(where,
-		consts.ProgressPending, consts.WaitForExecTime*60,
+		consts.ProgressPending, consts.WaitToExecTime*60,
+		consts.ProgressLaunchVm, consts.WaitForVmLaunchTime*60,
 		consts.ProgressInProgress, consts.WaitForResultTime*60).
 		Order("priority").Find(&queues)
 	return
@@ -108,13 +111,13 @@ func (r QueueRepo) QueryTimeoutOrFailedForRetry() (queues []model.Queue) {
 
 func (r QueueRepo) SetQueueStatus(queueId uint, progress consts.BuildProgress, status consts.BuildStatus) {
 	r.DB.Model(&model.Queue{}).Where("id=?", queueId).Updates(
-		map[string]interface{}{"progress": progress, "status": status, "result_time": time.Now(), "updated_at": time.Now()})
+		map[string]interface{}{"progress": progress, "status": status, "result_time": time.Now()})
 	return
 }
 
-func (r QueueRepo) UpdateVm(queueId, vmId uint, status consts.BuildProgress) {
+func (r QueueRepo) UpdateProgressAndVm(queueId, vmId uint, progress consts.BuildProgress) {
 	r.DB.Model(&model.Queue{}).Where("id=?", queueId).Updates(
-		map[string]interface{}{"vm_id": vmId, "progress": status})
+		map[string]interface{}{"vm_id": vmId, "progress": progress})
 	return
 }
 
