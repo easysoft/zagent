@@ -43,7 +43,7 @@ func NewLibvirtService() *LibvirtService {
 func (s *LibvirtService) CreateVm(req *domain.KvmReq) (dom *libvirt.Domain, vmVncPort int, err error) {
 	vmMacAddress := req.VmMacAddress
 	vmUniqueName := req.VmUniqueName
-	vmBackingPath := req.VmBackingPath
+	vmBackingPath := filepath.Join(agentConf.Inst.DirKvm, req.VmBackingPath)
 	vmTemplateName := req.VmTemplateName
 	vmMemorySize := req.VmMemorySize
 	vmDiskSize := req.VmDiskSize

@@ -77,9 +77,8 @@ func (s *QemuService) GenVmDef(tmplXml, macAddress, vmName, backingPath string, 
 
 	if vmMemory != 0 {
 		domCfg.Memory = &libvirtxml.DomainMemory{
-			Unit:     "M",
-			Value:    vmMemory,
-			DumpCore: "yes",
+			Unit:  "M",
+			Value: vmMemory,
 		}
 		domCfg.CurrentMemory = &libvirtxml.DomainCurrentMemory{
 			Unit:  "M",
