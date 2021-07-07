@@ -31,15 +31,14 @@ func (r *Router) App() {
 		srv.RegisterName("arith", r.ArithCtrl, "")
 		srv.RegisterName("task", r.TaskCtrl, "")
 		srv.RegisterName("vm", r.VmCtrl, "")
-
-		_logUtils.Info(_i118Utils.Sprintf("start_server", addr))
-		err := srv.Serve("tcp", addr)
-		if err != nil {
-			_logUtils.Infof(_i118Utils.Sprintf("fail_to_start_server", addr, err.Error()))
-		}
-
 	} else {
 		srv.RegisterName("arith", r.ArithCtrl, "")
 		srv.RegisterName("perform", r.PerformCtrl, "")
+	}
+
+	_logUtils.Info(_i118Utils.Sprintf("start_server", addr))
+	err := srv.Serve("tcp", addr)
+	if err != nil {
+		_logUtils.Infof(_i118Utils.Sprintf("fail_to_start_server", addr, err.Error()))
 	}
 }
