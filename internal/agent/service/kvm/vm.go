@@ -26,20 +26,20 @@ func NewVmService() *VmService {
 }
 
 func (s *VmService) Register(isBusy bool) {
-	node := domain.VmNode{
-		Node: domain.Node{Name: agentConf.Inst.NodeName, WorkDir: agentConf.Inst.WorkDir,
-			Ip: agentConf.Inst.NodeIp, Port: agentConf.Inst.NodePort,
-		},
+	vm := domain.Vm{
+		MacAddress: agentConf.Inst.MacAddress,
+		Name:       agentConf.Inst.NodeName, WorkDir: agentConf.Inst.WorkDir,
+		PublicIp: agentConf.Inst.NodeIp, PublicPort: agentConf.Inst.NodePort,
 	}
 
 	if isBusy {
-		node.ServiceStatus = consts.ServiceBusy
+		vm.Status = consts.VmBusy
 	} else {
-		node.ServiceStatus = consts.ServiceReady
+		vm.Status = consts.VmReady
 	}
 
 	url := _httpUtils.GenUrl(agentConf.Inst.Server, "client/vm/register")
-	resp, ok := _httpUtils.Post(url, node)
+	resp, ok := _httpUtils.Post(url, vm)
 
 	if ok {
 		_logUtils.Info(_i118Utils.I118Prt.Sprintf("success_to_register", agentConf.Inst.Server))

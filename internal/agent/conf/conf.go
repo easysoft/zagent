@@ -22,6 +22,7 @@ func Init() {
 	_i118Utils.InitI118(Inst.Language, agentConst.AppName)
 
 	Inst.Server = _httpUtils.UpdateUrl(Inst.Server)
+	Inst.NodePort = _const.RpcPort
 
 	ip, _ := _commonUtils.GetIp()
 	if Inst.NodeIp == "" {
@@ -56,10 +57,11 @@ type Config struct {
 	Host string
 	User string
 
-	RunMode  agentConst.RunMode `yaml:"runMode"`
-	Server   string             `yaml:"Server"`
-	NodeIp   string             `yaml:"ip"`
-	NodePort int                `yaml:"port"`
+	RunMode    agentConst.RunMode `yaml:"runMode"`
+	Server     string             `yaml:"Server"`
+	NodeIp     string             `yaml:"ip"`
+	NodePort   int                `yaml:"port"`
+	MacAddress string
 
 	Language string
 	NodeName string

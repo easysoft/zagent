@@ -22,6 +22,7 @@ const (
 	VmDestroy VmStatus = "destroy" // report by agent on host
 	VmShutOff VmStatus = "shutoff" // report by agent on host
 
+	VmBusy  VmStatus = "busy"  // report by agent in vm
 	VmReady VmStatus = "ready" // report by agent in vm
 
 	VmUnknown VmStatus = "unknown" // report by agent on host, not running, destroy and shutoff
