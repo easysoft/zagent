@@ -50,7 +50,7 @@ type ServiceStatus string
 const (
 	ServiceOffline ServiceStatus = "offline"
 	ServiceOnline  ServiceStatus = "online"
-	ServiceActive  ServiceStatus = "active"
+	ServiceReady   ServiceStatus = "ready"
 	ServiceBusy    ServiceStatus = "busy"
 )
 

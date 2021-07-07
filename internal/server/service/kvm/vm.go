@@ -15,7 +15,6 @@ import (
 )
 
 type VmService interface {
-	Register(vm domain.Vm) (result _domain.RpcResp)
 	CreateRemote(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp)
 	genVmName(backing model.VmBacking, vmId uint) (name string)
 	genValidMacAddress() (mac string)
@@ -41,14 +40,6 @@ func NewKvmService() VmService {
 	}
 
 	return service
-}
-
-func (s KvmNativeService) Register(vm domain.Vm) (result _domain.RpcResp) {
-	err := s.VmRepo.Register(vm)
-	if err != nil {
-		result.Fail(fmt.Sprintf("fail to register host %s ", vm.MacAddress))
-	}
-	return
 }
 
 func (s KvmNativeService) CreateRemote(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp) {

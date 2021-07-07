@@ -17,7 +17,7 @@ func NewVmRepo() *VmRepo {
 	return &VmRepo{}
 }
 
-func (r VmRepo) Register(vm domain.Vm) (err error) {
+func (r VmRepo) Register(vm model.Vm) (err error) {
 	// just update status by mac for exist vm
 	r.DB.Model(&model.Vm{}).Where("mac=?", vm.MacAddress).
 		Updates(
