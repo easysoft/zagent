@@ -24,7 +24,8 @@ func Init() {
 	Inst.Server = _httpUtils.UpdateUrl(Inst.Server)
 	Inst.NodePort = _const.RpcPort
 
-	ip, _ := _commonUtils.GetIp()
+	ip, macObj := _commonUtils.GetIp()
+	Inst.MacAddress = macObj.String()
 	if Inst.NodeIp == "" {
 		Inst.NodeIp = ip.String()
 	}
