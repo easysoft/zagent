@@ -195,7 +195,7 @@ func (s *QemuService) GenMachine() string {
 }
 
 func (s *QemuService) GetBaseImagePath(vm domain.Vm) (path string) {
-	dir := filepath.Join(agentConf.Inst.DirBase, vm.OsCategory.ToString(), vm.OsType.ToString())
+	dir := filepath.Join(agentConf.Inst.DirBaking, vm.OsCategory.ToString(), vm.OsType.ToString())
 	name := fmt.Sprintf("%s-%s", vm.OsVersion, vm.OsLang.ToString())
 
 	path = filepath.Join(dir, name)

@@ -91,7 +91,7 @@ func (s *LibvirtService) CreateVmTest(vm *domain.Vm) (
 
 	backingPath := ""
 	if vm.Backing != "" {
-		backingPath = filepath.Join(agentConf.Inst.DirBase, vm.Backing)
+		backingPath = filepath.Join(agentConf.Inst.DirBaking, vm.Backing)
 	}
 	backingPath += ".qcow2"
 

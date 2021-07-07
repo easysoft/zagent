@@ -38,19 +38,21 @@ func Init() {
 	}
 
 	Inst.WorkDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(home, agentConst.AppName))
-	Inst.DirKvm = _fileUtils.AddPathSepIfNeeded(filepath.Join(home, agentConst.FolderKvm))
-	Inst.DirIso = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderIso))
-	Inst.DirBase = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderBase))
-	Inst.DirImage = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderImage))
-	//Inst.DirTempl = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderTempl))
-	//Inst.DirDef = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderDef))
 
-	_fileUtils.MkDirIfNeeded(Inst.DirIso)
-	_fileUtils.MkDirIfNeeded(Inst.DirBase)
-	_fileUtils.MkDirIfNeeded(Inst.DirImage)
+	if Inst.RunMode == agentConst.Host {
+		Inst.DirKvm = _fileUtils.AddPathSepIfNeeded(filepath.Join(home, agentConst.FolderKvm))
+		Inst.DirIso = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderIso))
+		Inst.DirBaking = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderBacking))
+		Inst.DirImage = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderImage))
+
+		_fileUtils.MkDirIfNeeded(Inst.DirIso)
+		_fileUtils.MkDirIfNeeded(Inst.DirBaking)
+		_fileUtils.MkDirIfNeeded(Inst.DirImage)
+	}
 }
 
 type Config struct {
+	// fot libvirt testing only
 	Host string
 	User string
 
@@ -64,10 +66,10 @@ type Config struct {
 	WorkDir  string
 	LogDir   string
 
-	DirKvm   string
-	DirIso   string
-	DirImage string
-	DirBase  string
+	DirKvm    string
+	DirIso    string
+	DirImage  string
+	DirBaking string
 	//DirDef   string
 	//DirTempl string
 }

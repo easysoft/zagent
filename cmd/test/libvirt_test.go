@@ -2,7 +2,7 @@ package main
 
 import (
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
-	agentService "github.com/easysoft/zagent/internal/agent/service"
+	kvmService "github.com/easysoft/zagent/internal/agent/service/kvm"
 	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
 	commConst "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
@@ -17,7 +17,7 @@ func TestLibVirt(t *testing.T) {
 	agentConf.Inst.User = "aaron"
 	agentConf.Init()
 
-	service := agentService.NewLibvirtService()
+	service := kvmService.NewLibvirtService()
 
 	/**
 	src:  xml template

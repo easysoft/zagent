@@ -26,10 +26,10 @@ var (
 
 	ControlActions = []string{"start", "stop", "restart", "install", "uninstall"}
 
-	FolderKvm   = "kvm"
-	FolderIso   = "iso"
-	FolderBase  = "base"
-	FolderImage = "image"
+	FolderKvm     = "kvm"
+	FolderIso     = "iso"
+	FolderBacking = "base"
+	FolderImage   = "image"
 	//FolderDef   = "def"
 	//FolderTempl = "templ"
 )
