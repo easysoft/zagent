@@ -2,7 +2,6 @@ package handler
 
 import (
 	testingService "github.com/easysoft/zagent/internal/agent/service/testing"
-	consts "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	"golang.org/x/net/context"
@@ -17,9 +16,7 @@ func NewPerformCtrl() *PerformCtrl {
 }
 
 func (c *PerformCtrl) Perform(ctx context.Context, build commDomain.Build, reply *_domain.RpcResp) error {
-	if build.BuildType == consts.AutoSelenium {
-		c.TestService.Run(&build)
-	}
+	c.TestService.Run(&build)
 
 	reply.Success("success to add build.")
 

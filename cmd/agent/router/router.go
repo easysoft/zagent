@@ -14,6 +14,8 @@ type Router struct {
 	ArithCtrl *handler.ArithCtrl `inject:""`
 	TaskCtrl  *handler.TaskCtrl  `inject:""`
 	VmCtrl    *handler.VmCtrl    `inject:""`
+
+	PerformCtrl *handler.PerformCtrl `inject:""`
 }
 
 func NewRouter() *Router {
@@ -36,13 +38,8 @@ func (r *Router) App() {
 			_logUtils.Infof(_i118Utils.Sprintf("fail_to_start_server", addr, err.Error()))
 		}
 
-	} else if agentConf.Inst.RunMode == agentConst.Vm {
+	} else {
 		srv.RegisterName("arith", r.ArithCtrl, "")
-		srv.RegisterName("selenium", r.ArithCtrl, "")
-
-	} else if agentConf.Inst.RunMode == agentConst.Android || agentConf.Inst.RunMode == agentConst.Ios {
-		srv.RegisterName("arith", r.ArithCtrl, "")
-		srv.RegisterName("appium", r.ArithCtrl, "")
-
+		srv.RegisterName("perform", r.PerformCtrl, "")
 	}
 }
