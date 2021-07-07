@@ -37,7 +37,7 @@ func (s AssertService) RegisterVm(vm domain.Vm) (result _domain.RpcResp) {
 
 	err := s.VmRepo.Register(po)
 	if err != nil {
-		result.Fail(fmt.Sprintf("fail to register host %s ", po.PublicIp))
+		result.Fail(fmt.Sprintf("fail to register host %s ", po.NodeIp))
 	}
 
 	result.Success("")

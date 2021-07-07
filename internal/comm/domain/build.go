@@ -27,10 +27,10 @@ type Build struct {
 	NodePort int    `json:"nodePort,omitempty"`
 	DeviceIp string `json:"deviceIp,omitempty"`
 
-	AppiumPort            int                `json:"appiumPort,omitempty"`
-	SeleniumDriverType    consts.BrowserType `json:"seleniumDriverType,omitempty"`
-	SeleniumDriverVersion string             `json:"seleniumDriverVersion,omitempty"`
-	SeleniumDriverPath    string             `json:"seleniumDriverPath,omitempty"`
+	AppiumPort         int                `json:"appiumPort,omitempty"`
+	BrowserType        consts.BrowserType `json:"browserType,omitempty"`
+	BrowserVersion     string             `json:"browserVersion,omitempty"`
+	SeleniumDriverPath string             `json:"seleniumDriverPath,omitempty"`
 
 	AppPath     string `json:"appPath,omitempty"`
 	ScriptUrl   string `json:"scriptUrl,omitempty"`

@@ -33,8 +33,8 @@ type Vm struct {
 	FirstDetectedTime *time.Time `json:"firstDetectedTime"`
 	LastRegisterTime  *time.Time `json:"lastRegisterTime"`
 
-	PublicIp   string `json:"publicIp"`
-	PublicPort int    `json:"publicPort"`
+	NodeIp     string `json:"nodeIp"`
+	NodePort   int    `json:"nodePort"`
 	MacAddress string `json:"macAddress"`
 	RpcPort    int    `json:"rpcPort"`
 	SshPort    int    `json:"sshPort"`
@@ -71,8 +71,8 @@ func VmFromDomain(v domain.Vm) (po Vm) {
 		Status:    v.Status,
 		DestroyAt: &v.DestroyAt,
 
-		PublicIp:   v.PublicIp,
-		PublicPort: v.PublicPort,
+		NodeIp:     v.PublicIp,
+		NodePort:   v.PublicPort,
 		MacAddress: v.MacAddress,
 		RpcPort:    v.RpcPort,
 		SshPort:    v.SshPort,

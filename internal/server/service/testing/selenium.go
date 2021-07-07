@@ -27,20 +27,13 @@ func (s SeleniumService) Start(queue model.Queue) (result _domain.RpcResp) {
 	vmId := queue.VmId
 	vm := s.VmRepo.GetById(vmId)
 
-	build := model.NewBuild(queue.ID, vmId, queue.BuildType,
-		"", queue.Priority, vm.PublicIp, vm.PublicPort)
+	build := model.NewSeleniumBuildPo(queue, vm)
 	s.BuildRepo.Save(&build)
 
 	build = s.BuildRepo.GetBuild(build.ID)
 
-	rpcResult := s.RpcService.SeleniumTest(build)
-	if rpcResult.IsSuccess() {
-		s.BuildRepo.Start(build)
-	} else {
-		s.BuildRepo.Delete(build)
-	}
+	result = s.RpcService.SeleniumTest(build)
 
-	result.Success("")
 	return
 }
 

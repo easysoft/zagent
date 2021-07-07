@@ -28,7 +28,7 @@ func (s *SeleniumService) DownloadDriver(build *commDomain.Build) (err error) {
 	}
 
 	relatePath := path.Join(consts.ResDownDir, consts.ResDriverDir,
-		build.SeleniumDriverType.ToString(), build.SeleniumDriverVersion, _commonUtils.GetOs(), fileName)
+		build.BrowserType.ToString(), build.BrowserVersion, _commonUtils.GetOs(), fileName)
 
 	url := path.Join(agentConf.Inst.Server, relatePath)
 	filePath := filepath.Join(agentConf.Inst.WorkDir, strings.Replace(relatePath, "/", _const.PthSep, -1))

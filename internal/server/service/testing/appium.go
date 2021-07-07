@@ -27,21 +27,19 @@ func (s AppiumService) Start(queue model.Queue) (result _domain.RpcResp) {
 	serial := queue.Serial
 	device := s.DeviceRepo.GetBySerial(serial)
 
-	build := model.NewBuild(queue.ID, uint(0), queue.BuildType,
-		serial, queue.Priority, device.NodeIp, device.NodePort)
+	build := model.NewAppiumBuildPo(queue, device)
 	s.BuildRepo.Save(&build)
 
 	build = s.BuildRepo.GetBuild(build.ID)
 	build.AppiumPort = device.AppiumPort
 
-	rpcResult := s.RpcService.AppiumTest(build)
-	if rpcResult.IsSuccess() {
+	result = s.RpcService.AppiumTest(build)
+	if result.IsSuccess() {
 		s.BuildRepo.Start(build)
 	} else {
 		s.BuildRepo.Delete(build)
 	}
 
-	result.Success("")
 	return
 }
 

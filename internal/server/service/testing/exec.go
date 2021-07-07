@@ -75,6 +75,8 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 			if result.IsSuccess() {
 				s.QueueRepo.Start(queue)
 				newTaskProgress = consts.ProgressRunning
+			} else {
+				s.QueueRepo.SetQueueStatus(queue.ID, consts.ProgressPerformRequestFail, consts.StatusFail)
 			}
 		}
 	}
@@ -98,8 +100,7 @@ func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {
 			s.QueueRepo.Start(queue) // start
 			newTaskProgress = consts.ProgressRunning
 		} else {
-			s.QueueRepo.SetQueueStatus(queue.ID, consts.ProgressAppiumServiceFail, consts.StatusFail)
-			newTaskProgress = consts.ProgressPendingRes
+			s.QueueRepo.SetQueueStatus(queue.ID, consts.ProgressPerformRequestFail, consts.StatusFail)
 		}
 	} else {
 		s.QueueRepo.Pending(queue.ID) // pending

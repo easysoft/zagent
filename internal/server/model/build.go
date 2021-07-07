@@ -12,8 +12,9 @@ type Build struct {
 	QueueId uint `json:"queueId"`
 	Queue   `json:"queue" sql:"-" gorm:"foreignkey:QueueId"`
 
+	VmId uint `json:"vmId"`
+
 	BuildType consts.BuildType `json:"buildType"`
-	VmId      uint             `json:"vmId"`
 
 	Serial   string `json:"serial"`
 	Priority int    `json:"priority"`
@@ -24,6 +25,17 @@ type Build struct {
 	BrowserType    consts.BrowserType `json:"browserType"`
 	BrowserVersion string             `json:"browserVersion"`
 
+	ScriptUrl   string `json:"scriptUrl"`
+	ScmAddress  string `json:"ScmAddress"`
+	ScmAccount  string `json:"ScmAccount"`
+	ScmPassword string `json:"ScmPassword"`
+
+	AppUrl          string `json:"appUrl"`
+	BuildCommands   string `json:"buildCommands"`
+	EnvVars         string `json:"envVars"`
+	ResultFiles     string `json:"resultFiles"`
+	KeepResultFiles bool   `json:"keepResultFiles"`
+
 	StartTime    *time.Time `json:"startTime"`
 	CompleteTime *time.Time `json:"completeTime"`
 
@@ -31,16 +43,43 @@ type Build struct {
 	Status   consts.BuildStatus   `json:"status"`
 }
 
-func NewBuild(queueId uint, vmId uint, buildType consts.BuildType,
-	serial string, priority int, nodeIp string, nodePort int) Build {
+func NewSeleniumBuildPo(queue Queue, vm Vm) Build {
 	build := Build{
-		QueueId:   queueId,
-		VmId:      vmId,
-		BuildType: buildType,
-		Serial:    serial,
-		Priority:  priority,
-		NodeIp:    nodeIp,
-		NodePort:  nodePort,
+		QueueId:   queue.ID,
+		VmId:      vm.ID,
+		BuildType: queue.BuildType,
+		Priority:  queue.Priority,
+		NodeIp:    vm.NodeIp,
+		NodePort:  vm.NodePort,
+
+		BrowserType:    queue.BrowserType,
+		BrowserVersion: queue.BrowserVersion,
+
+		ScriptUrl:   queue.ScriptUrl,
+		ScmAddress:  queue.ScmAddress,
+		ScmAccount:  queue.ScmAccount,
+		ScmPassword: queue.ScmPassword,
+
+		Progress: consts.ProgressCreated,
+		Status:   consts.StatusCreated,
+	}
+
+	return build
+}
+
+func NewAppiumBuildPo(queue Queue, dev Device) Build {
+	build := Build{
+		QueueId:   queue.ID,
+		BuildType: queue.BuildType,
+		Priority:  queue.Priority,
+		NodeIp:    dev.NodeIp,
+		NodePort:  dev.NodePort,
+
+		AppUrl:      queue.AppUrl,
+		ScriptUrl:   queue.ScriptUrl,
+		ScmAddress:  queue.ScmAddress,
+		ScmAccount:  queue.ScmAccount,
+		ScmPassword: queue.ScmPassword,
 
 		Progress: consts.ProgressCreated,
 		Status:   consts.StatusCreated,
@@ -51,28 +90,24 @@ func NewBuild(queueId uint, vmId uint, buildType consts.BuildType,
 
 func NewBuildTo(build Build) domain.Build {
 	toValue := domain.Build{
-		ID:        build.ID,
-		QueueId:   build.QueueId,
+		QueueId:   build.ID,
 		BuildType: build.BuildType,
 		Serial:    build.Serial,
 		Priority:  build.Priority,
 		NodeIp:    build.NodeIp,
 		NodePort:  build.NodePort,
 
-		AppUrl: build.AppUrl,
+		BrowserType:    build.BrowserType,
+		BrowserVersion: build.BrowserVersion,
 
-		Progress: consts.ProgressCreated,
-		Status:   consts.StatusCreated,
-
+		AppUrl:      build.AppUrl,
 		ScriptUrl:   build.ScriptUrl,
 		ScmAddress:  build.ScmAddress,
 		ScmAccount:  build.ScmAccount,
 		ScmPassword: build.ScmPassword,
 
-		BuildCommands:   build.BuildCommands,
-		EnvVars:         build.EnvVars,
-		ResultFiles:     build.ResultFiles,
-		KeepResultFiles: build.KeepResultFiles,
+		Progress: consts.ProgressCreated,
+		Status:   consts.StatusCreated,
 	}
 
 	return toValue
