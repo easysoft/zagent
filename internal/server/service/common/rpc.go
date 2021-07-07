@@ -20,26 +20,24 @@ func NewRpcService() *RpcService {
 	return &RpcService{}
 }
 
-func (s RpcService) AppiumTest(build model.Build) (result _domain.RpcResp) {
-	appiumTestTo := model.NewBuildTo(build)
-	appiumTestTo.AppiumPort = build.AppiumPort
-
-	obj := interface{}(appiumTestTo)
-	s.Request(build.NodeIp, build.NodePort, "appium", "AppiumTest", &obj)
-
-	result.Success(fmt.Sprintf("success to send rpc build request %#v.", build))
-	return
-}
-
 func (s RpcService) SeleniumTest(build model.Build) (result _domain.RpcResp) {
 	seleniumTestTo := model.NewBuildTo(build)
 	seleniumTestTo.SeleniumDriverType = build.Queue.BrowserType
 	seleniumTestTo.SeleniumDriverVersion = build.Queue.BrowserVersion
 
 	obj := interface{}(seleniumTestTo)
-	s.Request(build.NodeIp, build.NodePort, "selenium", "SeleniumTest", &obj)
+	result = s.Request(build.NodeIp, build.NodePort, "perform", "SeleniumTest", &obj)
 
-	result.Success(fmt.Sprintf("success to send rpc build request %#v.", build))
+	return
+}
+
+func (s RpcService) AppiumTest(build model.Build) (result _domain.RpcResp) {
+	appiumTestTo := model.NewBuildTo(build)
+	appiumTestTo.AppiumPort = build.AppiumPort
+
+	obj := interface{}(appiumTestTo)
+	result = s.Request(build.NodeIp, build.NodePort, "perform", "Perform", &obj)
+
 	return
 }
 
