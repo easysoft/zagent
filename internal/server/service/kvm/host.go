@@ -50,21 +50,13 @@ func (s HostService) GetValidForQueue(queue model.Queue) (hostId, backingId, tmp
 }
 
 func (s HostService) getBusyHosts() (ids []uint) {
-	// keys: hostId, vmCount
-	hostToVmCountList := s.HostRepo.QueryBusy()
+	ids = s.HostRepo.QueryBusy()
 
-	hostIds := make([]uint, 0)
-	for _, mp := range hostToVmCountList {
-		hostId := mp["hostId"]
-		hostIds = append(hostIds, hostId)
-	}
-
-	return hostIds
+	return
 }
 
 func (s HostService) updateVmsStatus(host domain.Host, hostId uint) {
-	vmNames := make([]string, 0)
-	runningVms, shutOffVms, unknownVms := s.getVmsByStatus(host, vmNames)
+	runningVms, shutOffVms, unknownVms, vmNames := s.getVmsByStatus(host)
 
 	if len(runningVms) > 0 {
 		s.VmRepo.UpdateStatusByNames(runningVms, consts.VmRunning)
@@ -76,13 +68,14 @@ func (s HostService) updateVmsStatus(host domain.Host, hostId uint) {
 		s.VmRepo.UpdateStatusByNames(unknownVms, consts.VmUnknown)
 	}
 
-	// destroy vms already removed on agent side
+	// destroy vms already removed by host agent
 	s.VmRepo.DestroyMissedVmsStatus(vmNames, hostId)
 
 	return
 }
 
-func (s HostService) getVmsByStatus(host domain.Host, vmNames []string) (runningVms, shutOffVms, unknownVms []string) {
+func (s HostService) getVmsByStatus(host domain.Host) (
+	runningVms, shutOffVms, unknownVms, vmNames []string) {
 	vms := host.Vms
 
 	for _, vm := range vms {

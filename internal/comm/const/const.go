@@ -1,11 +1,15 @@
 package consts
 
 const (
-	RegisterExpireTime       = 5  // min
-	WaitResPendingTimeout    = 15 // min
-	WaitForVmReadyTimeout    = 5  // min
-	WaitTestCompletedTimeout = 30 // min
-	VmLifecycleTimeout       = 20 // min
+	AgentRunTime       = 20 // sec
+	AgentCheckInterval = 10 // sec
+
+	DeviceRegisterExpireTime = 5 * 60 // sec
+
+	WaitResPendingTimeout    = 15 * 60 // sec
+	WaitForVmReadyTimeout    = 5 * 60  // sec
+	WaitTestCompletedTimeout = 30 * 60 // sec
+	VmLifecycleTimeout       = 60 * 60 // sec
 
 	QueueRetryTime = 3
 

@@ -1,8 +1,8 @@
 package agentService
 
 import (
+	consts "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	_const "github.com/easysoft/zagent/internal/pkg/const"
 	"sync"
 	"time"
 )
@@ -77,7 +77,7 @@ func (s *TaskService) IsRunning() bool {
 	lock.Lock()
 	defer lock.Unlock()
 
-	if time.Now().Unix()-s.TimeStamp.Unix() > _const.AgentRunTime*60*1000 {
+	if time.Now().Unix()-s.TimeStamp.Unix() > consts.AgentRunTime*60*1000 {
 		s.running = false
 	}
 	return s.running

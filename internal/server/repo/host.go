@@ -66,30 +66,35 @@ func (r HostRepo) QueryByBackings(backingIds []uint, busyHostIds []uint) (hostId
 	return
 }
 
-func (r HostRepo) QueryBusy() (ret []map[string]uint) {
-	hosts := make([]map[string]uint, 0)
-	r.DB.Raw(`SELECT host.id hostId, host.max_vm_num maxVmNum
-					FROM biz_host
-					AND NOT deleted AND NOT disabled`).
+func (r HostRepo) QueryBusy() (hostIds []uint) {
+	hosts := make([]HostResult, 0)
+	r.DB.Raw(`SELECT host.id host_id, host.max_vm_num num
+					FROM biz_host host
+					WHERE NOT host.deleted AND NOT host.disabled`).
 		Scan(&hosts)
 
 	for _, host := range hosts {
-		//items := make([]map[string]uint, 0)
-		r.DB.Raw(`SELECT host_id hostId, COUNT(id) vmCount
-					FROM biz_vm
-					WHERE status == ? AND host_id = ?
-					GROUP BY hostId
-					HAVING vmCount > ?
-					ORDER BY vmCount`,
-			consts.VmRunning, host["hostId"], host["maxVmNum"]-1).
-			Scan(&ret)
+		items := make([]HostResult, 0)
 
-		//for _, item := range items {
-		//	if item["vmCount"] >= consts.MaxVmOnHost {
-		//		ret = append(ret, item)
-		//	}
-		//}
+		r.DB.Raw(`SELECT vm.host_id host_id, COUNT(vm.id) num
+					FROM biz_vm vm
+					WHERE vm.status == ? AND vm.host_id = ?
+					GROUP BY host_id
+					HAVING num > ?
+					ORDER BY num`,
+			consts.VmRunning, host.HostId, host.Num).
+			Scan(&items)
+
+		for _, item := range items {
+			hostId := item.HostId
+			hostIds = append(hostIds, hostId)
+		}
 	}
 
 	return
+}
+
+type HostResult struct {
+	HostId uint
+	Num    int
 }

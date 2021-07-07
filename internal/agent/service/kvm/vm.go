@@ -76,7 +76,7 @@ func (s *VmService) UpdateVmMapAndDestroyTimeout(vms []domain.Vm) {
 
 		// destroy and remove timeout vm
 		v := s.VmMapVar[key]
-		if time.Now().Unix()-v.FirstDetectedTime.Unix() > consts.VmLifecycleTimeout*60 { // timeout
+		if time.Now().Unix()-v.FirstDetectedTime.Unix() > consts.VmLifecycleTimeout { // timeout
 			s.LibvirtService.DestroyVmByName(v.Name, true)
 			delete(s.VmMapVar, key)
 		}

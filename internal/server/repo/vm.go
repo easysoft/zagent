@@ -67,10 +67,12 @@ func (r VmRepo) UpdateStatusByNames(vms []string, status consts.VmStatus) {
 
 func (r VmRepo) DestroyMissedVmsStatus(vms []string, hostId uint) {
 	db := r.DB.Model(&model.Vm{}).
-		Where("host_id=? AND status!=?", hostId, consts.VmDestroy)
+		Where("host_id=? AND status!=? "+
+			" AND strftime('%s','now') - strftime('%s',created_at) > ?",
+			hostId, consts.VmDestroy, consts.AgentCheckInterval)
 
 	if len(vms) > 0 {
-		db.Where("AND name NOT IN (?)", vms)
+		db.Where("name NOT IN (?)", vms)
 	}
 
 	db.Updates(map[string]interface{}{"status": consts.VmDestroy})

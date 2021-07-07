@@ -46,7 +46,7 @@ func (s DeviceService) IsDeviceReady(device model.Device) bool {
 	deviceStatus := device.DeviceStatus
 	appiumStatus := device.DeviceStatus
 
-	registerExpire := time.Now().Unix()-device.LastRegisterDate.Unix() > consts.RegisterExpireTime*60*1000
+	registerExpire := time.Now().Unix()-device.LastRegisterDate.Unix() > consts.DeviceRegisterExpireTime
 
 	ret := deviceStatus == consts.DeviceActive && appiumStatus == consts.DeviceActive && !registerExpire
 	return ret

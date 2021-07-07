@@ -3,7 +3,7 @@ package agentCron
 import (
 	"fmt"
 	agentService "github.com/easysoft/zagent/internal/agent/service"
-	_const "github.com/easysoft/zagent/internal/pkg/const"
+	consts "github.com/easysoft/zagent/internal/comm/const"
 	_cronUtils "github.com/easysoft/zagent/internal/pkg/lib/cron"
 )
 
@@ -20,7 +20,7 @@ func NewAgentCron() *CronService {
 func (s *CronService) Init() {
 	_cronUtils.AddTask(
 		"check",
-		fmt.Sprintf("@every %ds", _const.AgentCheckInterval),
+		fmt.Sprintf("@every %ds", consts.AgentCheckInterval),
 		func() {
 			s.CheckService.Check()
 		},
