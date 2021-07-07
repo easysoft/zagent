@@ -37,9 +37,11 @@ func (r *Router) App() {
 		}
 
 	} else if agentConf.Inst.RunMode == agentConst.Vm {
+		srv.RegisterName("arith", r.ArithCtrl, "")
 		srv.RegisterName("selenium", r.ArithCtrl, "")
 
 	} else if agentConf.Inst.RunMode == agentConst.Android || agentConf.Inst.RunMode == agentConst.Ios {
+		srv.RegisterName("arith", r.ArithCtrl, "")
 		srv.RegisterName("appium", r.ArithCtrl, "")
 
 	}
