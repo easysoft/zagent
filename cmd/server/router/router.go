@@ -29,6 +29,7 @@ type Router struct {
 	FileCtrl    *handler.FileCtrl    `inject:""`
 	TaskCtrl    *handler.TaskCtrl    `inject:""`
 	HostCtrl    *handler.HostCtrl    `inject:""`
+	VmCtrl      *handler.VmCtrl      `inject:""`
 
 	PermCtrl *handler.PermCtrl `inject:""`
 	RoleCtrl *handler.RoleCtrl `inject:""`
@@ -66,6 +67,9 @@ func (r *Router) App() {
 			v1.PartyFunc("/client", func(client iris.Party) {
 				client.PartyFunc("/host", func(party iris.Party) {
 					party.Post("/register", r.HostCtrl.Register).Name = "注册主机"
+				})
+				client.PartyFunc("/vm", func(party iris.Party) {
+					party.Post("/register", r.VmCtrl.Register).Name = "注册虚机"
 				})
 			})
 

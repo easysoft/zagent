@@ -38,7 +38,7 @@ func (s *VmService) Register(isBusy bool) {
 		node.ServiceStatus = consts.ServiceReady
 	}
 
-	url := _httpUtils.GenUrl(agentConf.Inst.Server, "vms/register")
+	url := _httpUtils.GenUrl(agentConf.Inst.Server, "client/vm/register")
 	resp, ok := _httpUtils.Post(url, node)
 
 	if ok {

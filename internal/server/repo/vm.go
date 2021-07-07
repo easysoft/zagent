@@ -21,8 +21,9 @@ func (r VmRepo) Register(vm model.Vm) (err error) {
 	// just update status by mac for exist vm
 	r.DB.Model(&model.Vm{}).Where("mac=?", vm.MacAddress).
 		Updates(
-			map[string]interface{}{"status": vm.Status, "ip": vm.PublicIp, "port": vm.PublicPort, "workDir": vm.WorkDir,
-				"lastRegisterDate": time.Now()})
+			map[string]interface{}{"status": vm.Status, "work_dir": vm.WorkDir,
+				"ip": vm.PublicIp, "port": vm.PublicPort,
+				"last_register_time": time.Now()})
 
 	return
 }

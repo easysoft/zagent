@@ -27,9 +27,11 @@ type Vm struct {
 	OsVersion  string            `json:"osVersion"`
 	OsLang     consts.OsLang     `json:"osLang"`
 
-	Status            consts.VmStatus `json:"status"`
-	DestroyAt         *time.Time      `json:"destroyAt"`
-	FirstDetectedTime *time.Time      `json:"firstDetectedTime"`
+	Status    consts.VmStatus `json:"status"`
+	DestroyAt *time.Time      `json:"destroyAt"`
+
+	FirstDetectedTime *time.Time `json:"firstDetectedTime"`
+	LastRegisterTime  *time.Time `json:"lastRegisterTime"`
 
 	PublicIp   string `json:"publicIp"`
 	PublicPort int    `json:"publicPort"`

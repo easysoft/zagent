@@ -29,7 +29,7 @@ type Host struct {
 
 	TaskCount        int        `json:"taskCount"`
 	MaxVmNum         int        `json:"maxVmNum"`
-	LastRegisterDate *time.Time `json:"lastRegisterDate"`
+	LastRegisterTime *time.Time `json:"lastRegisterTime"`
 
 	Backings []VmBacking `gorm:"many2many:host_backing_r;"`
 	Vms      []Vm        `json:"vms" gorm:"-"`
