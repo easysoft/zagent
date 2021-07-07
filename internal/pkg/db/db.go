@@ -2,6 +2,7 @@ package _db
 
 import (
 	"fmt"
+	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	"github.com/easysoft/zagent/internal/pkg/lib/file"
 	"github.com/easysoft/zagent/internal/pkg/lib/log"
 	serverConf "github.com/easysoft/zagent/internal/server/conf"
@@ -32,29 +33,36 @@ func GetInst() *Instance {
 func InitDB(model string) {
 	var dialector gorm.Dialector
 
-	if model == "agent" || serverConf.Config.DB.Adapter == "sqlite3" {
+	if model == "agent" || serverConf.Inst.DB.Adapter == "sqlite3" {
 		conn := DBFile(model)
 		dialector = sqlite.Open(conn)
 
-	} else if serverConf.Config.DB.Adapter == "mysql" {
+	} else if serverConf.Inst.DB.Adapter == "mysql" {
 		conn := fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?parseTime=True&loc=Local",
-			serverConf.Config.DB.User, serverConf.Config.DB.Password, serverConf.Config.DB.Host, serverConf.Config.DB.Port, serverConf.Config.DB.Name)
+			serverConf.Inst.DB.User, serverConf.Inst.DB.Password, serverConf.Inst.DB.Host, serverConf.Inst.DB.Port, serverConf.Inst.DB.Name)
 		dialector = mysql.Open(conn)
 
-	} else if serverConf.Config.DB.Adapter == "postgres" {
+	} else if serverConf.Inst.DB.Adapter == "postgres" {
 		conn := fmt.Sprintf("postgres://%v:%v@%v/%v?sslmode=disable",
-			serverConf.Config.DB.User, serverConf.Config.DB.Password, serverConf.Config.DB.Host, serverConf.Config.DB.Name)
+			serverConf.Inst.DB.User, serverConf.Inst.DB.Password, serverConf.Inst.DB.Host, serverConf.Inst.DB.Name)
 		dialector = postgres.Open(conn)
 
 	} else {
 		_logUtils.Info("not supported database adapter")
 	}
 
+	prefix := ""
+	if model == "agent" {
+		prefix = agentConf.Inst.DB.Prefix
+	} else {
+		prefix = serverConf.Inst.DB.Prefix
+	}
+
 	DB, err := gorm.Open(dialector, &gorm.Config{
 		SkipDefaultTransaction: false,
 		Logger:                 logger.Default.LogMode(logger.Info),
 		NamingStrategy: schema.NamingStrategy{
-			TablePrefix:   serverConf.Config.DB.Prefix,
+			TablePrefix:   prefix,
 			SingularTable: false,
 		},
 	})
@@ -76,7 +84,12 @@ func InitDB(model string) {
 
 	inst = &Instance{}
 	inst.db = DB
-	inst.config = &serverConf.Config.DB
+
+	//if model == "agent" {
+	//	inst.config = &agentConf.Inst.DB
+	//} else {
+	//	inst.config = &serverConf.Inst.DB
+	//}
 }
 
 func (*Instance) DB() *gorm.DB {
@@ -84,8 +97,8 @@ func (*Instance) DB() *gorm.DB {
 }
 
 type Instance struct {
-	config *serverConf.DBConfig
-	db     *gorm.DB
+	//config *serverConf.DBConfig
+	db *gorm.DB
 }
 
 func (i *Instance) Close() error {
@@ -98,7 +111,7 @@ func (i *Instance) Close() error {
 
 func DBFile(mode string) string {
 	if mode != "agent" {
-		mode = serverConf.Config.DB.Name
+		mode = serverConf.Inst.DB.Name
 	}
 
 	path := filepath.Join(_fileUtils.GetExeDir(), strings.ToLower(mode+".db"))

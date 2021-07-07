@@ -24,7 +24,7 @@ func TestHttpClient(t *testing.T) {
 
 	data, _ := cc.Encode(args)
 	// request
-	url := fmt.Sprintf("http://127.0.0.1:%d/", _const.RpcPort)
+	url := fmt.Sprintf("http://192.168.0.121:%d/", _const.RpcPort)
 	req, err := http.NewRequest("POST", url, bytes.NewReader(data))
 	if err != nil {
 		_logUtils.Errorf("failed to create request, error: %s", err.Error())

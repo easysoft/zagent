@@ -60,7 +60,7 @@ func (m *TokenService) Serve(ctx iris.Context) {
 				Token:        tokenStr,
 			}
 
-			if serverConf.Config.Redis.Enable {
+			if serverConf.Inst.Redis.Enable {
 				conn := redisUtils.GetRedisClusterClient()
 				defer conn.Close()
 
@@ -92,7 +92,7 @@ func (m *TokenService) Serve(ctx iris.Context) {
 
 func (m *TokenService) GetCredentials(value *jwt.Token, ctx iris.Context) (
 	credentials *bizConst.UserCredentials, err error) {
-	if serverConf.Config.Redis.Enable {
+	if serverConf.Inst.Redis.Enable {
 		conn := redisUtils.GetRedisClusterClient()
 		defer conn.Close()
 

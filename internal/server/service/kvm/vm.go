@@ -36,7 +36,7 @@ type KvmNativeService struct {
 func NewKvmService() VmService {
 	var service VmService
 
-	if serverConf.Config.Adapter.VmPlatform == serverConst.KvmNative {
+	if serverConf.Inst.Adapter.VmPlatform == serverConst.KvmNative {
 		service = &KvmNativeService{}
 	}
 

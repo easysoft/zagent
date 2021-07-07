@@ -36,7 +36,7 @@ func (s *UserService) CheckLogin(ctx iris.Context, u *model.User, password strin
 		return nil, 400, "用户不存在"
 	} else {
 		uid := strconv.FormatUint(uint64(u.ID), 10)
-		if serverConf.Config.Redis.Enable && s.TokenRepo.IsUserTokenOver(uid) {
+		if serverConf.Inst.Redis.Enable && s.TokenRepo.IsUserTokenOver(uid) {
 			return nil, 400, "已达到同时登录设备上限"
 		}
 		if ok := bcrypt.Match(password, u.Password); ok {
@@ -55,7 +55,7 @@ func (s *UserService) CheckLogin(ctx iris.Context, u *model.User, password strin
 				Token:        tokenStr,
 			}
 
-			if serverConf.Config.Redis.Enable {
+			if serverConf.Inst.Redis.Enable {
 				conn := redisUtils.GetRedisClusterClient()
 				defer conn.Close()
 

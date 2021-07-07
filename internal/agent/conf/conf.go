@@ -70,6 +70,10 @@ type Config struct {
 	DirIso    string
 	DirBaking string
 	DirImage  string
-	//DirDef   string
-	//DirTempl string
+
+	DB DBConfig
+}
+
+type DBConfig struct {
+	Prefix string
 }

@@ -84,11 +84,11 @@ func (r QueueRepo) QueryTimeout() (queues []model.Queue) {
 	queues = make([]model.Queue, 0)
 
 	where := ""
-	if serverConf.Config.DB.Adapter == "sqlite3" {
+	if serverConf.Inst.DB.Adapter == "sqlite3" {
 		where = "(progress = ? AND strftime('%s','now') - strftime('%s',pending_time) > ?)" +
 			" OR (progress = ? AND strftime('%s','now') - strftime('%s',start_time) > ?)" +
 			" OR (progress = ? AND strftime('%s','now') - strftime('%s',start_time) > ?)"
-	} else if serverConf.Config.DB.Adapter == "mysql" {
+	} else if serverConf.Inst.DB.Adapter == "mysql" {
 		where = "(progress = ? AND unix_timestamp(NOW()) - unix_timestamp(pending_time) > ?)" +
 			" OR (progress = ? AND unix_timestamp(NOW()) - unix_timestamp(start_time) > ?)" +
 			" OR (progress = ? AND unix_timestamp(NOW()) - unix_timestamp(start_time) > ?)"

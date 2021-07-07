@@ -24,7 +24,7 @@ func Set(ctx iris.Context, key string, obj interface{}) {
 }
 
 func GetCredentials(ctx iris.Context) (cred *bizConst.UserCredentials) {
-	if serverConf.Config.Redis.Enable {
+	if serverConf.Inst.Redis.Enable {
 		credObj := ctx.Values().Get("sess")
 		if credObj == nil {
 			return

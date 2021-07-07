@@ -104,7 +104,7 @@ func (c *AccountCtrl) UserLogout(ctx iris.Context) {
 		credentials *bizConst.UserCredentials
 		err         error
 	)
-	if serverConf.Config.Redis.Enable {
+	if serverConf.Inst.Redis.Enable {
 		conn := redisUtils.GetRedisClusterClient()
 		defer conn.Close()
 

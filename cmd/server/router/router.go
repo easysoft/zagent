@@ -49,7 +49,7 @@ func NewRouter(app *iris.Application) *Router {
 }
 
 func (r *Router) App() {
-	iris.LimitRequestBodySize(serverConf.Config.Options.UploadMaxSize)
+	iris.LimitRequestBodySize(serverConf.Inst.Options.UploadMaxSize)
 	r.api.UseRouter(_httpUtils.CrsAuth())
 
 	app := r.api.Party("/api").AllowMethods(iris.MethodOptions)

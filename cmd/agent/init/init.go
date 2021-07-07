@@ -23,11 +23,11 @@ func injectObj(router *router.Router) {
 	var g inject.Graph
 	g.Logger = logrus.StandardLogger()
 
+	var err error
 	if agentConf.Inst.RunMode == agentConst.Host {
-		if err := g.Provide(
+		err = g.Provide(
 			// db
 			&inject.Object{Value: _db.GetInst().DB()},
-
 			// cron
 			&inject.Object{Value: agentCron.NewAgentCron()},
 
@@ -35,19 +35,26 @@ func injectObj(router *router.Router) {
 			&inject.Object{Value: kvmService.NewLibvirtService()},
 			&inject.Object{Value: kvmService.NewVmService()},
 
+			// controller
 			&inject.Object{Value: router},
-		); err != nil {
-			logrus.Fatalf("provide usecase objects to the Graph: %v", err)
-		}
+		)
 	} else {
-		if err := g.Provide(
+		err = g.Provide(
+			// db
+			&inject.Object{Value: _db.GetInst().DB()},
+			// cron
+			&inject.Object{Value: agentCron.NewAgentCron()},
+
+			// controller
 			&inject.Object{Value: router},
-		); err != nil {
-			logrus.Fatalf("provide usecase objects to the Graph: %v", err)
-		}
+		)
 	}
 
-	err := g.Populate()
+	if err != nil {
+		logrus.Fatalf("provide usecase objects to the Graph: %v", err)
+	}
+
+	err = g.Populate()
 	if err != nil {
 		logrus.Fatalf("populate the incomplete Objects: %v", err)
 	}

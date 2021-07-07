@@ -13,6 +13,10 @@ import (
 	"strings"
 )
 
+var (
+	Inst = Config{}
+)
+
 func Init() {
 	exeDir := _fileUtils.GetExeDir()
 	configPath := ""
@@ -27,20 +31,20 @@ func Init() {
 	}
 
 	_logUtils.Infof("从文件%s加载server配置", configPath)
-	if err := configor.Load(&Config, configPath); err != nil {
+	if err := configor.Load(&Inst, configPath); err != nil {
 		logger.Println(fmt.Sprintf("Config Path:%s ,Error:%s", configPath, err.Error()))
 		return
 	}
 
-	if Config.Debug {
-		fmt.Println(fmt.Sprintf("配置项：%+v", Config))
+	if Inst.Debug {
+		fmt.Println(fmt.Sprintf("配置项：%+v", Inst))
 	}
 }
 
 func GetRedisUris() []string {
 	addrs := make([]string, 0, 0)
-	hosts := strings.Split(Config.Redis.Host, ";")
-	ports := strings.Split(Config.Redis.Port, ";")
+	hosts := strings.Split(Inst.Redis.Host, ";")
+	ports := strings.Split(Inst.Redis.Port, ";")
 	for _, h := range hosts {
 		for _, p := range ports {
 			addrs = append(addrs, fmt.Sprintf("%s:%s", h, p))
@@ -49,7 +53,7 @@ func GetRedisUris() []string {
 	return addrs
 }
 
-var Config = struct {
+type Config struct {
 	LogLevel string `yaml:"logLevel" env:"LogLevel" default:"info"`
 	Debug    bool   `yaml:"debug" env:"Debug" default:"false"`
 	//BinData  bool   `yaml:"binData" default:"false" env:"BinData"`
@@ -94,7 +98,7 @@ var Config = struct {
 	Options struct {
 		UploadMaxSize int64 `env:"uploadMaxSize" default:"100"`
 	}
-}{}
+}
 
 type DBConfig struct {
 	Prefix   string `yaml:"prefix" env:"DBPrefix" default:"biz_"`

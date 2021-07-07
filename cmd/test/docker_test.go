@@ -2,7 +2,7 @@ package main
 
 import (
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
-	agentService "github.com/easysoft/zagent/internal/agent/service"
+	kvmService "github.com/easysoft/zagent/internal/agent/service/kvm"
 	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"testing"
@@ -11,11 +11,11 @@ import (
 func TestDocker(t *testing.T) {
 	_logUtils.Init(agentConst.AppName)
 
-	agentConf.Inst.Host = "192.168.0.56"
+	agentConf.Inst.Host = "192.168.kvm6"
 	agentConf.Inst.User = "aaron"
 	agentConf.Init()
 
-	service := agentService.NewDockerService()
+	service := kvmService.NewDockerService()
 
 	imageName := "easysoft/zentao:15.0.2"
 
