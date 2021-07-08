@@ -8,15 +8,15 @@ import (
 	"time"
 )
 
-type FileCtrl struct {
+type BuildCtrl struct {
 	BaseCtrl
 	Ctx iris.Context
 }
 
-func NewFileCtrl() *FileCtrl {
-	return &FileCtrl{}
+func NewBuildCtrl() *BuildCtrl {
+	return &BuildCtrl{}
 }
-func (c *FileCtrl) PostUpload(ctx iris.Context) {
+func (c *BuildCtrl) UploadResult(ctx iris.Context) {
 	dir := _const.UploadDir + _dateUtils.DateStr(time.Now())
 	_fileUtils.MkDirIfNeeded(dir)
 

@@ -73,7 +73,8 @@ func (s *ExecService) UploadResult(build commDomain.Build, result commDomain.Tes
 
 	result.Payload = build
 
-	uploadResultUrl := _httpUtils.GenUrl(agentConf.Inst.Server, "build/upload")
+	uploadResultUrl := _httpUtils.GenUrl(agentConf.Inst.Server, "client/build/uploadResult")
+
 	files := []string{zipFile}
 	extraParams := map[string]string{}
 	json, _ := json.Marshal(result)

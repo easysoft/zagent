@@ -22,7 +22,7 @@ func (r VmRepo) Register(vm model.Vm) (err error) {
 	r.DB.Model(&model.Vm{}).Where("mac_address=?", vm.MacAddress).
 		Updates(
 			map[string]interface{}{"status": vm.Status, "work_dir": vm.WorkDir,
-				"public_ip": vm.NodeIp, "public_port": vm.NodePort,
+				"node_ip": vm.NodeIp, "node_port": vm.NodePort,
 				"last_register_time": time.Now()})
 
 	return
