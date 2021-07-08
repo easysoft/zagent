@@ -21,7 +21,7 @@ func (s BuildService) SaveResult(build domain.Build) (count int) {
 
 	po := s.BuildRepo.GetBuild(build.ID)
 
-	s.QueueService.SetQueueResult(po.QueueId, build.Progress, build.Status)
+	s.QueueService.SetQueueResult(po.QueueId, po.Progress, po.Status)
 
 	return
 }

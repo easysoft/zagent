@@ -77,7 +77,7 @@ func (s *TaskService) IsRunning() bool {
 	lock.Lock()
 	defer lock.Unlock()
 
-	if time.Now().Unix()-s.TimeStamp.Unix() > consts.AgentRunTime*60*1000 {
+	if time.Now().Unix()-s.TimeStamp.Unix() > consts.WaitAgentRunTaskTimeout {
 		s.running = false
 	}
 	return s.running

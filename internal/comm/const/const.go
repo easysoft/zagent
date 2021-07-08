@@ -1,9 +1,8 @@
 package consts
 
 const (
-	AgentRunTime          = 20 // sec
-	AgentCheckInterval    = 10 // sec
-	WebCheckQueueInterval = 3 * 60
+	AgentCheckInterval    = 60     // sec
+	WebCheckQueueInterval = 5 * 60 // sec
 
 	DeviceRegisterExpireTime = 5 * 60 // sec
 
@@ -11,6 +10,8 @@ const (
 	WaitForVmReadyTimeout    = 5 * 60  // sec
 	WaitTestCompletedTimeout = 30 * 60 // sec
 	VmLifecycleTimeout       = 60 * 60 // sec
+
+	WaitAgentRunTaskTimeout = 30 * 60 // sec
 
 	QueueRetryTime = 3
 
