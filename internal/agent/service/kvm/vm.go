@@ -1,12 +1,12 @@
 package kvmService
 
 import (
-	agentConf "github.com/easysoft/zagent/internal/agent/conf"
+	"github.com/easysoft/zagent/internal/agent/conf"
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/comm/domain"
-	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
-	_i118Utils "github.com/easysoft/zagent/internal/pkg/lib/i118"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	"github.com/easysoft/zagent/internal/pkg/lib/http"
+	"github.com/easysoft/zagent/internal/pkg/lib/i118"
+	"github.com/easysoft/zagent/internal/pkg/lib/log"
 	"time"
 )
 
