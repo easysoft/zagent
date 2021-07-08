@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
-	"github.com/easysoft/zagent/internal/comm/domain"
+	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	_fileUtils "github.com/easysoft/zagent/internal/pkg/lib/file"
@@ -14,7 +14,6 @@ import (
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zagent/internal/pkg/lib/shell"
 	"github.com/satori/go.uuid"
-	"os"
 	"strings"
 )
 
@@ -25,11 +24,12 @@ func NewExecService() *ExecService {
 	return &ExecService{}
 }
 
-func (s *ExecService) ExcCommand(build *domain.Build) (err error) {
+func (s *ExecService) ExcCommand(build *commDomain.Build) (err error) {
 	cmdStr := build.BuildCommands
+	envVars := s.parseEnvVars(build.EnvVars)
 
 	var out []string
-	out, err = _shellUtils.ExeShellWithOutputInDir(cmdStr, build.ProjectDir)
+	out, err = _shellUtils.ExeShellWithEnvVarsAndOutputInDir(cmdStr, build.ProjectDir, envVars)
 
 	if err != nil {
 		errors.New(fmt.Sprintf("fail to exec command, out %s, err: %s", out, err.Error()))
@@ -38,7 +38,7 @@ func (s *ExecService) ExcCommand(build *domain.Build) (err error) {
 	return
 }
 
-func (s *ExecService) GetTestApp(build *domain.Build) _domain.RpcResp {
+func (s *ExecService) GetTestApp(build *commDomain.Build) _domain.RpcResp {
 	result := _domain.RpcResp{}
 
 	if strings.Index(build.AppUrl, "http://") == 0 {
@@ -56,13 +56,13 @@ func (s *ExecService) GetTestApp(build *domain.Build) _domain.RpcResp {
 	return result
 }
 
-func (s *ExecService) DownloadApp(build *domain.Build) {
+func (s *ExecService) DownloadApp(build *commDomain.Build) {
 	path := build.WorkDir + uuid.NewV4().String() + _fileUtils.GetExtName(build.AppUrl)
 	_fileUtils.Download(build.AppUrl, path)
 	build.AppPath = path
 }
 
-func (s *ExecService) UploadResult(build domain.Build, result domain.TestResult) {
+func (s *ExecService) UploadResult(build commDomain.Build, result commDomain.TestResult) {
 	zipFile := build.WorkDir + "testResult.zip"
 	err := _fileUtils.ZipFiles(zipFile, build.ProjectDir, strings.Split(build.ResultFiles, ","))
 	if err != nil {
@@ -82,51 +82,22 @@ func (s *ExecService) UploadResult(build domain.Build, result domain.TestResult)
 	_fileUtils.Upload(uploadResultUrl, files, extraParams)
 }
 
-func (s *ExecService) SetBuildWorkDir(build *domain.Build) {
+func (s *ExecService) SetBuildWorkDir(build *commDomain.Build) {
 	build.WorkDir = agentConf.Inst.WorkDir + uuid.NewV4().String() + _const.PthSep
 	_fileUtils.MkDirIfNeeded(build.WorkDir)
 }
 
-func (s *ExecService) setEnvVars(build *domain.Build) (err error) {
-	for _, env := range strings.Split(build.EnvVars, "\n") {
-		arr := strings.Split(env, "=")
-		if len(arr) < 2 {
-			continue
-		}
+func (s *ExecService) parseEnvVars(vars string) (ret []string) {
+	arr := strings.Split(vars, "\n")
 
-		name := strings.TrimSpace(arr[0])
-		val := strings.TrimSpace(arr[1])
-		if name == "" || val == "" {
-			continue
-		}
-
-		err = os.Setenv(name, val)
-
-		if err != nil {
-			break
-		}
-	}
-
-	return
-}
-
-func (s *ExecService) setEnvVarsForMaven(build *domain.Build) {
-	if strings.Index(build.BuildCommands, "mvn") < 0 {
-		return
-	}
-
-	arr := strings.Split(build.EnvVars, "\n")
-
-	retArr := make([]string, 0)
 	for _, item := range arr {
 		str := strings.TrimSpace(item)
 		if str == "" {
 			continue
 		}
 
-		retArr = append(retArr, "-D"+str)
+		ret = append(ret, str)
 	}
 
-	build.BuildCommands += " " + strings.Join(retArr, " ")
 	return
 }
