@@ -29,11 +29,15 @@ func (r *Router) App() {
 
 	if agentConf.Inst.RunMode == agentConst.Host {
 		srv.RegisterName("arith", r.ArithCtrl, "")
-		srv.RegisterName("task", r.TaskCtrl, "")
 		srv.RegisterName("vm", r.VmCtrl, "")
-	} else {
+	} else if agentConf.Inst.RunMode == agentConst.Vm {
 		srv.RegisterName("arith", r.ArithCtrl, "")
 		srv.RegisterName("perform", r.PerformCtrl, "")
+	} else if agentConf.Inst.RunMode == agentConst.Machine ||
+		agentConf.Inst.RunMode == agentConst.Android ||
+		agentConf.Inst.RunMode == agentConst.Ios {
+		srv.RegisterName("arith", r.ArithCtrl, "")
+		srv.RegisterName("task", r.TaskCtrl, "") // add to agent side queue
 	}
 
 	_logUtils.Info(_i118Utils.Sprintf("start_server", addr))
