@@ -1,8 +1,8 @@
 package consts
 
 const (
-	AgentCheckInterval    = 60     // sec
-	WebCheckQueueInterval = 5 * 60 // sec
+	AgentCheckInterval    = 15 // sec
+	WebCheckQueueInterval = 15 // sec
 
 	DeviceRegisterExpireTime = 5 * 60 // sec
 

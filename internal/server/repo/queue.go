@@ -42,7 +42,7 @@ func (r QueueRepo) GetQueue(id uint) (queue model.Queue) {
 }
 
 func (r QueueRepo) Save(queue *model.Queue) (err error) {
-	err = r.DB.Model(&queue).
+	err = r.DB.Model(&model.Queue{}).
 		Omit("StartTime", "PendingTime", "ResultTime", "TimeoutTime").
 		Create(&queue).Error
 	return
@@ -54,7 +54,7 @@ func (r QueueRepo) DeleteInSameGroup(groupId uint, serials []string) (err error)
 }
 
 func (r QueueRepo) Start(queue model.Queue) (err error) {
-	r.DB.Model(&queue).Where("id=?", queue.ID).Updates(
+	r.DB.Model(&model.Queue{}).Where("id=?", queue.ID).Updates(
 		map[string]interface{}{"progress": consts.ProgressRunning, "start_time": time.Now(), "retry": gorm.Expr("retry +1")})
 	return
 }

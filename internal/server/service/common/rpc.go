@@ -26,7 +26,7 @@ func (s RpcService) SeleniumTest(build model.Build) (result _domain.RpcResp) {
 	buildTo.BrowserVersion = build.BrowserVersion
 
 	obj := interface{}(buildTo)
-	result = s.Request(build.NodeIp, build.NodePort, "perform", "Perform", &obj)
+	result = s.Request(build.NodeIp, build.NodePort, "job", "Add", &obj)
 
 	return
 }

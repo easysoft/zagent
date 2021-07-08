@@ -8,7 +8,7 @@ import (
 )
 
 type ArithCtrl struct {
-	TaskService *agentService.TaskService `inject:""`
+	TaskService *agentService.JobService `inject:""`
 }
 
 func NewArithCtrl() *ArithCtrl {

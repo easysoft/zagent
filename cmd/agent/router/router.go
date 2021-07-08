@@ -15,7 +15,7 @@ type Router struct {
 	TaskCtrl  *handler.TaskCtrl  `inject:""`
 	VmCtrl    *handler.VmCtrl    `inject:""`
 
-	PerformCtrl *handler.PerformCtrl `inject:""`
+	JobCtrl *handler.JobCtrl `inject:""`
 }
 
 func NewRouter() *Router {
@@ -32,7 +32,7 @@ func (r *Router) App() {
 		srv.RegisterName("vm", r.VmCtrl, "")
 	} else if agentConf.Inst.RunMode == agentConst.Vm {
 		srv.RegisterName("arith", r.ArithCtrl, "")
-		srv.RegisterName("perform", r.PerformCtrl, "")
+		srv.RegisterName("job", r.JobCtrl, "")
 	} else if agentConf.Inst.RunMode == agentConst.Machine ||
 		agentConf.Inst.RunMode == agentConst.Android ||
 		agentConf.Inst.RunMode == agentConst.Ios {

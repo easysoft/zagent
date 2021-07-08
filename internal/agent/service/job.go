@@ -2,55 +2,55 @@ package agentService
 
 import (
 	consts "github.com/easysoft/zagent/internal/comm/const"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	"sync"
 	"time"
 )
 
 var lock sync.Mutex
 
-type TaskService struct {
+type JobService struct {
 	TimeStamp time.Time
 	running   bool
-	tasks     []commDomain.Build
+	jobs      []domain.Build
 }
 
-func NewTaskService() *TaskService {
-	service := &TaskService{}
+func NewTaskService() *JobService {
+	service := &JobService{}
 
 	service.TimeStamp = time.Now()
-	service.tasks = make([]commDomain.Build, 0)
+	service.jobs = make([]domain.Build, 0)
 
 	return service
 }
 
-func (s *TaskService) AddTask(task commDomain.Build) {
+func (s *JobService) AddTask(build domain.Build) {
 	lock.Lock()
 
-	s.tasks = append(s.tasks, task)
+	s.jobs = append(s.jobs, build)
 
 	lock.Unlock()
 }
 
-func (s *TaskService) PeekTask() commDomain.Build {
+func (s *JobService) PeekJob() domain.Build {
 	lock.Lock()
 	defer lock.Unlock()
 
-	return s.tasks[0]
+	return s.jobs[0]
 }
 
-func (s *TaskService) RemoveTask() {
+func (s *JobService) RemoveTask() {
 	lock.Lock()
 
-	if len(s.tasks) == 0 {
+	if len(s.jobs) == 0 {
 		return
 	}
-	s.tasks = s.tasks[1:]
+	s.jobs = s.jobs[1:]
 
 	lock.Unlock()
 }
 
-func (s *TaskService) StartTask() {
+func (s *JobService) StartTask() {
 	lock.Lock()
 
 	s.TimeStamp = time.Now()
@@ -58,7 +58,7 @@ func (s *TaskService) StartTask() {
 
 	lock.Unlock()
 }
-func (s *TaskService) EndTask() {
+func (s *JobService) EndTask() {
 	lock.Lock()
 
 	s.running = false
@@ -66,14 +66,14 @@ func (s *TaskService) EndTask() {
 	lock.Unlock()
 }
 
-func (s *TaskService) GetTaskSize() int {
+func (s *JobService) GetTaskSize() int {
 	lock.Lock()
 	defer lock.Unlock()
 
-	return len(s.tasks)
+	return len(s.jobs)
 }
 
-func (s *TaskService) IsRunning() bool {
+func (s *JobService) IsRunning() bool {
 	lock.Lock()
 	defer lock.Unlock()
 

@@ -12,7 +12,7 @@ import (
 )
 
 type TaskCtrl struct {
-	TaskService          *agentService.TaskService              `inject:""`
+	TaskService          *agentService.JobService               `inject:""`
 	InterfaceTestService *interfaceService.InterfaceTestService `inject:""`
 }
 

@@ -3,6 +3,7 @@ package agentService
 import (
 	deviceService "github.com/easysoft/zagent/internal/agent/service/device"
 	kvmService "github.com/easysoft/zagent/internal/agent/service/kvm"
+	testingService "github.com/easysoft/zagent/internal/agent/service/testing"
 	agentUtils "github.com/easysoft/zagent/internal/agent/utils/common"
 )
 
@@ -11,8 +12,8 @@ type CheckService struct {
 	VmService     *kvmService.VmService        `inject:""`
 	DeviceService *deviceService.DeviceService `inject:""`
 
-	TaskService  *TaskService  `inject:""`
-	BuildService *BuildService `inject:""`
+	JobService  *JobService                 `inject:""`
+	TestService *testingService.TestService `inject:""`
 }
 
 func NewCheckService() *CheckService {
@@ -34,21 +35,25 @@ func (s *CheckService) Check() {
 
 func (s *CheckService) CheckVm() {
 	// is running，register busy
-	if s.TaskService.IsRunning() {
+	if s.JobService.IsRunning() {
 		s.VmService.Register(true)
 		return
 	}
 
 	// no task to run, submit free
-	if s.TaskService.GetTaskSize() == 0 {
+	if s.JobService.GetTaskSize() == 0 {
 		s.VmService.Register(false)
 		return
 	}
 
 	// has task to run，register busy, then run
-	task := s.TaskService.PeekTask()
+	job := s.JobService.PeekJob()
 	s.VmService.Register(true)
-	s.BuildService.Exec(task)
+
+	s.JobService.StartTask()
+	s.TestService.Run(&job)
+	s.JobService.RemoveTask()
+	s.JobService.EndTask()
 }
 
 func (s *CheckService) CheckDevice() {
