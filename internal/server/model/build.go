@@ -10,7 +10,7 @@ type Build struct {
 	BaseModel
 
 	QueueId uint `json:"queueId"`
-	Queue   `json:"queue" sql:"-" gorm:"foreignkey:QueueId"`
+	//Queue   `json:"queue" sql:"-" gorm:"foreignkey:QueueId"`
 
 	VmId uint `json:"vmId"`
 

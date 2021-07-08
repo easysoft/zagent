@@ -21,11 +21,11 @@ func NewRpcService() *RpcService {
 }
 
 func (s RpcService) SeleniumTest(build model.Build) (result _domain.RpcResp) {
-	seleniumTestTo := model.NewBuildTo(build)
-	seleniumTestTo.BrowserType = build.Queue.BrowserType
-	seleniumTestTo.BrowserVersion = build.Queue.BrowserVersion
+	buildTo := model.NewBuildTo(build)
+	buildTo.BrowserType = build.BrowserType
+	buildTo.BrowserVersion = build.BrowserVersion
 
-	obj := interface{}(seleniumTestTo)
+	obj := interface{}(buildTo)
 	result = s.Request(build.NodeIp, build.NodePort, "perform", "Perform", &obj)
 
 	return
