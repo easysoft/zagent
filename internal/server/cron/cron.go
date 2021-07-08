@@ -2,7 +2,7 @@ package serverCron
 
 import (
 	"fmt"
-	_const "github.com/easysoft/zagent/internal/pkg/const"
+	consts "github.com/easysoft/zagent/internal/comm/const"
 	_cronUtils "github.com/easysoft/zagent/internal/pkg/lib/cron"
 	"github.com/easysoft/zagent/internal/server/service/testing"
 	"github.com/kataras/iris/v12"
@@ -21,7 +21,7 @@ func NewServerCron() *ServerCron {
 func (s *ServerCron) Init() {
 	_cronUtils.AddTask(
 		"check",
-		fmt.Sprintf("@every %ds", _const.WebCheckQueueInterval),
+		fmt.Sprintf("@every %ds", consts.WebCheckQueueInterval),
 		func() {
 			/**
 			query queue by status:
