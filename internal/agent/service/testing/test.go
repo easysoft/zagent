@@ -53,6 +53,9 @@ func (s *TestService) Run(build *commDomain.Build) {
 		return
 	}
 
+	// parser environment var to maven command by using -DVar=1
+	s.ExecService.setEnvVarsForMaven(build)
+
 	// exec test
 	err = s.ExecService.ExcCommand(build)
 	if err != nil {
