@@ -9,6 +9,7 @@ import (
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
 	"io"
+	"os"
 	"os/exec"
 	"regexp"
 	"strings"
@@ -89,7 +90,8 @@ func ExeShellWithEnvVarsAndOutputInDir(cmdStr, dir string, envVars []string) ([]
 		cmd.Dir = dir
 	}
 	if envVars != nil && len(envVars) > 0 {
-		cmd.Env = envVars
+		cmd.Env = os.Environ()
+		cmd.Env = append(cmd.Env, envVars...)
 	}
 
 	output := make([]string, 0)
