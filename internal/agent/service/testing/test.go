@@ -38,12 +38,12 @@ func (s *TestService) Run(build *commDomain.Build) {
 	}
 
 	// set environment var
-	err = s.ExecService.setEnvVars(build)
-	if err != nil {
-		result.Failf("failed to set envs, err %s。", err.Error())
-		s.ExecService.UploadResult(*build, result)
-		return
-	}
+	//err = s.ExecService.setEnvVars(build)
+	//if err != nil {
+	//	result.Failf("failed to set envs, err %s。", err.Error())
+	//	s.ExecService.UploadResult(*build, result)
+	//	return
+	//}
 
 	// get script
 	err = s.ScmService.GetTestScript(build)

@@ -26,7 +26,7 @@ require (
 	github.com/go-playground/locales v0.13.0
 	github.com/go-playground/universal-translator v0.17.0
 	github.com/go-playground/validator/v10 v10.6.1
-	github.com/gofrs/uuid v3.3.0+incompatible // indirect
+	github.com/gofrs/uuid v3.3.0+incompatible
 	github.com/goinggo/mapstructure v0.0.0-20140717182941-194205d9b4a9 // indirect
 	github.com/gomodule/redigo v1.8.4
 	github.com/gopherjs/gopherjs v0.0.0-20200217142428-fce0ec30dd00 // indirect
