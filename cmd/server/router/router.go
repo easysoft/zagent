@@ -3,11 +3,10 @@ package router
 import (
 	"fmt"
 	"github.com/easysoft/zagent/cmd/server/router/handler"
-	_const "github.com/easysoft/zagent/internal/pkg/const"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
 	bizCasbin "github.com/easysoft/zagent/internal/server/biz/casbin"
 	"github.com/easysoft/zagent/internal/server/biz/jwt"
-	"github.com/easysoft/zagent/internal/server/conf"
+	serverConf "github.com/easysoft/zagent/internal/server/conf"
 	"github.com/easysoft/zagent/internal/server/repo"
 	initService "github.com/easysoft/zagent/internal/server/service/init"
 	gorillaWs "github.com/gorilla/websocket"
@@ -30,6 +29,7 @@ type Router struct {
 	TaskCtrl    *handler.TaskCtrl    `inject:""`
 	HostCtrl    *handler.HostCtrl    `inject:""`
 	VmCtrl      *handler.VmCtrl      `inject:""`
+	BuildCtrl   *handler.BuildCtrl   `inject:""`
 
 	PermCtrl *handler.PermCtrl `inject:""`
 	RoleCtrl *handler.RoleCtrl `inject:""`
@@ -38,7 +38,6 @@ type Router struct {
 	Environment *handler.EnvironmentCtrl `inject:""`
 	ValidCtrl   *handler.ValidCtrl       `inject:""`
 	WsCtrl      *handler.WsCtrl          `inject:""`
-	BuildCtrl   *handler.BuildCtrl       `inject:""`
 
 	TokenRepo *repo.TokenRepo `inject:""`
 }
@@ -73,9 +72,7 @@ func (r *Router) App() {
 					party.Post("/register", r.VmCtrl.Register).Name = "注册虚机"
 				})
 				client.PartyFunc("/build", func(party iris.Party) {
-					party.Post("uploadResult",
-						iris.LimitRequestBodySize(_const.UploadFileMaxSize),
-						r.BuildCtrl.UploadResult).Name = "文件上传"
+					party.Post("/uploadResult", r.BuildCtrl.UploadResult).Name = "文件上传"
 				})
 			})
 

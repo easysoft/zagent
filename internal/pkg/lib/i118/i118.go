@@ -2,6 +2,7 @@ package _i118Utils
 
 import (
 	"encoding/json"
+	"fmt"
 	_resUtils "github.com/easysoft/zagent/internal/pkg/lib/res"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
@@ -64,5 +65,9 @@ func InitResFromAsset(bytes []byte) {
 }
 
 func Sprintf(key message.Reference, a ...interface{}) string {
-	return I118Prt.Sprintf(key, a...)
+	if I118Prt == nil {
+		return fmt.Sprintf("%s, %#v", key.(string), a)
+	} else {
+		return I118Prt.Sprintf(key, a...)
+	}
 }

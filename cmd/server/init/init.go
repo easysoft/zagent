@@ -105,7 +105,6 @@ func injectObj(router *router.Router) {
 		&inject.Object{Value: handler.NewUserCtrl()},
 
 		&inject.Object{Value: handler.NewTaskCtrl()},
-		&inject.Object{Value: handler.NewFileCtrl()},
 
 		// router
 		&inject.Object{Value: router},

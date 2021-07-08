@@ -1,6 +1,7 @@
 package handler
 
 import (
+	_fileUtils "github.com/easysoft/zagent/internal/pkg/lib/file"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
 	"github.com/easysoft/zagent/internal/server/biz/validate"
 	"github.com/go-playground/validator/v10"
@@ -32,7 +33,9 @@ func (c *BaseCtrl) Validate(s interface{}, ctx iris.Context) bool {
 
 func beforeFileSave(context *context.Context, file *multipart.FileHeader) bool {
 	uuid, _ := uuid.NewV4()
-	file.Filename = uuid.String() + "-" + file.Filename
+	file.Filename = _fileUtils.GetFileNameWithoutExt(file.Filename) +
+		"-" + uuid.String() +
+		_fileUtils.GetExtName(file.Filename)
 
 	return true
 }
