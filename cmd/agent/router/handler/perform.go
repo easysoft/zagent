@@ -1,40 +1,24 @@
 package handler
 
 import (
-	"fmt"
 	agentService "github.com/easysoft/zagent/internal/agent/service"
 	interfaceService "github.com/easysoft/zagent/internal/agent/service/interface"
 	commConst "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"golang.org/x/net/context"
 )
 
-type TaskCtrl struct {
-	TaskService          *agentService.JobService               `inject:""`
+type PerformCtrl struct {
+	PerformService       *agentService.JobService               `inject:""`
 	InterfaceTestService *interfaceService.InterfaceTestService `inject:""`
 }
 
-func NewTaskCtrl() *TaskCtrl {
-	return &TaskCtrl{}
+func NewPerformCtrl() *PerformCtrl {
+	return &PerformCtrl{}
 }
 
-func (c *TaskCtrl) Add(ctx context.Context, task commDomain.Build, reply *_domain.RpcResp) error {
-	size := c.TaskService.GetTaskSize()
-	if size == 0 {
-		c.TaskService.AddTask(task)
-		reply.Success("Pass to add job.")
-	} else {
-		reply.Fail(fmt.Sprintf("already has %d jobs to be done.", size))
-	}
-
-	return nil
-}
-
-func (c *TaskCtrl) Exec(ctx context.Context, build commDomain.Build, reply *_domain.RpcResp) error {
-	_logUtils.Infof("%v", build)
-
+func (c *PerformCtrl) Perform(ctx context.Context, build commDomain.Build, reply *_domain.RpcResp) error {
 	result := commDomain.TestResult{}
 
 	if build.BuildType == commConst.InterfaceScenario {

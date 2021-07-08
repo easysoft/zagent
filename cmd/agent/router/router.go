@@ -11,11 +11,10 @@ import (
 )
 
 type Router struct {
-	ArithCtrl *handler.ArithCtrl `inject:""`
-	TaskCtrl  *handler.TaskCtrl  `inject:""`
-	VmCtrl    *handler.VmCtrl    `inject:""`
-
-	JobCtrl *handler.JobCtrl `inject:""`
+	ArithCtrl   *handler.ArithCtrl   `inject:""`
+	VmCtrl      *handler.VmCtrl      `inject:""`
+	JobCtrl     *handler.JobCtrl     `inject:""`
+	PerformCtrl *handler.PerformCtrl `inject:""`
 }
 
 func NewRouter() *Router {
@@ -30,14 +29,16 @@ func (r *Router) App() {
 	if agentConf.Inst.RunMode == agentConst.Host {
 		srv.RegisterName("arith", r.ArithCtrl, "")
 		srv.RegisterName("vm", r.VmCtrl, "")
+
 	} else if agentConf.Inst.RunMode == agentConst.Vm {
-		srv.RegisterName("arith", r.ArithCtrl, "")
 		srv.RegisterName("job", r.JobCtrl, "")
-	} else if agentConf.Inst.RunMode == agentConst.Machine ||
-		agentConf.Inst.RunMode == agentConst.Android ||
-		agentConf.Inst.RunMode == agentConst.Ios {
-		srv.RegisterName("arith", r.ArithCtrl, "")
-		srv.RegisterName("task", r.TaskCtrl, "") // add to agent side queue
+
+	} else if agentConf.Inst.RunMode == agentConst.Android || agentConf.Inst.RunMode == agentConst.Ios {
+		srv.RegisterName("job", r.JobCtrl, "")
+
+	} else if agentConf.Inst.RunMode == agentConst.Machine {
+		srv.RegisterName("perform", r.PerformCtrl, "") // add to agent side queue
+
 	}
 
 	_logUtils.Info(_i118Utils.Sprintf("start_server", addr))
