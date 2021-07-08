@@ -11,6 +11,7 @@ import (
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
 	serverService "github.com/easysoft/zagent/internal/server/service"
 	"github.com/kataras/iris/v12"
+	"github.com/mitchellh/mapstructure"
 	"path/filepath"
 	"time"
 )
@@ -39,7 +40,7 @@ func (c *BuildCtrl) UploadResult(ctx iris.Context) {
 	var testResult domain.TestResult
 	json.Unmarshal([]byte(params["result"][0]), &testResult)
 	var build domain.Build
-	json.Unmarshal([]byte(testResult.Payload.(string)), &build)
+	mapstructure.Decode(testResult.Payload.(map[string]interface{}), &build)
 
 	build.ResultPath = filePath
 	jsn, _ := json.Marshal(build)
