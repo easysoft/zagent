@@ -75,12 +75,13 @@ func (s *ExecService) UploadResult(build commDomain.Build, result commDomain.Tes
 
 	uploadResultUrl := _httpUtils.GenUrl(agentConf.Inst.Server, "client/build/uploadResult")
 
-	files := []string{zipFile}
+	// add form field
 	extraParams := map[string]string{}
+
 	json, _ := json.Marshal(result)
 	extraParams["result"] = string(json)
 
-	_fileUtils.Upload(uploadResultUrl, files, extraParams)
+	_fileUtils.Upload(uploadResultUrl, []string{zipFile}, extraParams)
 }
 
 func (s *ExecService) SetBuildWorkDir(build *commDomain.Build) {

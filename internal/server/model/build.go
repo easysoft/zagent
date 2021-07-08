@@ -93,7 +93,8 @@ func NewAppiumBuildPo(queue Queue, dev Device) Build {
 
 func NewBuildTo(build Build) domain.Build {
 	toValue := domain.Build{
-		QueueId:   build.ID,
+		ID:        build.ID,
+		QueueId:   build.QueueId,
 		BuildType: build.BuildType,
 		Serial:    build.Serial,
 		Priority:  build.Priority,

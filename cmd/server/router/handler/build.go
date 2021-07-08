@@ -1,11 +1,15 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
+	consts "github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
 	_dateUtils "github.com/easysoft/zagent/internal/pkg/lib/date"
 	_fileUtils "github.com/easysoft/zagent/internal/pkg/lib/file"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
+	serverService "github.com/easysoft/zagent/internal/server/service"
 	"github.com/kataras/iris/v12"
 	"path/filepath"
 	"time"
@@ -13,7 +17,8 @@ import (
 
 type BuildCtrl struct {
 	BaseCtrl
-	Ctx iris.Context
+
+	BuildService *serverService.BuildService `inject:""`
 }
 
 func NewBuildCtrl() *BuildCtrl {
@@ -30,5 +35,20 @@ func (c *BuildCtrl) UploadResult(ctx iris.Context) {
 
 	filePath := filepath.Join(dir, uploaded[0].Filename)
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "操作成功"+filePath, nil))
+	params := ctx.FormValues()
+	var testResult domain.TestResult
+	json.Unmarshal([]byte(params["result"][0]), &testResult)
+	var build domain.Build
+	json.Unmarshal([]byte(testResult.Payload.(string)), &build)
+
+	build.ResultPath = filePath
+	jsn, _ := json.Marshal(build)
+	build.ResultMsg = string(jsn)
+	build.Progress = consts.ProgressCompleted
+	build.Status = consts.StatusPass
+
+	c.BuildService.SaveResult(build)
+
+	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK,
+		fmt.Sprintf("操作成功 %s %#v", filePath, params), nil))
 }

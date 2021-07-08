@@ -1,14 +1,11 @@
 package testing
 
 import (
-	"github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/comm/domain"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 	serverService "github.com/easysoft/zagent/internal/server/service"
 	commonService "github.com/easysoft/zagent/internal/server/service/common"
-	"github.com/mitchellh/mapstructure"
 )
 
 type SeleniumService struct {
@@ -35,24 +32,4 @@ func (s SeleniumService) Start(queue model.Queue) (result _domain.RpcResp) {
 	result = s.RpcService.SeleniumTest(build)
 
 	return
-}
-
-func (s SeleniumService) SaveResult(buildResult _domain.RpcResp, resultPath string) {
-	seleniumTestTo := domain.Build{}
-	mp := buildResult.Payload.(map[string]interface{})
-	mapstructure.Decode(mp, &seleniumTestTo)
-
-	progress := consts.ProgressCompleted
-	var result consts.BuildStatus
-	if buildResult.IsSuccess() {
-		result = consts.StatusPass
-	} else {
-		result = consts.StatusFail
-	}
-
-	s.BuildRepo.SaveResult(seleniumTestTo, resultPath, progress, result, buildResult.Msg)
-	s.QueueService.SetQueueResult(seleniumTestTo.QueueId, progress, result)
-	if progress == consts.ProgressTimeout {
-		s.BuildRepo.SetTimeoutByQueueId(seleniumTestTo.QueueId)
-	}
 }

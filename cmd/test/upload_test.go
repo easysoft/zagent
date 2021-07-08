@@ -13,10 +13,11 @@ import (
 func TestUpload(t *testing.T) {
 	_logUtils.Init(agentConst.AppName)
 	result := commDomain.TestResult{Name: "Result Name"}
+	build := commDomain.Build{ID: 100, Name: "Result Name"}
 
 	zipFile := "/Users/aaron/testResult.zip"
 
-	result.Payload = "Payload..."
+	result.Payload = build
 	uploadResultUrl := _httpUtils.GenUrl("http://localhost:8085/", "client/build/uploadResult")
 
 	files := []string{zipFile}

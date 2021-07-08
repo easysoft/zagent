@@ -1,14 +1,11 @@
 package testing
 
 import (
-	"github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/comm/domain"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 	serverService "github.com/easysoft/zagent/internal/server/service"
 	commonService "github.com/easysoft/zagent/internal/server/service/common"
-	"github.com/mitchellh/mapstructure"
 )
 
 type AppiumService struct {
@@ -41,24 +38,4 @@ func (s AppiumService) Start(queue model.Queue) (result _domain.RpcResp) {
 	}
 
 	return
-}
-
-func (s AppiumService) SaveResult(buildResult _domain.RpcResp, resultPath string) {
-	appiumTestTo := domain.Build{}
-	mp := buildResult.Payload.(map[string]interface{})
-	mapstructure.Decode(mp, &appiumTestTo)
-
-	progress := consts.ProgressCompleted
-	var status consts.BuildStatus
-	if buildResult.IsSuccess() {
-		status = consts.StatusPass
-	} else {
-		status = consts.StatusFail
-	}
-
-	s.BuildRepo.SaveResult(appiumTestTo, resultPath, progress, status, buildResult.Msg)
-	s.QueueService.SetQueueResult(appiumTestTo.QueueId, progress, status)
-	if progress == consts.ProgressTimeout {
-		s.BuildRepo.SetTimeoutByQueueId(appiumTestTo.QueueId)
-	}
 }

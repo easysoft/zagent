@@ -43,11 +43,10 @@ func (r BuildRepo) Delete(build model.Build) (err error) {
 	return
 }
 
-func (r BuildRepo) SaveResult(appiumTestTo domain.Build, resultPath string,
-	progress consts.BuildProgress, status consts.BuildStatus, msg string) {
-
-	r.DB.Model(&model.Build{}).Where("id=?", appiumTestTo.ID).Updates(
-		map[string]interface{}{"progress": progress, "status": status, "resultPath": resultPath, "resultMsg": msg,
+func (r BuildRepo) SaveResult(build domain.Build) {
+	r.DB.Model(&model.Build{}).Where("id=?", build.ID).Updates(
+		map[string]interface{}{"progress": build.Progress, "status": build.Status,
+			"result_path": build.ResultPath, "result_msg": build.ResultMsg,
 			"complete_time": time.Now()})
 	return
 }
