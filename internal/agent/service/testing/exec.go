@@ -14,6 +14,7 @@ import (
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zagent/internal/pkg/lib/shell"
 	"github.com/satori/go.uuid"
+	"os"
 	"strings"
 )
 
@@ -85,6 +86,29 @@ func (s *ExecService) UploadResult(build commDomain.Build, result commDomain.Tes
 func (s *ExecService) SetBuildWorkDir(build *commDomain.Build) {
 	build.WorkDir = agentConf.Inst.WorkDir + uuid.NewV4().String() + _const.PthSep
 	_fileUtils.MkDirIfNeeded(build.WorkDir)
+}
+
+func (s *ExecService) setEnvVars(build *commDomain.Build) (err error) {
+	for _, env := range strings.Split(build.EnvVars, "\n") {
+		arr := strings.Split(env, "=")
+		if len(arr) < 2 {
+			continue
+		}
+
+		name := strings.TrimSpace(arr[0])
+		val := strings.TrimSpace(arr[1])
+		if name == "" || val == "" {
+			continue
+		}
+
+		err = os.Setenv(name, val)
+
+		if err != nil {
+			break
+		}
+	}
+
+	return
 }
 
 func (s *ExecService) parseEnvVars(vars string) (ret []string) {
