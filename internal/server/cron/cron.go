@@ -35,7 +35,6 @@ func (s *ServerCron) Init() {
 				_logUtils.Infof("is running, skip this iteration " + _dateUtils.DateTimeStr(time.Now()))
 				return
 			}
-
 			s.syncMap.Store("isRunning", true)
 
 			/**
