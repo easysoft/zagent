@@ -74,6 +74,10 @@ func ExeShellWithOutput(cmdStr string) ([]string, error) {
 }
 
 func ExeShellWithOutputInDir(cmdStr string, dir string) ([]string, error) {
+	return ExeShellWithEnvVarsAndOutputInDir(cmdStr, dir, nil)
+}
+
+func ExeShellWithEnvVarsAndOutputInDir(cmdStr, dir string, envVars []string) ([]string, error) {
 	var cmd *exec.Cmd
 	if _commonUtils.IsWin() {
 		cmd = exec.Command("cmd", "/C", cmdStr)
@@ -83,6 +87,9 @@ func ExeShellWithOutputInDir(cmdStr string, dir string) ([]string, error) {
 
 	if dir != "" {
 		cmd.Dir = dir
+	}
+	if envVars != nil && len(envVars) > 0 {
+		cmd.Env = envVars
 	}
 
 	output := make([]string, 0)
