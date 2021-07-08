@@ -7,6 +7,7 @@ import (
 	_cronUtils "github.com/easysoft/zagent/internal/pkg/lib/cron"
 	_dateUtils "github.com/easysoft/zagent/internal/pkg/lib/date"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	"github.com/kataras/iris/v12"
 	"sync"
 	"time"
 )
@@ -41,4 +42,8 @@ func (s *CronService) Init() {
 			s.syncMap.Store("isRunning", false)
 		},
 	)
+
+	iris.RegisterOnInterrupt(func() {
+		_cronUtils.Stop()
+	})
 }
