@@ -43,11 +43,11 @@ func (r BuildRepo) Delete(build model.Build) (err error) {
 	return
 }
 
-func (r BuildRepo) SaveResult(build domain.Build) {
-	r.DB.Model(&model.Build{}).Where("id=?", build.ID).Updates(
+func (r BuildRepo) SaveResult(build domain.Build) (err error) {
+	err = r.DB.Model(&model.Build{}).Where("id=?", build.ID).Updates(
 		map[string]interface{}{"progress": build.Progress, "status": build.Status,
 			"result_path": build.ResultPath, "result_msg": build.ResultMsg,
-			"complete_time": time.Now()})
+			"complete_time": time.Now()}).Error
 	return
 }
 

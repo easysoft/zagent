@@ -106,7 +106,7 @@ func (r *TaskRepo) SetProgress(taskId uint, progress consts.BuildProgress) (err 
 }
 
 func (r *TaskRepo) SetResult(taskId uint, progress consts.BuildProgress, status consts.BuildStatus) (err error) {
-	var data = map[string]interface{}{"progress": progress, "result": status, "updatedTime": time.Now()}
-	r.DB.Model(model.Task{}).Where("id=?", taskId).Updates(data)
+	var data = map[string]interface{}{"progress": progress, "status": status}
+	r.DB.Model(&model.Task{}).Where("id=?", taskId).Updates(data)
 	return
 }

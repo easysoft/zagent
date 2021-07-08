@@ -1,6 +1,7 @@
 package handler
 
 import (
+	_const "github.com/easysoft/zagent/internal/pkg/const"
 	_fileUtils "github.com/easysoft/zagent/internal/pkg/lib/file"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
 	"github.com/easysoft/zagent/internal/server/biz/validate"
@@ -9,6 +10,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/context"
 	"mime/multipart"
+	"strings"
 )
 
 type BaseCtrl struct {
@@ -32,10 +34,12 @@ func (c *BaseCtrl) Validate(s interface{}, ctx iris.Context) bool {
 }
 
 func beforeFileSave(context *context.Context, file *multipart.FileHeader) bool {
+	name := strings.ReplaceAll(file.Filename, "\\", _const.PthSep)
+
 	uuid, _ := uuid.NewV4()
-	file.Filename = _fileUtils.GetFileNameWithoutExt(file.Filename) +
+	file.Filename = _fileUtils.GetFileNameWithoutExt(name) +
 		"-" + uuid.String() +
-		_fileUtils.GetExtName(file.Filename)
+		_fileUtils.GetExtName(name)
 
 	return true
 }

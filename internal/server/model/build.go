@@ -39,6 +39,9 @@ type Build struct {
 	StartTime    *time.Time `json:"startTime"`
 	CompleteTime *time.Time `json:"completeTime"`
 
+	ResultPath string `json:"resultPath"`
+	ResultMsg  string `json:"resultMsg"`
+
 	Progress consts.BuildProgress `json:"progress"`
 	Status   consts.BuildStatus   `json:"status"`
 }
@@ -55,13 +58,14 @@ func NewSeleniumBuildPo(queue Queue, vm Vm) Build {
 		BrowserType:    queue.BrowserType,
 		BrowserVersion: queue.BrowserVersion,
 
-		BuildCommands: queue.BuildCommands,
-		ScriptUrl:     queue.ScriptUrl,
-		ScmAddress:    queue.ScmAddress,
-		ScmAccount:    queue.ScmAccount,
-		ScmPassword:   queue.ScmPassword,
+		ScriptUrl:   queue.ScriptUrl,
+		ScmAddress:  queue.ScmAddress,
+		ScmAccount:  queue.ScmAccount,
+		ScmPassword: queue.ScmPassword,
 
-		EnvVars: queue.EnvVars,
+		EnvVars:       queue.EnvVars,
+		BuildCommands: queue.BuildCommands,
+		ResultFiles:   queue.ResultFiles,
 
 		Progress: consts.ProgressCreated,
 		Status:   consts.StatusCreated,
@@ -110,8 +114,9 @@ func NewBuildTo(build Build) domain.Build {
 		ScmAccount:  build.ScmAccount,
 		ScmPassword: build.ScmPassword,
 
-		BuildCommands: build.BuildCommands,
 		EnvVars:       build.EnvVars,
+		BuildCommands: build.BuildCommands,
+		ResultFiles:   build.ResultFiles,
 
 		Progress: consts.ProgressCreated,
 		Status:   consts.StatusCreated,
