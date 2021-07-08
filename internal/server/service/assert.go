@@ -49,7 +49,8 @@ func (s AssertService) updateVmsStatus(host domain.Host, hostId uint) {
 	runningVms, shutOffVms, unknownVms, vmNames := s.getVmsByStatus(host)
 
 	if len(runningVms) > 0 {
-		s.VmRepo.UpdateStatusByNames(runningVms, consts.VmRunning)
+		// should not update vm status that is active like launch, ready etc.
+		//s.VmRepo.UpdateStatusByNames(runningVms, consts.VmRunning)
 	}
 	if len(shutOffVms) > 0 {
 		s.VmRepo.UpdateStatusByNames(shutOffVms, consts.VmShutOff)
