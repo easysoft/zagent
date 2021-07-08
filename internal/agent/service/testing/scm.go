@@ -33,13 +33,13 @@ func (s *ScmService) GetTestScript(build *commDomain.Build) (err error) {
 	return
 }
 
-func CheckoutCodes(task *commDomain.Build) (err error) {
-	url := task.ScmAddress
-	userName := task.ScmAccount
-	password := task.ScmPassword
+func CheckoutCodes(build *commDomain.Build) (err error) {
+	url := build.ScmAddress
+	userName := build.ScmAccount
+	password := build.ScmPassword
 
-	projectDir := task.WorkDir + _gitUtils.GetGitProjectName(url) + _const.PthSep
-
+	projectDir := build.WorkDir + _gitUtils.GetGitProjectName(url) + _const.PthSep
+	build.ProjectDir = projectDir
 	_fileUtils.MkDirIfNeeded(projectDir)
 
 	options := git.CloneOptions{
@@ -56,8 +56,6 @@ func CheckoutCodes(task *commDomain.Build) (err error) {
 	if err != nil {
 		return
 	}
-
-	task.ProjectDir = projectDir
 
 	return
 }

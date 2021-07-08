@@ -60,6 +60,8 @@ func NewSeleniumBuildPo(queue Queue, vm Vm) Build {
 		ScmAccount:  queue.ScmAccount,
 		ScmPassword: queue.ScmPassword,
 
+		EnvVars: queue.EnvVars,
+
 		Progress: consts.ProgressCreated,
 		Status:   consts.StatusCreated,
 	}
@@ -105,6 +107,8 @@ func NewBuildTo(build Build) domain.Build {
 		ScmAddress:  build.ScmAddress,
 		ScmAccount:  build.ScmAccount,
 		ScmPassword: build.ScmPassword,
+
+		EnvVars: build.EnvVars,
 
 		Progress: consts.ProgressCreated,
 		Status:   consts.StatusCreated,
