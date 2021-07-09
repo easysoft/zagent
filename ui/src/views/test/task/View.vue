@@ -1,14 +1,15 @@
 <template>
   <page-header-wrapper
-    :title="model.name"
+    :title="model.id + '-' + model.name"
     :tab-list="tabList"
     :tab-active-key="tabActiveKey"
     @tabChange="handleTabChange"
   >
+    <!-- summury -->
     <template v-slot:content>
-      <a-descriptions size="small" :column="isMobile ? 1 : 2">
+      <a-descriptions size="small" :column="2">
         <a-descriptions-item :label="$t('form.test.type')">{{ buildTypes[model.buildType] }}</a-descriptions-item>
-        <a-descriptions-item :label="$t('form.test.env')">{{ model.environments.length }} {{ $t('form.uint.ge') }}</a-descriptions-item>
+        <a-descriptions-item :label="$t('form.test.env')">{{ model.environments.length }}</a-descriptions-item>
 
         <a-descriptions-item :label="$t('form.createdAt')">{{ model.createdAt | moment }}</a-descriptions-item>
         <a-descriptions-item :label="$t('form.pendingAt')">
@@ -25,12 +26,9 @@
         <a-descriptions-item :label="$t('form.desc')">{{ model.desc }}</a-descriptions-item>
       </a-descriptions>
     </template>
-
-    <!-- actions -->
     <template v-slot:extra>
       <a-button @click="back()" type="primary" >{{ $t('common.back') }}</a-button>
     </template>
-
     <template v-slot:extraContent>
       <a-row class="status-list">
         <a-col :xs="12" :sm="12">
@@ -44,8 +42,9 @@
       </a-row>
     </template>
 
-    <a-card :bordered="false" :title="$t('form.progress')">
-      <a-steps :direction="isMobile && 'vertical' || 'horizontal'" :current="1" progressDot>
+    <!-- progress -->
+    <a-card v-if="tabActiveKey=='detail'" :bordered="false" :title="$t('form.progress')">
+      <a-steps :direction="'horizontal'" :current="1" progressDot>
         <a-step>
           <template v-slot:title>
             <span>创建项目</span>
@@ -73,8 +72,9 @@
       </a-steps>
     </a-card>
 
-    <!-- 操作 -->
+    <!-- operations -->
     <a-card
+      v-if="tabActiveKey=='detail'"
       style="margin-top: 24px"
       :bordered="false"
       :tabList="operationTabList"
@@ -82,18 +82,19 @@
       @tabChange="(key) => {this.operationActiveTabKey = key}"
     >
       <a-table
-        v-if="operationActiveTabKey === '1'"
         :columns="operationColumns"
-        :dataSource="operation"
+        :dataSource="operations[operationActiveTabKey]"
         :pagination="false"
       >
-        <template
-          slot="status"
-          slot-scope="status">
-          <a-badge :status="status | statusTypeFilter" :text="status | statusFilter"/>
-        </template>
       </a-table>
+    </a-card>
 
+    <a-card
+      v-if="tabActiveKey=='request'"
+      style="margin-top: 24px"
+      :bordered="false"
+    >
+      <pre>{{ JSON.stringify(modelJson, null, 4) }}</pre>
     </a-card>
 
   </page-header-wrapper>
@@ -113,6 +114,7 @@ import {
   getVmStatus
 } from '@/utils/testing'
 import { getTask } from '@/api/manage'
+import { clone } from '@/utils/util'
 
 export default {
   name: 'TaskView',
@@ -129,7 +131,8 @@ export default {
   },
   data () {
     return {
-      model: {},
+      model: { environments: [], queues: [] },
+      modelJson: {},
 
       buildProgress: {},
       buildStatus: {},
@@ -145,43 +148,28 @@ export default {
 
       operationTabList: [],
       operationActiveTabKey: '1',
+      operations: {},
 
       operationColumns: [
+        {
+          title: '编号',
+          dataIndex: 'key',
+          key: 'key'
+        },
         {
           title: '操作类型',
           dataIndex: 'type',
           key: 'type'
         },
         {
-          title: '操作人',
-          dataIndex: 'name',
-          key: 'name'
-        },
-        {
           title: '执行结果',
           dataIndex: 'status',
-          key: 'status',
-          scopedSlots: { customRender: 'status' }
+          key: 'status'
         },
         {
           title: '操作时间',
-          dataIndex: 'updatedAt',
-          key: 'updatedAt'
-        },
-        {
-          title: '备注',
-          dataIndex: 'remark',
-          key: 'remark'
-        }
-      ],
-      operation: [
-        {
-          key: 'op1',
-          type: '订购关系生效',
-          name: '曲丽丽',
-          status: 'agree',
-          updatedAt: '2017-10-03  19:23:12',
-          remark: '-'
+          dataIndex: 'optAt',
+          key: 'optAt'
         }
       ]
     }
@@ -193,20 +181,6 @@ export default {
     }
   },
   filters: {
-    statusFilter (status) {
-      const statusMap = {
-        'agree': '成功',
-        'reject': '驳回'
-      }
-      return statusMap[status]
-    },
-    statusTypeFilter (type) {
-      const statusTypeMap = {
-        'agree': 'success',
-        'reject': 'error'
-      }
-      return statusTypeMap[type]
-    }
   },
   created () {
     this.buildProgress = getBuildProgress(this)
@@ -220,22 +194,36 @@ export default {
 
     this.tabList = [
       { key: 'detail', tab: this.$t('common.detail') },
-      { key: 'rule', tab: this.$t('common.request') }
+      { key: 'request', tab: this.$t('common.request') }
     ]
-
-    this.operationTabList = [ { key: '1', tab: '操作日志一' } ]
   },
   mounted () {
     this.loadData()
   },
   methods: {
     loadData () {
-      if (!this.id) {
-        return
-      }
+      if (!this.id) return
       if (this.id) {
         this.getModel().then(json => {
           this.model = json.data
+          this.modelJson = this.convertJson(this.model)
+
+          this.model.queues.forEach((queue, index) => {
+            const name = this.osTypes[queue.osType] + ' ' + this.osLangs[queue.osLang]
+            this.operationTabList.push({ key: queue.id, tab: name })
+
+            // queue.buildHistories.forEach((buildHis, index) => {
+            // })
+
+            this.operations[queue.id] = [
+              {
+                key: 1,
+                type: '创建虚拟机',
+                status: '成功',
+                optAt: '2017-10-03  19:23:12'
+              }
+            ]
+          })
         })
       } else {
         this.reset()
@@ -248,8 +236,33 @@ export default {
       this.$router.push('/task/list')
     },
 
+    convertJson (task) {
+      const json = clone(task)
+      const arr = ['queues', 'id', 'createdAt', 'updatedAt', 'progress', 'status',
+        'startTime', 'pendingTime', 'resultTime', 'userName', 'userId', 'groupId',
+        'priority', 'keepResultFiles']
+      arr.forEach((item, index) => {
+        json[item] = undefined
+      })
+
+      if (json.scriptUrl === '') {
+        json.scriptUrl = json.scmAddress
+        json.scmAddress = undefined
+      }
+
+      if (json.environments) {
+        json.environments.forEach((item, index) => {
+          item.id = undefined
+          item.createdAt = undefined
+          item.updatedAt = undefined
+          item.taskId = undefined
+        })
+      }
+
+      return json
+    },
     handleTabChange (key) {
-      console.log('')
+      console.log(key)
       this.tabActiveKey = key
     }
   }
@@ -268,20 +281,6 @@ export default {
 .heading {
   color: rgba(0, 0, 0, .85);
   font-size: 20px;
-}
-
-.no-data {
-  color: rgba(0, 0, 0, .25);
-  text-align: center;
-  line-height: 64px;
-  font-size: 16px;
-
-  i {
-    font-size: 24px;
-    margin-right: 16px;
-    position: relative;
-    top: 3px;
-  }
 }
 
 .mobile {

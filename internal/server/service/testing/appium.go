@@ -31,11 +31,6 @@ func (s AppiumService) Start(queue model.Queue) (result _domain.RpcResp) {
 	build.AppiumPort = device.AppiumPort
 
 	result = s.RpcService.AppiumTest(build)
-	if result.IsSuccess() {
-		s.BuildRepo.Start(build)
-	} else {
-		s.BuildRepo.Delete(build)
-	}
 
 	return
 }

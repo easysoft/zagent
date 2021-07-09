@@ -27,6 +27,13 @@ func (s *TaskService) Get(id uint) (po model.Task) {
 	po = s.TaskRepo.Get(id)
 	return
 }
+func (s *TaskService) GetDetail(id uint) (po model.Task) {
+	po = s.Get(id)
+
+	po.Queues = s.QueueRepo.QueryByTask(po.ID)
+
+	return
+}
 
 func (s *TaskService) Save(po *model.Task, userId uint) (err error) {
 	if strings.Index(po.ScriptUrl, ".zip") < 0 {

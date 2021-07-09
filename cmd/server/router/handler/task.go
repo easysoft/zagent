@@ -56,7 +56,7 @@ func (c *TaskCtrl) Get(ctx iris.Context) {
 		return
 	}
 
-	model := c.TaskService.Get(uint(id))
+	model := c.TaskService.GetDetail(uint(id))
 	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "操作成功", model))
 	return
 }

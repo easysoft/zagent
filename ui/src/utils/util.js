@@ -65,3 +65,8 @@ export function removeLoadingAnimate (id = '', timeout = 1500) {
     document.body.removeChild(document.getElementById(id))
   }, timeout)
 }
+
+export function clone (obj) {
+  const ret = JSON.parse(JSON.stringify(obj))
+  return ret
+}

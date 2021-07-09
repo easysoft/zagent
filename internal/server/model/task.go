@@ -40,6 +40,8 @@ type Task struct {
 	UserName string `json:"userName"`
 	UserId   uint   `json:"userId"`
 	GroupId  uint   `json:"groupId"`
+
+	Queues []Queue `json:"queues" gorm:"-"`
 }
 
 func NewTask() Task {

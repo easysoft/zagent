@@ -13,7 +13,7 @@ type Queue struct {
 	VmId     uint   `json:"vmId"`
 
 	BuildType      consts.BuildType   `json:"buildType"`
-	OsPlatform     consts.OsCategory  `json:"osPlatform"`
+	OsCategory     consts.OsCategory  `json:"osCategory"`
 	OsType         consts.OsType      `json:"osType"`
 	OsLang         consts.OsLang      `json:"osLang"`
 	BrowserType    consts.BrowserType `json:"browserType"`
@@ -61,7 +61,7 @@ func NewQueue(buildType consts.BuildType, groupId uint, taskId uint, taskPriorit
 
 		BuildType:  buildType,
 		OsLang:     osLang,
-		OsPlatform: osCategory,
+		OsCategory: osCategory,
 		OsType:     osType,
 
 		GroupId:         groupId,

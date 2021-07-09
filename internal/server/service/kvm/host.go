@@ -18,7 +18,7 @@ func NewHostService() *HostService {
 
 func (s HostService) GetValidForQueue(queue model.Queue) (hostId, backingId, tmplId uint, found bool) {
 	backingIdsByBrowser := s.BackingRepo.QueryByBrowser(queue.BrowserType, queue.BrowserVersion)
-	backingIds, found := s.BackingRepo.QueryByOs(queue.OsPlatform, queue.OsType, queue.OsLang, backingIdsByBrowser)
+	backingIds, found := s.BackingRepo.QueryByOs(queue.OsCategory, queue.OsType, queue.OsLang, backingIdsByBrowser)
 	if !found {
 		return
 	}
@@ -26,7 +26,7 @@ func (s HostService) GetValidForQueue(queue model.Queue) (hostId, backingId, tmp
 	busyHostIds := s.getBusyHosts()
 	hostId, backingId = s.HostRepo.QueryByBackings(backingIds, busyHostIds)
 
-	tmplId, found = s.TmplRepo.QueryByOs(queue.OsPlatform, queue.OsType, queue.OsLang)
+	tmplId, found = s.TmplRepo.QueryByOs(queue.OsCategory, queue.OsType, queue.OsLang)
 
 	return
 }
