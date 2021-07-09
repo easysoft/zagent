@@ -20,6 +20,7 @@ const locale = {
   'menu.task': 'Task',
   'menu.task.list': 'Task List',
   'menu.task.edit': 'Task Edit',
+  'menu.task.view': 'Task View',
 
   'form.view': 'View',
   'form.create': 'Create',
@@ -106,6 +107,32 @@ const locale = {
   'form.os.lang.zh_cn': 'Simple Chinese',
 
   'form.edit.env': 'Edit Environment',
+
+  'build.progress.created': 'Created',
+  'build.progress.pending_res': 'Pending Resource',
+  'build.progress.launch_vm': 'Launch Vm',
+  'build.progress.create_vm_fail': 'Create Vm Fail',
+  'build.progress.perform_request_fail': 'Perform Request Fail',
+  'build.progress.appium_service_fail': 'Appium Service Fail',
+  'build.progress.running': 'Running',
+  'build.progress.timeout': 'Timeout',
+  'build.progress.completed': 'Completed',
+  'build.progress.cancel': 'Cancel',
+
+  'build.status.created': 'Created',
+  'build.status.pass': 'Pass',
+  'build.status.fail': 'Fail',
+
+  'vm.status.created': 'Created',
+  'vm.status.launch': 'Launch',
+  'vm.status.vm_fail_create': 'Vm Fail Create',
+  'vm.status.running': 'Running',
+  'vm.status.shutoff': 'Shutoff',
+  'vm.status.destroy': 'Destroy',
+  'vm.status.vm_fail_destroy': 'Vm Fail Destroy',
+  'vm.status.busy': 'Busy',
+  'vm.status.ready': 'Ready',
+  'vm.status.unknown': 'Unknown',
 
   'status.enable': 'Enable',
   'status.disable': 'Disable',

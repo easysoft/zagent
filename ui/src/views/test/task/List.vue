@@ -19,7 +19,7 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="!advanced && 8 || 24" :sm="24">
+              <a-col>
                 <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
                   <a-button type="primary" @click="$refs.table.refresh(true)">{{ $t('form.search') }}</a-button>
                   <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">{{ $t('form.reset') }}</a-button>
@@ -80,9 +80,8 @@
 </template>
 
 <script>
-import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { listTask, disableTask, removeTask } from '@/api/manage'
+import { listTask, removeTask } from '@/api/manage'
 
 export default {
   name: 'TaskList',
@@ -94,11 +93,7 @@ export default {
   statusMap: {},
   data () {
     return {
-      isProd: process.env.NODE_ENV === 'production',
-
-      visible: false,
       confirmLoading: false,
-      mdl: null,
       advanced: false,
       queryParam: { status: '' },
       loadData: parameter => {
@@ -166,35 +161,13 @@ export default {
   },
   methods: {
     create () {
-      this.mdl = null
-      this.visible = true
-
       this.$router.push('/test/task/0/edit')
     },
-    test (record) {
-      this.visible = true
-      this.mdl = { ...record }
-
-      this.$router.push('/test/task/' + record.id + '/test')
-    },
     view (record) {
-      this.visible = true
-      this.mdl = { ...record }
-
       this.$router.push('/test/task/' + record.id + '/view')
     },
     edit (record) {
-      this.visible = true
-      this.mdl = { ...record }
-
       this.$router.push('/test/task/' + record.id + '/edit')
-    },
-
-    disable (record) {
-      disableTask(record).then(json => {
-        console.log('disableTask', json)
-        this.$refs.table.refresh(false)
-      })
     },
     confirmRemove (record) {
       removeTask(record).then(json => {
@@ -208,14 +181,6 @@ export default {
     onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
-    },
-    toggleAdvanced () {
-      this.advanced = !this.advanced
-    },
-    resetSearchForm () {
-      this.queryParam = {
-        date: moment(new Date())
-      }
     }
   }
 }

@@ -1,5 +1,46 @@
+export function getBuildProgress (that) {
+  return {
+    'created': that.$t('build.progress.created'),
+    'pending_res': that.$t('build.progress.pending_res'),
+    'launch_vm': that.$t('build.progress.launch_vm'),
+    'create_vm_fail': that.$t('build.progress.create_vm_fail'),
+    'perform_request_fail': that.$t('build.progress.perform_request_fail'),
+    'appium_service_fail': that.$t('build.progress.appium_service_fail'),
+    'running': that.$t('build.progress.running'),
+    'timeout': that.$t('build.progress.timeout'),
+    'completed': that.$t('build.progress.completed'),
+    'cancel': that.$t('build.progress.cancel')
+  }
+}
+export function getBuildStatus (that) {
+  return {
+    'created': that.$t('build.status.created'),
+    'pass': that.$t('build.status.pass'),
+    'fail': that.$t('build.status.fail')
+  }
+}
+export function getVmStatus (that) {
+  return {
+    'created': that.$t('vm.status.created'),
+    'launch': that.$t('vm.status.launch'),
+    'vm_fail_create': that.$t('vm.status.vm_fail_create'),
+
+    'running': that.$t('vm.status.running'),
+    'shutoff': that.$t('vm.status.shutoff'),
+    'destroy': that.$t('vm.status.destroy'),
+    'vm_fail_destroy': that.$t('vm.status.vm_fail_destroy'),
+
+    'busy': that.$t('vm.status.busy'),
+    'ready': that.$t('vm.status.ready'),
+
+    'unknown': that.$t('vm.status.unknown')
+  }
+}
+
 export function getBuildTypes (that) {
-  return { 'selenium': that.$t('form.selenium.test'), 'appium': that.$t('form.appium.test') }
+  return {
+    'selenium': that.$t('form.selenium.test'),
+    'appium': that.$t('form.appium.test') }
 }
 
 export function getOsCategories (that) {

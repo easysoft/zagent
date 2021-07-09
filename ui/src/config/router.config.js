@@ -41,6 +41,12 @@ export const asyncRouterMap = [
             name: 'task-edit',
             component: () => import('@/views/test/task/Edit'),
             meta: { title: 'menu.task.edit', keepAlive: true }
+          },
+          {
+            path: '/test/task/:id/view',
+            name: 'task-view',
+            component: () => import('@/views/test/task/View'),
+            meta: { title: 'menu.task.view', keepAlive: true }
           }
         ]
       }
