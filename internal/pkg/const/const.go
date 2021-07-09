@@ -6,7 +6,7 @@ const (
 	PthSep = string(os.PathSeparator)
 
 	RpcPort           = 8848
-	UploadDir         = "uploads"
+	UploadDir         = "down" + PthSep + "upload"
 	UploadFileMaxSize = 1000 << 20
 
 	LanguageEN      = "en"
