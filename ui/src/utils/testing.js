@@ -39,8 +39,8 @@ export function getVmStatus (that) {
 
 export function getBuildTypes (that) {
   return {
-    'selenium': that.$t('form.selenium.test'),
-    'appium': that.$t('form.appium.test') }
+    'selenium': that.$t('form.selenium'),
+    'appium': that.$t('form.appium') }
 }
 
 export function getOsCategories (that) {

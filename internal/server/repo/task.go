@@ -94,11 +94,11 @@ func (r *TaskRepo) Delete(id uint) (err error) {
 }
 
 func (r *TaskRepo) SetProgress(taskId uint, progress consts.BuildProgress) (err error) {
-	var data map[string]interface{}
+	data := map[string]interface{}{"progress": progress}
 	if progress == consts.ProgressRunning {
-		data = map[string]interface{}{"progress": progress, "start_time": time.Now()}
-	} else {
-		data = map[string]interface{}{"progress": progress, "pending_time": time.Now()}
+		data["start_time"] = time.Now()
+	} else if progress == consts.ProgressPendingRes {
+		data["pending_time"] = time.Now()
 	}
 
 	r.DB.Model(&model.Task{}).Where("id=?", taskId).Updates(data)
@@ -106,7 +106,11 @@ func (r *TaskRepo) SetProgress(taskId uint, progress consts.BuildProgress) (err 
 }
 
 func (r *TaskRepo) SetResult(taskId uint, progress consts.BuildProgress, status consts.BuildStatus) (err error) {
-	var data = map[string]interface{}{"progress": progress, "status": status}
+	var data = map[string]interface{}{
+		"progress":    progress,
+		"status":      status,
+		"result_time": time.Now()}
+
 	r.DB.Model(&model.Task{}).Where("id=?", taskId).Updates(data)
 	return
 }

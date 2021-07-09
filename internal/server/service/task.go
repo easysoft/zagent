@@ -66,7 +66,7 @@ func (s *TaskService) SetProgress(id uint, progress consts.BuildProgress) {
 	s.TaskRepo.SetProgress(id, progress)
 }
 
-func (s *TaskService) CheckCompleted(taskId uint) {
+func (s *TaskService) SetTaskStatus(taskId uint) {
 	queues := s.QueueRepo.QueryByTask(taskId)
 
 	progress := consts.ProgressCompleted
@@ -74,7 +74,8 @@ func (s *TaskService) CheckCompleted(taskId uint) {
 	isAllQueuesCompleted := true
 
 	for _, queue := range queues {
-		if queue.Progress != consts.ProgressCompleted && queue.Progress != consts.ProgressTimeout { // 有queue在进行中
+		if queue.Progress != consts.ProgressCompleted &&
+			queue.Progress != consts.ProgressTimeout { // 有queue在进行中
 			isAllQueuesCompleted = false
 			break
 		}
