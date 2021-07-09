@@ -32,7 +32,7 @@ func (c *TaskCtrl) List(ctx iris.Context) {
 
 	projects, total := c.TaskService.List(keywords, status, pageNo, pageSize)
 
-	_, _ = ctx.JSON(_httpUtils.ApiResPage(200, "请求成功",
+	_, _ = ctx.JSON(_httpUtils.ApiResPage(iris.StatusOK, "请求成功",
 		projects, pageNo, pageSize, total))
 }
 
@@ -46,7 +46,7 @@ func (c *TaskCtrl) ListForSelect(ctx iris.Context) {
 	data["projects"] = projects
 	data["projectId"] = projectId
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", data))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "请求成功", data))
 }
 
 func (c *TaskCtrl) Get(ctx iris.Context) {
@@ -57,7 +57,7 @@ func (c *TaskCtrl) Get(ctx iris.Context) {
 	}
 
 	model := c.TaskService.Get(uint(id))
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", model))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "操作成功", model))
 	return
 }
 
@@ -82,7 +82,7 @@ func (c *TaskCtrl) Create(ctx iris.Context) {
 		return
 	}
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", model))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "操作成功", model))
 	return
 }
 
@@ -99,7 +99,7 @@ func (c *TaskCtrl) Update(ctx iris.Context) {
 		return
 	}
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", model))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "操作成功", model))
 }
 
 func (c *TaskCtrl) Disable(ctx iris.Context) {
@@ -110,7 +110,7 @@ func (c *TaskCtrl) Disable(ctx iris.Context) {
 	}
 
 	c.TaskService.Disable(uint(id))
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", ""))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "操作成功", ""))
 }
 
 func (c *TaskCtrl) Delete(ctx iris.Context) {
@@ -121,5 +121,5 @@ func (c *TaskCtrl) Delete(ctx iris.Context) {
 	}
 
 	c.TaskService.Delete(uint(id))
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", ""))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "操作成功", ""))
 }

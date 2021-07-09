@@ -26,5 +26,5 @@ func (c *ValidCtrl) Valid(ctx iris.Context) {
 
 	result := c.ValidService.Valid(model)
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", result))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "请求成功", result))
 }

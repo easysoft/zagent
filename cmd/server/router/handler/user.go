@@ -63,7 +63,7 @@ func (c *UserCtrl) GetProfile(ctx iris.Context) {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", c.userTransform(user)))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "请求成功", c.userTransform(user)))
 }
 
 func (c *UserCtrl) GetAdminInfo(ctx iris.Context) {
@@ -74,7 +74,7 @@ func (c *UserCtrl) GetAdminInfo(ctx iris.Context) {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", map[string]string{"avatar": user.Avatar}))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "请求成功", map[string]string{"avatar": user.Avatar}))
 }
 
 func (c *UserCtrl) ChangeAvatar(ctx iris.Context) {
@@ -108,7 +108,7 @@ func (c *UserCtrl) ChangeAvatar(ctx iris.Context) {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", c.userTransform(user)))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "请求成功", c.userTransform(user)))
 }
 
 /**
@@ -132,7 +132,7 @@ func (c *UserCtrl) GetUser(ctx iris.Context) {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", c.userTransform(user)))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "操作成功", c.userTransform(user)))
 }
 
 /**
@@ -178,7 +178,7 @@ func (c *UserCtrl) CreateUser(ctx iris.Context) {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, "操作失败", nil))
 		return
 	}
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", c.userTransform(user)))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "操作成功", c.userTransform(user)))
 	return
 
 }
@@ -227,7 +227,7 @@ func (c *UserCtrl) UpdateUser(ctx iris.Context) {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", c.userTransform(user)))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "操作成功", c.userTransform(user)))
 }
 
 /**
@@ -251,7 +251,7 @@ func (c *UserCtrl) DeleteUser(ctx iris.Context) {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "删除成功", nil))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "删除成功", nil))
 }
 
 /**
@@ -277,7 +277,7 @@ func (c *UserCtrl) GetAllUsers(ctx iris.Context) {
 	}
 
 	transform := c.usersTransform(users)
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", map[string]interface{}{"items": transform, "total": count, "limit": "s.Limit"}))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "操作成功", map[string]interface{}{"items": transform, "total": count, "limit": "s.Limit"}))
 
 }
 

@@ -33,7 +33,7 @@ func (c *BuildCtrl) UploadResult(ctx iris.Context) {
 
 	uploaded, n, err := ctx.UploadFormFiles(dir, beforeFileSave)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, fmt.Sprintf("操作失败, 字节%d", n), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, fmt.Sprintf("操作失败, 字节%d", n), nil))
 	}
 
 	filePath := filepath.Join(dir, uploaded[0].Filename)

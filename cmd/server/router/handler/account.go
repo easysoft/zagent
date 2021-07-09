@@ -47,7 +47,7 @@ func (c *AccountCtrl) UserLogin(ctx iris.Context) {
 	req := new(validate.LoginRequest)
 
 	if err := ctx.ReadJSON(req); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
 
@@ -56,7 +56,7 @@ func (c *AccountCtrl) UserLogin(ctx iris.Context) {
 		errs := err.(validator.ValidationErrors)
 		for _, e := range errs.Translate(validate.ValidateTrans) {
 			if len(e) > 0 {
-				_, _ = ctx.JSON(_httpUtils.ApiRes(400, e, nil))
+				_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, e, nil))
 				return
 			}
 		}
@@ -75,19 +75,19 @@ func (c *AccountCtrl) UserLogin(ctx iris.Context) {
 	}
 	user, err := c.UserRepo.GetUser(search)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
 
 	response, code, msg := c.UserService.CheckLogin(ctx, user, req.Password)
-	if code != 200 {
+	if code != iris.StatusOK {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(code, msg, response))
 		return
 	}
 	response.RememberMe = req.RememberMe
 
 	refreshToken := ""
-	if code == 200 && req.RememberMe {
+	if code == iris.StatusOK && req.RememberMe {
 		refreshToken = response.Token
 	}
 
@@ -110,19 +110,19 @@ func (c *AccountCtrl) UserLogout(ctx iris.Context) {
 
 		credentials, err = c.TokenRepo.GetRedisSession(conn, value.Raw)
 		if err != nil {
-			_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+			_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 			return
 		}
 		if credentials != nil {
 			if err := c.TokenRepo.DelUserTokenCache(conn, *credentials, value.Raw); err != nil {
-				_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+				_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 				return
 			}
 		}
 	} else {
 		credentials = jwt2.GetCredentials(ctx)
 		if credentials == nil {
-			_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+			_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 			return
 		} else {
 			jwt2.RemoveCredentials(ctx)
@@ -130,7 +130,7 @@ func (c *AccountCtrl) UserLogout(ctx iris.Context) {
 	}
 
 	ctx.Application().Logger().Infof("%d 退出系统", credentials.UserId)
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "退出", nil))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "退出", nil))
 }
 
 func (c *AccountCtrl) UserExpire(ctx iris.Context) {
@@ -141,15 +141,15 @@ func (c *AccountCtrl) UserExpire(ctx iris.Context) {
 	defer conn.Close()
 	sess, err := c.TokenRepo.GetRedisSession(conn, value.Raw)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
 	if sess != nil {
 		if err := c.TokenRepo.UpdateUserTokenCacheExpire(conn, *sess, value.Raw); err != nil {
-			_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+			_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 			return
 		}
 	}
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "", nil))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "", nil))
 }
