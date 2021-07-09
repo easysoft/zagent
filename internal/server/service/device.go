@@ -34,7 +34,7 @@ func (s DeviceService) Register(devices []domain.DeviceInst) (result _domain.Rpc
 		}
 	}
 
-	result.Success(fmt.Sprintf("success to register %d devices", len(devices)))
+	result.Pass(fmt.Sprintf("success to register %d devices", len(devices)))
 	return
 }
 

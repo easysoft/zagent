@@ -20,7 +20,7 @@ func NewVmCtrl() *VmCtrl {
 func (c *VmCtrl) Create(ctx context.Context, req domain.KvmReq, reply *_domain.RpcResp) error {
 	dom, vncPort, vmRawPath, vmBackingPath, err := c.LibvirtService.CreateVm(&req, true)
 	if err == nil {
-		reply.Success("success to create vm.")
+		reply.Pass("success to create vm.")
 
 		vmName, _ := dom.GetName()
 		vm := domain.Vm{
@@ -40,6 +40,8 @@ func (c *VmCtrl) Create(ctx context.Context, req domain.KvmReq, reply *_domain.R
 }
 
 func (c *VmCtrl) Destroy(ctx context.Context, req domain.KvmReq, reply *_domain.RpcResp) error {
+	c.LibvirtService.DestroyVmByName(req.VmUniqueName, true)
 
+	reply.Passf("success to destroy vm %s .", req.VmUniqueName)
 	return nil
 }

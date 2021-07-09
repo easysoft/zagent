@@ -27,7 +27,7 @@ func (c *PerformCtrl) Perform(ctx context.Context, build commDomain.Build, reply
 		c.InterfaceTestService.ExecSet(&build, &result)
 	}
 
-	reply.Success("Pass to exec processor.")
+	reply.Pass("Pass to exec processor.")
 	reply.Payload = result
 
 	return nil

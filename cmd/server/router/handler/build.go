@@ -10,6 +10,7 @@ import (
 	_fileUtils "github.com/easysoft/zagent/internal/pkg/lib/file"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
 	serverService "github.com/easysoft/zagent/internal/server/service"
+	"github.com/easysoft/zagent/internal/server/service/kvm"
 	"github.com/kataras/iris/v12"
 	"github.com/mitchellh/mapstructure"
 	"path/filepath"
@@ -20,6 +21,7 @@ type BuildCtrl struct {
 	BaseCtrl
 
 	BuildService *serverService.BuildService `inject:""`
+	VmService    kvmService.VmService        `inject:""`
 }
 
 func NewBuildCtrl() *BuildCtrl {
@@ -49,6 +51,7 @@ func (c *BuildCtrl) UploadResult(ctx iris.Context) {
 	build.Status = consts.StatusPass
 
 	c.BuildService.SaveResult(build)
+	//c.VmService.DestroyRemote(build.VmId) TODO: testing
 
 	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK,
 		fmt.Sprintf("操作成功 %s %#v", filePath, params), nil))

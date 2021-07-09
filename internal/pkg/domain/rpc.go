@@ -1,6 +1,9 @@
 package _domain
 
-import _const "github.com/easysoft/zagent/internal/pkg/const"
+import (
+	"fmt"
+	_const "github.com/easysoft/zagent/internal/pkg/const"
+)
 
 type RpcReq struct {
 	ComputerIp   string
@@ -17,14 +20,24 @@ type RpcResp struct {
 	Payload interface{} `json:"payload"`
 }
 
-func (result *RpcResp) Success(msg string) {
+func (result *RpcResp) Pass(msg string) {
 	result.Code = _const.ResultSuccess.Int()
 	result.Msg = msg
+}
+
+func (result *RpcResp) Passf(str string, args ...interface{}) {
+	result.Code = _const.ResultSuccess.Int()
+	result.Msg = fmt.Sprintf(str, args...)
 }
 
 func (result *RpcResp) Fail(msg string) {
 	result.Code = _const.ResultFail.Int()
 	result.Msg = msg
+}
+
+func (result *RpcResp) Failf(str string, args ...interface{}) {
+	result.Code = _const.ResultFail.Int()
+	result.Msg = fmt.Sprintf(str, args...)
 }
 
 func (result *RpcResp) IsSuccess() bool {

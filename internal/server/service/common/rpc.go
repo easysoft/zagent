@@ -49,9 +49,7 @@ func (s RpcService) CreateVm(hostIp string, hostPort int, req commDomain.KvmReq)
 
 func (s RpcService) DestroyVm(hostIp string, hostPort int, req commDomain.KvmReq) (result _domain.RpcResp) {
 	obj := interface{}(req)
-	s.Request(hostIp, hostPort, "vm", "Destroy", &obj)
-
-	result.Success(fmt.Sprintf("success to destroy vm via rpc %#v.", req))
+	result = s.Request(hostIp, hostPort, "vm", "Destroy", &obj)
 	return
 }
 

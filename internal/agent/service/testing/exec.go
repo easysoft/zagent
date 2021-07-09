@@ -51,7 +51,7 @@ func (s *ExecService) GetTestApp(build *commDomain.Build) _domain.RpcResp {
 	if build.AppPath == "" {
 		result.Fail(fmt.Sprintf("App获取错误，%s", build.AppUrl))
 	} else {
-		result.Success("")
+		result.Pass("")
 	}
 
 	return result

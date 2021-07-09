@@ -5,18 +5,18 @@ import (
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 )
 
-type TestService struct {
+type RunService struct {
 	ExecService *ExecService `inject:""`
 
 	SeleniumService *SeleniumService `inject:""`
 	ScmService      *ScmService      `inject:""`
 }
 
-func NewService() *TestService {
-	return &TestService{}
+func NewRunService() *RunService {
+	return &RunService{}
 }
 
-func (s *TestService) Run(build *commDomain.Build) {
+func (s *RunService) Run(build *commDomain.Build) {
 	result := commDomain.TestResult{}
 	result.Name = build.Name
 

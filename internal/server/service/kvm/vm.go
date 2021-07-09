@@ -16,6 +16,8 @@ import (
 
 type VmService interface {
 	CreateRemote(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp)
+	DestroyRemote(vmId uint) (result _domain.RpcResp)
+
 	genVmName(backing model.VmBacking, vmId uint) (name string)
 	genValidMacAddress() (mac string)
 	genRandomMac() (mac string)
@@ -102,6 +104,24 @@ func (s KvmNativeService) CreateRemote(hostId, backingId, tmplId, queueId uint) 
 		s.VmRepo.FailToCreate(vm.ID, result.Msg)
 		s.QueueRepo.SetQueueStatus(queueId, consts.ProgressCreateVmFail, consts.StatusFail)
 	}
+
+	return
+}
+
+func (s KvmNativeService) DestroyRemote(vmId uint) (result _domain.RpcResp) {
+	vm := s.VmRepo.GetById(vmId)
+	host := s.HostRepo.Get(vm.HostId)
+
+	req := domain.KvmReq{VmUniqueName: vm.Name}
+
+	result = s.RpcService.DestroyVm(host.Ip, host.Port, req)
+	var status consts.VmStatus
+	if result.IsSuccess() {
+		status = consts.VmDestroy
+	} else {
+		status = consts.VmFailDestroy
+	}
+	s.VmRepo.UpdateStatusByNames([]string{vm.Name}, status)
 
 	return
 }

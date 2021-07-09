@@ -10,9 +10,7 @@ type Build struct {
 	BaseModel
 
 	QueueId uint `json:"queueId"`
-	//Queue   `json:"queue" sql:"-" gorm:"foreignkey:QueueId"`
-
-	VmId uint `json:"vmId"`
+	VmId    uint `json:"vmId"`
 
 	BuildType consts.BuildType `json:"buildType"`
 
@@ -99,6 +97,7 @@ func NewBuildTo(build Build) domain.Build {
 	toValue := domain.Build{
 		ID:        build.ID,
 		QueueId:   build.QueueId,
+		VmId:      build.VmId,
 		BuildType: build.BuildType,
 		Serial:    build.Serial,
 		Priority:  build.Priority,

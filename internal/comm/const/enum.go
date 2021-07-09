@@ -18,9 +18,10 @@ const (
 	VmLaunch     VmStatus = "launch"         // set after success to call vm creating remotely
 	VmFailCreate VmStatus = "vm_fail_create" // set after fail to call vm creating remotely
 
-	VmRunning VmStatus = "running" // report by agent on host
-	VmDestroy VmStatus = "destroy" // report by agent on host
-	VmShutOff VmStatus = "shutoff" // report by agent on host
+	VmRunning     VmStatus = "running"         // report by agent on host
+	VmShutOff     VmStatus = "shutoff"         // report by agent on host
+	VmDestroy     VmStatus = "destroy"         // report by agent on host
+	VmFailDestroy VmStatus = "vm_fail_destroy" // set after fail to call vm destroy remotely
 
 	VmBusy  VmStatus = "busy"  // report by agent in vm
 	VmReady VmStatus = "ready" // report by agent in vm

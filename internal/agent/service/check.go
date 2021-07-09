@@ -12,8 +12,8 @@ type CheckService struct {
 	VmService     *kvmService.VmService        `inject:""`
 	DeviceService *deviceService.DeviceService `inject:""`
 
-	JobService  *JobService                 `inject:""`
-	TestService *testingService.TestService `inject:""`
+	JobService  *JobService                `inject:""`
+	TestService *testingService.RunService `inject:""`
 }
 
 func NewCheckService() *CheckService {

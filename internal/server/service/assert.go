@@ -27,7 +27,7 @@ func (s AssertService) RegisterHost(host domain.Host) (result _domain.RpcResp) {
 
 	s.updateVmsStatus(host, hostPo.ID)
 
-	result.Success("")
+	result.Pass("")
 
 	return
 }
@@ -40,7 +40,7 @@ func (s AssertService) RegisterVm(vm domain.Vm) (result _domain.RpcResp) {
 		result.Fail(fmt.Sprintf("fail to register host %s ", po.NodeIp))
 	}
 
-	result.Success("")
+	result.Pass("")
 
 	return
 }

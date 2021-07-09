@@ -8,6 +8,7 @@ import (
 type Build struct {
 	Version float64 `json:"version,omitempty"`
 	QueueId uint    `json:"queueId,omitempty"`
+	VmId    uint    `json:"vmId,omitempty"`
 	ID      uint    `json:"id,omitempty"`
 	Name    string  `json:"name,omitempty"`
 	Desc    string  `json:"desc,omitempty"`

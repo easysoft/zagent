@@ -19,7 +19,7 @@ func (c *JobCtrl) Add(ctx context.Context, build commDomain.Build, reply *_domai
 	//size := c.JobService.GetTaskSize()
 	//if size == 0 {
 	c.JobService.AddTask(build)
-	reply.Success("Pass to add job.")
+	reply.Pass("Pass to add job.")
 	//} else {
 	//	reply.Fail(fmt.Sprintf("already has %d jobs to be done.", size))
 	//}
