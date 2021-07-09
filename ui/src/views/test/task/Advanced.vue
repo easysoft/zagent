@@ -162,45 +162,12 @@
 
 <script>
 import { baseMixin } from '@/store/app-mixin'
-import {
-} from '@/utils/const'
-import {
-  getBuildTypes,
-  getOsCategories,
-  getOsTypes,
-  getOsLangs,
-  getBuildProgress,
-  getBuildStatus,
-  getVmStatus
-} from '@/utils/testing'
-import { getTask } from '@/api/manage'
 
 export default {
-  name: 'TaskView',
+  name: 'Advanced',
   mixins: [baseMixin],
-  props: {
-    id: {
-      type: Number,
-      default: function () {
-        return parseInt(this.$route.params.id)
-      }
-    }
-  },
-  computed: {
-  },
   data () {
     return {
-      model: {},
-
-      buildProgress: {},
-      buildStatus: {},
-      vmStatus: {},
-
-      buildTypes: {},
-      osCategories: {},
-      osTypes: {},
-      osLangs: {},
-
       tabList: [
         { key: 'detail', tab: '详情' },
         { key: 'rule', tab: '规则' }
@@ -339,12 +306,6 @@ export default {
       ]
     }
   },
-  watch: {
-    id: function () {
-      console.log('watch id', this.id)
-      this.loadData()
-    }
-  },
   filters: {
     statusFilter (status) {
       const statusMap = {
@@ -361,39 +322,7 @@ export default {
       return statusTypeMap[type]
     }
   },
-  created () {
-    this.buildProgress = getBuildProgress(this)
-    this.buildStatus = getBuildStatus(this)
-    this.vmStatus = getVmStatus(this)
-
-    this.buildTypes = getBuildTypes(this)
-    this.osCategories = getOsCategories(this)
-    this.osTypes = getOsTypes(this)
-    this.osLangs = getOsLangs(this)
-  },
-  mounted () {
-    this.loadData()
-  },
   methods: {
-    loadData () {
-      if (!this.id) {
-        return
-      }
-      if (this.id) {
-        this.getModel().then(json => {
-          this.model = json.data
-        })
-      } else {
-        this.reset()
-      }
-    },
-    getModel () {
-      return getTask(this.id)
-    },
-    back () {
-      this.$router.push('/task/list')
-    },
-
     handleTabChange (key) {
       console.log('')
       this.tabActiveKey = key
@@ -404,41 +333,41 @@ export default {
 
 <style lang="less" scoped>
 
-.detail-layout {
-  margin-left: 44px;
-}
-.text {
-  color: rgba(0, 0, 0, .45);
-}
-
-.heading {
-  color: rgba(0, 0, 0, .85);
-  font-size: 20px;
-}
-
-.no-data {
-  color: rgba(0, 0, 0, .25);
-  text-align: center;
-  line-height: 64px;
-  font-size: 16px;
-
-  i {
-    font-size: 24px;
-    margin-right: 16px;
-    position: relative;
-    top: 3px;
-  }
-}
-
-.mobile {
   .detail-layout {
-    margin-left: unset;
+    margin-left: 44px;
   }
   .text {
+    color: rgba(0, 0, 0, .45);
+  }
 
+  .heading {
+    color: rgba(0, 0, 0, .85);
+    font-size: 20px;
   }
-  .status-list {
-    text-align: left;
+
+  .no-data {
+    color: rgba(0, 0, 0, .25);
+    text-align: center;
+    line-height: 64px;
+    font-size: 16px;
+
+    i {
+      font-size: 24px;
+      margin-right: 16px;
+      position: relative;
+      top: 3px;
+    }
   }
-}
+
+  .mobile {
+    .detail-layout {
+      margin-left: unset;
+    }
+    .text {
+
+    }
+    .status-list {
+      text-align: left;
+    }
+  }
 </style>
