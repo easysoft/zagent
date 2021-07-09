@@ -48,7 +48,10 @@ const locale = {
   'form.confirm.to.remove': 'Confirm to delete?',
 
   'form.all': 'All',
-  'form.no': 'NO',
+  'form.no': 'NO.',
+  'form.step': 'Step',
+  'form.result': 'Result',
+  'form.result.down': 'Download Result',
   'form.code': 'Code',
   'form.name': 'Name',
   'form.placeholder': 'Placeholder',

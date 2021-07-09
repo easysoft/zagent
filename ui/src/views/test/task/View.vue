@@ -86,6 +86,9 @@
         :dataSource="operations[operationActiveTabKey]"
         :pagination="false"
       >
+        <span slot="action" slot-scope="text, record">
+          <a :href="record.resultUrl">{{ $t('form.result.down') }}</a>
+        </span>
       </a-table>
     </a-card>
 
@@ -150,28 +153,7 @@ export default {
       operationActiveTabKey: '1',
       operations: {},
 
-      operationColumns: [
-        {
-          title: '编号',
-          dataIndex: 'key',
-          key: 'key'
-        },
-        {
-          title: '操作类型',
-          dataIndex: 'type',
-          key: 'type'
-        },
-        {
-          title: '执行结果',
-          dataIndex: 'status',
-          key: 'status'
-        },
-        {
-          title: '操作时间',
-          dataIndex: 'optAt',
-          key: 'optAt'
-        }
-      ]
+      operationColumns: []
     }
   },
   watch: {
@@ -196,6 +178,36 @@ export default {
       { key: 'detail', tab: this.$t('common.detail') },
       { key: 'request', tab: this.$t('common.request') }
     ]
+
+    this.operationColumns = [
+      {
+        title: this.$t('form.no'),
+        dataIndex: 'key',
+        key: 'key'
+      },
+      {
+        title: this.$t('form.step'),
+        dataIndex: 'step',
+        key: 'step'
+      },
+      {
+        title: this.$t('form.result'),
+        dataIndex: 'result',
+        key: 'result'
+      },
+      {
+        title: this.$t('form.time'),
+        dataIndex: 'time',
+        key: 'time'
+      },
+      {
+        title: this.$t('form.opt'),
+        dataIndex: 'action',
+        key: 'action',
+        width: '150px',
+        scopedSlots: { customRender: 'action' }
+      }
+    ]
   },
   mounted () {
     this.loadData()
@@ -210,7 +222,7 @@ export default {
 
           this.model.queues.forEach((queue, index) => {
             const name = this.osTypes[queue.osType] + ' ' + this.osLangs[queue.osLang]
-            this.operationTabList.push({ key: queue.id, tab: name })
+            this.operationTabList.push({ key: queue.id + '', tab: name })
 
             // queue.buildHistories.forEach((buildHis, index) => {
             // })
@@ -218,12 +230,15 @@ export default {
             this.operations[queue.id] = [
               {
                 key: 1,
-                type: '创建虚拟机',
-                status: '成功',
-                optAt: '2017-10-03  19:23:12'
+                step: '创建虚拟机',
+                result: '成功',
+                time: '2017-10-03  19:23:12',
+                resultUrl: 'http://localhost:8085/down/upload/2021-07-08/testResult-1ba63fd9-cb8c-4dd8-a942-86a74960b469.zip'
               }
             ]
           })
+
+          this.operationTabList.push({ key: '2', tab: 'Win7 简体中文' })
         })
       } else {
         this.reset()

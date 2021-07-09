@@ -49,6 +49,10 @@ const locale = {
 
   'form.all': '所有',
   'form.no': '序号',
+  'form.step': '步骤',
+  'form.result': '结果',
+  'form.result.down': '下载结果',
+  'form.time': '时间',
   'form.code': '编码',
   'form.name': '名称',
   'form.placeholder': '占位符',
