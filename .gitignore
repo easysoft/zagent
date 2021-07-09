@@ -7,3 +7,4 @@
 /cmd/test/log/
 /*.db
 /res/server/res.go
+/upload/*
