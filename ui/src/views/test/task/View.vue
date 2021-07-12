@@ -124,6 +124,15 @@
       <pre>{{ JSON.stringify(modelJson, null, 4) }}</pre>
     </a-card>
 
+    <br />
+    <div>
+      <a-form layout="inline">
+        <a-form-item><a-input id="input" type="text" v-model="inputModel" /></a-form-item>
+        <a-form-item><a-button id="sendBtn" @click="sendWs">Send</a-button></a-form-item>
+      </a-form>
+      <div><pre id="output">{{ outputModel }}</pre></div>
+    </div>
+
   </page-header-wrapper>
 </template>
 
@@ -179,7 +188,12 @@ export default {
 
       operationColumns: [],
       currStep: 0,
-      progressMap: { start: {}, res: {}, exec: {}, end: {} }
+      progressMap: { start: {}, res: {}, exec: {}, end: {} },
+
+      wsConn: null,
+      room1: null,
+      inputModel: 'websocket request',
+      outputModel: ''
     }
   },
   watch: {
@@ -191,6 +205,17 @@ export default {
   filters: {
   },
   created () {
+    const that = this
+    this.$global.EventBus.$on(this.$global.wsEventName, (json) => {
+      console.log('EventBus in page', json)
+      that.outputModel += json.room + ': ' + json.msg + '\n'
+
+      const msg = JSON.parse(json.msg)
+      if (msg.action === 'end_training' && msg.projectId === that.model.id) {
+        that.model.trainingStatus = 'end_training'
+      }
+    })
+
     this.buildProgress = getBuildProgress(this)
     this.buildStatus = getBuildStatus(this)
     this.vmStatus = getVmStatus(this)
@@ -308,6 +333,13 @@ export default {
     handleTabChange (key) {
       console.log(key)
       this.tabActiveKey = key
+    },
+
+    sendWs () {
+      console.log('sendWs', this.inputModel, this.$global.ws)
+      this.$global.ws.room(this.$global.wsDefaultRoom).emit('OnChat', this.inputModel)
+
+      this.outputModel += 'me: ' + this.inputModel + '\n'
     }
   }
 }
