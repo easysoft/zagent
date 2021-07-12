@@ -17,6 +17,7 @@ type ExecService struct {
 
 	DeviceService   *serverService.DeviceService  `inject:""`
 	TaskService     *serverService.TaskService    `inject:""`
+	QueueService    *serverService.QueueService   `inject:""`
 	SeleniumService *SeleniumService              `inject:""`
 	AppiumService   *AppiumService                `inject:""`
 	HostService     *kvmService.HostService       `inject:""`
@@ -86,7 +87,7 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 				s.QueueRepo.Start(queue)
 				newTaskProgress = consts.ProgressRunning
 			} else {
-				s.QueueRepo.SetQueueStatus(queue.ID, consts.ProgressPerformRequestFail, consts.StatusFail)
+				s.QueueService.SaveResult(queue.ID, consts.ProgressPerformRequestFail, consts.StatusFail)
 			}
 		}
 	}
@@ -111,7 +112,7 @@ func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {
 			s.QueueRepo.Start(queue) // start
 			newTaskProgress = consts.ProgressRunning
 		} else {
-			s.QueueRepo.SetQueueStatus(queue.ID, consts.ProgressPerformRequestFail, consts.StatusFail)
+			s.QueueService.SaveResult(queue.ID, consts.ProgressPerformRequestFail, consts.StatusFail)
 		}
 	} else {
 		s.QueueRepo.Pending(queue.ID) // pending

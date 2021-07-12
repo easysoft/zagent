@@ -32,6 +32,7 @@ type KvmNativeService struct {
 	BackingRepo *repo.BackingRepo `inject:""`
 	TmplRepo    *repo.TmplRepo    `inject:""`
 
+	QueueService   *serverService.QueueService   `inject:""`
 	HistoryService *serverService.HistoryService `inject:""`
 	RpcService     *commonService.RpcService     `inject:""`
 }
@@ -107,7 +108,7 @@ func (s KvmNativeService) CreateRemote(hostId, backingId, tmplId, queueId uint) 
 		s.HistoryService.Create(consts.Queue, queueId, consts.ProgressLaunchVm, "")
 	} else {
 		s.VmRepo.FailToCreate(vm.ID, result.Msg)
-		s.QueueRepo.SetQueueStatus(queueId, consts.ProgressCreateVmFail, consts.StatusFail)
+		s.QueueService.SaveResult(queueId, consts.ProgressCreateVmFail, consts.StatusFail)
 		s.HistoryService.Create(consts.Queue, queueId, consts.ProgressCreateVmFail, consts.StatusFail.ToString())
 	}
 

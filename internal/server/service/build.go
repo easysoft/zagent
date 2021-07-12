@@ -24,7 +24,7 @@ func (s BuildService) SaveResult(build domain.Build) (count int) {
 	po := s.BuildRepo.GetBuild(build.ID)
 	s.HistoryService.Create(consts.Build, po.ID, po.Progress, po.Status.ToString())
 
-	s.QueueService.SetQueueStatus(po.QueueId, po.Progress, po.Status)
+	s.QueueService.SaveResult(po.QueueId, po.Progress, po.Status)
 
 	return
 }

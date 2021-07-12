@@ -98,16 +98,15 @@ func (s QueueService) GenerateAppiumQueuesFromTask(task *model.Task) (count int)
 		}
 	}
 
-	// s.QueueRepo.DeleteInSameGroup(task.GroupId, serials) // disable same serial queues in same group
-
 	return
 }
 
-func (s QueueService) SetQueueStatus(queueId uint, progress consts.BuildProgress, status consts.BuildStatus) {
+// SaveResult not just update queue status, but also update parent task
+func (s QueueService) SaveResult(queueId uint, progress consts.BuildProgress, status consts.BuildStatus) {
 	queue := s.QueueRepo.GetQueue(queueId)
 
 	s.QueueRepo.SetQueueStatus(queueId, progress, status)
-	s.HistoryService.Create(consts.Queue, queueId, progress, status.ToString())
-
 	s.TaskService.SetTaskStatus(queue.TaskId)
+
+	s.HistoryService.Create(consts.Queue, queueId, progress, status.ToString())
 }
