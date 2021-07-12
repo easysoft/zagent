@@ -54,7 +54,8 @@ func (s *ServerCron) Init() {
 
 			/**
 				query queue for retry:
-					process = consts.ProgressTimeout ||
+					process = consts.ProgressTimeout
+						||
 			    	status = consts.StatusFail
 			*/
 			s.ExecService.RetryTimeoutOrFailed()

@@ -110,6 +110,12 @@ func (r QueueRepo) QueryTimeoutOrFailedForRetry() (queues []model.Queue) {
 	return
 }
 
+//func (r QueueRepo) Retry(queue model.Queue) {
+//	r.DB.Model(&model.Queue{}).Where("id=?", queue.ID).Updates(
+//		map[string]interface{}{"retry": gorm.Expr("retry +1")})
+//	return
+//}
+
 func (r QueueRepo) SetQueueStatus(queueId uint, progress consts.BuildProgress, status consts.BuildStatus) {
 	r.DB.Model(&model.Queue{}).Where("id=?", queueId).Updates(
 		map[string]interface{}{"progress": progress, "status": status, "result_time": time.Now()})

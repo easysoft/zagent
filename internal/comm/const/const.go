@@ -6,12 +6,12 @@ const (
 
 	DeviceRegisterExpireTime = 5 * 60 // sec
 
+	// Must > WaitResPendingTimeout
 	WaitResPendingTimeout    = 15 * 60 // sec
 	WaitForVmReadyTimeout    = 5 * 60  // sec
 	WaitTestCompletedTimeout = 30 * 60 // sec
-	VmLifecycleTimeout       = 60 * 60 // sec
-
-	WaitAgentRunTaskTimeout = 30 * 60 // sec
+	WaitVmLifecycleTimeout   = 60 * 60 // sec
+	WaitAgentRunTaskTimeout  = 30 * 60 // sec
 
 	QueueRetryTime = 3
 

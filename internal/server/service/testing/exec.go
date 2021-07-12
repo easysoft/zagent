@@ -48,8 +48,7 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 	originalProgress := queue.Progress
 	var newTaskProgress consts.BuildProgress
 
-	if queue.Progress == consts.ProgressCreated ||
-		queue.Progress == consts.ProgressPendingRes {
+	if queue.Progress == consts.ProgressCreated || queue.Progress == consts.ProgressPendingRes { // new queue
 
 		// looking for valid host
 		hostId, backingId, tmplId, found := s.HostService.GetValidForQueue(queue)
@@ -66,7 +65,18 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 			newTaskProgress = consts.ProgressPendingRes
 		}
 
-	} else if queue.Progress == consts.ProgressLaunchVm {
+	} else if queue.Progress == consts.ProgressTimeout || queue.Status == consts.StatusFail { // retry queue
+		// looking for valid host
+		hostId, backingId, tmplId, found := s.HostService.GetValidForQueue(queue)
+		if found {
+			// create kvm
+			result := s.VmService.CreateRemote(hostId, backingId, tmplId, queue.ID)
+			if result.IsSuccess() { // success to create
+				newTaskProgress = consts.ProgressRunning
+			}
+		} // different from new queue, no need to update progress to 'ProgressPendingRes' when retry
+
+	} else if queue.Progress == consts.ProgressLaunchVm { // vm launching
 		vmId := queue.VmId
 		vm := s.VmRepo.GetById(vmId)
 
