@@ -309,3 +309,16 @@ const (
 func (e ExtractorSource) ToString() string {
 	return string(e)
 }
+
+type EntityType string
+
+const (
+	Task  EntityType = "task"
+	Queue EntityType = "queue"
+	Build EntityType = "build"
+	Vm    EntityType = "vm"
+)
+
+func (e EntityType) ToString() string {
+	return string(e)
+}

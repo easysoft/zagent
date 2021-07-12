@@ -122,10 +122,10 @@ func (r QueueRepo) UpdateProgressAndVm(queueId, vmId uint, progress consts.Build
 	return
 }
 
-func (r QueueRepo) CancelQueuesNotExec(taskId uint) {
-	r.DB.Model(&model.Queue{}).
-		Where("task_id=? AND (progress=? OR progress=?)",
-			taskId, consts.ProgressCreated, consts.ProgressPendingRes).
-		Updates(map[string]interface{}{"progress": consts.ProgressCancel})
-	return
-}
+//func (r QueueRepo) CancelQueuesNotExec(taskId uint) {
+//	r.DB.Model(&model.Queue{}).
+//		Where("task_id=? AND (progress=? OR progress=?)",
+//			taskId, consts.ProgressCreated, consts.ProgressPendingRes).
+//		Updates(map[string]interface{}{"progress": consts.ProgressCancel})
+//	return
+//}

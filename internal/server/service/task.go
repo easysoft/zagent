@@ -11,7 +11,8 @@ type TaskService struct {
 	TaskRepo  *repo.TaskRepo  `inject:""`
 	QueueRepo *repo.QueueRepo `inject:""`
 
-	QueueService *QueueService `inject:""`
+	QueueService   *QueueService   `inject:""`
+	HistoryService *HistoryService `inject:""`
 }
 
 func NewTaskService() *TaskService {
@@ -45,6 +46,7 @@ func (s *TaskService) Save(po *model.Task, userId uint) (err error) {
 	err = s.TaskRepo.Save(po)
 
 	s.QueueService.GenerateFromTask(po)
+	s.HistoryService.Create(consts.Task, po.ID, consts.ProgressCreated, "")
 
 	return
 }
@@ -71,6 +73,8 @@ func (s *TaskService) Delete(id uint) (err error) {
 
 func (s *TaskService) SetProgress(id uint, progress consts.BuildProgress) {
 	s.TaskRepo.SetProgress(id, progress)
+
+	s.HistoryService.Create(consts.Task, id, progress, "")
 }
 
 func (s *TaskService) SetTaskStatus(taskId uint) {
@@ -98,5 +102,6 @@ func (s *TaskService) SetTaskStatus(taskId uint) {
 
 	if isAllQueuesCompleted {
 		s.TaskRepo.SetResult(taskId, progress, status)
+		s.HistoryService.Create(consts.Task, taskId, progress, status)
 	}
 }

@@ -9,6 +9,7 @@ import (
 	serverConf "github.com/easysoft/zagent/internal/server/conf"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
+	serverService "github.com/easysoft/zagent/internal/server/service"
 	commonService "github.com/easysoft/zagent/internal/server/service/common"
 	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
 	"github.com/mitchellh/mapstructure"
@@ -31,7 +32,8 @@ type KvmNativeService struct {
 	BackingRepo *repo.BackingRepo `inject:""`
 	TmplRepo    *repo.TmplRepo    `inject:""`
 
-	RpcService *commonService.RpcService `inject:""`
+	HistoryService *serverService.HistoryService `inject:""`
+	RpcService     *commonService.RpcService     `inject:""`
 }
 
 func NewKvmService() VmService {
@@ -99,10 +101,14 @@ func (s KvmNativeService) CreateRemote(hostId, backingId, tmplId, queueId uint) 
 		mapstructure.Decode(mp, &vmInResp)
 
 		s.VmRepo.Launch(vmInResp, vm.ID) // update vm status, mac address
+		s.HistoryService.Create(consts.Vm, vm.ID, "", consts.VmLaunch.ToString())
+
 		s.QueueRepo.UpdateProgressAndVm(queueId, vm.ID, consts.ProgressLaunchVm)
+		s.HistoryService.Create(consts.Queue, queueId, consts.ProgressLaunchVm, "")
 	} else {
 		s.VmRepo.FailToCreate(vm.ID, result.Msg)
 		s.QueueRepo.SetQueueStatus(queueId, consts.ProgressCreateVmFail, consts.StatusFail)
+		s.HistoryService.Create(consts.Queue, queueId, consts.ProgressCreateVmFail, consts.StatusFail.ToString())
 	}
 
 	return
@@ -122,6 +128,8 @@ func (s KvmNativeService) DestroyRemote(vmId uint) (result _domain.RpcResp) {
 		status = consts.VmFailDestroy
 	}
 	s.VmRepo.UpdateStatusByNames([]string{vm.Name}, status)
+
+	s.HistoryService.Create(consts.Vm, vmId, "", status.ToString())
 
 	return
 }

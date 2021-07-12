@@ -31,6 +31,7 @@ var (
 		&Queue{},
 		&Environment{},
 		&Build{},
+		History{},
 
 		&User{},
 		&Role{},
