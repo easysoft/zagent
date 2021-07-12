@@ -1,0 +1,35 @@
+VERSION=1.0.0
+PROJECT=zagent-host
+PACKAGE=${PROJECT}-${VERSION}
+BINARY=zagent-host
+BIN_DIR=bin
+BIN_ZIP_DIR=${BIN_DIR}/zip/${PROJECT}/${VERSION}/
+BIN_ZIP_RELAT=../../../zip/${PROJECT}/${VERSION}/
+BIN_OUT=${BIN_DIR}/${PROJECT}/${VERSION}/
+BIN_LINUX=${BIN_OUT}linux/zagent-host/
+
+default: prepare_res compile_all copy_files package
+
+linux: prepare_res compile_linux copy_files package
+
+prepare_res:
+	@echo 'start prepare res'
+	@go-bindata -o=res/agent/res.go -pkg=agentRes res/agent/...
+	@rm -rf ${BIN_DIR}
+
+compile_all: compile_linux
+
+compile_linux:
+	@echo 'start compile linux'
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ${BIN_LINUX}zagent-host cmd/host/main.go
+
+copy_files:
+	@echo 'start copy files'
+
+package:
+	@echo 'start package'
+	@find . -name .DS_Store -print0 | xargs -0 rm -f
+	@for subdir in `ls ${BIN_OUT}`; do mkdir -p ${BIN_DIR}/zip/${PROJECT}/${VERSION}/$${subdir}; done
+
+	@cd ${BIN_OUT} && \
+		for subdir in `ls ./`; do cd $${subdir} && zip -r ${BIN_ZIP_RELAT}$${subdir}/${BINARY}.zip "${BINARY}" && cd ..; done

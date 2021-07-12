@@ -44,8 +44,8 @@ compile_mac:
 copy_files:
 	@echo 'start copy files'
 	@cp -r {cmd/server/server.yml,cmd/server/perms.yml,cmd/server/rbac_model.conf} bin
-	@for subdir in `ls ${BIN_OUT}`;
-		do cp -r {bin/server.yml,bin/perms.yml,bin/rbac_model.conf} "${BIN_OUT}$${subdir}/zagent-server"; done
+	@for subdir in `ls ${BIN_OUT}`; \
+	    do cp -r {bin/server.yml,bin/perms.yml,bin/rbac_model.conf} "${BIN_OUT}$${subdir}/zagent-server"; done
 
 package:
 	@echo 'start package'

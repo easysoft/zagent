@@ -84,12 +84,6 @@ func InitDB(model string) {
 
 	inst = &Instance{}
 	inst.db = DB
-
-	//if model == "agent" {
-	//	inst.config = &agentConf.Inst.DB
-	//} else {
-	//	inst.config = &serverConf.Inst.DB
-	//}
 }
 
 func (*Instance) DB() *gorm.DB {

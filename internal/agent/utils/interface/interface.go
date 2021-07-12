@@ -82,7 +82,7 @@ func Post(url string, params interface{}) (interface{}, bool) {
 	defer resp.Body.Close()
 
 	code := result.Code
-	return result, code == _const.ResultSuccess.Int()
+	return result, code == _const.ResultSuccess
 }
 
 func GenUrl(server string, path string) string {
