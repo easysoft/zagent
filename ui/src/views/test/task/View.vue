@@ -9,7 +9,9 @@
     <template v-slot:content>
       <a-descriptions size="small" :column="2">
         <a-descriptions-item :label="$t('form.test.type')">{{ buildTypes[model.buildType] }}</a-descriptions-item>
-        <a-descriptions-item :label="$t('form.test.env')">{{ model.environments.length }}</a-descriptions-item>
+        <a-descriptions-item :label="$t('form.test.env')">
+          {{ model.environments ? model.environments.length: 0 }}
+        </a-descriptions-item>
 
         <a-descriptions-item :label="$t('form.createdAt')">{{ model.createdAt | moment }}</a-descriptions-item>
         <a-descriptions-item :label="$t('form.pendingAt')">
@@ -44,32 +46,54 @@
 
     <!-- progress -->
     <a-card v-if="tabActiveKey=='detail'" :bordered="false" :title="$t('form.progress')">
-      <a-steps :direction="'horizontal'" :current="1" progressDot>
+
+      <a-steps :direction="'horizontal'" :current="currStep" progressDot>
         <a-step>
           <template v-slot:title>
-            <span>创建项目</span>
+            <span>{{ $t('build.progress.start') }}</span>
           </template>
           <template v-slot:description>
             <div class="antd-pro-pages-profile-advanced-style-stepDescription">
-              曲丽丽<a-icon type="dingding" style="margin-left: 8px;" />
-              <div>2016-12-12 12:32</div>
+              {{progressMap['start']['status']}} <br/>
+              {{progressMap['start']['time']}}
             </div>
           </template>
         </a-step>
         <a-step>
           <template v-slot:title>
-            <span>部门初审</span>
+            <span>{{ $t('build.progress.res') }}</span>
           </template>
           <template v-slot:description>
             <div class="antd-pro-pages-profile-advanced-style-stepDescription">
-              周毛毛<a-icon type="dingding" style="color: rgb(0, 160, 233); margin-left: 8px;" />
-              <div><a>催一下</a></div>
+              {{progressMap['res']['status']}} <br/>
+              {{progressMap['res']['time']}}
             </div>
           </template>
         </a-step>
-        <a-step title="财务复核" />
-        <a-step title="完成" />
+        <a-step>
+          <template v-slot:title>
+            <span>{{ $t('build.progress.exec') }}</span>
+          </template>
+          <template v-slot:description>
+            <div class="antd-pro-pages-profile-advanced-style-stepDescription">
+              {{progressMap['exec']['status']}} <br/>
+              {{progressMap['exec']['time']}}
+            </div>
+          </template>
+        </a-step>
+        <a-step>
+          <template v-slot:title>
+            <span>{{ $t('build.progress.end') }}</span>
+          </template>
+          <template v-slot:description>
+            <div class="antd-pro-pages-profile-advanced-style-stepDescription">
+              {{progressMap['end']['status']}} <br/>
+              {{progressMap['end']['time']}}
+            </div>
+          </template>
+        </a-step>
       </a-steps>
+
     </a-card>
 
     <!-- operations -->
@@ -117,7 +141,7 @@ import {
   getVmStatus
 } from '@/utils/testing'
 import { getTask } from '@/api/manage'
-import { clone } from '@/utils/util'
+import { clone, getBuildStep } from '@/utils/util'
 
 export default {
   name: 'TaskView',
@@ -153,7 +177,9 @@ export default {
       operationActiveTabKey: '1',
       operations: {},
 
-      operationColumns: []
+      operationColumns: [],
+      currStep: 0,
+      progressMap: { start: {}, res: {}, exec: {}, end: {} }
     }
   },
   watch: {
@@ -238,7 +264,10 @@ export default {
             ]
           })
 
-          this.operationTabList.push({ key: '2', tab: 'Win7 简体中文' })
+          this.operationTabList.push({ key: '-1', tab: 'Win7 简体中文' })
+
+          console.log('===' + this.model.progress)
+          this.currStep = getBuildStep(this.model.progress)
         })
       } else {
         this.reset()

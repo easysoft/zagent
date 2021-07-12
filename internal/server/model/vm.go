@@ -48,6 +48,8 @@ type Vm struct {
 	CdromDriver      string `json:"cdromDriver"`
 	ResolutionHeight int    `json:"resolutionHeight"`
 	ResolutionWidth  int    `json:"resolutionWidth"`
+
+	Histories []History `json:"histories" gorm:"polymorphic:Owner;polymorphicValue:vm"`
 }
 
 func GenKvmReq(po Vm) (req domain.KvmReq) {

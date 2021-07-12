@@ -45,6 +45,8 @@ type Queue struct {
 
 	TaskId  uint `json:"taskId"`
 	GroupId uint `json:"groupId"`
+
+	Histories []History `json:"histories" gorm:"polymorphic:Owner;polymorphicValue:queue"`
 }
 
 func NewQueue(buildType consts.BuildType, groupId uint, taskId uint, taskPriority int,

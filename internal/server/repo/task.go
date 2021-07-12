@@ -50,6 +50,14 @@ func (r *TaskRepo) Get(id uint) (po model.Task) {
 
 	return
 }
+func (r *TaskRepo) GetDetail(id uint) (po model.Task) {
+	r.DB.Model(&model.Task{}).
+		Preload("Environments").
+		Preload("Histories").
+		Where("id = ?", id).First(&po)
+
+	return
+}
 
 func (r *TaskRepo) Save(po *model.Task) (err error) {
 	err = r.DB.Model(&model.Task{}).Create(&po).Error

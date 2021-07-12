@@ -116,6 +116,11 @@ const locale = {
 
   'form.edit.env': 'Edit Environment',
 
+  'build.progress.start': 'Start',
+  'build.progress.res': 'Prepare Resource',
+  'build.progress.exec': 'Execution',
+  'build.progress.end': 'End',
+
   'build.progress.created': 'Created',
   'build.progress.pending_res': 'Pending Resource',
   'build.progress.launch_vm': 'Launch Vm',

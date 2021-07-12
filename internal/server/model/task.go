@@ -42,6 +42,8 @@ type Task struct {
 	GroupId  uint   `json:"groupId"`
 
 	Queues []Queue `json:"queues" gorm:"-"`
+
+	Histories []History `json:"histories" gorm:"polymorphic:Owner;polymorphicValue:task"`
 }
 
 func NewTask() Task {

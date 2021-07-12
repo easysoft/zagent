@@ -114,6 +114,11 @@ const locale = {
 
   'form.edit.env': '编辑环境',
 
+  'build.progress.start': '开始',
+  'build.progress.res': '准备资源',
+  'build.progress.exec': '执行',
+  'build.progress.end': '结束',
+
   'build.progress.created': '新建',
   'build.progress.pending_res': '等待资源',
   'build.progress.launch_vm': '启动虚机',

@@ -29,7 +29,7 @@ func (s *TaskService) Get(id uint) (po model.Task) {
 	return
 }
 func (s *TaskService) GetDetail(id uint) (po model.Task) {
-	po = s.Get(id)
+	po = s.TaskRepo.GetDetail(id)
 
 	po.Queues = s.QueueRepo.QueryByTask(po.ID)
 
@@ -102,6 +102,6 @@ func (s *TaskService) SetTaskStatus(taskId uint) {
 
 	if isAllQueuesCompleted {
 		s.TaskRepo.SetResult(taskId, progress, status)
-		s.HistoryService.Create(consts.Task, taskId, progress, status)
+		s.HistoryService.Create(consts.Task, taskId, progress, status.ToString())
 	}
 }

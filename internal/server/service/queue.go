@@ -107,7 +107,7 @@ func (s QueueService) SetQueueStatus(queueId uint, progress consts.BuildProgress
 	queue := s.QueueRepo.GetQueue(queueId)
 
 	s.QueueRepo.SetQueueStatus(queueId, progress, status)
-	s.HistoryService.Create(consts.Queue, queueId, progress, status)
+	s.HistoryService.Create(consts.Queue, queueId, progress, status.ToString())
 
 	s.TaskService.SetTaskStatus(queue.TaskId)
 }

@@ -42,6 +42,8 @@ type Build struct {
 
 	Progress consts.BuildProgress `json:"progress"`
 	Status   consts.BuildStatus   `json:"status"`
+
+	Histories []History `json:"histories" gorm:"polymorphic:Owner;polymorphicValue:build"`
 }
 
 func NewSeleniumBuildPo(queue Queue, vm Vm) Build {
