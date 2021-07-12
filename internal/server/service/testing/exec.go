@@ -15,11 +15,12 @@ type ExecService struct {
 	DeviceRepo *repo.DeviceRepo `inject:""`
 	VmRepo     *repo.VmRepo     `inject:""`
 
-	DeviceService   *serverService.DeviceService `inject:""`
-	TaskService     *serverService.TaskService   `inject:""`
-	SeleniumService *SeleniumService             `inject:""`
-	AppiumService   *AppiumService               `inject:""`
-	HostService     *kvmService.HostService      `inject:""`
+	DeviceService   *serverService.DeviceService  `inject:""`
+	TaskService     *serverService.TaskService    `inject:""`
+	SeleniumService *SeleniumService              `inject:""`
+	AppiumService   *AppiumService                `inject:""`
+	HostService     *kvmService.HostService       `inject:""`
+	HistoryService  *serverService.HistoryService `inject:""`
 
 	VmService kvmService.VmService `inject:""`
 }
@@ -83,6 +84,7 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 
 	if newTaskProgress != "" && originalProgress != newTaskProgress { // queue's progress changed, update parent task
 		s.TaskRepo.SetProgress(queue.TaskId, newTaskProgress)
+		s.HistoryService.Create(consts.Task, queue.TaskId, newTaskProgress, "")
 	}
 }
 
@@ -109,6 +111,7 @@ func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {
 
 	if newTaskProgress != "" && originalProgress != newTaskProgress { // progress changed
 		s.TaskService.SetProgress(queue.TaskId, newTaskProgress)
+		s.HistoryService.Create(consts.Task, queue.TaskId, newTaskProgress, "")
 	}
 }
 
@@ -117,6 +120,7 @@ func (s ExecService) CheckTimeout() {
 
 	for _, queue := range queues {
 		s.QueueRepo.SetTimeout(queue.ID)
+		s.HistoryService.Create(consts.Queue, queue.ID, consts.ProgressTimeout, "")
 	}
 }
 

@@ -12,10 +12,10 @@ const labelColHalf2 = { lg: { span: 4 }, sm: { span: 4 } }
 
 const noLabel = { offset: 4 }
 
-const buildProgressInit = ['created']
+const buildProgressStart = ['created']
 const buildProgressPrepareRes = ['pending_res', 'launch_vm', 'create_vm_fail']
 const buildProgressExec = ['perform_request_fail', 'appium_service_fail', 'running']
-const buildProgressComplete = ['timeout', 'completed', 'cancel']
+const buildProgressEnd = ['timeout', 'completed', 'cancel']
 
 export { colsFull, colsHalf, labelColFull, wrapperColFull, labelColHalf, labelColHalf2, wrapperColHalf,
-    noLabel, TEST_HISTORIES, buildProgressInit, buildProgressPrepareRes, buildProgressExec, buildProgressComplete }
+    noLabel, TEST_HISTORIES, buildProgressStart, buildProgressPrepareRes, buildProgressExec, buildProgressEnd }

@@ -55,7 +55,7 @@
           <template v-slot:description>
             <div class="antd-pro-pages-profile-advanced-style-stepDescription">
               {{progressMap['start']['status']}} <br/>
-              {{progressMap['start']['time']}}
+              {{progressMap['start']['time'] ? $options.filters.moment(progressMap['start']['time'], 'MM-DD HH:mm:ss') : '' }}
             </div>
           </template>
         </a-step>
@@ -66,7 +66,7 @@
           <template v-slot:description>
             <div class="antd-pro-pages-profile-advanced-style-stepDescription">
               {{progressMap['res']['status']}} <br/>
-              {{progressMap['res']['time']}}
+              {{progressMap['res']['time'] ? $options.filters.moment(progressMap['res']['time'], 'MM-DD HH:mm:ss') : '' }}
             </div>
           </template>
         </a-step>
@@ -77,7 +77,7 @@
           <template v-slot:description>
             <div class="antd-pro-pages-profile-advanced-style-stepDescription">
               {{progressMap['exec']['status']}} <br/>
-              {{progressMap['exec']['time']}}
+              {{progressMap['exec']['time'] ? $options.filters.moment(progressMap['exec']['time'], 'MM-DD HH:mm:ss') : '' }}
             </div>
           </template>
         </a-step>
@@ -88,7 +88,7 @@
           <template v-slot:description>
             <div class="antd-pro-pages-profile-advanced-style-stepDescription">
               {{progressMap['end']['status']}} <br/>
-              {{progressMap['end']['time']}}
+              {{progressMap['end']['time'] ? $options.filters.moment(progressMap['end']['time'], 'MM-DD HH:mm:ss') : '' }}
             </div>
           </template>
         </a-step>
@@ -139,6 +139,10 @@
 <script>
 import { baseMixin } from '@/store/app-mixin'
 import {
+  buildProgressStart,
+  buildProgressPrepareRes,
+  buildProgressExec,
+  buildProgressEnd
 } from '@/utils/const'
 import {
   getBuildTypes,
@@ -167,7 +171,7 @@ export default {
   },
   data () {
     return {
-      model: { environments: [], queues: [] },
+      model: { environments: [], queues: [], histories: [] },
       modelJson: {},
 
       buildProgress: {},
@@ -291,8 +295,25 @@ export default {
 
           this.operationTabList.push({ key: '-1', tab: 'Win7 简体中文' })
 
-          console.log('===' + this.model.progress)
           this.currStep = getBuildStep(this.model.progress)
+
+          this.model.histories.forEach((item, index) => {
+            let key = ''
+            if (buildProgressStart.indexOf(item.progress) > -1) {
+              key = 'start'
+            } else if (buildProgressPrepareRes.indexOf(item.progress) > -1) {
+              key = 'res'
+            } else if (buildProgressExec.indexOf(item.progress) > -1) {
+              key = 'exec'
+            } else if (buildProgressEnd.indexOf(item.progress) > -1) {
+              key = 'end'
+            }
+
+            this.progressMap[key].time = item.createdAt
+            this.progressMap[key].status = this.buildProgress[item.progress]
+          })
+
+          console.log('this.progressMap', this.progressMap)
         })
       } else {
         this.reset()

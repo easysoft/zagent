@@ -1,4 +1,4 @@
-import { buildProgressInit, buildProgressPrepareRes, buildProgressExec, buildProgressComplete } from '@/utils/const'
+import { buildProgressStart, buildProgressPrepareRes, buildProgressExec, buildProgressEnd } from '@/utils/const'
 
 export function timeFix () {
   const time = new Date()
@@ -74,13 +74,13 @@ export function clone (obj) {
 }
 
 export function getBuildStep (progress) {
-  if (buildProgressInit.indexOf(progress) > -1) {
+  if (buildProgressStart.indexOf(progress) > -1) {
     return 0
   } else if (buildProgressPrepareRes.indexOf(progress) > -1) {
     return 1
   } else if (buildProgressExec.indexOf(progress) > -1) {
     return 2
-  } else if (buildProgressComplete.indexOf(progress) > -1) {
+  } else if (buildProgressEnd.indexOf(progress) > -1) {
     return 3
   }
 
