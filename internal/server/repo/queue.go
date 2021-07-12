@@ -101,7 +101,7 @@ func (r QueueRepo) QueryTimeout() (queues []model.Queue) {
 		Order("priority").Find(&queues)
 	return
 }
-func (r QueueRepo) QueryTimeoutOrFailedForRetry() (queues []model.Queue) {
+func (r QueueRepo) QueryForRetry() (queues []model.Queue) {
 	queues = make([]model.Queue, 0)
 
 	r.DB.Model(&model.Queue{}).Where("retry < ? AND (progress = ? OR status = ? )",

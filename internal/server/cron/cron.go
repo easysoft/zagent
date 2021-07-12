@@ -58,7 +58,7 @@ func (s *ServerCron) Init() {
 						||
 			    	status = consts.StatusFail
 			*/
-			s.ExecService.RetryTimeoutOrFailed()
+			s.ExecService.CheckRetry()
 
 			s.syncMap.Store("isRunning", false)
 		},

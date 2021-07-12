@@ -49,7 +49,6 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 	var newTaskProgress consts.BuildProgress
 
 	if queue.Progress == consts.ProgressCreated || queue.Progress == consts.ProgressPendingRes { // new queue
-
 		// looking for valid host
 		hostId, backingId, tmplId, found := s.HostService.GetValidForQueue(queue)
 		if found {
@@ -134,8 +133,8 @@ func (s ExecService) CheckTimeout() {
 	}
 }
 
-func (s ExecService) RetryTimeoutOrFailed() {
-	queues := s.QueueRepo.QueryTimeoutOrFailedForRetry()
+func (s ExecService) CheckRetry() {
+	queues := s.QueueRepo.QueryForRetry()
 
 	for _, queue := range queues {
 		s.CheckAndCall(queue)
