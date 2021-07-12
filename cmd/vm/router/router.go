@@ -1,7 +1,6 @@
 package vmRouter
 
 import (
-	"github.com/easysoft/zagent/cmd/agent/router/handler"
 	vmHandler "github.com/easysoft/zagent/cmd/vm/router/handler"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	_i118Utils "github.com/easysoft/zagent/internal/pkg/lib/i118"
@@ -11,8 +10,7 @@ import (
 )
 
 type Router struct {
-	ArithCtrl *handler.ArithCtrl `inject:""`
-	JobCtrl   *vmHandler.JobCtrl `inject:""`
+	JobCtrl *vmHandler.JobCtrl `inject:""`
 }
 
 func NewRouter() *Router {
@@ -24,7 +22,6 @@ func (r *Router) App() {
 	addr := agentConf.Inst.NodeIp + ":" + strconv.Itoa(agentConf.Inst.NodePort)
 	srv := server.NewServer()
 
-	srv.RegisterName("arith", r.ArithCtrl, "")
 	srv.RegisterName("job", r.JobCtrl, "")
 
 	_logUtils.Info(_i118Utils.Sprintf("start_server", addr))

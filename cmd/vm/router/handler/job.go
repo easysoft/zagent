@@ -1,14 +1,14 @@
 package vmHandler
 
 import (
-	agentService "github.com/easysoft/zagent/internal/agent/service"
+	vmAgentService "github.com/easysoft/zagent/internal/agent-vm/service"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	"golang.org/x/net/context"
 )
 
 type JobCtrl struct {
-	JobService *agentService.JobService `inject:""`
+	JobService *vmAgentService.JobService `inject:""`
 }
 
 func NewJobCtrl() *JobCtrl {

@@ -1,7 +1,8 @@
-package kvmService
+package vmAgentService
 
 import (
 	"github.com/easysoft/zagent/internal/agent/conf"
+	testingService "github.com/easysoft/zagent/internal/agent/service/testing"
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/comm/domain"
 	"github.com/easysoft/zagent/internal/pkg/lib/http"
@@ -14,7 +15,9 @@ type VmService struct {
 	VmMapVar  map[string]domain.Vm
 	TimeStamp int64
 
-	LibvirtService *LibvirtService `inject:""`
+	VmService   *VmService                 `inject:""`
+	JobService  *JobService                `inject:""`
+	TestService *testingService.RunService `inject:""`
 }
 
 func NewVmService() *VmService {
@@ -23,6 +26,29 @@ func NewVmService() *VmService {
 	s.VmMapVar = map[string]domain.Vm{}
 
 	return &s
+}
+
+func (s *VmService) Check() {
+	// is running，register busy
+	if s.JobService.IsRunning() {
+		s.VmService.Register(true)
+		return
+	}
+
+	// no task to run, submit free
+	if s.JobService.GetTaskSize() == 0 {
+		s.VmService.Register(false)
+		return
+	}
+
+	// has task to run，register busy, then run
+	job := s.JobService.PeekJob()
+	s.VmService.Register(true)
+
+	s.JobService.StartTask()
+	s.TestService.Run(&job)
+	s.JobService.RemoveTask()
+	s.JobService.EndTask()
 }
 
 func (s *VmService) Register(isBusy bool) {
@@ -46,47 +72,4 @@ func (s *VmService) Register(isBusy bool) {
 	} else {
 		_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_register", agentConf.Inst.Server, resp))
 	}
-}
-
-func (s *VmService) UpdateVmMapAndDestroyTimeout(vms []domain.Vm) {
-	names := map[string]bool{}
-
-	for _, vm := range vms {
-		name := vm.Name
-		names[name] = true
-
-		if _, ok := s.VmMapVar[name]; ok { // update status in map
-			v := s.VmMapVar[name]
-			v.Status = vm.Status
-			s.VmMapVar[name] = v
-		} else { // update time then add
-			if vm.FirstDetectedTime.IsZero() {
-				vm.FirstDetectedTime = time.Now()
-			}
-			s.VmMapVar[name] = vm
-		}
-	}
-
-	keys := s.getKeys(s.VmMapVar)
-	for _, key := range keys {
-		if !names[key] { // remove vm in map but not found this time
-			delete(s.VmMapVar, key)
-			continue
-		}
-
-		// destroy and remove timeout vm
-		v := s.VmMapVar[key]
-		if time.Now().Unix()-v.FirstDetectedTime.Unix() > consts.WaitVmLifecycleTimeout { // timeout
-			s.LibvirtService.DestroyVmByName(v.Name, true)
-			delete(s.VmMapVar, key)
-		}
-	}
-}
-
-func (s *VmService) getKeys(m map[string]domain.Vm) []string {
-	keys := make([]string, 0, len(m))
-	for k := range m {
-		keys = append(keys, k)
-	}
-	return keys
 }

@@ -1,7 +1,7 @@
 package handler
 
 import (
-	agentService "github.com/easysoft/zagent/internal/agent/service"
+	vmAgentService "github.com/easysoft/zagent/internal/agent-vm/service"
 	interfaceService "github.com/easysoft/zagent/internal/agent/service/interface"
 	commConst "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
@@ -10,7 +10,7 @@ import (
 )
 
 type PerformCtrl struct {
-	PerformService       *agentService.JobService               `inject:""`
+	PerformService       *vmAgentService.JobService             `inject:""`
 	InterfaceTestService *interfaceService.InterfaceTestService `inject:""`
 }
 

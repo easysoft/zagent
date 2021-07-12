@@ -2,15 +2,15 @@ package hostHandler
 
 import (
 	"fmt"
-	"github.com/easysoft/zagent/internal/agent/service/kvm"
+	hostKvmService "github.com/easysoft/zagent/internal/agent-host/service/kvm"
 	"github.com/easysoft/zagent/internal/comm/domain"
 	"github.com/easysoft/zagent/internal/pkg/domain"
 	"golang.org/x/net/context"
 )
 
 type VmCtrl struct {
-	VmService      *kvmService.VmService      `inject:""`
-	LibvirtService *kvmService.LibvirtService `inject:""`
+	VmService      *hostKvmService.VmService      `inject:""`
+	LibvirtService *hostKvmService.LibvirtService `inject:""`
 }
 
 func NewVmCtrl() *VmCtrl {

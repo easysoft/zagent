@@ -1,9 +1,9 @@
 package vmInit
 
 import (
+	vmCron "github.com/easysoft/zagent/cmd/vm/cron"
 	vmRouter "github.com/easysoft/zagent/cmd/vm/router"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
-	agentCron "github.com/easysoft/zagent/internal/agent/cron"
 	"github.com/easysoft/zagent/internal/pkg/db"
 	"github.com/facebookgo/inject"
 	"github.com/sirupsen/logrus"
@@ -25,7 +25,7 @@ func injectObj(router *vmRouter.Router) {
 		// db
 		&inject.Object{Value: _db.GetInst().DB()},
 		// cron
-		&inject.Object{Value: agentCron.NewAgentCron()},
+		&inject.Object{Value: vmCron.NewAgentCron()},
 
 		// controller
 		&inject.Object{Value: router},

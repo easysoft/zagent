@@ -1,4 +1,4 @@
-package kvmService
+package hostKvmService
 
 import "C"
 import (

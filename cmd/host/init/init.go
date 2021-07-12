@@ -1,10 +1,10 @@
 package hostInit
 
 import (
+	hostCron "github.com/easysoft/zagent/cmd/host/cron"
 	hostRouter "github.com/easysoft/zagent/cmd/host/router"
+	hostKvmService "github.com/easysoft/zagent/internal/agent-host/service/kvm"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
-	agentCron "github.com/easysoft/zagent/internal/agent/cron"
-	kvmService "github.com/easysoft/zagent/internal/agent/service/kvm"
 	"github.com/easysoft/zagent/internal/pkg/db"
 	"github.com/facebookgo/inject"
 	"github.com/sirupsen/logrus"
@@ -27,11 +27,11 @@ func injectObj(router *hostRouter.Router) {
 		&inject.Object{Value: _db.GetInst().DB()},
 
 		// cron
-		&inject.Object{Value: agentCron.NewAgentCron()},
+		&inject.Object{Value: hostCron.NewAgentCron()},
 
 		// service
-		&inject.Object{Value: kvmService.NewLibvirtService()},
-		&inject.Object{Value: kvmService.NewVmService()},
+		&inject.Object{Value: hostKvmService.NewLibvirtService()},
+		&inject.Object{Value: hostKvmService.NewVmService()},
 
 		// controller
 		&inject.Object{Value: router},
