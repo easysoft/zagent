@@ -63,18 +63,22 @@ func (e ServiceStatus) ToString() string {
 type BuildProgress string
 
 const (
+	// start group
 	ProgressCreated BuildProgress = "created"
 
+	// res group
 	ProgressPendingRes   BuildProgress = "pending_res"
 	ProgressLaunchVm     BuildProgress = "launch_vm"
 	ProgressCreateVmFail BuildProgress = "create_vm_fail"
 
+	// exec group
+	ProgressRunning            BuildProgress = "running"
 	ProgressPerformRequestFail BuildProgress = "perform_request_fail"
 	ProgressAppiumServiceFail  BuildProgress = "appium_service_fail"
-	ProgressRunning            BuildProgress = "running"
 
-	ProgressTimeout   BuildProgress = "timeout"
+	// end group
 	ProgressCompleted BuildProgress = "completed"
+	ProgressTimeout   BuildProgress = "timeout"
 	ProgressCancel    BuildProgress = "cancel"
 )
 
