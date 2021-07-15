@@ -1,8 +1,8 @@
-package vmCron
+package hostCron
 
 import (
 	"fmt"
-	vmAgentService "github.com/easysoft/zagent/internal/agent-vm/service"
+	hostKvmService "github.com/easysoft/zagent/internal/agent-host/service/kvm"
 	consts "github.com/easysoft/zagent/internal/comm/const"
 	_cronUtils "github.com/easysoft/zagent/internal/pkg/lib/cron"
 	_dateUtils "github.com/easysoft/zagent/internal/pkg/lib/date"
@@ -13,8 +13,8 @@ import (
 )
 
 type CronService struct {
-	syncMap   sync.Map
-	VmService *vmAgentService.VmService `inject:""`
+	syncMap          sync.Map
+	CheckHostService *hostKvmService.HostService `inject:""`
 }
 
 func NewAgentCron() *CronService {
@@ -31,15 +31,18 @@ func (s *CronService) Init() {
 		fmt.Sprintf("@every %ds", consts.AgentCheckInterval),
 		func() {
 			isRunning, _ := s.syncMap.Load("isRunning")
-			if isRunning.(bool) {
-				_logUtils.Infof("is running, skip this iteration " + _dateUtils.DateTimeStr(time.Now()))
+			lastCompletedTime, _ := s.syncMap.Load("lastCompletedTime")
+
+			if isRunning.(bool) || time.Now().Unix()-lastCompletedTime.(int64) > consts.AgentCheckInterval {
+				_logUtils.Infof("skip this iteration " + _dateUtils.DateTimeStr(time.Now()))
 				return
 			}
 			s.syncMap.Store("isRunning", true)
 
-			s.VmService.Check()
+			s.CheckHostService.Register()
 
 			s.syncMap.Store("isRunning", false)
+			s.syncMap.Store("lastCompletedTime", time.Now().Unix())
 		},
 	)
 
