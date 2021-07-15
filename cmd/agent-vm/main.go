@@ -32,7 +32,7 @@ func main() {
 	flagSet = flag.NewFlagSet(agentConst.AppName, flag.ContinueOnError)
 
 	flagSet.StringVar(&runMode, "t", agentConst.Host.ToString(), "")
-	flagSet.StringVar(&agentConf.Inst.Server, "s", "http://192.168.0.104:8085", "")
+	flagSet.StringVar(&agentConf.Inst.Server, "s", "http://192.168.0.106:8085", "")
 	flagSet.StringVar(&agentConf.Inst.NodeName, "n", "", "")
 	flagSet.StringVar(&agentConf.Inst.NodeIp, "i", "", "") // 192.168.0.56
 	flagSet.IntVar(&agentConf.Inst.NodePort, "p", 8848, "")
