@@ -28,7 +28,7 @@ func (s SeleniumService) Start(queue model.Queue) (result _domain.RpcResp) {
 
 	build := model.NewSeleniumBuildPo(queue, vm)
 	s.BuildRepo.Save(&build)
-	s.HistoryService.Create(consts.Build, build.ID, consts.ProgressCreated, "")
+	s.HistoryService.Create(consts.Build, build.ID, consts.ProgressCreated, consts.StatusCreated.ToString())
 
 	build = s.BuildRepo.GetBuild(build.ID)
 
