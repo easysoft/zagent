@@ -16,13 +16,14 @@ const api = {
 }
 
 const WebSocketPath = 'api/v1/ws'
-export const WebSocketBaseDev = 'ws://127.0.0.1:8085/'
+export const WebBaseDev = 'http://127.0.0.1:8085/'
+export const WebSocketBaseDev = ''
 export function GetWebSocketApi () {
   const isProd = process.env.NODE_ENV === 'production'
 
   let wsUri = ''
   if (!isProd) {
-    wsUri = WebSocketBaseDev
+    wsUri = WebBaseDev.replace('http', 'ws')
   } else {
     const loc = window.location
 
@@ -35,7 +36,9 @@ export function GetWebSocketApi () {
     wsUri += loc.pathname
   }
 
-  return wsUri + WebSocketPath
+  wsUri += WebSocketPath
+
+  return wsUri
 }
 
 export function requestSuccess (code) {

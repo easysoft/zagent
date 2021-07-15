@@ -54,8 +54,8 @@
           </template>
           <template v-slot:description>
             <div class="antd-pro-pages-profile-advanced-style-stepDescription">
-              {{progressMap['start']['status']}} <br/>
-              {{progressMap['start']['time'] ? $options.filters.moment(progressMap['start']['time'], 'MM-DD HH:mm:ss') : '' }}
+              {{taskProgressMap['start']['status']}} <br/>
+              {{taskProgressMap['start']['time'] ? $options.filters.moment(taskProgressMap['start']['time'], 'MM-DD HH:mm:ss') : '' }}
             </div>
           </template>
         </a-step>
@@ -65,8 +65,8 @@
           </template>
           <template v-slot:description>
             <div class="antd-pro-pages-profile-advanced-style-stepDescription">
-              {{progressMap['res']['status']}} <br/>
-              {{progressMap['res']['time'] ? $options.filters.moment(progressMap['res']['time'], 'MM-DD HH:mm:ss') : '' }}
+              {{taskProgressMap['res']['status']}} <br/>
+              {{taskProgressMap['res']['time'] ? $options.filters.moment(taskProgressMap['res']['time'], 'MM-DD HH:mm:ss') : '' }}
             </div>
           </template>
         </a-step>
@@ -76,8 +76,8 @@
           </template>
           <template v-slot:description>
             <div class="antd-pro-pages-profile-advanced-style-stepDescription">
-              {{progressMap['exec']['status']}} <br/>
-              {{progressMap['exec']['time'] ? $options.filters.moment(progressMap['exec']['time'], 'MM-DD HH:mm:ss') : '' }}
+              {{taskProgressMap['exec']['status']}} <br/>
+              {{taskProgressMap['exec']['time'] ? $options.filters.moment(taskProgressMap['exec']['time'], 'MM-DD HH:mm:ss') : '' }}
             </div>
           </template>
         </a-step>
@@ -87,8 +87,8 @@
           </template>
           <template v-slot:description>
             <div class="antd-pro-pages-profile-advanced-style-stepDescription">
-              {{progressMap['end']['status']}} <br/>
-              {{progressMap['end']['time'] ? $options.filters.moment(progressMap['end']['time'], 'MM-DD HH:mm:ss') : '' }}
+              {{taskProgressMap['end']['status']}} <br/>
+              {{taskProgressMap['end']['time'] ? $options.filters.moment(taskProgressMap['end']['time'], 'MM-DD HH:mm:ss') : '' }}
             </div>
           </template>
         </a-step>
@@ -101,17 +101,21 @@
       v-if="tabActiveKey=='detail'"
       style="margin-top: 24px"
       :bordered="false"
-      :tabList="operationTabList"
+      :tabList="taskQueueTabs"
       :activeTabKey="operationActiveTabKey"
       @tabChange="(key) => {this.operationActiveTabKey = key}"
     >
       <a-table
         :columns="operationColumns"
-        :dataSource="operations[operationActiveTabKey]"
+        :dataSource="taskBuildHistories[operationActiveTabKey]"
         :pagination="false"
       >
+        <span slot="time" slot-scope="text, record">
+          {{ record.createdAt | moment }}
+        </span>
         <span slot="action" slot-scope="text, record">
-          <a :href="record.resultUrl">{{ $t('form.result.down') }}</a>
+          <a :href="record.resultUrl">{{ $t('form.result.down') }}</a> |
+          <a :href="record.vncUrl">{{ $t('form.vnc.url') }}</a>
         </span>
       </a-table>
     </a-card>
@@ -139,19 +143,13 @@
 <script>
 import { baseMixin } from '@/store/app-mixin'
 import {
-  buildProgressStart,
-  buildProgressPrepareRes,
-  buildProgressExec,
-  buildProgressEnd
-} from '@/utils/const'
-import {
   getBuildTypes,
   getOsCategories,
   getOsTypes,
   getOsLangs,
   getBuildProgress,
   getBuildStatus,
-  getVmStatus
+  getVmStatus, getTaskProgressMap, getTaskBuildHistories
 } from '@/utils/testing'
 import { getTask } from '@/api/manage'
 import { clone, getBuildStep } from '@/utils/util'
@@ -186,13 +184,13 @@ export default {
       tabList: [],
       tabActiveKey: 'detail',
 
-      operationTabList: [],
+      taskQueueTabs: [],
       operationActiveTabKey: '1',
-      operations: {},
-
       operationColumns: [],
+
       currStep: 0,
-      progressMap: { start: {}, res: {}, exec: {}, end: {} },
+      taskProgressMap: { start: {}, res: {}, exec: {}, end: {} },
+      taskBuildHistories: {},
 
       wsConn: null,
       room1: null,
@@ -242,25 +240,26 @@ export default {
         key: 'key'
       },
       {
-        title: this.$t('form.step'),
-        dataIndex: 'step',
-        key: 'step'
+        title: this.$t('form.progress'),
+        dataIndex: 'progress',
+        key: 'progress'
       },
       {
-        title: this.$t('form.result'),
-        dataIndex: 'result',
-        key: 'result'
+        title: this.$t('form.status'),
+        dataIndex: 'status',
+        key: 'status'
       },
       {
         title: this.$t('form.time'),
         dataIndex: 'time',
-        key: 'time'
+        key: 'time',
+        scopedSlots: { customRender: 'time' }
       },
       {
         title: this.$t('form.opt'),
         dataIndex: 'action',
         key: 'action',
-        width: '150px',
+        width: '200px',
         scopedSlots: { customRender: 'action' }
       }
     ]
@@ -273,49 +272,20 @@ export default {
       if (!this.id) return
       if (this.id) {
         this.getModel().then(json => {
-          this.model = json.data
+          this.model = json.data.task
           this.modelJson = this.convertJson(this.model)
 
-          this.operationTabList = []
+          this.taskQueueTabs = []
           this.model.queues.forEach((queue, index) => {
             const name = this.osTypes[queue.osType] + ' ' + this.osLangs[queue.osLang]
-            this.operationTabList.push({ key: queue.id + '', tab: name })
-
-            // queue.buildHistories.forEach((buildHis, index) => {
-            // })
-
-            this.operations[queue.id] = [
-              {
-                key: 1,
-                step: '创建虚拟机',
-                result: '成功',
-                time: '2017-10-03  19:23:12',
-                resultUrl: 'http://localhost:8085/down/upload/2021-07-08/testResult-1ba63fd9-cb8c-4dd8-a942-86a74960b469.zip'
-              }
-            ]
+            this.taskQueueTabs.push({ key: queue.id + '', tab: name })
           })
-
-          this.operationTabList.push({ key: '-1', tab: 'Win7 简体中文' })
 
           this.currStep = getBuildStep(this.model.progress)
+          this.taskProgressMap = getTaskProgressMap(this.model.histories, this.buildProgress)
+          this.taskBuildHistories = getTaskBuildHistories(json.data.buildHistories, this)
 
-          this.model.histories.forEach((item, index) => {
-            let key = ''
-            if (buildProgressStart.indexOf(item.progress) > -1) {
-              key = 'start'
-            } else if (buildProgressPrepareRes.indexOf(item.progress) > -1) {
-              key = 'res'
-            } else if (buildProgressExec.indexOf(item.progress) > -1) {
-              key = 'exec'
-            } else if (buildProgressEnd.indexOf(item.progress) > -1) {
-              key = 'end'
-            }
-
-            this.progressMap[key].time = item.createdAt
-            this.progressMap[key].status = this.buildProgress[item.progress]
-          })
-
-          console.log('this.progressMap', this.progressMap)
+          console.log('this.taskProgressMap', this.taskProgressMap)
         })
       } else {
         this.reset()

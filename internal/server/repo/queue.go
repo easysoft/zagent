@@ -30,7 +30,10 @@ func (r QueueRepo) QueryForExec() (queues []model.Queue) {
 func (r QueueRepo) QueryByTask(taskID uint) (queues []model.Queue) {
 	queues = make([]model.Queue, 0)
 
-	r.DB.Model(&model.Queue{}).Where("task_id=? AND NOT deleted", taskID).Order("id").Find(&queues)
+	r.DB.Model(&model.Queue{}).
+		Where("task_id=? AND NOT deleted", taskID).
+		Order("id").
+		Find(&queues)
 
 	return
 }

@@ -52,6 +52,7 @@ const locale = {
   'form.step': '步骤',
   'form.result': '结果',
   'form.result.down': '下载结果',
+  'form.vnc.url': '远程桌面',
   'form.time': '时间',
   'form.code': '编码',
   'form.name': '名称',

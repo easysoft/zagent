@@ -1,3 +1,55 @@
+import { buildProgressEnd, buildProgressExec, buildProgressPrepareRes, buildProgressStart }
+  from '@/utils/const'
+import { WebBaseDev } from '@/api/manage'
+
+export function getTaskProgressMap (histories, buildProgress) {
+  const taskProgressMap = {}
+  histories.forEach((item, index) => {
+    let key = ''
+    if (buildProgressStart.indexOf(item.progress) > -1) {
+      key = 'start'
+    } else if (buildProgressPrepareRes.indexOf(item.progress) > -1) {
+      key = 'res'
+    } else if (buildProgressExec.indexOf(item.progress) > -1) {
+      key = 'exec'
+    } else if (buildProgressEnd.indexOf(item.progress) > -1) {
+      key = 'end'
+    }
+
+    taskProgressMap[key] = {}
+    taskProgressMap[key].status = buildProgress[item.progress]
+    taskProgressMap[key].time = item.createdAt
+  })
+
+  return taskProgressMap
+}
+
+export function getTaskBuildHistories (buildHistories, that) {
+  const ret = {}
+
+  const buildProgress = getBuildProgress(that)
+  const buildStatus = getBuildStatus(that)
+
+  buildHistories.forEach((item, index) => {
+    if (!(item.queueId in ret)) {
+      ret[item.queueId] = []
+    }
+
+    ret[item.queueId].push(
+      {
+        key: item.id,
+        progress: buildProgress[item.progress],
+        status: buildStatus[item.status],
+        time: item.createdAt,
+        resultUrl: WebBaseDev + item.resultPath,
+        vncUrl: 'http://' + item.nodeIp + ':' + item.vncPort // TODO: use novnc address
+      }
+    )
+  })
+
+  return ret
+}
+
 export function getBuildProgress (that) {
   return {
     'created': that.$t('build.progress.created'),

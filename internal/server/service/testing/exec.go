@@ -85,6 +85,8 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 
 			if result.IsSuccess() {
 				s.QueueRepo.Start(queue)
+				s.HistoryService.Create(consts.Queue, queue.ID, consts.ProgressRunning, "")
+
 				newTaskProgress = consts.ProgressRunning
 			} else {
 				s.QueueService.SaveResult(queue.ID, consts.ProgressPerformRequestFail, consts.StatusFail)
@@ -110,6 +112,8 @@ func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {
 
 		if rpcResult.IsSuccess() {
 			s.QueueRepo.Start(queue) // start
+			s.HistoryService.Create(consts.Queue, queue.ID, consts.ProgressRunning, "")
+
 			newTaskProgress = consts.ProgressRunning
 		} else {
 			s.QueueService.SaveResult(queue.ID, consts.ProgressPerformRequestFail, consts.StatusFail)

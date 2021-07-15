@@ -2,6 +2,7 @@ package serverService
 
 import (
 	consts "github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 )
@@ -29,6 +30,12 @@ func (s *HistoryService) Get(id uint) (po model.History) {
 func (s *HistoryService) Create(tp consts.EntityType, id uint, progress consts.BuildProgress, status string) (err error) {
 	po := model.NewHistoryPo(tp, id, progress, status)
 	err = s.HistoryRepo.Save(&po)
+
+	return
+}
+
+func (s *HistoryService) GetBuildHistoriesByTask(taskId uint) (histories []domain.BuildHistory) {
+	histories = s.HistoryRepo.GetBuildHistoriesByTask(taskId)
 
 	return
 }

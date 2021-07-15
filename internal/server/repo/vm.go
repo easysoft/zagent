@@ -51,7 +51,8 @@ func (r VmRepo) Launch(vm domain.Vm, id uint) {
 		Updates(
 			map[string]interface{}{"status": consts.VmLaunch,
 				"image_path":   vm.ImagePath,
-				"backing_path": vm.BackingPath})
+				"backing_path": vm.BackingPath,
+				"vnc_port":     vm.VncPort})
 
 	return
 }

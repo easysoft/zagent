@@ -52,6 +52,7 @@ const locale = {
   'form.step': 'Step',
   'form.result': 'Result',
   'form.result.down': 'Download Result',
+  'form.vnc.url': 'Remote Desktop',
   'form.code': 'Code',
   'form.name': 'Name',
   'form.placeholder': 'Placeholder',

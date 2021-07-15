@@ -15,6 +15,7 @@ type TaskCtrl struct {
 	BaseCtrl
 
 	TaskService      *serverService.TaskService      `inject:""`
+	HistoryService   *serverService.HistoryService   `inject:""`
 	WebSocketService *commonService.WebSocketService `inject:""`
 }
 
@@ -58,8 +59,11 @@ func (c *TaskCtrl) Get(ctx iris.Context) {
 		return
 	}
 
-	model := c.TaskService.GetDetail(uint(id))
-	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "操作成功", model))
+	task := c.TaskService.GetDetail(uint(id))
+	buildHistories := c.HistoryService.GetBuildHistoriesByTask(task.ID)
+
+	mp := map[string]interface{}{"task": task, "buildHistories": buildHistories}
+	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "操作成功", mp))
 	return
 }
 
