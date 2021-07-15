@@ -36,7 +36,7 @@ func (s RpcService) AppiumTest(build model.Build) (result _domain.RpcResp) {
 	appiumTestTo.AppiumPort = build.AppiumPort
 
 	obj := interface{}(appiumTestTo)
-	result = s.Request(build.NodeIp, build.NodePort, "perform", "Perform", &obj)
+	result = s.Request(build.NodeIp, build.NodePort, "job", "Add", &obj)
 
 	return
 }

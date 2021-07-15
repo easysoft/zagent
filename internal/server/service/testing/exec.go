@@ -56,9 +56,9 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 			// create kvm
 			result := s.VmService.CreateRemote(hostId, backingId, tmplId, queue.ID)
 			if result.IsSuccess() { // success to create
-				newTaskProgress = consts.ProgressRunning
+				newTaskProgress = consts.ProgressLaunchVm
 			} else {
-				newTaskProgress = consts.ProgressPendingRes
+				newTaskProgress = consts.ProgressCreateVmFail
 			}
 		} else {
 			s.QueueRepo.Pending(queue.ID) // pending
