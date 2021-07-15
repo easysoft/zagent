@@ -38,8 +38,11 @@ export function getTaskBuildHistories (buildHistories, that) {
   const historyTypes = getHistoryType(that)
   const buildProgress = getBuildProgress(that)
   const buildStatus = getBuildStatus(that)
+  const vmStatus = getVmStatus(that)
 
-  buildHistories.forEach((item, index) => {
+  for (let index = 0; index < buildHistories.length; index++) {
+    const item = buildHistories[index]
+
     if (!(item.queueId in ret)) {
       ret[item.queueId] = []
     }
@@ -49,18 +52,21 @@ export function getTaskBuildHistories (buildHistories, that) {
     } else if (item.ownerType === 'build') {
     }
 
-    ret[item.queueId].push(
-      {
-        key: index,
-        type: historyTypes[item.ownerType],
-        progress: buildProgress[item.progress],
-        status: buildStatus[item.status],
-        time: item.createdAt,
-        resultUrl: WebBaseDev + item.resultPath,
-        vncUrl: 'http://' + item.nodeIp + ':' + item.vncPort // TODO: use novnc address
-      }
-    )
-  })
+    const his = {
+      key: index + 1,
+      type: historyTypes[item.ownerType],
+      progress: buildProgress[item.progress],
+      status: item.ownerType !== 'vm' ? buildStatus[item.status] : vmStatus[item.status],
+      time: item.createdAt
+    }
+
+    if (item.ownerType === 'build' && item.status !== 'created') his.resultUrl = WebBaseDev + item.resultPath
+    if (item.ownerType === 'build' && ['launch', 'running', 'busy', 'ready'].indexOf(item.status) > -1) {
+      his.vncUrl = 'http://' + item.nodeIp + ':' + item.vncPort
+    }
+
+    ret[item.queueId].push(his)
+  }
 
   return ret
 }
@@ -73,6 +79,7 @@ export function getHistoryType (that) {
     'vm': that.$t('history.type.vm')
   }
 }
+
 export function getBuildProgress (that) {
   return {
     'init': that.$t('build.init'),

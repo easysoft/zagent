@@ -22,6 +22,7 @@ func NewHistoryPo(tp consts.EntityType, id, queueId uint, progress consts.BuildP
 	po := History{
 		OwnerType: tp.ToString(),
 		OwnerID:   id,
+		QueueId:   queueId,
 		Progress:  progress.ToString(),
 		Status:    status,
 	}

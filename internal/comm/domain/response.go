@@ -27,6 +27,6 @@ type BuildHistory struct {
 	ResultPath string     `json:"resultPath"`
 	CreatedAt  *time.Time `json:"createdAt"`
 
-	OwnerType uint `json:"ownerType"`
-	OwnerId   uint `json:"ownerId"`
+	OwnerType string `json:"ownerType"`
+	OwnerId   uint   `json:"ownerId"`
 }

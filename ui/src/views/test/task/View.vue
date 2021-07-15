@@ -295,7 +295,7 @@ export default {
           this.taskProgressMap = getTaskProgressMap(this.model.histories, this.buildProgress)
           this.taskBuildHistories = getTaskBuildHistories(json.data.buildHistories, this)
 
-          console.log('this.taskProgressMap', this.taskProgressMap)
+          console.log('this.taskProgressMap', this.taskProgressMap, this.taskBuildHistories)
         })
       } else {
         this.reset()
