@@ -25,7 +25,7 @@ func NewAgentCron() *CronService {
 
 func (s *CronService) Init() {
 	s.syncMap.Store("isRunning", false)
-	s.syncMap.Store("lastCompletedTime", 0)
+	s.syncMap.Store("lastCompletedTime", int64(0))
 
 	_cronUtils.AddTask(
 		"check",
