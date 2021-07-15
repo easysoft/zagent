@@ -1,8 +1,8 @@
 package vmInit
 
 import (
-	vmCron "github.com/easysoft/zagent/cmd/vm/cron"
-	vmRouter "github.com/easysoft/zagent/cmd/vm/router"
+	vmCron "github.com/easysoft/zagent/cmd/agent-vm/cron"
+	vmRouter "github.com/easysoft/zagent/cmd/agent-vm/router"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	"github.com/easysoft/zagent/internal/pkg/db"
 	"github.com/facebookgo/inject"

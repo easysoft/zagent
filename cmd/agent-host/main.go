@@ -2,8 +2,8 @@ package main
 
 import (
 	"flag"
-	hostInit "github.com/easysoft/zagent/cmd/host/init"
-	hostRouter "github.com/easysoft/zagent/cmd/host/router"
+	hostInit "github.com/easysoft/zagent/cmd/agent-host/init"
+	hostRouter "github.com/easysoft/zagent/cmd/agent-host/router"
 	"github.com/easysoft/zagent/internal/agent/conf"
 	"github.com/easysoft/zagent/internal/agent/utils/common"
 	"github.com/easysoft/zagent/internal/agent/utils/const"

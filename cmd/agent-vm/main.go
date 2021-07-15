@@ -2,8 +2,8 @@ package main
 
 import (
 	"flag"
-	vmInit "github.com/easysoft/zagent/cmd/vm/init"
-	vmRouter "github.com/easysoft/zagent/cmd/vm/router"
+	vmInit "github.com/easysoft/zagent/cmd/agent-vm/init"
+	vmRouter "github.com/easysoft/zagent/cmd/agent-vm/router"
 	"github.com/easysoft/zagent/internal/agent/conf"
 	"github.com/easysoft/zagent/internal/agent/utils/common"
 	"github.com/easysoft/zagent/internal/agent/utils/const"

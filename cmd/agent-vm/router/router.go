@@ -1,7 +1,7 @@
 package vmRouter
 
 import (
-	vmHandler "github.com/easysoft/zagent/cmd/vm/router/handler"
+	vmHandler "github.com/easysoft/zagent/cmd/agent-vm/router/handler"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	_i118Utils "github.com/easysoft/zagent/internal/pkg/lib/i118"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"

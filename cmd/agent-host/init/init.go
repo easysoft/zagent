@@ -1,8 +1,8 @@
 package hostInit
 
 import (
-	hostCron "github.com/easysoft/zagent/cmd/host/cron"
-	hostRouter "github.com/easysoft/zagent/cmd/host/router"
+	hostCron "github.com/easysoft/zagent/cmd/agent-host/cron"
+	hostRouter "github.com/easysoft/zagent/cmd/agent-host/router"
 	hostKvmService "github.com/easysoft/zagent/internal/agent-host/service/kvm"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	"github.com/easysoft/zagent/internal/pkg/db"
