@@ -59,7 +59,7 @@ func (s QueueService) GenerateSeleniumQueuesFromTask(task *model.Task) (count in
 		)
 
 		s.QueueRepo.Save(&queue)
-		s.HistoryService.Create(consts.Queue, queue.ID, consts.ProgressCreated, "")
+		s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressCreated, "")
 		count++
 	}
 
@@ -95,7 +95,7 @@ func (s QueueService) GenerateAppiumQueuesFromTask(task *model.Task) (count int)
 				task.BrowserType, task.BrowserVersion)
 
 			s.QueueRepo.Save(&queue)
-			s.HistoryService.Create(consts.Queue, queue.ID, consts.ProgressCreated, "")
+			s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressCreated, "")
 			count++
 		}
 	}
@@ -110,7 +110,7 @@ func (s QueueService) SaveResult(queueId uint, progress consts.BuildProgress, st
 	s.QueueRepo.SetQueueStatus(queueId, progress, status)
 	s.TaskService.SetTaskStatus(queue.TaskId)
 
-	s.HistoryService.Create(consts.Queue, queueId, progress, status.ToString())
+	s.HistoryService.Create(consts.Queue, queueId, queueId, progress, status.ToString())
 }
 
 func (s QueueService) removeOldQueuesByTask(taskId uint) {

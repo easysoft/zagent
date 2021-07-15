@@ -3,7 +3,14 @@ import { buildProgressEnd, buildProgressExec, buildProgressPrepareRes, buildProg
 import { WebBaseDev } from '@/api/manage'
 
 export function getTaskProgressMap (histories, buildProgress) {
-  const taskProgressMap = {}
+  const ret = {}
+  ret['start'] = {}
+  ret['res'] = {}
+  ret['exec'] = {}
+  ret['end'] = {}
+
+  if (!histories) return ret
+
   histories.forEach((item, index) => {
     let key = ''
     if (buildProgressStart.indexOf(item.progress) > -1) {
@@ -16,17 +23,19 @@ export function getTaskProgressMap (histories, buildProgress) {
       key = 'end'
     }
 
-    taskProgressMap[key] = {}
-    taskProgressMap[key].status = buildProgress[item.progress]
-    taskProgressMap[key].time = item.createdAt
+    ret[key] = {}
+    ret[key].status = buildProgress[item.progress]
+    ret[key].time = item.createdAt
   })
 
-  return taskProgressMap
+  return ret
 }
 
 export function getTaskBuildHistories (buildHistories, that) {
   const ret = {}
+  if (!buildHistories) return ret
 
+  const historyTypes = getHistoryType(that)
   const buildProgress = getBuildProgress(that)
   const buildStatus = getBuildStatus(that)
 
@@ -35,9 +44,15 @@ export function getTaskBuildHistories (buildHistories, that) {
       ret[item.queueId] = []
     }
 
+    if (item.ownerType === 'queue') {
+    } else if (item.ownerType === 'vm') {
+    } else if (item.ownerType === 'build') {
+    }
+
     ret[item.queueId].push(
       {
-        key: item.id,
+        key: index,
+        type: historyTypes[item.ownerType],
         progress: buildProgress[item.progress],
         status: buildStatus[item.status],
         time: item.createdAt,
@@ -50,8 +65,18 @@ export function getTaskBuildHistories (buildHistories, that) {
   return ret
 }
 
+export function getHistoryType (that) {
+  return {
+    'task': that.$t('history.type.task'),
+    'queue': that.$t('history.type.queue'),
+    'build': that.$t('history.type.build'),
+    'vm': that.$t('history.type.vm')
+  }
+}
 export function getBuildProgress (that) {
   return {
+    'init': that.$t('build.init'),
+
     'created': that.$t('build.progress.created'),
     'pending_res': that.$t('build.progress.pending_res'),
     'launch_vm': that.$t('build.progress.launch_vm'),

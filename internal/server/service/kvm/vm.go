@@ -17,7 +17,7 @@ import (
 
 type VmService interface {
 	CreateRemote(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp)
-	DestroyRemote(vmId uint) (result _domain.RpcResp)
+	DestroyRemote(vmId, queueId uint) (result _domain.RpcResp)
 
 	genVmName(backing model.VmBacking, vmId uint) (name string)
 	genValidMacAddress() (mac string)
@@ -102,20 +102,20 @@ func (s KvmNativeService) CreateRemote(hostId, backingId, tmplId, queueId uint) 
 		mapstructure.Decode(mp, &vmInResp)
 
 		s.VmRepo.Launch(vmInResp, vm.ID) // update vm status, mac address
-		s.HistoryService.Create(consts.Vm, vm.ID, "", consts.VmLaunch.ToString())
+		s.HistoryService.Create(consts.Vm, vm.ID, queueId, "", consts.VmLaunch.ToString())
 
 		s.QueueRepo.UpdateProgressAndVm(queueId, vm.ID, consts.ProgressLaunchVm)
-		s.HistoryService.Create(consts.Queue, queueId, consts.ProgressLaunchVm, "")
+		s.HistoryService.Create(consts.Queue, queueId, queueId, consts.ProgressLaunchVm, "")
 	} else {
 		s.VmRepo.FailToCreate(vm.ID, result.Msg)
 		s.QueueService.SaveResult(queueId, consts.ProgressCreateVmFail, consts.StatusFail)
-		s.HistoryService.Create(consts.Queue, queueId, consts.ProgressCreateVmFail, consts.StatusFail.ToString())
+		s.HistoryService.Create(consts.Queue, queueId, queueId, consts.ProgressCreateVmFail, consts.StatusFail.ToString())
 	}
 
 	return
 }
 
-func (s KvmNativeService) DestroyRemote(vmId uint) (result _domain.RpcResp) {
+func (s KvmNativeService) DestroyRemote(vmId, queueId uint) (result _domain.RpcResp) {
 	vm := s.VmRepo.GetById(vmId)
 	host := s.HostRepo.Get(vm.HostId)
 
@@ -130,7 +130,7 @@ func (s KvmNativeService) DestroyRemote(vmId uint) (result _domain.RpcResp) {
 	}
 	s.VmRepo.UpdateStatusByNames([]string{vm.Name}, status)
 
-	s.HistoryService.Create(consts.Vm, vmId, "", status.ToString())
+	s.HistoryService.Create(consts.Vm, vmId, queueId, "", status.ToString())
 
 	return
 }

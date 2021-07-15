@@ -45,19 +45,18 @@ func (r *HistoryRepo) Save(po *model.History) (err error) {
 
 func (r *HistoryRepo) GetBuildHistoriesByTask(taskId uint) (histories []domain.BuildHistory) {
 	r.DB.Model(&model.Browser{}).Raw(
-		`SELECT his.id, his.progress, his.status, his.owner_id, his.created_at,
+		`SELECT his.id, his.progress, his.status, his.owner_type, his.owner_id, his.created_at,
              bld.queue_id, bld.result_path, 
 			 vm.node_ip, vm.vnc_port 
              FROM biz_history his 
 			 LEFT JOIN biz_build bld ON bld.id = his.owner_id 
 			 LEFT JOIN biz_vm vm ON vm.id = bld.vm_id 
-			 WHERE his.owner_type = ? 
-			 AND his.owner_id IN (
+			 WHERE his.queue_id IN (
 				SELECT id FROM biz_queue 
 			   WHERE task_id = ?
 			 )
 			 ORDER BY his.id ASC`,
-		"build", taskId).
+		taskId).
 		Scan(&histories)
 
 	return

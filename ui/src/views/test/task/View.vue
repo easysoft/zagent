@@ -114,8 +114,13 @@
           {{ record.createdAt | moment }}
         </span>
         <span slot="action" slot-scope="text, record">
-          <a :href="record.resultUrl">{{ $t('form.result.down') }}</a> |
-          <a :href="record.vncUrl">{{ $t('form.vnc.url') }}</a>
+          <span v-if="record.resultUrl">
+            <a :href="record.resultUrl">{{ $t('form.result.down') }}</a>
+          </span>
+          <span v-if="record.resultUrl && record.vncUrl"> | </span>
+          <span v-if="record.vncUrl">
+            <a :href="record.vncUrl">{{ $t('form.vnc.url') }}</a>
+          </span>
         </span>
       </a-table>
     </a-card>
@@ -238,6 +243,11 @@ export default {
         title: this.$t('form.no'),
         dataIndex: 'key',
         key: 'key'
+      },
+      {
+        title: this.$t('form.type'),
+        dataIndex: 'type',
+        key: 'type'
       },
       {
         title: this.$t('form.progress'),

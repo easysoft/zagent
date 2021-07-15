@@ -13,12 +13,12 @@ type History struct {
 	Progress string `json:"progress"`
 	Status   string `json:"status"`
 
-	QueueId uint   `json:"queueId" gorm:"-"`
+	QueueId uint   `json:"queueId"`
 	NodeIp  string `json:"nodeIp" gorm:"-"`
 	VncPort int    `json:"vncPort" gorm:"-"`
 }
 
-func NewHistoryPo(tp consts.EntityType, id uint, progress consts.BuildProgress, status string) History {
+func NewHistoryPo(tp consts.EntityType, id, queueId uint, progress consts.BuildProgress, status string) History {
 	po := History{
 		OwnerType: tp.ToString(),
 		OwnerID:   id,

@@ -85,7 +85,7 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 
 			if result.IsSuccess() {
 				s.QueueRepo.Start(queue)
-				s.HistoryService.Create(consts.Queue, queue.ID, consts.ProgressRunning, "")
+				s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressRunning, "")
 
 				newTaskProgress = consts.ProgressRunning
 			} else {
@@ -96,7 +96,7 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 
 	if newTaskProgress != "" && originalProgress != newTaskProgress { // queue's progress changed, update parent task
 		s.TaskRepo.SetProgress(queue.TaskId, newTaskProgress)
-		s.HistoryService.Create(consts.Task, queue.TaskId, newTaskProgress, "")
+		s.HistoryService.Create(consts.Task, queue.TaskId, 0, newTaskProgress, "")
 	}
 }
 
@@ -112,7 +112,7 @@ func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {
 
 		if rpcResult.IsSuccess() {
 			s.QueueRepo.Start(queue) // start
-			s.HistoryService.Create(consts.Queue, queue.ID, consts.ProgressRunning, "")
+			s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressRunning, "")
 
 			newTaskProgress = consts.ProgressRunning
 		} else {
@@ -125,7 +125,7 @@ func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {
 
 	if newTaskProgress != "" && originalProgress != newTaskProgress { // progress changed
 		s.TaskService.SetProgress(queue.TaskId, newTaskProgress)
-		s.HistoryService.Create(consts.Task, queue.TaskId, newTaskProgress, "")
+		s.HistoryService.Create(consts.Task, queue.TaskId, 0, newTaskProgress, "")
 	}
 }
 
@@ -134,7 +134,7 @@ func (s ExecService) CheckTimeout() {
 
 	for _, queue := range queues {
 		s.QueueRepo.SetTimeout(queue.ID)
-		s.HistoryService.Create(consts.Queue, queue.ID, consts.ProgressTimeout, "")
+		s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressTimeout, "")
 	}
 }
 

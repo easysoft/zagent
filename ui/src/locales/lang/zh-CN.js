@@ -115,7 +115,13 @@ const locale = {
 
   'form.edit.env': '编辑环境',
 
-  'build.progress.start': '起始',
+  'history.type.task': '任务',
+  'history.type.queue': '队列',
+  'history.type.build': '构建',
+  'history.type.vm': '虚机',
+
+  'build.init': '初始化',
+  'build.progress.start': '开始',
   'build.progress.res': '准备',
   'build.progress.exec': '执行',
   'build.progress.end': '结束',

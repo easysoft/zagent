@@ -117,6 +117,12 @@ const locale = {
 
   'form.edit.env': 'Edit Environment',
 
+  'history.type.task': 'Task',
+  'history.type.queue': 'Queue',
+  'history.type.build': 'Build',
+  'history.type.vm': 'VM',
+
+  'build.init': 'Init',
   'build.progress.start': 'Start',
   'build.progress.res': 'Prepare',
   'build.progress.exec': 'Execution',

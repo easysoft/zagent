@@ -27,8 +27,8 @@ func (s *HistoryService) Get(id uint) (po model.History) {
 	po = s.HistoryRepo.Get(id)
 	return
 }
-func (s *HistoryService) Create(tp consts.EntityType, id uint, progress consts.BuildProgress, status string) (err error) {
-	po := model.NewHistoryPo(tp, id, progress, status)
+func (s *HistoryService) Create(tp consts.EntityType, id, queueId uint, progress consts.BuildProgress, status string) (err error) {
+	po := model.NewHistoryPo(tp, id, queueId, progress, status)
 	err = s.HistoryRepo.Save(&po)
 
 	return

@@ -28,7 +28,7 @@ func (s AppiumService) Start(queue model.Queue) (result _domain.RpcResp) {
 
 	build := model.NewAppiumBuildPo(queue, device)
 	s.BuildRepo.Save(&build)
-	s.HistoryService.Create(consts.Build, build.ID, consts.ProgressCreated, consts.StatusCreated.ToString())
+	s.HistoryService.Create(consts.Build, build.ID, queue.ID, consts.ProgressCreated, consts.StatusCreated.ToString())
 
 	build = s.BuildRepo.GetBuild(build.ID)
 	build.AppiumPort = device.AppiumPort

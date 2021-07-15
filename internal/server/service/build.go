@@ -22,7 +22,7 @@ func (s BuildService) SaveResult(build domain.Build) (count int) {
 	s.BuildRepo.SaveResult(build)
 
 	po := s.BuildRepo.GetBuild(build.ID)
-	s.HistoryService.Create(consts.Build, po.ID, po.Progress, po.Status.ToString())
+	s.HistoryService.Create(consts.Build, po.ID, po.QueueId, po.Progress, po.Status.ToString())
 
 	s.QueueService.SaveResult(po.QueueId, po.Progress, po.Status)
 

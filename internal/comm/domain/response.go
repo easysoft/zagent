@@ -26,4 +26,7 @@ type BuildHistory struct {
 	VncPort    int        `json:"vncPort"`
 	ResultPath string     `json:"resultPath"`
 	CreatedAt  *time.Time `json:"createdAt"`
+
+	OwnerType uint `json:"ownerType"`
+	OwnerId   uint `json:"ownerId"`
 }

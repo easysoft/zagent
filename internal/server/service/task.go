@@ -60,7 +60,7 @@ func (s *TaskService) Save(po *model.Task, userId uint) (err error) {
 	err = s.TaskRepo.Save(po)
 
 	s.QueueService.GenerateFromTask(po)
-	s.HistoryService.Create(consts.Task, po.ID, consts.ProgressCreated, "")
+	s.HistoryService.Create(consts.Task, po.ID, 0, consts.ProgressCreated, "")
 
 	return
 }
@@ -96,7 +96,7 @@ func (s *TaskService) Delete(id uint) (err error) {
 func (s *TaskService) SetProgress(id uint, progress consts.BuildProgress) {
 	s.TaskRepo.SetProgress(id, progress)
 
-	s.HistoryService.Create(consts.Task, id, progress, "")
+	s.HistoryService.Create(consts.Task, id, 0, progress, "")
 }
 
 func (s *TaskService) SetTaskStatus(taskId uint) {
@@ -124,6 +124,6 @@ func (s *TaskService) SetTaskStatus(taskId uint) {
 
 	if isAllQueuesCompleted {
 		s.TaskRepo.SetResult(taskId, progress, status)
-		s.HistoryService.Create(consts.Task, taskId, progress, status.ToString())
+		s.HistoryService.Create(consts.Task, taskId, 0, progress, status.ToString())
 	}
 }
