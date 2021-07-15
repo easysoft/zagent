@@ -20,6 +20,16 @@ const (
 	Portainer    ContainerPlatform = "portainer"
 )
 
+type WsEventAction string
+
+const (
+	TaskUpdate WsEventAction = "task_update"
+)
+
+func (e WsEventAction) ToString() string {
+	return string(e)
+}
+
 var (
 	SlotTypeAbbrMap = map[string]string{"synonym": "syn", "lookup": "lkp", "regex": "rgx"}
 )

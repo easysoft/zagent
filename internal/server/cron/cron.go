@@ -25,7 +25,7 @@ func NewServerCron() *ServerCron {
 
 func (s *ServerCron) Init() {
 	s.syncMap.Store("isRunning", false)
-	s.syncMap.Store("lastCompletedTime", 0)
+	s.syncMap.Store("lastCompletedTime", int64(0))
 
 	_cronUtils.AddTask(
 		"check",
@@ -33,7 +33,8 @@ func (s *ServerCron) Init() {
 		func() {
 			isRunning, _ := s.syncMap.Load("isRunning")
 			lastCompletedTime, _ := s.syncMap.Load("lastCompletedTime")
-			if isRunning.(bool) || time.Now().Unix()-lastCompletedTime.(int64) > consts.WebCheckInterval {
+
+			if isRunning.(bool) || time.Now().Unix()-lastCompletedTime.(int64) < consts.WebCheckInterval {
 				_logUtils.Infof("skip this iteration " + _dateUtils.DateTimeStr(time.Now()))
 				return
 			}

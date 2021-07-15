@@ -30,7 +30,7 @@ func (r QueueRepo) QueryForExec() (queues []model.Queue) {
 func (r QueueRepo) QueryByTask(taskID uint) (queues []model.Queue) {
 	queues = make([]model.Queue, 0)
 
-	r.DB.Model(&model.Queue{}).Where("task_id=?", taskID).Order("id").Find(&queues)
+	r.DB.Model(&model.Queue{}).Where("task_id=? AND NOT deleted", taskID).Order("id").Find(&queues)
 
 	return
 }
@@ -118,5 +118,11 @@ func (r QueueRepo) SetQueueStatus(queueId uint, progress consts.BuildProgress, s
 func (r QueueRepo) UpdateProgressAndVm(queueId, vmId uint, progress consts.BuildProgress) {
 	r.DB.Model(&model.Queue{}).Where("id=?", queueId).Updates(
 		map[string]interface{}{"vm_id": vmId, "progress": progress})
+	return
+}
+
+func (r QueueRepo) RemoveOldQueuesByTask(taskId uint) {
+	r.DB.Model(&model.Queue{}).Where("task_id=?", taskId).Updates(
+		map[string]interface{}{"deleted": true})
 	return
 }

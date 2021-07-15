@@ -34,7 +34,7 @@ func (s *CronService) Init() {
 			isRunning, _ := s.syncMap.Load("isRunning")
 			lastCompletedTime, _ := s.syncMap.Load("lastCompletedTime")
 
-			if isRunning.(bool) || time.Now().Unix()-lastCompletedTime.(int64) > consts.AgentCheckInterval {
+			if isRunning.(bool) || time.Now().Unix()-lastCompletedTime.(int64) < consts.AgentCheckInterval {
 				_logUtils.Infof("skip this iteration " + _dateUtils.DateTimeStr(time.Now()))
 				return
 			}

@@ -211,12 +211,13 @@ export default {
   created () {
     const that = this
     this.$global.EventBus.$on(this.$global.wsEventName, (json) => {
-      console.log('EventBus in page', json)
+      console.log('wsEvent', json)
       that.outputModel += json.room + ': ' + json.msg + '\n'
 
       const msg = JSON.parse(json.msg)
-      if (msg.action === 'end_training' && msg.projectId === that.model.id) {
-        that.model.trainingStatus = 'end_training'
+      if (msg.action === 'task_update' && msg.taskId === that.model.id) {
+        console.log('task_update', json)
+        this.loadData()
       }
     })
 
@@ -275,6 +276,7 @@ export default {
           this.model = json.data
           this.modelJson = this.convertJson(this.model)
 
+          this.operationTabList = []
           this.model.queues.forEach((queue, index) => {
             const name = this.osTypes[queue.osType] + ' ' + this.osLangs[queue.osLang]
             this.operationTabList.push({ key: queue.id + '', tab: name })

@@ -6,6 +6,7 @@ import (
 	"github.com/easysoft/zagent/internal/server/biz/jwt"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/service"
+	commonService "github.com/easysoft/zagent/internal/server/service/common"
 	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
 	"github.com/kataras/iris/v12"
 )
@@ -13,7 +14,8 @@ import (
 type TaskCtrl struct {
 	BaseCtrl
 
-	TaskService *serverService.TaskService `inject:""`
+	TaskService      *serverService.TaskService      `inject:""`
+	WebSocketService *commonService.WebSocketService `inject:""`
 }
 
 func NewTaskCtrl() *TaskCtrl {
@@ -121,5 +123,12 @@ func (c *TaskCtrl) Delete(ctx iris.Context) {
 	}
 
 	c.TaskService.Delete(uint(id))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "操作成功", ""))
+}
+
+func (c *TaskCtrl) TestWs(ctx iris.Context) {
+	data := map[string]interface{}{"action": serverConst.TaskUpdate, "taskId": 1, "msg": ""}
+	c.WebSocketService.Broadcast(serverConst.WsNamespace, serverConst.WsDefaultRoom, serverConst.WsEvent, data)
+
 	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "操作成功", ""))
 }

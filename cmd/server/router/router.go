@@ -74,6 +74,8 @@ func (r *Router) App() {
 				client.PartyFunc("/build", func(party iris.Party) {
 					party.Post("/uploadResult", r.BuildCtrl.UploadResult).Name = "文件上传"
 				})
+
+				client.Get("/testWs", r.TaskCtrl.TestWs).Name = "测试"
 			})
 
 			v1.PartyFunc("/admin", func(admin iris.Party) {

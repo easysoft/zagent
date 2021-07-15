@@ -20,6 +20,8 @@ func NewQueueService() *QueueService {
 }
 
 func (s QueueService) GenerateFromTask(task *model.Task) (count int) {
+	s.removeOldQueuesByTask(task.ID)
+
 	if task.BuildType == consts.AutoSelenium {
 		count = s.GenerateSeleniumQueuesFromTask(task)
 	} else if task.BuildType == consts.AutoAppium {
@@ -109,4 +111,8 @@ func (s QueueService) SaveResult(queueId uint, progress consts.BuildProgress, st
 	s.TaskService.SetTaskStatus(queue.TaskId)
 
 	s.HistoryService.Create(consts.Queue, queueId, progress, status.ToString())
+}
+
+func (s QueueService) removeOldQueuesByTask(taskId uint) {
+	s.QueueRepo.RemoveOldQueuesByTask(taskId)
 }

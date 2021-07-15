@@ -4,6 +4,8 @@ import (
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
+	commonService "github.com/easysoft/zagent/internal/server/service/common"
+	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
 	"strings"
 )
 
@@ -11,8 +13,9 @@ type TaskService struct {
 	TaskRepo  *repo.TaskRepo  `inject:""`
 	QueueRepo *repo.QueueRepo `inject:""`
 
-	QueueService   *QueueService   `inject:""`
-	HistoryService *HistoryService `inject:""`
+	QueueService     *QueueService                   `inject:""`
+	HistoryService   *HistoryService                 `inject:""`
+	WebSocketService *commonService.WebSocketService `inject:""`
 }
 
 func NewTaskService() *TaskService {
@@ -26,10 +29,21 @@ func (s *TaskService) List(keywords, status string, pageNo int, pageSize int) (p
 
 func (s *TaskService) Get(id uint) (po model.Task) {
 	po = s.TaskRepo.Get(id)
+
+	if po.ScriptUrl == "" {
+		po.ScriptUrl = po.ScmAddress
+		po.ScmAddress = ""
+	}
+
 	return
 }
 func (s *TaskService) GetDetail(id uint) (po model.Task) {
 	po = s.TaskRepo.GetDetail(id)
+
+	if po.ScriptUrl == "" {
+		po.ScriptUrl = po.ScmAddress
+		po.ScmAddress = ""
+	}
 
 	po.Queues = s.QueueRepo.QueryByTask(po.ID)
 
@@ -52,9 +66,17 @@ func (s *TaskService) Save(po *model.Task, userId uint) (err error) {
 }
 
 func (s *TaskService) Update(po *model.Task) (err error) {
+	if strings.Index(po.ScriptUrl, ".zip") < 0 {
+		po.ScmAddress = po.ScriptUrl
+		po.ScriptUrl = ""
+	}
+
 	err = s.TaskRepo.Update(po)
 
 	s.QueueService.GenerateFromTask(po)
+
+	data := map[string]interface{}{"action": serverConst.TaskUpdate, "taskId": po.ID, "msg": ""}
+	s.WebSocketService.Broadcast(serverConst.WsNamespace, serverConst.WsDefaultRoom, serverConst.WsEvent, data)
 
 	return
 }

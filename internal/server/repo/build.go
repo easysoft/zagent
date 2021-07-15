@@ -20,7 +20,7 @@ func NewBuildRepo() *BuildRepo {
 type buildRepository struct{}
 
 func (r BuildRepo) GetBuild(id uint) (build model.Build) {
-	r.DB.Model(&model.Build{}).Preload("Queue").Where("ID=?", id).First(&build)
+	r.DB.Model(&model.Build{}).Preload("Queue", "NOT deleted").Where("ID=?", id).First(&build)
 
 	return
 }

@@ -46,14 +46,14 @@ func (r *TaskRepo) Query(keywords, status string, pageNo int, pageSize int) (pos
 }
 
 func (r *TaskRepo) Get(id uint) (po model.Task) {
-	r.DB.Model(&model.Task{}).Preload("Environments").Where("id = ?", id).First(&po)
+	r.DB.Model(&model.Task{}).Preload("Environments", "NOT deleted").Where("id = ?", id).First(&po)
 
 	return
 }
 func (r *TaskRepo) GetDetail(id uint) (po model.Task) {
 	r.DB.Model(&model.Task{}).
-		Preload("Environments").
-		Preload("Histories").
+		Preload("Environments", "NOT deleted").
+		Preload("Histories", "NOT deleted").
 		Where("id = ?", id).First(&po)
 
 	return
@@ -66,7 +66,8 @@ func (r *TaskRepo) Save(po *model.Task) (err error) {
 
 func (r *TaskRepo) Update(po *model.Task) (err error) {
 	err = r.DB.Model(&model.Task{}).Where("task_id = ?", po.ID).Delete(&model.Environment{}).Error
-	err = r.DB.Model(&model.Task{}).Session(&gorm.Session{FullSaveAssociations: true}).Updates(&po).Error
+	err = r.DB.Model(&model.Task{}).Where("id = ?", po.ID).
+		Session(&gorm.Session{FullSaveAssociations: true}).Updates(&po).Error
 	return
 }
 

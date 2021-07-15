@@ -1,4 +1,4 @@
-package initService
+package commonService
 
 import (
 	"encoding/json"
