@@ -324,10 +324,10 @@ export default {
 
       if (json.environments) {
         json.environments.forEach((item, index) => {
-          item.id = undefined
-          item.createdAt = undefined
-          item.updatedAt = undefined
-          item.taskId = undefined
+          const arr = ['id', 'createdAt', 'updatedAt', 'taskId', 'deletedAt', 'deleted', 'disabled']
+          arr.forEach((i, index) => {
+            item[i] = undefined
+          })
         })
       }
 
