@@ -81,15 +81,15 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 		vm := s.VmRepo.GetById(vmId)
 
 		if vm.Status == consts.VmReady { // find ready vm, begin to run test
-			result := s.SeleniumService.Start(queue)
+			result := s.SeleniumService.Run(queue)
 
 			if result.IsSuccess() {
-				s.QueueRepo.Start(queue)
+				s.QueueRepo.Run(queue)
 				s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressRunning, "")
 
 				newTaskProgress = consts.ProgressRunning
 			} else {
-				s.QueueService.SaveResult(queue.ID, consts.ProgressPerformRequestFail, consts.StatusFail)
+				s.QueueService.SaveResult(queue.ID, consts.ProgressRunFail, consts.StatusFail)
 			}
 		}
 	}
@@ -108,15 +108,15 @@ func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {
 	var newTaskProgress consts.BuildProgress
 
 	if s.DeviceService.IsDeviceReady(device) {
-		rpcResult := s.AppiumService.Start(queue)
+		rpcResult := s.AppiumService.Run(queue)
 
 		if rpcResult.IsSuccess() {
-			s.QueueRepo.Start(queue) // start
+			s.QueueRepo.Run(queue) // start
 			s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressRunning, "")
 
 			newTaskProgress = consts.ProgressRunning
 		} else {
-			s.QueueService.SaveResult(queue.ID, consts.ProgressPerformRequestFail, consts.StatusFail)
+			s.QueueService.SaveResult(queue.ID, consts.ProgressRunFail, consts.StatusFail)
 		}
 	} else {
 		s.QueueRepo.Pending(queue.ID) // pending
@@ -133,7 +133,7 @@ func (s ExecService) CheckTimeout() {
 	queues := s.QueueRepo.QueryTimeout()
 
 	for _, queue := range queues {
-		s.QueueRepo.SetTimeout(queue.ID)
+		s.QueueRepo.Timeout(queue.ID)
 		s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressTimeout, "")
 	}
 }

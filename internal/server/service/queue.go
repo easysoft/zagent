@@ -107,7 +107,7 @@ func (s QueueService) GenerateAppiumQueuesFromTask(task *model.Task) (count int)
 func (s QueueService) SaveResult(queueId uint, progress consts.BuildProgress, status consts.BuildStatus) {
 	queue := s.QueueRepo.GetQueue(queueId)
 
-	s.QueueRepo.SetQueueStatus(queueId, progress, status)
+	s.QueueRepo.SaveResult(queueId, progress, status)
 	s.TaskService.SetTaskStatus(queue.TaskId)
 
 	s.HistoryService.Create(consts.Queue, queueId, queueId, progress, status.ToString())

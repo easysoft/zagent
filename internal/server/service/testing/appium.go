@@ -22,7 +22,7 @@ func NewAppiumService() *AppiumService {
 	return &AppiumService{}
 }
 
-func (s AppiumService) Start(queue model.Queue) (result _domain.RpcResp) {
+func (s AppiumService) Run(queue model.Queue) (result _domain.RpcResp) {
 	serial := queue.Serial
 	device := s.DeviceRepo.GetBySerial(serial)
 

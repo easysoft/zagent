@@ -104,7 +104,8 @@ func (s KvmNativeService) CreateRemote(hostId, backingId, tmplId, queueId uint) 
 		s.VmRepo.Launch(vmInResp, vm.ID) // update vm status, mac address
 		s.HistoryService.Create(consts.Vm, vm.ID, queueId, "", consts.VmLaunch.ToString())
 
-		s.QueueRepo.UpdateProgressAndVm(queueId, vm.ID, consts.ProgressLaunchVm)
+		s.QueueRepo.LaunchVm(queueId)
+		s.QueueRepo.UpdateVm(queueId, vm.ID)
 		s.HistoryService.Create(consts.Queue, queueId, queueId, consts.ProgressLaunchVm, "")
 	} else {
 		s.VmRepo.FailToCreate(vm.ID, result.Msg)

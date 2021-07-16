@@ -33,33 +33,6 @@ func (e VmStatus) ToString() string {
 	return string(e)
 }
 
-type DeviceStatus string
-
-const (
-	DeviceOff     DeviceStatus = "off"
-	DeviceOn      DeviceStatus = "on"
-	DeviceActive  DeviceStatus = "active"
-	DeviceBusy    DeviceStatus = "busy"
-	DeviceUnknown DeviceStatus = "unknown"
-)
-
-func (e DeviceStatus) ToString() string {
-	return string(e)
-}
-
-type ServiceStatus string
-
-const (
-	ServiceOffline ServiceStatus = "offline"
-	ServiceOnline  ServiceStatus = "online"
-	ServiceReady   ServiceStatus = "ready"
-	ServiceBusy    ServiceStatus = "busy"
-)
-
-func (e ServiceStatus) ToString() string {
-	return string(e)
-}
-
 type BuildProgress string
 
 const (
@@ -72,13 +45,14 @@ const (
 	ProgressCreateVmFail BuildProgress = "create_vm_fail"
 
 	// exec group
-	ProgressRunning            BuildProgress = "running"
-	ProgressPerformRequestFail BuildProgress = "perform_request_fail"
-	ProgressAppiumServiceFail  BuildProgress = "appium_service_fail"
+	ProgressRunning           BuildProgress = "running"
+	ProgressRunFail           BuildProgress = "run_fail"
+	ProgressAppiumServiceFail BuildProgress = "appium_service_fail"
 
 	// end group
 	ProgressCompleted BuildProgress = "completed"
 	ProgressTimeout   BuildProgress = "timeout"
+	ProgressTerminal  BuildProgress = "terminal"
 	ProgressCancel    BuildProgress = "cancel"
 )
 
@@ -114,6 +88,33 @@ const (
 )
 
 func (e BuildType) ToString() string {
+	return string(e)
+}
+
+type DeviceStatus string
+
+const (
+	DeviceOff     DeviceStatus = "off"
+	DeviceOn      DeviceStatus = "on"
+	DeviceActive  DeviceStatus = "active"
+	DeviceBusy    DeviceStatus = "busy"
+	DeviceUnknown DeviceStatus = "unknown"
+)
+
+func (e DeviceStatus) ToString() string {
+	return string(e)
+}
+
+type ServiceStatus string
+
+const (
+	ServiceOffline ServiceStatus = "offline"
+	ServiceOnline  ServiceStatus = "online"
+	ServiceReady   ServiceStatus = "ready"
+	ServiceBusy    ServiceStatus = "busy"
+)
+
+func (e ServiceStatus) ToString() string {
 	return string(e)
 }
 

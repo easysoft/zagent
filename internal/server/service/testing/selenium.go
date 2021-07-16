@@ -22,7 +22,7 @@ func NewSeleniumService() *SeleniumService {
 	return &SeleniumService{}
 }
 
-func (s SeleniumService) Start(queue model.Queue) (result _domain.RpcResp) {
+func (s SeleniumService) Run(queue model.Queue) (result _domain.RpcResp) {
 	vmId := queue.VmId
 	vm := s.VmRepo.GetById(vmId)
 

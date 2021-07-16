@@ -80,14 +80,15 @@ func (r QueueRepo) Save(queue *model.Queue) (err error) {
 	return
 }
 
-func (r QueueRepo) DeleteInSameGroup(groupId uint, serials []string) (err error) {
-	r.DB.Model(&model.Queue{}).Where("group_id=? AND serial IN (?)", groupId, strings.Join(serials, ",")).Delete(&model.Queue{})
+func (r QueueRepo) LaunchVm(queueId uint) (err error) {
+	r.DB.Model(&model.Queue{}).Where("id=?", queueId).Updates(
+		map[string]interface{}{"progress": consts.ProgressLaunchVm})
 	return
 }
-
-func (r QueueRepo) Start(queue model.Queue) (err error) {
+func (r QueueRepo) Run(queue model.Queue) (err error) {
 	r.DB.Model(&model.Queue{}).Where("id=?", queue.ID).Updates(
-		map[string]interface{}{"progress": consts.ProgressRunning, "start_time": time.Now(), "retry": gorm.Expr("retry +1")})
+		map[string]interface{}{
+			"progress": consts.ProgressRunning, "start_time": time.Now(), "retry": gorm.Expr("retry +1")})
 	return
 }
 func (r QueueRepo) Pending(queueId uint) (err error) {
@@ -105,27 +106,31 @@ func (r QueueRepo) Pending(queueId uint) (err error) {
 
 	return
 }
-
-func (r QueueRepo) SetTimeout(id uint) (err error) {
+func (r QueueRepo) Timeout(id uint) (err error) {
 	r.DB.Model(&model.Queue{}).Where("id=?", id).Updates(
 		map[string]interface{}{"progress": consts.ProgressTimeout, "timeout_time": time.Now()})
 	return
 }
 
-func (r QueueRepo) SetQueueStatus(queueId uint, progress consts.BuildProgress, status consts.BuildStatus) {
+func (r QueueRepo) SaveResult(queueId uint, progress consts.BuildProgress, status consts.BuildStatus) {
 	r.DB.Model(&model.Queue{}).Where("id=?", queueId).Updates(
 		map[string]interface{}{"progress": progress, "status": status, "result_time": time.Now()})
 	return
 }
 
-func (r QueueRepo) UpdateProgressAndVm(queueId, vmId uint, progress consts.BuildProgress) {
+func (r QueueRepo) UpdateVm(queueId, vmId uint) {
 	r.DB.Model(&model.Queue{}).Where("id=?", queueId).Updates(
-		map[string]interface{}{"vm_id": vmId, "progress": progress})
+		map[string]interface{}{"vm_id": vmId})
 	return
 }
 
 func (r QueueRepo) RemoveOldQueuesByTask(taskId uint) {
 	r.DB.Model(&model.Queue{}).Where("task_id=?", taskId).Updates(
 		map[string]interface{}{"deleted": true})
+	return
+}
+
+func (r QueueRepo) DeleteInSameGroup(groupId uint, serials []string) (err error) {
+	r.DB.Model(&model.Queue{}).Where("group_id=? AND serial IN (?)", groupId, strings.Join(serials, ",")).Delete(&model.Queue{})
 	return
 }
