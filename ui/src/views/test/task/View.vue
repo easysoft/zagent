@@ -263,13 +263,14 @@ export default {
         title: this.$t('form.time'),
         dataIndex: 'time',
         key: 'time',
+        width: '200px',
         scopedSlots: { customRender: 'time' }
       },
       {
         title: this.$t('form.opt'),
         dataIndex: 'action',
         key: 'action',
-        width: '180px',
+        width: '200px',
         scopedSlots: { customRender: 'action' }
       }
     ]

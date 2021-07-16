@@ -54,8 +54,8 @@ export function getTaskBuildHistories (buildHistories, that) {
       status: item.ownerType !== 'vm' ? buildStatus[item.status] : vmStatus[item.status],
       time: item.createdAt
     }
-    if (!his.progress) his.progress = 'N/A'
-    if (!his.status) his.status = 'N/A'
+    if (!his.progress) his.progress = '-'
+    if (!his.status) his.status = '-'
 
     if (item.ownerType === 'build' && item.status !== 'created') his.resultUrl = WebBaseDev + item.resultPath
     if (item.ownerType === 'build' && ['launch', 'running', 'busy', 'ready'].indexOf(item.status) > -1) {
