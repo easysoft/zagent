@@ -312,7 +312,7 @@ export default {
       const json = clone(task)
       const arr = ['queues', 'id', 'createdAt', 'updatedAt', 'progress', 'status',
         'startTime', 'pendingTime', 'resultTime', 'userName', 'userId', 'groupId',
-        'priority', 'keepResultFiles']
+        'priority', 'keepResultFiles', 'histories']
       arr.forEach((item, index) => {
         json[item] = undefined
       })
