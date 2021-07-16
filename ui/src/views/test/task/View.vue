@@ -269,7 +269,7 @@ export default {
         title: this.$t('form.opt'),
         dataIndex: 'action',
         key: 'action',
-        width: '200px',
+        width: '180px',
         scopedSlots: { customRender: 'action' }
       }
     ]
@@ -294,8 +294,6 @@ export default {
           this.currStep = getBuildStep(this.model.progress)
           this.taskProgressMap = getTaskProgressMap(this.model.histories, this.buildProgress)
           this.taskBuildHistories = getTaskBuildHistories(json.data.buildHistories, this)
-
-          console.log('this.taskProgressMap', this.taskProgressMap, this.taskBuildHistories)
         })
       } else {
         this.reset()
