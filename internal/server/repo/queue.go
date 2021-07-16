@@ -18,15 +18,6 @@ func NewQueueRepo() *QueueRepo {
 	return &QueueRepo{}
 }
 
-func (r QueueRepo) QueryForExec() (queues []model.Queue) {
-	queues = make([]model.Queue, 0)
-
-	r.DB.Model(&model.Queue{}).Where("status = ? AND (progress=? OR progress=? OR progress=?)",
-		consts.StatusCreated, consts.ProgressCreated, consts.ProgressPendingRes, consts.ProgressLaunchVm).
-		Order("priority").Find(&queues)
-
-	return
-}
 func (r QueueRepo) QueryByTask(taskID uint) (queues []model.Queue) {
 	queues = make([]model.Queue, 0)
 
@@ -37,7 +28,17 @@ func (r QueueRepo) QueryByTask(taskID uint) (queues []model.Queue) {
 
 	return
 }
-func (r QueueRepo) QueryTimeout() (queues []model.Queue) {
+
+func (r QueueRepo) QueryForExec() (queues []model.Queue) {
+	queues = make([]model.Queue, 0)
+
+	r.DB.Model(&model.Queue{}).Where("progress=? OR progress=? OR progress=?",
+		consts.ProgressCreated, consts.ProgressPendingRes, consts.ProgressLaunchVm).
+		Order("priority").Find(&queues)
+
+	return
+}
+func (r QueueRepo) QueryForTimeout() (queues []model.Queue) {
 	queues = make([]model.Queue, 0)
 
 	where := ""

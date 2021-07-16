@@ -30,9 +30,26 @@ func NewExecService() *ExecService {
 	return &ExecService{}
 }
 
-func (s ExecService) CheckExec() {
+func (s ExecService) QueryForExec() {
 	queuesToBuild := s.QueueRepo.QueryForExec()
 	for _, queue := range queuesToBuild {
+		s.CheckAndCall(queue)
+	}
+}
+
+func (s ExecService) QueryForTimeout() {
+	queues := s.QueueRepo.QueryForTimeout()
+
+	for _, queue := range queues {
+		s.QueueRepo.Timeout(queue.ID)
+		s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressTimeout, "")
+	}
+}
+
+func (s ExecService) QueryForRetry() {
+	queues := s.QueueRepo.QueryForRetry()
+
+	for _, queue := range queues {
 		s.CheckAndCall(queue)
 	}
 }
@@ -76,11 +93,11 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 			}
 		} // different from new queue, no need to update progress to 'ProgressPendingRes' when retry
 
-	} else if queue.Progress == consts.ProgressLaunchVm { // vm launching
+	} else if queue.Progress == consts.ProgressLaunchVm { // run if vm launched
 		vmId := queue.VmId
 		vm := s.VmRepo.GetById(vmId)
 
-		if vm.Status == consts.VmReady { // find ready vm, begin to run test
+		if vm.Status == consts.VmReady { // begin to run if vm ready
 			result := s.SeleniumService.Run(queue)
 
 			if result.IsSuccess() {
@@ -126,22 +143,5 @@ func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {
 	if newTaskProgress != "" && originalProgress != newTaskProgress { // progress changed
 		s.TaskService.SetProgress(queue.TaskId, newTaskProgress)
 		s.HistoryService.Create(consts.Task, queue.TaskId, 0, newTaskProgress, "")
-	}
-}
-
-func (s ExecService) CheckTimeout() {
-	queues := s.QueueRepo.QueryTimeout()
-
-	for _, queue := range queues {
-		s.QueueRepo.Timeout(queue.ID)
-		s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressTimeout, "")
-	}
-}
-
-func (s ExecService) CheckRetry() {
-	queues := s.QueueRepo.QueryForRetry()
-
-	for _, queue := range queues {
-		s.CheckAndCall(queue)
 	}
 }

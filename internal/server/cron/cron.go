@@ -46,7 +46,7 @@ func (s *ServerCron) Init() {
 				consts.ProgressCreated, consts.ProgressPendingRes: to create vm on host
 				consts.ProgressLaunchVm:                        to exec testing on vm
 			*/
-			s.ExecService.CheckExec()
+			s.ExecService.QueryForExec()
 
 			/**
 			query queue by progress timeout:
@@ -54,7 +54,7 @@ func (s *ServerCron) Init() {
 				consts.ProgressLaunchVm: consts.WaitForVmReadyTimeout
 				consts.ProgressRunning: consts.WaitTestCompletedTimeout
 			*/
-			s.ExecService.CheckTimeout()
+			s.ExecService.QueryForTimeout()
 
 			/**
 				query queue for retry:
@@ -62,7 +62,7 @@ func (s *ServerCron) Init() {
 						||
 			    	status = consts.StatusFail
 			*/
-			s.ExecService.CheckRetry()
+			s.ExecService.QueryForRetry()
 
 			s.syncMap.Store("isRunning", false)
 			s.syncMap.Store("lastCompletedTime", time.Now().Unix())
