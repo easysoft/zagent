@@ -5,6 +5,7 @@ import (
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/comm/domain"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
+	_i118Utils "github.com/easysoft/zagent/internal/pkg/lib/i118"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"github.com/libvirt/libvirt-go"
 	"strings"
@@ -30,14 +31,10 @@ func (s *HostService) Register() {
 	url := _httpUtils.GenUrl(agentConf.Inst.Server, "client/host/register")
 	resp, ok := _httpUtils.Post(url, host)
 
-	msg := ""
-	str := "%s to register host, response is %#v"
 	if ok {
-		msg = "success"
-		_logUtils.Infof(str, msg, resp)
+		_logUtils.Info(_i118Utils.I118Prt.Sprintf("success_to_register", agentConf.Inst.Server))
 	} else {
-		msg = "fail"
-		_logUtils.Errorf(str, msg, resp)
+		_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_register", agentConf.Inst.Server, resp))
 	}
 }
 
