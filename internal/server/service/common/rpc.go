@@ -41,6 +41,15 @@ func (s RpcService) AppiumTest(build model.Build) (result _domain.RpcResp) {
 	return
 }
 
+func (s RpcService) UnitTest(build model.Build) (result _domain.RpcResp) {
+	buildTo := model.NewBuildTo(build)
+
+	obj := interface{}(buildTo)
+	result = s.Request(build.NodeIp, build.NodePort, "job", "Add", &obj)
+
+	return
+}
+
 func (s RpcService) CreateVm(hostIp string, hostPort int, req commDomain.KvmReq) (result _domain.RpcResp) {
 	obj := interface{}(req)
 	result = s.Request(hostIp, hostPort, "vm", "Create", &obj)

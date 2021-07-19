@@ -1,8 +1,10 @@
-package hostKvmService
+package hostAgentKvmService
 
 import (
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/libvirt/libvirt-go"
+	"strings"
 	"time"
 )
 
@@ -19,6 +21,30 @@ func NewVmService() *VmService {
 	s.VmMapVar = map[string]domain.Vm{}
 
 	return &s
+}
+
+func (s *VmService) GetVms() (vms []domain.Vm) {
+	domains := s.LibvirtService.ListVm()
+
+	for _, dom := range domains {
+		vm := domain.Vm{}
+		vm.Name, _ = dom.GetName()
+		if strings.Index(vm.Name, "test-") != 0 {
+			continue
+		}
+
+		vm.Status = consts.VmUnknown
+		domainState, _, _ := dom.GetState()
+		if domainState == libvirt.DOMAIN_RUNNING {
+			vm.Status = consts.VmRunning
+		} else if domainState == libvirt.DOMAIN_SHUTOFF {
+			vm.Status = consts.VmShutOff
+		}
+
+		vms = append(vms, vm)
+	}
+
+	return vms
 }
 
 func (s *VmService) UpdateVmMapAndDestroyTimeout(vms []domain.Vm) {

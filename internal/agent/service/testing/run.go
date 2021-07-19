@@ -1,4 +1,4 @@
-package testingService
+package agentTestingService
 
 import (
 	consts "github.com/easysoft/zagent/internal/comm/const"

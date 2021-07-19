@@ -96,6 +96,11 @@ const locale = {
   'form.appium': 'Appium',
   'form.selenium.test': 'Selenium Test',
   'form.appium.test': 'Appium Test',
+  'form.testng': 'TestNG',
+  'form.junit': 'JUint',
+  'form.ztf': 'ZTF',
+  'form.interface_scenario': 'Interface Scenario',
+  'form.interface_set': 'Interface Set',
 
   'form.os.category': 'System Category',
   'form.os.category.windows': 'Windows',

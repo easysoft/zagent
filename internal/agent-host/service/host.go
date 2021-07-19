@@ -1,31 +1,57 @@
-package hostKvmService
+package hostAgentService
 
 import (
+	hostKvmService "github.com/easysoft/zagent/internal/agent-host/service/kvm"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
+	agentService "github.com/easysoft/zagent/internal/agent/service"
+	testingService "github.com/easysoft/zagent/internal/agent/service/testing"
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/comm/domain"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
 	_i118Utils "github.com/easysoft/zagent/internal/pkg/lib/i118"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
-	"github.com/libvirt/libvirt-go"
-	"strings"
 )
 
 type HostService struct {
-	VmService      *VmService      `inject:""`
-	LibvirtService *LibvirtService `inject:""`
+	VmService *hostKvmService.VmService `inject:""`
+
+	JobService  *agentService.JobService   `inject:""`
+	TestService *testingService.RunService `inject:""`
 }
 
 func NewHostService() *HostService {
 	return &HostService{}
 }
 
-func (s *HostService) Register() {
+func (s *HostService) Check() {
+	// is running，register busy
+	if s.JobService.IsRunning() {
+		s.Register(true)
+		return
+	}
+
+	// no task to run, submit free
+	if s.JobService.GetTaskSize() == 0 {
+		s.Register(false)
+		return
+	}
+
+	// has task to run，register busy, then run
+	job := s.JobService.PeekJob()
+	s.Register(true)
+
+	s.JobService.StartTask()
+	s.TestService.Run(&job)
+	s.JobService.RemoveTask()
+	s.JobService.EndTask()
+}
+
+func (s *HostService) Register(busy bool) {
 	host := domain.HostNode{
 		Node:       domain.Node{Ip: agentConf.Inst.NodeIp, Port: agentConf.Inst.NodePort},
 		HostStatus: consts.HostActive,
 	}
-	host.Vms = s.getVms()
+	host.Vms = s.VmService.GetVms()
 	s.VmService.UpdateVmMapAndDestroyTimeout(host.Vms)
 
 	url := _httpUtils.GenUrl(agentConf.Inst.Server, "client/host/register")
@@ -36,28 +62,4 @@ func (s *HostService) Register() {
 	} else {
 		_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_register", agentConf.Inst.Server, resp))
 	}
-}
-
-func (s *HostService) getVms() (vms []domain.Vm) {
-	domains := s.LibvirtService.ListVm()
-
-	for _, dom := range domains {
-		vm := domain.Vm{}
-		vm.Name, _ = dom.GetName()
-		if strings.Index(vm.Name, "test-") != 0 {
-			continue
-		}
-
-		vm.Status = consts.VmUnknown
-		domainState, _, _ := dom.GetState()
-		if domainState == libvirt.DOMAIN_RUNNING {
-			vm.Status = consts.VmRunning
-		} else if domainState == libvirt.DOMAIN_SHUTOFF {
-			vm.Status = consts.VmShutOff
-		}
-
-		vms = append(vms, vm)
-	}
-
-	return vms
 }

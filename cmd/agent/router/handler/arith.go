@@ -2,13 +2,13 @@ package handler
 
 import (
 	"fmt"
-	vmAgentService "github.com/easysoft/zagent/internal/agent-vm/service"
+	agentService "github.com/easysoft/zagent/internal/agent/service"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	"golang.org/x/net/context"
 )
 
 type ArithCtrl struct {
-	TaskService *vmAgentService.JobService `inject:""`
+	TaskService *agentService.JobService `inject:""`
 }
 
 func NewArithCtrl() *ArithCtrl {

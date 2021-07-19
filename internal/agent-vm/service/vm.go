@@ -2,6 +2,7 @@ package vmAgentService
 
 import (
 	"github.com/easysoft/zagent/internal/agent/conf"
+	agentService "github.com/easysoft/zagent/internal/agent/service"
 	testingService "github.com/easysoft/zagent/internal/agent/service/testing"
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/comm/domain"
@@ -16,7 +17,7 @@ type VmService struct {
 	TimeStamp int64
 
 	VmService   *VmService                 `inject:""`
-	JobService  *JobService                `inject:""`
+	JobService  *agentService.JobService   `inject:""`
 	TestService *testingService.RunService `inject:""`
 }
 

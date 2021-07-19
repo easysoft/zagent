@@ -1,4 +1,4 @@
-package testingService
+package agentTestingService
 
 import (
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"

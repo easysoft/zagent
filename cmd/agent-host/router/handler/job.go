@@ -1,4 +1,4 @@
-package vmHandler
+package hostHandler
 
 import (
 	agentService "github.com/easysoft/zagent/internal/agent/service"

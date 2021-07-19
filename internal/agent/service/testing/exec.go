@@ -1,4 +1,4 @@
-package testingService
+package agentTestingService
 
 import (
 	"encoding/json"

@@ -1,4 +1,4 @@
-package vmAgentService
+package agentService
 
 import (
 	consts "github.com/easysoft/zagent/internal/comm/const"

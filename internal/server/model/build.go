@@ -126,6 +126,30 @@ func NewBuildTo(build Build) domain.Build {
 	return toValue
 }
 
+func NewUnitBuildPo(queue Queue, host Host) Build {
+	build := Build{
+		QueueId:   queue.ID,
+		BuildType: queue.BuildType,
+		Priority:  queue.Priority,
+		NodeIp:    host.Ip, // to host
+		NodePort:  host.Port,
+
+		ScriptUrl:   queue.ScriptUrl,
+		ScmAddress:  queue.ScmAddress,
+		ScmAccount:  queue.ScmAccount,
+		ScmPassword: queue.ScmPassword,
+
+		EnvVars:       queue.EnvVars,
+		BuildCommands: queue.BuildCommands,
+		ResultFiles:   queue.ResultFiles,
+
+		Progress: consts.ProgressCreated,
+		Status:   consts.StatusCreated,
+	}
+
+	return build
+}
+
 func (Build) TableName() string {
 	return "biz_build"
 }

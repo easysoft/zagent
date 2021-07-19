@@ -55,7 +55,7 @@ func (c *TaskCtrl) ListForSelect(ctx iris.Context) {
 func (c *TaskCtrl) Get(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
 
@@ -72,7 +72,7 @@ func (c *TaskCtrl) Create(ctx iris.Context) {
 
 	model := model.Task{}
 	if err := ctx.ReadJSON(&model); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
 
@@ -84,7 +84,7 @@ func (c *TaskCtrl) Create(ctx iris.Context) {
 
 	err := c.TaskService.Save(&model, _stringUtils.ParseUint(cred.UserId))
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, "操作失败", nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "操作失败", nil))
 		return
 	}
 
@@ -95,13 +95,13 @@ func (c *TaskCtrl) Create(ctx iris.Context) {
 func (c *TaskCtrl) Update(ctx iris.Context) {
 	model := model.Task{}
 	if err := ctx.ReadJSON(&model); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
 
 	err := c.TaskService.Update(&model)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, "操作失败", nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "操作失败", nil))
 		return
 	}
 
@@ -111,7 +111,7 @@ func (c *TaskCtrl) Update(ctx iris.Context) {
 func (c *TaskCtrl) Disable(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
 
@@ -122,7 +122,7 @@ func (c *TaskCtrl) Disable(ctx iris.Context) {
 func (c *TaskCtrl) Delete(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
 

@@ -29,6 +29,8 @@ func (s QueueService) GenerateFromTask(task *model.Task) (count int) {
 		count = s.GenerateSeleniumQueuesFromTask(task)
 	} else if task.BuildType == consts.AutoAppium {
 		count = s.GenerateAppiumQueuesFromTask(task)
+	} else if task.BuildType == consts.UnitTestNG {
+		count = s.GenerateUnitQueuesFromTask(task)
 	}
 
 	return
@@ -101,6 +103,41 @@ func (s QueueService) GenerateAppiumQueuesFromTask(task *model.Task) (count int)
 			s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressCreated, "")
 			count++
 		}
+	}
+
+	return
+}
+
+func (s QueueService) GenerateUnitQueuesFromTask(task *model.Task) (count int) {
+	envs := task.Environments
+	if len(envs) == 0 {
+		return
+	}
+
+	var groupId uint
+	if task.GroupId != 0 {
+		groupId = task.GroupId
+	} else {
+		groupId = task.ID
+	}
+
+	for _, env := range envs {
+		osCategory := env.OsCategory
+		osType := env.OsType
+		osLang := env.OsLang
+
+		queue := model.NewQueue(
+			task.BuildType, groupId, task.ID, task.Priority,
+			osCategory, osType, osLang,
+			task.ScriptUrl, task.ScmAddress, task.ScmAccount, task.ScmPassword,
+			task.ResultFiles, task.KeepResultFiles, task.Name, task.UserName,
+			"", "", task.BuildCommands, task.EnvVars,
+			"", "",
+		)
+
+		s.QueueRepo.Save(&queue)
+		s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressCreated, "")
+		count++
 	}
 
 	return

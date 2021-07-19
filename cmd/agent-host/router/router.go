@@ -11,8 +11,9 @@ import (
 )
 
 type Router struct {
-	ArithCtrl *handler.ArithCtrl  `inject:""`
-	VmCtrl    *hostHandler.VmCtrl `inject:""`
+	ArithCtrl *handler.ArithCtrl   `inject:""`
+	VmCtrl    *hostHandler.VmCtrl  `inject:""`
+	JobCtrl   *hostHandler.JobCtrl `inject:""`
 }
 
 func NewRouter() *Router {

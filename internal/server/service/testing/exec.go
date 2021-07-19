@@ -14,12 +14,14 @@ type ExecService struct {
 	TaskRepo   *repo.TaskRepo   `inject:""`
 	DeviceRepo *repo.DeviceRepo `inject:""`
 	VmRepo     *repo.VmRepo     `inject:""`
+	HostRepo   *repo.HostRepo   `inject:""`
 
 	DeviceService    *serverService.DeviceService    `inject:""`
 	TaskService      *serverService.TaskService      `inject:""`
 	QueueService     *serverService.QueueService     `inject:""`
 	SeleniumService  *SeleniumService                `inject:""`
 	AppiumService    *AppiumService                  `inject:""`
+	UnitService      *UnitService                    `inject:""`
 	HostService      *serverService.HostService      `inject:""`
 	HistoryService   *serverService.HistoryService   `inject:""`
 	WebSocketService *commonService.WebSocketService `inject:""`
@@ -61,6 +63,8 @@ func (s ExecService) CheckAndCall(queue model.Queue) {
 		s.CheckAndCallSeleniumTest(queue)
 	} else if queue.BuildType == consts.AutoAppium {
 		s.CheckAndCallAppiumTest(queue)
+	} else if queue.BuildType == consts.UnitJunit || queue.BuildType == consts.UnitTestNG {
+		s.CheckAndCallUnitTest(queue)
 	}
 }
 
@@ -68,34 +72,7 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 	originalProgress := queue.Progress
 	var newTaskProgress consts.BuildProgress
 
-	if queue.Progress == consts.ProgressCreated || queue.Progress == consts.ProgressPendingRes { // new queue
-		// looking for valid host
-		hostId, backingId, tmplId, found := s.HostService.GetValidForQueue(queue)
-		if found {
-			// create kvm
-			result := s.VmService.CreateRemote(hostId, backingId, tmplId, queue.ID)
-			if result.IsSuccess() { // success to create
-				newTaskProgress = consts.ProgressLaunchVm
-			} else {
-				newTaskProgress = consts.ProgressCreateVmFail
-			}
-		} else {
-			s.QueueRepo.Pending(queue.ID) // pending
-			newTaskProgress = consts.ProgressPendingRes
-		}
-
-	} else if queue.Progress == consts.ProgressTimeout || queue.Status == consts.StatusFail { // retry queue
-		// looking for valid host
-		hostId, backingId, tmplId, found := s.HostService.GetValidForQueue(queue)
-		if found {
-			// create kvm
-			result := s.VmService.CreateRemote(hostId, backingId, tmplId, queue.ID)
-			if result.IsSuccess() { // success to create
-				newTaskProgress = consts.ProgressRunning
-			}
-		} // different from new queue, no need to update progress to 'ProgressPendingRes' when retry
-
-	} else if queue.Progress == consts.ProgressLaunchVm { // run if vm launched
+	if queue.Progress == consts.ProgressLaunchVm { // run if vm launched
 		vmId := queue.VmId
 		vm := s.VmRepo.GetById(vmId)
 
@@ -112,6 +89,26 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 				s.QueueService.SaveResult(queue.ID, consts.ProgressRunFail, consts.StatusFail)
 			}
 		}
+	} else {
+		s.QueueRepo.Retry(queue)
+
+		// looking for valid host
+		hostId, backingId, tmplId, found := s.HostService.GetValidForQueueByVm(queue)
+		if found {
+			// create kvm
+			result := s.VmService.CreateRemote(hostId, backingId, tmplId, queue.ID)
+			if result.IsSuccess() { // success to create
+				newTaskProgress = consts.ProgressLaunchVm
+			} else {
+				newTaskProgress = consts.ProgressCreateVmFail
+			}
+		} else {
+			// only pending new queue
+			if queue.Progress == consts.ProgressCreated || queue.Progress == consts.ProgressPendingRes {
+				s.QueueRepo.Pending(queue.ID) // pending
+				newTaskProgress = consts.ProgressPendingRes
+			}
+		}
 	}
 
 	if newTaskProgress != "" && originalProgress != newTaskProgress { // queue's progress changed, update parent task
@@ -121,6 +118,8 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 }
 
 func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {
+	s.QueueRepo.Retry(queue)
+
 	serial := queue.Serial
 	device := s.DeviceRepo.GetBySerial(serial)
 
@@ -140,12 +139,50 @@ func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {
 			s.QueueService.SaveResult(queue.ID, consts.ProgressRunFail, consts.StatusFail)
 		}
 	} else {
-		s.QueueRepo.Pending(queue.ID) // pending
-		newTaskProgress = consts.ProgressPendingRes
+		// only pending new queue
+		if queue.Progress == consts.ProgressCreated || queue.Progress == consts.ProgressPendingRes {
+			s.QueueRepo.Pending(queue.ID) // pending
+			newTaskProgress = consts.ProgressPendingRes
+		}
 	}
 
 	if newTaskProgress != "" && originalProgress != newTaskProgress { // progress changed
 		s.TaskService.SetProgress(queue.TaskId, newTaskProgress)
+		s.HistoryService.Create(consts.Task, queue.TaskId, 0, newTaskProgress, "")
+	}
+}
+
+func (s ExecService) CheckAndCallUnitTest(queue model.Queue) {
+	s.QueueRepo.Retry(queue)
+
+	originalProgress := queue.Progress
+	var newTaskProgress consts.BuildProgress
+
+	hostId, found := s.HostService.GetValidForQueueByContainer(queue)
+	if found {
+		host := s.HostRepo.Get(hostId)
+
+		result := s.UnitService.Run(queue, host)
+
+		if result.IsSuccess() {
+			s.QueueRepo.Run(queue)
+			s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressRunning, "")
+			s.WebSocketService.UpdateTask(queue.TaskId, "success to run unit queue")
+
+			newTaskProgress = consts.ProgressRunning
+		} else {
+			s.QueueService.SaveResult(queue.ID, consts.ProgressRunFail, consts.StatusFail)
+		}
+	} else {
+		// only pending new queue
+		if queue.Progress == consts.ProgressCreated || queue.Progress == consts.ProgressPendingRes {
+			s.QueueRepo.Pending(queue.ID) // pending
+			newTaskProgress = consts.ProgressPendingRes
+		}
+	}
+
+	if newTaskProgress != "" && originalProgress != newTaskProgress { // queue's progress changed, update parent task
+		s.TaskRepo.SetProgress(queue.TaskId, newTaskProgress)
 		s.HistoryService.Create(consts.Task, queue.TaskId, 0, newTaskProgress, "")
 	}
 }

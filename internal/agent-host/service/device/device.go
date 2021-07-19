@@ -1,4 +1,4 @@
-package deviceService
+package hostAgentDeviceService
 
 type DeviceService struct {
 }

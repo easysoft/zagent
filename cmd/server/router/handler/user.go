@@ -60,7 +60,7 @@ func (c *UserCtrl) GetProfile(ctx iris.Context) {
 	}
 	user, err := c.UserRepo.GetUser(s)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
 	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "请求成功", c.userTransform(user)))
@@ -71,7 +71,7 @@ func (c *UserCtrl) GetAdminInfo(ctx iris.Context) {
 
 	user, err := c.UserRepo.GetUser(nil)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
 	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "请求成功", map[string]string{"avatar": user.Avatar}))
@@ -85,7 +85,7 @@ func (c *UserCtrl) ChangeAvatar(ctx iris.Context) {
 
 	avatar := new(model.Avatar)
 	if err := ctx.ReadJSON(avatar); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
 
@@ -94,7 +94,7 @@ func (c *UserCtrl) ChangeAvatar(ctx iris.Context) {
 		errs := err.(validator.ValidationErrors)
 		for _, e := range errs.Translate(validate.ValidateTrans) {
 			if len(e) > 0 {
-				_, _ = ctx.JSON(_httpUtils.ApiRes(400, e, nil))
+				_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, e, nil))
 				return
 			}
 		}
@@ -105,7 +105,7 @@ func (c *UserCtrl) ChangeAvatar(ctx iris.Context) {
 	user.Avatar = avatar.Avatar
 	err = c.UserService.UpdateUserById(id, user)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
 	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "请求成功", c.userTransform(user)))
@@ -129,7 +129,7 @@ func (c *UserCtrl) GetUser(ctx iris.Context) {
 
 	user, err := c.UserRepo.GetUser(nil)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
 	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "操作成功", c.userTransform(user)))
@@ -153,7 +153,7 @@ func (c *UserCtrl) CreateUser(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
 	user := new(model.User)
 	if err := ctx.ReadJSON(user); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
 
@@ -162,7 +162,7 @@ func (c *UserCtrl) CreateUser(ctx iris.Context) {
 		errs := err.(validator.ValidationErrors)
 		for _, e := range errs.Translate(validate.ValidateTrans) {
 			if len(e) > 0 {
-				_, _ = ctx.JSON(_httpUtils.ApiRes(400, e, nil))
+				_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, e, nil))
 				return
 			}
 		}
@@ -170,12 +170,12 @@ func (c *UserCtrl) CreateUser(ctx iris.Context) {
 
 	err = c.UserService.CreateUser(user)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
 
 	if user.ID == 0 {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, "操作失败", nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "操作失败", nil))
 		return
 	}
 	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "操作成功", c.userTransform(user)))
@@ -202,7 +202,7 @@ func (c *UserCtrl) UpdateUser(ctx iris.Context) {
 	user := new(model.User)
 
 	if err := ctx.ReadJSON(user); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 	}
 
 	err := validate.Validate.Struct(*user)
@@ -210,7 +210,7 @@ func (c *UserCtrl) UpdateUser(ctx iris.Context) {
 		errs := err.(validator.ValidationErrors)
 		for _, e := range errs.Translate(validate.ValidateTrans) {
 			if len(e) > 0 {
-				_, _ = ctx.JSON(_httpUtils.ApiRes(400, e, nil))
+				_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, e, nil))
 				return
 			}
 		}
@@ -218,13 +218,13 @@ func (c *UserCtrl) UpdateUser(ctx iris.Context) {
 
 	id, _ := ctx.Params().GetUint("id")
 	if user.Username == "username" {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, "不能编辑管理员", nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "不能编辑管理员", nil))
 		return
 	}
 
 	err = c.UserService.UpdateUserById(id, user)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
 	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "操作成功", c.userTransform(user)))
@@ -248,7 +248,7 @@ func (c *UserCtrl) DeleteUser(ctx iris.Context) {
 
 	err := c.UserRepo.DeleteUser(id)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
 	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "删除成功", nil))
@@ -272,7 +272,7 @@ func (c *UserCtrl) GetAllUsers(ctx iris.Context) {
 
 	users, count, err := c.UserRepo.GetAllUsers(nil)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusUnauthorized, err.Error(), nil))
 		return
 	}
 

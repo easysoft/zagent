@@ -186,7 +186,7 @@ func (c *RoleCtrl) GetAllRoles(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
 	roles, count, err := c.RoleRepo.GetAllRoles(nil)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
 

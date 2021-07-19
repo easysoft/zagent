@@ -1,4 +1,4 @@
-package interfaceService
+package agentInterfaceService
 
 import (
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"

@@ -94,6 +94,20 @@ func (r HostRepo) QueryBusy() (hostIds []uint) {
 	return
 }
 
+func (r HostRepo) QueryUnBusy(busyHostIds []uint) (hostId uint) {
+	list := make([]commDomain.VmHost, 0)
+
+	sql := fmt.Sprintf(`SELECT id
+			FROM biz_host host
+	        WHERE host.status = 'active' 
+			AND host.id NOT IN (%s) LIMIT 1`,
+		strings.Join(_commonUtils.UintToStrArr(busyHostIds), ","))
+
+	r.DB.Raw(sql).Find(&list)
+
+	return
+}
+
 type HostResult struct {
 	HostId uint
 	Num    int

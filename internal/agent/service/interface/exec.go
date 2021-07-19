@@ -1,4 +1,4 @@
-package interfaceService
+package agentInterfaceService
 
 import (
 	"encoding/json"

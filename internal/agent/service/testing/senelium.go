@@ -1,4 +1,4 @@
-package testingService
+package agentTestingService
 
 import (
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"

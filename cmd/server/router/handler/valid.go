@@ -20,7 +20,7 @@ func (c *ValidCtrl) Valid(ctx iris.Context) {
 
 	model := commDomain.ValidRequest{}
 	if err := ctx.ReadJSON(&model); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
 

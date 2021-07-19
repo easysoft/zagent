@@ -94,6 +94,11 @@ const locale = {
   'form.appium': 'Appium',
   'form.selenium.test': 'Selenium测试',
   'form.appium.test': 'Appium测试',
+  'form.testng': 'TestNG单元测试',
+  'form.junit': 'JUint单元测试',
+  'form.ztf': 'ZTF',
+  'form.interface_scenario': '接口场景',
+  'form.interface_set': '接口测试集',
 
   'form.os.category': '系统分类',
   'form.os.category.windows': 'Windows',

@@ -89,7 +89,7 @@ func (r QueueRepo) LaunchVm(queueId uint) (err error) {
 func (r QueueRepo) Run(queue model.Queue) (err error) {
 	r.DB.Model(&model.Queue{}).Where("id=?", queue.ID).Updates(
 		map[string]interface{}{
-			"progress": consts.ProgressRunning, "start_time": time.Now(), "retry": gorm.Expr("retry +1")})
+			"progress": consts.ProgressRunning, "start_time": time.Now()})
 	return
 }
 func (r QueueRepo) Pending(queueId uint) (err error) {
@@ -128,6 +128,13 @@ func (r QueueRepo) UpdateVm(queueId, vmId uint) {
 func (r QueueRepo) RemoveOldQueuesByTask(taskId uint) {
 	r.DB.Model(&model.Queue{}).Where("task_id=?", taskId).Updates(
 		map[string]interface{}{"deleted": true})
+	return
+}
+
+func (r QueueRepo) Retry(queue model.Queue) (err error) {
+	r.DB.Model(&model.Queue{}).
+		Where("id=?", queue.ID).
+		Updates(map[string]interface{}{"retry": gorm.Expr("retry +1")})
 	return
 }
 

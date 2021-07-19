@@ -2,7 +2,7 @@ package hostCron
 
 import (
 	"fmt"
-	hostKvmService "github.com/easysoft/zagent/internal/agent-host/service/kvm"
+	hostAgentService "github.com/easysoft/zagent/internal/agent-host/service"
 	consts "github.com/easysoft/zagent/internal/comm/const"
 	_cronUtils "github.com/easysoft/zagent/internal/pkg/lib/cron"
 	_dateUtils "github.com/easysoft/zagent/internal/pkg/lib/date"
@@ -13,8 +13,8 @@ import (
 )
 
 type CronService struct {
-	syncMap          sync.Map
-	CheckHostService *hostKvmService.HostService `inject:""`
+	syncMap     sync.Map
+	HostService *hostAgentService.HostService `inject:""`
 }
 
 func NewAgentCron() *CronService {
@@ -40,7 +40,7 @@ func (s *CronService) Init() {
 			}
 			s.syncMap.Store("isRunning", true)
 
-			s.CheckHostService.Register()
+			s.HostService.Check()
 
 			s.syncMap.Store("isRunning", false)
 			s.syncMap.Store("lastCompletedTime", time.Now().Unix())
