@@ -93,18 +93,14 @@ func (r HostRepo) QueryBusy() (hostIds []uint) {
 }
 
 func (r HostRepo) QueryUnBusy(busyHostIds []uint) (hostId uint) {
-	list := make([]uint, 0)
+	list := make([]model.Host, 0)
 
-	sql := fmt.Sprintf(`SELECT id
-			FROM biz_host host
-	        WHERE host.status = 'active' 
-			AND host.id NOT IN (%s) LIMIT 1`,
-		strings.Join(_commonUtils.UintToStrArr(busyHostIds), ","))
-
-	r.DB.Raw(sql).Find(&list)
+	r.DB.Model(&model.Host{}).Where(
+		"host.status = ? AND host.id NOT IN (?) LIMIT 1",
+		consts.HostReady, _commonUtils.UintToStrArr(busyHostIds)).Find(&list)
 
 	if len(list) > 0 {
-		hostId = list[0]
+		hostId = list[0].ID
 	}
 
 	return
