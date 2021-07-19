@@ -13,9 +13,10 @@ type SeleniumService struct {
 	BuildRepo *repo.BuildRepo `inject:""`
 	VmRepo    *repo.VmRepo    `inject:""`
 
-	RpcService     *commonService.RpcService     `inject:""`
-	QueueService   *serverService.QueueService   `inject:""`
-	HistoryService *serverService.HistoryService `inject:""`
+	RpcService       *commonService.RpcService       `inject:""`
+	QueueService     *serverService.QueueService     `inject:""`
+	HistoryService   *serverService.HistoryService   `inject:""`
+	WebSocketService *commonService.WebSocketService `inject:""`
 }
 
 func NewSeleniumService() *SeleniumService {
@@ -28,7 +29,9 @@ func (s SeleniumService) Run(queue model.Queue) (result _domain.RpcResp) {
 
 	build := model.NewSeleniumBuildPo(queue, vm)
 	s.BuildRepo.Save(&build)
+
 	s.HistoryService.Create(consts.Build, build.ID, queue.ID, consts.ProgressCreated, consts.StatusCreated.ToString())
+	s.WebSocketService.UpdateTask(queue.TaskId, "run selenium queue")
 
 	build = s.BuildRepo.GetBuild(build.ID)
 

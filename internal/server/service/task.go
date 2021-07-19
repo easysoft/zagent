@@ -5,7 +5,6 @@ import (
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 	commonService "github.com/easysoft/zagent/internal/server/service/common"
-	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
 	"strings"
 )
 
@@ -74,9 +73,7 @@ func (s *TaskService) Update(po *model.Task) (err error) {
 	err = s.TaskRepo.Update(po)
 
 	s.QueueService.GenerateFromTask(po)
-
-	data := map[string]interface{}{"action": serverConst.TaskUpdate, "taskId": po.ID, "msg": ""}
-	s.WebSocketService.Broadcast(serverConst.WsNamespace, serverConst.WsDefaultRoom, serverConst.WsEvent, data)
+	s.WebSocketService.UpdateTask(po.ID, "update task props")
 
 	return
 }
@@ -97,6 +94,7 @@ func (s *TaskService) SetProgress(id uint, progress consts.BuildProgress) {
 	s.TaskRepo.SetProgress(id, progress)
 
 	s.HistoryService.Create(consts.Task, id, 0, progress, "")
+	s.WebSocketService.UpdateTask(id, "update task progress")
 }
 
 func (s *TaskService) SetTaskStatus(taskId uint) {
@@ -125,5 +123,6 @@ func (s *TaskService) SetTaskStatus(taskId uint) {
 	if isAllQueuesCompleted {
 		s.TaskRepo.SetResult(taskId, progress, status)
 		s.HistoryService.Create(consts.Task, taskId, 0, progress, status.ToString())
+		s.WebSocketService.UpdateTask(taskId, "update task status")
 	}
 }

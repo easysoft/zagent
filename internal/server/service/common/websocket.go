@@ -2,6 +2,7 @@ package commonService
 
 import (
 	"encoding/json"
+	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/kataras/neffos"
 )
@@ -15,6 +16,12 @@ type WebSocketService struct {
 
 func NewWebSocketService() *WebSocketService {
 	return &WebSocketService{}
+}
+
+func (s *WebSocketService) UpdateTask(taskId uint, msg string) {
+	data := map[string]interface{}{"action": serverConst.TaskUpdate, "taskId": taskId, "msg": msg}
+	s.Broadcast(serverConst.WsNamespace, serverConst.WsDefaultRoom, serverConst.WsEvent, data)
+
 }
 
 func (s *WebSocketService) Broadcast(namespace, room, event string, data interface{}) {

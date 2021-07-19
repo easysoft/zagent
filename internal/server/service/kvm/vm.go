@@ -32,9 +32,10 @@ type KvmNativeService struct {
 	BackingRepo *repo.BackingRepo `inject:""`
 	TmplRepo    *repo.TmplRepo    `inject:""`
 
-	QueueService   *serverService.QueueService   `inject:""`
-	HistoryService *serverService.HistoryService `inject:""`
-	RpcService     *commonService.RpcService     `inject:""`
+	QueueService     *serverService.QueueService     `inject:""`
+	HistoryService   *serverService.HistoryService   `inject:""`
+	WebSocketService *commonService.WebSocketService `inject:""`
+	RpcService       *commonService.RpcService       `inject:""`
 }
 
 func NewKvmService() VmService {
@@ -96,6 +97,7 @@ func (s KvmNativeService) CreateRemote(hostId, backingId, tmplId, queueId uint) 
 	kvmReq := model.GenKvmReq(vm)
 	result = s.RpcService.CreateVm(host.Ip, host.Port, kvmReq)
 
+	queue := s.QueueRepo.GetQueue(queueId)
 	if result.IsSuccess() { // success to create vm
 		mp := result.Payload.(map[string]interface{})
 		vmInResp := domain.Vm{}
@@ -106,11 +108,15 @@ func (s KvmNativeService) CreateRemote(hostId, backingId, tmplId, queueId uint) 
 
 		s.QueueRepo.LaunchVm(queueId)
 		s.QueueRepo.UpdateVm(queueId, vm.ID)
+
 		s.HistoryService.Create(consts.Queue, queueId, queueId, consts.ProgressLaunchVm, "")
+		s.WebSocketService.UpdateTask(queue.TaskId, "success to create vm")
 	} else {
 		s.VmRepo.FailToCreate(vm.ID, result.Msg)
 		s.QueueService.SaveResult(queueId, consts.ProgressCreateVmFail, consts.StatusFail)
+
 		s.HistoryService.Create(consts.Queue, queueId, queueId, consts.ProgressCreateVmFail, consts.StatusFail.ToString())
+		s.WebSocketService.UpdateTask(queue.TaskId, "fail to create vm")
 	}
 
 	return

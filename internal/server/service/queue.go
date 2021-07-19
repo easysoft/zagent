@@ -4,6 +4,8 @@ import (
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
+	commonService "github.com/easysoft/zagent/internal/server/service/common"
+	kvmService "github.com/easysoft/zagent/internal/server/service/kvm"
 	"strings"
 )
 
@@ -11,8 +13,10 @@ type QueueService struct {
 	DeviceRepo *repo.DeviceRepo `inject:""`
 	QueueRepo  *repo.QueueRepo  `inject:""`
 
-	TaskService    *TaskService    `inject:""`
-	HistoryService *HistoryService `inject:""`
+	TaskService      *TaskService                    `inject:""`
+	VmService        kvmService.VmService            `inject:""`
+	HistoryService   *HistoryService                 `inject:""`
+	WebSocketService *commonService.WebSocketService `inject:""`
 }
 
 func NewQueueService() *QueueService {
@@ -110,7 +114,10 @@ func (s QueueService) SaveResult(queueId uint, progress consts.BuildProgress, st
 	s.QueueRepo.SaveResult(queueId, progress, status)
 	s.TaskService.SetTaskStatus(queue.TaskId)
 
+	s.VmService.DestroyRemote(queue.VmId, queue.ID)
+
 	s.HistoryService.Create(consts.Queue, queueId, queueId, progress, status.ToString())
+	s.WebSocketService.UpdateTask(queue.TaskId, "save queue result")
 }
 
 func (s QueueService) removeOldQueuesByTask(taskId uint) {

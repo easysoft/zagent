@@ -5,6 +5,7 @@ import (
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 	serverService "github.com/easysoft/zagent/internal/server/service"
+	commonService "github.com/easysoft/zagent/internal/server/service/common"
 	kvmService "github.com/easysoft/zagent/internal/server/service/kvm"
 )
 
@@ -15,13 +16,14 @@ type ExecService struct {
 	DeviceRepo *repo.DeviceRepo `inject:""`
 	VmRepo     *repo.VmRepo     `inject:""`
 
-	DeviceService   *serverService.DeviceService  `inject:""`
-	TaskService     *serverService.TaskService    `inject:""`
-	QueueService    *serverService.QueueService   `inject:""`
-	SeleniumService *SeleniumService              `inject:""`
-	AppiumService   *AppiumService                `inject:""`
-	HostService     *kvmService.HostService       `inject:""`
-	HistoryService  *serverService.HistoryService `inject:""`
+	DeviceService    *serverService.DeviceService    `inject:""`
+	TaskService      *serverService.TaskService      `inject:""`
+	QueueService     *serverService.QueueService     `inject:""`
+	SeleniumService  *SeleniumService                `inject:""`
+	AppiumService    *AppiumService                  `inject:""`
+	HostService      *kvmService.HostService         `inject:""`
+	HistoryService   *serverService.HistoryService   `inject:""`
+	WebSocketService *commonService.WebSocketService `inject:""`
 
 	VmService kvmService.VmService `inject:""`
 }
@@ -43,6 +45,7 @@ func (s ExecService) QueryForTimeout() {
 	for _, queue := range queues {
 		s.QueueRepo.Timeout(queue.ID)
 		s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressTimeout, "")
+		s.WebSocketService.UpdateTask(queue.TaskId, "set queue timeout")
 	}
 }
 
@@ -103,6 +106,7 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 			if result.IsSuccess() {
 				s.QueueRepo.Run(queue)
 				s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressRunning, "")
+				s.WebSocketService.UpdateTask(queue.TaskId, "success to run selenium queue")
 
 				newTaskProgress = consts.ProgressRunning
 			} else {
@@ -130,6 +134,7 @@ func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {
 		if rpcResult.IsSuccess() {
 			s.QueueRepo.Run(queue) // start
 			s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressRunning, "")
+			s.WebSocketService.UpdateTask(queue.TaskId, "success to run appium queue")
 
 			newTaskProgress = consts.ProgressRunning
 		} else {

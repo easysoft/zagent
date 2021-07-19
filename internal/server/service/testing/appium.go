@@ -13,9 +13,10 @@ type AppiumService struct {
 	DeviceRepo *repo.DeviceRepo `inject:""`
 	BuildRepo  *repo.BuildRepo  `inject:""`
 
-	QueueService   *serverService.QueueService   `inject:""`
-	RpcService     *commonService.RpcService     `inject:""`
-	HistoryService *serverService.HistoryService `inject:""`
+	QueueService     *serverService.QueueService     `inject:""`
+	RpcService       *commonService.RpcService       `inject:""`
+	HistoryService   *serverService.HistoryService   `inject:""`
+	WebSocketService *commonService.WebSocketService `inject:""`
 }
 
 func NewAppiumService() *AppiumService {
@@ -28,7 +29,9 @@ func (s AppiumService) Run(queue model.Queue) (result _domain.RpcResp) {
 
 	build := model.NewAppiumBuildPo(queue, device)
 	s.BuildRepo.Save(&build)
+
 	s.HistoryService.Create(consts.Build, build.ID, queue.ID, consts.ProgressCreated, consts.StatusCreated.ToString())
+	s.WebSocketService.UpdateTask(queue.TaskId, "run appium queue")
 
 	build = s.BuildRepo.GetBuild(build.ID)
 	build.AppiumPort = device.AppiumPort
