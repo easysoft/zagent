@@ -16,7 +16,7 @@
           <a-form-model-item :label="$t('form.test.type')" prop="buildType" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
             <a-select v-model="model.buildType">
               <a-select-option v-for="(value, key) in buildTypes" :value="key" :key="key">
-                {{value}}
+                {{ value }}
               </a-select-option>
             </a-select>
           </a-form-model-item>
@@ -251,26 +251,30 @@ export default {
     },
     loadData () {
       if (!this.id) {
-        // this.model = {
-        //   'name': 'test',
-        //   'buildType': 'selenium',
-        //   'browserType': 'chrome',
-        //   'browserVersion': '91',
-        //   'envVars': 'abc=123',
-        //   'scriptUrl': 'https://gitee.com/ngtesting/ci_test_selenium.git',
-        //   'buildCommands': 'mvn clean test -Dtestng.suite=target/test-classes/baidu-test.xml',
-        //   'resultFiles': 'target/surefire-reports',
-        //   environments: [ { 'osCategory': 'windows', 'osType': 'win10', 'osLang': 'zh_cn' } ]
-        // }
+        const a = 2
 
-        this.model = {
-          'name': 'test',
-          'buildType': 'testng',
-          'envVars': 'abc=123',
-          'scriptUrl': 'https://gitee.com/ngtesting/ci_test_testng.git',
-          'buildCommands': 'docker run -it --rm --name testng-in-docker -v "$(pwd)":/usr/src/mymaven -v ~/.m2:/root/.m2 -w /usr/src/mymaven maven mvn clean package',
-          'resultFiles': 'target/surefire-reports',
-          environments: [ { 'osCategory': 'linux', 'osType': 'ubuntu', 'osVersion': '20', 'osLang': 'zh_cn' } ]
+        if (a === 1) {
+          this.model = {
+            'name': 'test',
+            'buildType': 'selenium',
+            'browserType': 'chrome',
+            'browserVersion': '91',
+            'envVars': 'abc=123',
+            'scriptUrl': 'https://gitee.com/ngtesting/ci_test_selenium.git',
+            'buildCommands': 'mvn clean test -Dtestng.suite=target/test-classes/baidu-test.xml',
+            'resultFiles': 'target/surefire-reports',
+            environments: [ { 'osCategory': 'windows', 'osType': 'win10', 'osLang': 'zh_cn' } ]
+          }
+        } else {
+          this.model = {
+            'name': 'test',
+            'buildType': 'testng',
+            'envVars': 'abc=123',
+            'scriptUrl': 'https://gitee.com/ngtesting/ci_test_testng.git',
+            'buildCommands': 'docker run -it --rm --name testng-in-docker -v "$(pwd)":/usr/src/mymaven -v ~/.m2:/root/.m2 -w /usr/src/mymaven maven mvn clean package',
+            'resultFiles': 'target/surefire-reports',
+            environments: [ { 'osCategory': 'linux', 'osType': 'ubuntu', 'osVersion': '20', 'osLang': 'zh_cn' } ]
+          }
         }
 
         return

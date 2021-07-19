@@ -138,7 +138,6 @@ func (s *LibvirtService) ListVm() (doms []libvirt.Domain) {
 func (s *LibvirtService) GetVm(name string) (dom *libvirt.Domain, err error) {
 	dom, err = LibvirtConn.LookupDomainByName(name)
 	if err != nil {
-		_logUtils.Errorf(err.Error())
 		return
 	}
 

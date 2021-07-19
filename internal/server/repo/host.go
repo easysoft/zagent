@@ -95,7 +95,7 @@ func (r HostRepo) QueryBusy() (hostIds []uint) {
 }
 
 func (r HostRepo) QueryUnBusy(busyHostIds []uint) (hostId uint) {
-	list := make([]commDomain.VmHost, 0)
+	list := make([]uint, 0)
 
 	sql := fmt.Sprintf(`SELECT id
 			FROM biz_host host
@@ -104,6 +104,10 @@ func (r HostRepo) QueryUnBusy(busyHostIds []uint) (hostId uint) {
 		strings.Join(_commonUtils.UintToStrArr(busyHostIds), ","))
 
 	r.DB.Raw(sql).Find(&list)
+
+	if len(list) > 0 {
+		hostId = list[0]
+	}
 
 	return
 }
