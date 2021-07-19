@@ -95,9 +95,15 @@ func (r HostRepo) QueryBusy() (hostIds []uint) {
 func (r HostRepo) QueryUnBusy(busyHostIds []uint) (hostId uint) {
 	list := make([]model.Host, 0)
 
-	r.DB.Model(&model.Host{}).Where(
-		"host.status = ? AND host.id NOT IN (?) LIMIT 1",
-		consts.HostReady, _commonUtils.UintToStrArr(busyHostIds)).Find(&list)
+	whr := r.DB.Model(&model.Host{}).Where(
+		"status = ?",
+		consts.HostReady).Find(&list)
+
+	if busyHostIds != nil {
+		whr.Where(
+			"id NOT IN (?)",
+			busyHostIds)
+	}
 
 	if len(list) > 0 {
 		hostId = list[0].ID
