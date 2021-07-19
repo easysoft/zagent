@@ -46,11 +46,16 @@ func (s *HostService) Check() {
 	s.JobService.EndTask()
 }
 
-func (s *HostService) Register(busy bool) {
+func (s *HostService) Register(isBusy bool) {
 	host := domain.HostNode{
-		Node:       domain.Node{Ip: agentConf.Inst.NodeIp, Port: agentConf.Inst.NodePort},
-		HostStatus: consts.HostActive,
+		Node: domain.Node{Ip: agentConf.Inst.NodeIp, Port: agentConf.Inst.NodePort},
 	}
+	if isBusy {
+		host.Status = consts.HostBusy
+	} else {
+		host.Status = consts.HostReady
+	}
+
 	host.Vms = s.VmService.GetVms()
 	s.VmService.UpdateVmMapAndDestroyTimeout(host.Vms)
 

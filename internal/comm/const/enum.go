@@ -3,7 +3,8 @@ package consts
 type HostStatus string
 
 const (
-	HostActive  HostStatus = "active"
+	HostReady   HostStatus = "ready"
+	HostBusy    HostStatus = "busy" // report by agent on host
 	HostOffline HostStatus = "offline"
 )
 

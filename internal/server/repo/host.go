@@ -20,8 +20,6 @@ func NewHostRepo() *HostRepo {
 }
 
 func (r HostRepo) Register(host model.Host) (po model.Host, err error) {
-	host.Status = consts.HostActive
-
 	err = r.DB.Model(&model.Host{}).Where("ip = ?", host.Ip).First(&po).Error
 	if err == gorm.ErrRecordNotFound {
 		err = r.DB.Model(&model.Host{}).Omit("").Create(&host).Error

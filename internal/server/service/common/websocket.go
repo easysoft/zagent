@@ -2,6 +2,7 @@ package commonService
 
 import (
 	"encoding/json"
+	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/kataras/neffos"
@@ -26,6 +27,11 @@ func (s *WebSocketService) UpdateTask(taskId uint, msg string) {
 
 func (s *WebSocketService) Broadcast(namespace, room, event string, data interface{}) {
 	bytes, _ := json.Marshal(data)
+
+	if wsConn == nil {
+		_logUtils.Warnf("WebSocket connection not init")
+		return
+	}
 
 	wsConn.Server().Broadcast(nil, websocket.Message{
 		Namespace: namespace,

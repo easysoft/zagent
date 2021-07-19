@@ -7,8 +7,8 @@ import (
 
 type HostNode struct {
 	Node
-	HostStatus consts.HostStatus `json:"hostStatus" yaml:"hostStatus"`
-	Vms        []Vm
+	Status consts.HostStatus `json:"hostStatus" yaml:"hostStatus"`
+	Vms    []Vm
 }
 
 type VmNode struct {
