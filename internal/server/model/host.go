@@ -40,17 +40,10 @@ func NewHost() Host {
 	return host
 }
 
-func HostFromDomain(h domain.Host) (po Host) {
+func HostFromDomain(h domain.HostNode) (po Host) {
 	po = Host{
-		Name: h.Name,
-
-		OsCategory: h.OsCategory,
-		OsType:     h.OsType,
-		OsLang:     h.OsLang,
-
-		OsVersion: h.OsVersion,
-		OsBuild:   h.OsBuild,
-		OsBits:    h.OsBits,
+		Name:   h.Name,
+		OsType: h.OsType,
 
 		Ip:      h.Ip,
 		Port:    h.Port,

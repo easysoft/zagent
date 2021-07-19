@@ -1,7 +1,7 @@
 package handler
 
 import (
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
 	serverService "github.com/easysoft/zagent/internal/server/service"
 	"github.com/kataras/iris/v12"
@@ -20,7 +20,7 @@ func NewHostCtrl() *HostCtrl {
 func (c *HostCtrl) Register(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
 
-	model := commDomain.Host{}
+	model := domain.HostNode{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return

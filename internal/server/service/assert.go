@@ -18,7 +18,7 @@ func NewAssertService() *AssertService {
 	return &AssertService{}
 }
 
-func (s AssertService) RegisterHost(host domain.Host) (result _domain.RpcResp) {
+func (s AssertService) RegisterHost(host domain.HostNode) (result _domain.RpcResp) {
 	po := model.HostFromDomain(host)
 	hostPo, err := s.HostRepo.Register(po)
 	if err != nil {
@@ -45,7 +45,7 @@ func (s AssertService) RegisterVm(vm domain.Vm) (result _domain.RpcResp) {
 	return
 }
 
-func (s AssertService) updateVmsStatus(host domain.Host, hostId uint) {
+func (s AssertService) updateVmsStatus(host domain.HostNode, hostId uint) {
 	runningVms, shutOffVms, unknownVms, vmNames := s.getVmsByStatus(host)
 
 	if len(runningVms) > 0 {
@@ -65,7 +65,7 @@ func (s AssertService) updateVmsStatus(host domain.Host, hostId uint) {
 	return
 }
 
-func (s AssertService) getVmsByStatus(host domain.Host) (
+func (s AssertService) getVmsByStatus(host domain.HostNode) (
 	runningVms, shutOffVms, unknownVms, vmNames []string) {
 	vms := host.Vms
 

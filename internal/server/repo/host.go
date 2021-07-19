@@ -3,7 +3,7 @@ package repo
 import (
 	"fmt"
 	"github.com/easysoft/zagent/internal/comm/const"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
+	domain "github.com/easysoft/zagent/internal/comm/domain"
 	_commonUtils "github.com/easysoft/zagent/internal/pkg/lib/common"
 	"github.com/easysoft/zagent/internal/server/model"
 	"gorm.io/gorm"
@@ -36,7 +36,7 @@ func (r HostRepo) Get(id uint) (host model.Host) {
 }
 
 func (r HostRepo) QueryByBackings(backingIds []uint, busyHostIds []uint) (hostId, backingId uint) {
-	list := make([]commDomain.VmHost, 0)
+	list := make([]domain.VmHost, 0)
 
 	sql := fmt.Sprintf(`SELECT r.host_id, r.vm_backing_id
 			FROM biz_host_backing_r r 

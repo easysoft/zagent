@@ -7,7 +7,7 @@ import (
 
 type HostNode struct {
 	Node
-	Status consts.HostStatus `json:"hostStatus" yaml:"hostStatus"`
+	Status consts.HostStatus `json:"status" yaml:"status"`
 	Vms    []Vm
 }
 
