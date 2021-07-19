@@ -1,4 +1,4 @@
-package kvmService
+package serverService
 
 import (
 	"github.com/easysoft/zagent/internal/server/model"

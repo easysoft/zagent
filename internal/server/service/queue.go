@@ -5,7 +5,6 @@ import (
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 	commonService "github.com/easysoft/zagent/internal/server/service/common"
-	kvmService "github.com/easysoft/zagent/internal/server/service/kvm"
 	"strings"
 )
 
@@ -14,7 +13,7 @@ type QueueService struct {
 	QueueRepo  *repo.QueueRepo  `inject:""`
 
 	TaskService      *TaskService                    `inject:""`
-	VmService        kvmService.VmService            `inject:""`
+	VmService        VmService                       `inject:""`
 	HistoryService   *HistoryService                 `inject:""`
 	WebSocketService *commonService.WebSocketService `inject:""`
 }

@@ -6,7 +6,6 @@ import (
 	"github.com/easysoft/zagent/internal/server/repo"
 	serverService "github.com/easysoft/zagent/internal/server/service"
 	commonService "github.com/easysoft/zagent/internal/server/service/common"
-	kvmService "github.com/easysoft/zagent/internal/server/service/kvm"
 )
 
 type ExecService struct {
@@ -21,11 +20,11 @@ type ExecService struct {
 	QueueService     *serverService.QueueService     `inject:""`
 	SeleniumService  *SeleniumService                `inject:""`
 	AppiumService    *AppiumService                  `inject:""`
-	HostService      *kvmService.HostService         `inject:""`
+	HostService      *serverService.HostService      `inject:""`
 	HistoryService   *serverService.HistoryService   `inject:""`
 	WebSocketService *commonService.WebSocketService `inject:""`
 
-	VmService kvmService.VmService `inject:""`
+	VmService serverService.VmService `inject:""`
 }
 
 func NewExecService() *ExecService {

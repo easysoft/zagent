@@ -10,7 +10,6 @@ import (
 	_fileUtils "github.com/easysoft/zagent/internal/pkg/lib/file"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
 	serverService "github.com/easysoft/zagent/internal/server/service"
-	"github.com/easysoft/zagent/internal/server/service/kvm"
 	"github.com/kataras/iris/v12"
 	"github.com/mitchellh/mapstructure"
 	"path/filepath"
@@ -21,7 +20,7 @@ type BuildCtrl struct {
 	BaseCtrl
 
 	BuildService *serverService.BuildService `inject:""`
-	VmService    kvmService.VmService        `inject:""`
+	VmService    serverService.VmService     `inject:""`
 }
 
 func NewBuildCtrl() *BuildCtrl {

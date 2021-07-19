@@ -201,17 +201,7 @@ export default {
       labelColHalf2: labelColHalf2,
       wrapperColHalf: wrapperColHalf,
 
-      model: {
-        'name': 'test',
-        'buildType': 'selenium',
-        'browserType': 'chrome',
-        'browserVersion': '91',
-        'envVars': 'abc=123',
-        'scriptUrl': 'https://gitee.com/ngtesting/ci_test_selenium.git',
-        'buildCommands': 'mvn clean test -Dtestng.suite=target/test-classes/baidu-test.xml',
-        'resultFiles': 'target/surefire-reports',
-        environments: [ { 'osCategory': 'windows', 'osType': 'win10', 'osLang': 'zh_cn' } ]
-      },
+      model: {},
       envData: {},
       environment: {},
       environmentIndex: -1,
@@ -261,6 +251,27 @@ export default {
     },
     loadData () {
       if (!this.id) {
+        // this.model = {
+        //   'name': 'test',
+        //   'buildType': 'selenium',
+        //   'browserType': 'chrome',
+        //   'browserVersion': '91',
+        //   'envVars': 'abc=123',
+        //   'scriptUrl': 'https://gitee.com/ngtesting/ci_test_selenium.git',
+        //   'buildCommands': 'mvn clean test -Dtestng.suite=target/test-classes/baidu-test.xml',
+        //   'resultFiles': 'target/surefire-reports',
+        //   environments: [ { 'osCategory': 'windows', 'osType': 'win10', 'osLang': 'zh_cn' } ]
+        // }
+
+        this.model = {
+          'name': 'test',
+          'envVars': 'abc=123',
+          'scriptUrl': 'https://gitee.com/ngtesting/ci_test_testng.git',
+          'buildCommands': 'docker run -it --rm --name testng-in-docker -v "$(pwd)":/usr/src/mymaven -v ~/.m2:/root/.m2 -w /usr/src/mymaven maven mvn clean package',
+          'resultFiles': 'target/surefire-reports',
+          environments: [ { 'osCategory': 'linux', 'osType': 'ubuntu', 'osVersion': '20', 'osLang': 'zh_cn' } ]
+        }
+
         return
       }
       if (this.id) {

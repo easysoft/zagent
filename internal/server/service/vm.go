@@ -1,4 +1,4 @@
-package kvmService
+package serverService
 
 import (
 	"crypto/rand"
@@ -9,7 +9,6 @@ import (
 	serverConf "github.com/easysoft/zagent/internal/server/conf"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
-	serverService "github.com/easysoft/zagent/internal/server/service"
 	commonService "github.com/easysoft/zagent/internal/server/service/common"
 	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
 	"github.com/mitchellh/mapstructure"
@@ -32,8 +31,8 @@ type KvmNativeService struct {
 	BackingRepo *repo.BackingRepo `inject:""`
 	TmplRepo    *repo.TmplRepo    `inject:""`
 
-	QueueService     *serverService.QueueService     `inject:""`
-	HistoryService   *serverService.HistoryService   `inject:""`
+	QueueService     *QueueService                   `inject:""`
+	HistoryService   *HistoryService                 `inject:""`
 	WebSocketService *commonService.WebSocketService `inject:""`
 	RpcService       *commonService.RpcService       `inject:""`
 }
