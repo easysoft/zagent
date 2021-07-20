@@ -3,8 +3,6 @@ package agentTestingService
 import (
 	consts "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
-	"os"
 )
 
 type RunService struct {
@@ -46,8 +44,6 @@ func (s *RunService) Run(build *commDomain.Build) {
 		s.ExecService.UploadResult(*build, result)
 		return
 	}
-
-	_logUtils.Infof("abc = %s", os.Getenv("abc"))
 
 	// get script
 	err = s.ScmService.GetTestScript(build)
