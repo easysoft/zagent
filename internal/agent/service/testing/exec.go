@@ -28,8 +28,8 @@ func NewExecService() *ExecService {
 func (s *ExecService) ExcCommand(build *commDomain.Build) (err error) {
 	cmdStr := build.BuildCommands
 
-	var out string
-	out, err = _shellUtils.ExeShellInDir(cmdStr, build.ProjectDir)
+	var out []string
+	out, err = _shellUtils.ExeShellWithOutputInDir(cmdStr, build.ProjectDir)
 
 	if err != nil {
 		errors.New(fmt.Sprintf("fail to exec command, out %s, err: %s", out, err.Error()))
