@@ -11,7 +11,6 @@ import (
 	"io"
 	"os"
 	"os/exec"
-	"os/user"
 	"regexp"
 	"strings"
 )
@@ -48,18 +47,17 @@ func ExeShellWithPid(cmdStr string) (string, error, int) {
 }
 
 func ExeShellInDirWithPid(cmdStr string, dir string) (ret string, err error, pid int) {
-	u, err := user.Current()
-	if err != nil {
-		fmt.Println("error")
-	}
-	fmt.Printf("u.Uid: %s, u.Gid: %s, u.Name: %s, u.HomeDir: %s, u.Username: %s\n",
-		u.Uid, u.Gid, u.Name, u.HomeDir, u.Username)
+	cmdStr = strings.TrimSpace(cmdStr)
 
 	var cmd *exec.Cmd
 	if _commonUtils.IsWin() {
 		cmd = exec.Command("cmd", "/C", cmdStr)
 	} else {
-		cmd = exec.Command("/bin/bash", "-c", cmdStr)
+		if strings.Index(cmdStr, "docker") == 0 {
+			cmd = exec.Command("/bin/sh", "-c", cmdStr)
+		} else {
+			cmd = exec.Command("/bin/bash", "-c", cmdStr)
+		}
 	}
 	if dir != "" {
 		cmd.Dir = dir
@@ -87,11 +85,17 @@ func ExeShellWithOutputInDir(cmdStr string, dir string) ([]string, error) {
 }
 
 func ExeShellWithEnvVarsAndOutputInDir(cmdStr, dir string, envVars []string) ([]string, error) {
+	cmdStr = strings.TrimSpace(cmdStr)
+
 	var cmd *exec.Cmd
 	if _commonUtils.IsWin() {
 		cmd = exec.Command("cmd", "/C", cmdStr)
 	} else {
-		cmd = exec.Command("/bin/bash", "-c", cmdStr)
+		if strings.Index(cmdStr, "docker") == 0 {
+			cmd = exec.Command("/bin/sh", "-c", cmdStr)
+		} else {
+			cmd = exec.Command("/bin/bash", "-c", cmdStr)
+		}
 	}
 
 	if dir != "" {
