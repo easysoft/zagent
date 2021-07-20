@@ -271,7 +271,7 @@ export default {
             'buildType': 'testng',
             'envVars': 'abc=123',
             'scriptUrl': 'https://gitee.com/ngtesting/ci_test_testng.git',
-            'buildCommands': 'docker run --privileged=true -it --rm --name testng-in-docker -v "$(pwd)":/usr/src/mymaven -v ~/.m2:/root/.m2 -w /usr/src/mymaven maven mvn clean package',
+            'buildCommands': 'docker run -i --rm --name testng-in-docker -v "$(pwd)":/usr/src/mymaven -v ~/.m2:/root/.m2 -w /usr/src/mymaven maven mvn clean package',
             'resultFiles': 'target/surefire-reports',
             environments: [ { 'osCategory': 'linux', 'osType': 'ubuntu', 'osVersion': '20', 'osLang': 'zh_cn' } ]
           }

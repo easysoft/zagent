@@ -50,7 +50,6 @@ func (c *BuildCtrl) UploadResult(ctx iris.Context) {
 	build.Status = consts.StatusPass
 
 	c.BuildService.SaveResult(build)
-	//c.VmService.DestroyRemote(build.VmId) TODO: testing
 
 	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK,
 		fmt.Sprintf("操作成功 %s %#v", filePath, params), nil))

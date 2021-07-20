@@ -91,18 +91,18 @@ func ExeShellWithOutputInDir(cmdStr string, dir string) ([]string, error) {
 	output := make([]string, 0)
 
 	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		_logUtils.Error(_i118Utils.Sprintf("fail_to_exec_command", cmdStr, cmd.Dir, err.Error()))
+		return output, err
+	}
 
+	stderr, err := cmd.StderrPipe()
 	if err != nil {
 		_logUtils.Error(_i118Utils.Sprintf("fail_to_exec_command", cmdStr, cmd.Dir, err.Error()))
 		return output, err
 	}
 
 	cmd.Start()
-
-	if err != nil {
-		_logUtils.Error(_i118Utils.Sprintf("fail_to_exec_command", cmdStr, cmd.Dir, err.Error()))
-		return output, err
-	}
 
 	reader := bufio.NewReader(stdout)
 	for {
@@ -115,6 +115,11 @@ func ExeShellWithOutputInDir(cmdStr string, dir string) ([]string, error) {
 	}
 
 	cmd.Wait()
+
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(stderr)
+
+	output = append(output, buf.String())
 
 	return output, nil
 }

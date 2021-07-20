@@ -150,7 +150,9 @@ func (s QueueService) SaveResult(queueId uint, progress consts.BuildProgress, st
 	s.QueueRepo.SaveResult(queueId, progress, status)
 	s.TaskService.SetTaskStatus(queue.TaskId)
 
-	s.VmService.DestroyRemote(queue.VmId, queue.ID)
+	if queue.VmId > 0 {
+		s.VmService.DestroyRemote(queue.VmId, queue.ID)
+	}
 
 	s.HistoryService.Create(consts.Queue, queueId, queueId, progress, status.ToString())
 	s.WebSocketService.UpdateTask(queue.TaskId, "save queue result")
