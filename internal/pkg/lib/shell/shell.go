@@ -54,7 +54,7 @@ func ExeShellInDirWithPid(cmdStr string, dir string) (ret string, err error, pid
 		cmd = exec.Command("cmd", "/C", cmdStr)
 	} else {
 		if strings.Index(cmdStr, "docker") == 0 {
-			cmd = exec.Command("/bin/sh", "-c", cmdStr)
+			cmd = exec.Command("sudo /bin/bash", "-c", cmdStr)
 		} else {
 			cmd = exec.Command("/bin/bash", "-c", cmdStr)
 		}
@@ -92,7 +92,7 @@ func ExeShellWithEnvVarsAndOutputInDir(cmdStr, dir string, envVars []string) ([]
 		cmd = exec.Command("cmd", "/C", cmdStr)
 	} else {
 		if strings.Index(cmdStr, "docker") == 0 {
-			cmd = exec.Command("/bin/sh", "-c", cmdStr)
+			cmd = exec.Command("sudo /bin/bash", "-c", cmdStr)
 		} else {
 			cmd = exec.Command("/bin/bash", "-c", cmdStr)
 		}
