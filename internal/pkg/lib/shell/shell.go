@@ -51,11 +51,7 @@ func ExeShellInDirWithPid(cmdStr string, dir string) (ret string, err error, pid
 	if _commonUtils.IsWin() {
 		cmd = exec.Command("cmd", "/C", cmdStr)
 	} else {
-		if strings.Index(cmdStr, "docker") == 0 {
-			cmd = exec.Command("docker", cmdStr[6:])
-		} else {
-			cmd = exec.Command("/bin/bash", "-c", cmdStr)
-		}
+		cmd = exec.Command("/bin/bash", "-c", cmdStr)
 	}
 	if dir != "" {
 		cmd.Dir = dir
