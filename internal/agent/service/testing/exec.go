@@ -2,6 +2,7 @@ package agentTestingService
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
@@ -26,11 +27,13 @@ func NewExecService() *ExecService {
 
 func (s *ExecService) ExcCommand(build *commDomain.Build) (err error) {
 	cmdStr := build.BuildCommands
-	cmdStr = strings.ReplaceAll(cmdStr, `"$(pwd)"`, build.ProjectDir)
 
-	//envVars := s.parseEnvVars(build.EnvVars)
+	var out string
+	out, err = _shellUtils.ExeShellInDir(cmdStr, build.ProjectDir)
 
-	_shellUtils.ExeShellInDir(cmdStr, build.ProjectDir)
+	if err != nil {
+		errors.New(fmt.Sprintf("fail to exec command, out %s, err: %s", out, err.Error()))
+	}
 
 	return
 }

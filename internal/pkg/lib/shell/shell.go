@@ -9,7 +9,6 @@ import (
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
 	"io"
-	"os"
 	"os/exec"
 	"regexp"
 	"strings"
@@ -75,10 +74,6 @@ func ExeShellWithOutput(cmdStr string) ([]string, error) {
 }
 
 func ExeShellWithOutputInDir(cmdStr string, dir string) ([]string, error) {
-	return ExeShellWithEnvVarsAndOutputInDir(cmdStr, dir, nil)
-}
-
-func ExeShellWithEnvVarsAndOutputInDir(cmdStr, dir string, envVars []string) ([]string, error) {
 	var cmd *exec.Cmd
 	if _commonUtils.IsWin() {
 		cmd = exec.Command("cmd", "/C", cmdStr)
@@ -88,10 +83,6 @@ func ExeShellWithEnvVarsAndOutputInDir(cmdStr, dir string, envVars []string) ([]
 
 	if dir != "" {
 		cmd.Dir = dir
-	}
-	if envVars != nil && len(envVars) > 0 {
-		cmd.Env = os.Environ()
-		cmd.Env = append(cmd.Env, envVars...)
 	}
 
 	output := make([]string, 0)
