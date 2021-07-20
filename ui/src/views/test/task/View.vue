@@ -295,6 +295,8 @@ export default {
           this.currStep = getBuildStep(this.model.progress)
           this.taskProgressMap = getTaskProgressMap(this.model.histories, this.buildProgress)
           this.taskBuildHistories = getTaskBuildHistories(json.data.buildHistories, this)
+
+          this.operationActiveTabKey = this.model.queues[0].id + ''
         })
       } else {
         this.reset()

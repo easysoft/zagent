@@ -32,6 +32,8 @@ export function getTaskProgressMap (histories, buildProgress) {
 }
 
 export function getTaskBuildHistories (buildHistories, that) {
+  console.log(buildHistories)
+
   const ret = {}
   if (!buildHistories) return ret
 
