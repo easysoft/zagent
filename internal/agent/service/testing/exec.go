@@ -27,10 +27,12 @@ func NewExecService() *ExecService {
 
 func (s *ExecService) ExcCommand(build *commDomain.Build) (err error) {
 	cmdStr := build.BuildCommands
-	//envVars := s.parseEnvVars(build.EnvVars)
+	cmdStr = strings.ReplaceAll(cmdStr, `"$(pwd)"`, build.ProjectDir)
 
-	var out string
-	out, _ = _shellUtils.ExeShellInDir(cmdStr, build.ProjectDir)
+	envVars := s.parseEnvVars(build.EnvVars)
+
+	var out []string
+	out, err = _shellUtils.ExeShellWithEnvVarsAndOutputInDir(cmdStr, build.ProjectDir, envVars)
 
 	if err != nil {
 		errors.New(fmt.Sprintf("fail to exec command, out %s, err: %s", out, err.Error()))
