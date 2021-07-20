@@ -11,6 +11,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"os/user"
 	"regexp"
 	"strings"
 )
@@ -47,6 +48,13 @@ func ExeShellWithPid(cmdStr string) (string, error, int) {
 }
 
 func ExeShellInDirWithPid(cmdStr string, dir string) (ret string, err error, pid int) {
+	u, err := user.Current()
+	if err != nil {
+		fmt.Println("error")
+	}
+	fmt.Printf("u.Uid: %s, u.Gid: %s, u.Name: %s, u.HomeDir: %s, u.Username: %s\n",
+		u.Uid, u.Gid, u.Name, u.HomeDir, u.Username)
+
 	var cmd *exec.Cmd
 	if _commonUtils.IsWin() {
 		cmd = exec.Command("cmd", "/C", cmdStr)
