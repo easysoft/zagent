@@ -2,14 +2,14 @@ package agentConst
 
 import (
 	"fmt"
+	consts "github.com/easysoft/zagent/internal/comm/const"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
 	"path/filepath"
 )
 
 var (
-	AppName    = "agent"
 	ConfigVer  = 1
-	ConfigFile = filepath.Join("conf", AppName+".yaml")
+	ConfigFile = filepath.Join("conf", consts.AppNameAgent+".yaml")
 
 	EnRes = filepath.Join("res", "messages_en.json")
 	ZhRes = filepath.Join("res", "messages_zh.json")

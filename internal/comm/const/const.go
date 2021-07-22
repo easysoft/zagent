@@ -1,6 +1,10 @@
 package consts
 
 const (
+	AppName       = "zagent"
+	AppNameAgent  = "agent"
+	AppNameServer = "serve"
+
 	AgentCheckInterval = 15 // sec
 	WebCheckInterval   = 15 // sec
 

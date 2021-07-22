@@ -7,6 +7,7 @@ import (
 	"github.com/easysoft/zagent/internal/agent/conf"
 	"github.com/easysoft/zagent/internal/agent/utils/common"
 	"github.com/easysoft/zagent/internal/agent/utils/const"
+	consts "github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/pkg/lib/log"
 	"github.com/fatih/color"
 	"os"
@@ -29,7 +30,7 @@ func main() {
 		os.Exit(0)
 	}()
 
-	flagSet = flag.NewFlagSet(agentConst.AppName, flag.ContinueOnError)
+	flagSet = flag.NewFlagSet(consts.AppNameAgent, flag.ContinueOnError)
 
 	flagSet.StringVar(&runMode, "t", agentConst.Host.ToString(), "")
 	flagSet.StringVar(&agentConf.Inst.Server, "s", "http://192.168.0.100:8085", "")
@@ -55,7 +56,7 @@ func main() {
 }
 
 func start() {
-	_logUtils.Init(agentConst.AppName)
+	_logUtils.Init(consts.AppNameAgent)
 
 	if err := flagSet.Parse(os.Args[1:]); err == nil {
 		agentConf.Inst.RunMode = agentConst.RunMode(runMode)

@@ -2,7 +2,7 @@ package agentUtils
 
 import (
 	"fmt"
-	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
+	consts "github.com/easysoft/zagent/internal/comm/const"
 	_commonUtils "github.com/easysoft/zagent/internal/pkg/lib/common"
 	_i118Utils "github.com/easysoft/zagent/internal/pkg/lib/i118"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
@@ -21,7 +21,7 @@ func PrintUsage() {
 
 	usage := ReadResData(usageFile)
 
-	app := agentConst.AppName
+	app := consts.AppNameAgent
 	if _commonUtils.IsWin() {
 		app += ".exe"
 	}

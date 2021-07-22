@@ -1,13 +1,12 @@
-//go:generate go-bindata -prefix "./www/dist" -fs  ./www/dist/...
 package main
 
 import (
 	"flag"
 	"fmt"
 	ini "github.com/easysoft/zagent/cmd/server/init"
+	consts "github.com/easysoft/zagent/internal/comm/const"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"github.com/easysoft/zagent/internal/server/conf"
-	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
 	"os"
 )
 
@@ -37,7 +36,7 @@ func main() {
 	}
 	flag.Parse()
 
-	_logUtils.Init(serverConst.AppName)
+	_logUtils.Init(consts.AppNameServer)
 	serverConf.Init()
 	ini.Init(version, printVersion, printRouter)
 }

@@ -2,6 +2,7 @@ package agentConf
 
 import (
 	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
+	consts "github.com/easysoft/zagent/internal/comm/const"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
 	_commonUtils "github.com/easysoft/zagent/internal/pkg/lib/common"
 	_fileUtils "github.com/easysoft/zagent/internal/pkg/lib/file"
@@ -19,7 +20,7 @@ func Init() {
 	if Inst.Language == "" {
 		Inst.Language = "zh"
 	}
-	_i118Utils.InitI118(Inst.Language, agentConst.AppName)
+	_i118Utils.InitI118(Inst.Language, consts.AppNameAgent)
 
 	Inst.Server = _httpUtils.UpdateUrl(Inst.Server)
 	Inst.NodePort = _const.RpcPort
@@ -39,7 +40,7 @@ func Init() {
 		home = "/home/" + Inst.User
 	}
 
-	Inst.WorkDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(home, agentConst.AppName))
+	Inst.WorkDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(home, consts.AppNameAgent))
 
 	if Inst.RunMode == agentConst.Host {
 		Inst.DirKvm = _fileUtils.AddPathSepIfNeeded(filepath.Join(home, agentConst.FolderKvm))

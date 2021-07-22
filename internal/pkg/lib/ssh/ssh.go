@@ -1,7 +1,7 @@
 package _sshUtils
 
 import (
-	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
+	consts "github.com/easysoft/zagent/internal/comm/const"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	_resUtils "github.com/easysoft/zagent/internal/pkg/lib/res"
 	"golang.org/x/crypto/ssh"
@@ -9,7 +9,7 @@ import (
 )
 
 func Connect(host, user string) (client *ssh.Client, err error) {
-	privateKeyFile := filepath.Join("res", agentConst.AppName, "key", "id_rsa_test")
+	privateKeyFile := filepath.Join("res", consts.AppNameAgent, "key", "id_rsa_test")
 	privateKeyBytes, err := _resUtils.ReadRes(privateKeyFile)
 	if err != nil {
 		_logUtils.Errorf(err.Error())
