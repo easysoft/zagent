@@ -251,7 +251,7 @@ export default {
     },
     loadData () {
       if (!this.id) {
-        const a = 2
+        const a = 1
 
         if (a === 1) {
           this.model = {
@@ -263,7 +263,7 @@ export default {
             'scriptUrl': 'https://gitee.com/ngtesting/ci_test_selenium.git',
             'buildCommands': 'mvn clean test -Dtestng.suite=target/test-classes/baidu-test.xml',
             'resultFiles': 'target/surefire-reports',
-            environments: [ { 'osCategory': 'windows', 'osType': 'win10', 'osLang': 'zh_cn' } ]
+            'environments': [ { 'osCategory': 'windows', 'osType': 'win10', 'osLang': 'zh_cn' } ]
           }
         } else {
           this.model = {
@@ -273,7 +273,7 @@ export default {
             'scriptUrl': 'https://gitee.com/ngtesting/ci_test_testng.git',
             'buildCommands': 'docker run -i --rm --name testng-in-docker -v "$(pwd)":/usr/src/mymaven -v ~/.m2:/root/.m2 -w /usr/src/mymaven maven mvn clean package',
             'resultFiles': 'target/surefire-reports',
-            environments: [ { 'osCategory': 'linux', 'osType': 'ubuntu', 'osVersion': '20', 'osLang': 'zh_cn' } ]
+            'environments': [ { 'osCategory': 'linux', 'osType': 'ubuntu', 'osVersion': '20', 'osLang': 'zh_cn' } ]
           }
         }
 

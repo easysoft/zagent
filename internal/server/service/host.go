@@ -28,6 +28,10 @@ func (s HostService) GetValidForQueueByVm(queue model.Queue) (hostId, backingId,
 
 	tmplId, found = s.TmplRepo.QueryByOs(queue.OsCategory, queue.OsType, queue.OsLang)
 
+	if hostId == 0 || backingId == 0 || tmplId == 0 {
+		found = false
+	}
+
 	return
 }
 

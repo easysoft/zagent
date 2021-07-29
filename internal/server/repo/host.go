@@ -42,9 +42,10 @@ func (r HostRepo) QueryByBackings(backingIds []uint, busyHostIds []uint) (hostId
 			FROM biz_host_backing_r r 
 		    INNER JOIN biz_host host on r.host_id = host.id 
 
-	        WHERE host.status = 'active' 
+	        WHERE host.status = '%s' 
 			AND r.vm_backing_id IN (%s) AND host.id NOT IN (%s) LIMIT 1`,
 
+		consts.HostReady,
 		strings.Join(_commonUtils.UintToStrArr(backingIds), ","),
 		strings.Join(_commonUtils.UintToStrArr(busyHostIds), ","))
 

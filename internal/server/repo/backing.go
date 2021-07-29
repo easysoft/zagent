@@ -48,10 +48,10 @@ func (r BackingRepo) QueryByBrowser(browserType consts.BrowserType, version stri
 		"WHERE NOT browser.disabled AND NOT browser.deleted "
 
 	if browserType != "" {
-		sql += "AND browser.type = ? "
+		sql += "AND browser.type = '" + browserType.ToString() + "' "
 	}
 	if version != "" {
-		sql += "AND browser.version = ? "
+		sql += "AND browser.version = '" + version + "' "
 	}
 
 	sql += "ORDER BY id"
