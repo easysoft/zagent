@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"encoding/json"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
+	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
 	"github.com/easysoft/zagent/internal/server/biz/jwt"
 	"github.com/easysoft/zagent/internal/server/model"
@@ -76,13 +78,20 @@ func (c *TaskCtrl) Create(ctx iris.Context) {
 		return
 	}
 
+	jsn, _ := json.Marshal(model)
+	_logUtils.Infof(string(jsn))
+
 	if c.Validate(model, ctx) {
 		return
 	}
 
 	cred := jwt.GetCredentials(ctx)
+	userId := uint(0)
+	if cred != nil {
+		userId = _stringUtils.ParseUint(cred.UserId)
+	}
 
-	err := c.TaskService.Save(&model, _stringUtils.ParseUint(cred.UserId))
+	err := c.TaskService.Save(&model, userId)
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "操作失败", nil))
 		return

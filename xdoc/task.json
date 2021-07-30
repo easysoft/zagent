@@ -1,0 +1,34 @@
+{
+  "id": 0,
+  "name": "test",
+  "desc": "",
+  "buildType": "selenium",
+  "priority": 0,
+  "serials": "",
+  "environments": [
+    {
+      "id": 0,
+      "osCategory": "windows",
+      "osType": "win10",
+      "osVersion": "",
+      "osLang": "zh_cn",
+      "taskId": ""
+    }
+  ],
+  "scriptUrl": "https://gitee.com/ngtesting/ci_test_selenium.git",
+  "scmAddress": "",
+  "scmAccount": "",
+  "scmPassword": "",
+  "browserType": "chrome",
+  "browserVersion": "91",
+  "appUrl": "",
+  "buildCommands": "mvn clean test -Dtestng.suite=target/test-classes/baidu-test.xml",
+  "envVars": "abc=123",
+  "resultFiles": "target/surefire-reports",
+  "keepResultFiles": false,
+  "progress": "",
+  "status": "",
+  "userName": "",
+  "userId": 0,
+  "groupId": 0
+}

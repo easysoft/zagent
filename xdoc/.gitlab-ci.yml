@@ -1,0 +1,26 @@
+stages:
+   - build
+   - deploy
+   - test
+
+build:
+   stage: build
+   tags:
+      - docker-runner
+   script:
+      - echo "start build ..."
+
+deploy:
+   stage: deploy
+   tags:
+      - docker-runner
+   script:
+      - echo "start deploy ..."
+
+test:
+   stage: test
+   tags:
+      - docker-runner
+   script:
+      - echo "start test ..."
+      - curl -i -X POST http://192.168.0.100:8085/api/v1/client/tasks -T xdoc/task.json
