@@ -10,8 +10,14 @@ import (
 func TestAliyun(t *testing.T) {
 	_logUtils.Init(consts.AppNameAgent)
 
-	id, name, _ := vendors.NewAliyunService().GetRegions(
-		"LTAI5t9ABAZtGob7m7DsTTmg", "OxsHmMVOdbbaDXEjmAqPWGpkq0DLXn")
+	srv := vendors.NewAliyunService()
 
-	_logUtils.Infof("found region: %s, %s", id, name)
+	client, err := srv.CreateClient("ecs-cn-hangzhou.aliyuncs.com", ALIYUN_KEY, ALIYUN_Secret)
+	if err != nil {
+		return
+	}
+
+	id, name, _ := vendors.NewAliyunService().CreateInst("windows", "x86_64", client)
+
+	_logUtils.Infof("%s, %s", id, name)
 }
