@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
+	consts "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
 	_fileUtils "github.com/easysoft/zagent/internal/pkg/lib/file"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
@@ -11,7 +11,7 @@ import (
 )
 
 func TestUpload(t *testing.T) {
-	_logUtils.Init(agentConst.AppName)
+	_logUtils.Init(consts.AppNameAgent)
 	result := commDomain.TestResult{Name: "Result Name"}
 	build := commDomain.Build{ID: 100, Name: "Result Name"}
 

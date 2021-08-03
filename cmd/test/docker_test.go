@@ -3,13 +3,13 @@ package main
 import (
 	hostKvmService "github.com/easysoft/zagent/internal/agent-host/service/kvm"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
-	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
+	consts "github.com/easysoft/zagent/internal/comm/const"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"testing"
 )
 
 func TestDocker(t *testing.T) {
-	_logUtils.Init(agentConst.AppName)
+	_logUtils.Init(consts.AppNameAgent)
 
 	agentConf.Inst.Host = "192.168.kvm6"
 	agentConf.Inst.User = "aaron"

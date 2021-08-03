@@ -3,15 +3,14 @@ package main
 import (
 	hostKvmService "github.com/easysoft/zagent/internal/agent-host/service/kvm"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
-	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
-	commConst "github.com/easysoft/zagent/internal/comm/const"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"testing"
 )
 
 func TestLibVirt(t *testing.T) {
-	_logUtils.Init(agentConst.AppName)
+	_logUtils.Init(consts.AppNameAgent)
 
 	agentConf.Inst.Host = "192.168.0.56"
 	agentConf.Inst.User = "aaron"
@@ -23,9 +22,9 @@ func TestLibVirt(t *testing.T) {
 	src:  xml template
 	base: backing file, get by vm's OsCategory properties etc.
 	*/
-	vm := commDomain.Vm{DiskSize: 40000,
-		OsCategory: commConst.Windows, OsType: commConst.Win10,
-		OsVersion: "x64-pro", OsLang: commConst.ZH_CN}
+	vm := domain.Vm{DiskSize: 40000,
+		OsCategory: consts.Windows, OsType: consts.Win10,
+		OsVersion: "x64-pro", OsLang: consts.ZH_CN}
 
 	dom, macAddress, vncPort, err := service.CreateVmTest(&vm)
 	if err != nil {
