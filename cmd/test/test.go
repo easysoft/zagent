@@ -6,7 +6,6 @@ import (
 	ecs20140526 "github.com/alibabacloud-go/ecs-20140526/v2/client"
 	"github.com/alibabacloud-go/tea/tea"
 	_const "github.com/easysoft/zagent/cmd/test/const"
-	"os"
 )
 
 /**
@@ -52,9 +51,9 @@ func _main(args []*string) (_err error) {
 	return _err
 }
 
-func main() {
-	err := _main(tea.StringSlice(os.Args[1:]))
-	if err != nil {
-		panic(err)
-	}
-}
+//func main() {
+//	err := _main(tea.StringSlice(os.Args[1:]))
+//	if err != nil {
+//		panic(err)
+//	}
+//}
