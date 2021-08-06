@@ -1,4 +1,4 @@
-package main
+package aliyun
 
 import (
 	_const "github.com/easysoft/zagent/cmd/test/const"

@@ -36,6 +36,7 @@ require (
 	github.com/gopherjs/gopherjs v0.0.0-20200217142428-fce0ec30dd00 // indirect
 	github.com/gorilla/websocket v1.4.2
 	github.com/huandu/go-clone v1.1.4 // indirect
+	github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.0.54
 	github.com/iris-contrib/go.uuid v2.0.0+incompatible
 	github.com/iris-contrib/middleware/cors v0.0.0-20201115103636-07e8bced147f
 	github.com/iris-contrib/middleware/jwt v0.0.0-20210110101738-6d0a4d799b5d

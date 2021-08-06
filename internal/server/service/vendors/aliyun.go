@@ -135,7 +135,7 @@ func (s AliyunService) CreateClient(endpoint, accessKeyId, accessKeySecret strin
 	result = &ecs.Client{}
 	result, err = ecs.NewClient(config)
 	if err != nil {
-		_logUtils.Errorf("CreateClient error %s", err.Error())
+		_logUtils.Errorf("CreateEcsClient error %s", err.Error())
 		return
 	}
 
