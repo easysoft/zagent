@@ -5,7 +5,6 @@ import (
 	"fmt"
 	consts "github.com/easysoft/zagent/internal/comm/const"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
-	serverConf "github.com/easysoft/zagent/internal/server/conf"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 	commonService "github.com/easysoft/zagent/internal/server/service/common"
@@ -17,18 +16,6 @@ type VmService interface {
 	genVmName(backing model.VmBacking, vmId uint) (name string)
 }
 
-func NewKvmService() VmService {
-	var service VmService
-
-	if serverConf.Inst.Adapter.VmPlatform == consts.KvmNative {
-		service = &KvmNativeService{}
-	} else if serverConf.Inst.Adapter.VmPlatform == consts.HuaweiCloud {
-		service = &HuaweiCloudService{}
-	}
-
-	return service
-}
-
 type VmCommonService struct {
 	VmRepo           *repo.VmRepo                    `inject:""`
 	HostRepo         *repo.HostRepo                  `inject:""`
@@ -38,6 +25,19 @@ type VmCommonService struct {
 	HistoryService   *HistoryService                 `inject:""`
 	WebSocketService *commonService.WebSocketService `inject:""`
 	QueueService     *QueueService                   `inject:""`
+}
+
+func (s VmCommonService) GetVmService(hostId uint) VmService {
+	host := s.HostRepo.Get(hostId)
+
+	var service VmService
+	if host.VmPlatform == consts.KvmNative {
+		service = &KvmNativeService{}
+	} else if host.VmPlatform == consts.HuaweiCloud {
+		service = &HuaweiCloudService{}
+	}
+
+	return service
 }
 
 func (s VmCommonService) SaveVmCreationResult(isSuccess bool, result string, queueId uint, vmId uint,

@@ -20,7 +20,6 @@ type BuildCtrl struct {
 	BaseCtrl
 
 	BuildService *serverService.BuildService `inject:""`
-	VmService    serverService.VmService     `inject:""`
 }
 
 func NewBuildCtrl() *BuildCtrl {

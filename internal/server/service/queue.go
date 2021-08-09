@@ -11,12 +11,12 @@ import (
 type QueueService struct {
 	DeviceRepo *repo.DeviceRepo `inject:""`
 	QueueRepo  *repo.QueueRepo  `inject:""`
+	VmRepo     *repo.VmRepo     `inject:""`
 
 	TaskService      *TaskService                    `inject:""`
+	VmCommonService  *VmCommonService                `inject:""`
 	HistoryService   *HistoryService                 `inject:""`
 	WebSocketService *commonService.WebSocketService `inject:""`
-
-	VmService VmService `inject:""`
 }
 
 func NewQueueService() *QueueService {
@@ -152,7 +152,9 @@ func (s QueueService) SaveResult(queueId uint, progress consts.BuildProgress, st
 	s.TaskService.SetTaskStatus(queue.TaskId)
 
 	if queue.VmId > 0 {
-		s.VmService.DestroyRemote(queue.VmId, queue.ID)
+		vm := s.VmRepo.GetById(queue.VmId)
+		vmService := s.VmCommonService.GetVmService(vm.HostId)
+		vmService.DestroyRemote(queue.VmId, queue.ID)
 	}
 
 	s.HistoryService.Create(consts.Queue, queueId, queueId, progress, status.ToString())

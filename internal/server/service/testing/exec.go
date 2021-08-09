@@ -24,9 +24,8 @@ type ExecService struct {
 	UnitService      *UnitService                    `inject:""`
 	HostService      *serverService.HostService      `inject:""`
 	HistoryService   *serverService.HistoryService   `inject:""`
+	VmCommonService  *serverService.VmCommonService  `inject:""`
 	WebSocketService *commonService.WebSocketService `inject:""`
-
-	VmService serverService.VmService `inject:""`
 }
 
 func NewExecService() *ExecService {
@@ -96,7 +95,8 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 		hostId, backingId, tmplId, found := s.HostService.GetValidForQueueByVm(queue)
 		if found {
 			// create kvm
-			result := s.VmService.CreateRemote(hostId, backingId, tmplId, queue.ID)
+			vmService := s.VmCommonService.GetVmService(hostId)
+			result := vmService.CreateRemote(hostId, backingId, tmplId, queue.ID)
 			if result.IsSuccess() { // success to create
 				newTaskProgress = consts.ProgressLaunchVm
 			} else {

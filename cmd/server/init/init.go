@@ -12,7 +12,6 @@ import (
 	"github.com/easysoft/zagent/internal/server/conf"
 	serverCron "github.com/easysoft/zagent/internal/server/cron"
 	"github.com/easysoft/zagent/internal/server/model"
-	serverService "github.com/easysoft/zagent/internal/server/service"
 	initService "github.com/easysoft/zagent/internal/server/service/init"
 	serverRes "github.com/easysoft/zagent/res/server"
 	assetfs "github.com/elazarl/go-bindata-assetfs"
@@ -97,7 +96,6 @@ func injectObj(router *router.Router) {
 		// service
 		&inject.Object{Value: initService.NewSeeder()},
 		&inject.Object{Value: serverCron.NewServerCron()},
-		&inject.Object{Value: serverService.NewKvmService()},
 
 		// controller
 		&inject.Object{Value: handler.NewPermCtrl()},

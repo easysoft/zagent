@@ -2,7 +2,6 @@ package serverConf
 
 import (
 	"fmt"
-	consts "github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/pkg/lib/common"
 	"github.com/easysoft/zagent/internal/pkg/lib/file"
 	"github.com/easysoft/zagent/internal/pkg/lib/log"
@@ -62,11 +61,6 @@ type Config struct {
 	CertKey  string `default:"" env:"CertKey"`
 	Host     string `default:"0.0.0.0" env:"HostId"`
 	Port     int    `default:"8085" env:"Port"`
-
-	Adapter struct {
-		VmPlatform        consts.VmPlatform `yaml:"vmPlatform" env:"VitualPlatform" default:"kvm_native"`
-		ContainerPlatform consts.VmPlatform `yaml:"containerPlatform" env:"ContainerPlatform" default:"docker_native"`
-	} `yaml:"adapter,flow"`
 
 	Admin struct {
 		UserName        string `env:"AdminUserName" default:"admin"`
