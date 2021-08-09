@@ -70,6 +70,22 @@ func (s HuaweiCloudService) CreateInst(instName, img string,
 	return
 }
 
+func (s HuaweiCloudService) RemoveInst(id string, ecsClient *ecs.EcsClient) (err error) {
+	request := &ecsModel.DeleteServersRequest{
+		Body: &ecsModel.DeleteServersRequestBody{
+			Servers: []ecsModel.ServerId{{
+				Id: id,
+			}},
+		},
+	}
+	response, err := ecsClient.DeleteServers(request)
+
+	if response.HttpStatusCode != 200 || err != nil {
+		_logUtils.Printf("DeleteServers response %s, error %s", response.String(), err.Error())
+	}
+
+	return
+}
 func (s HuaweiCloudService) QuerySpec(client *ecs.EcsClient) (id, name string, err error) {
 	request := &ecsModel.ListFlavorsRequest{}
 	response, err := client.ListFlavors(request)
@@ -143,6 +159,45 @@ func (s HuaweiCloudService) QuerySubNet(client *vpc.VpcClient) (id, name string,
 
 		return // first one
 	}
+
+	return
+}
+
+func (s HuaweiCloudService) QueryVm(id string, client *ecs.EcsClient) (name, status, ip, mac string, err error) {
+	request := &ecsModel.ShowServerRequest{
+		ServerId: id,
+	}
+	response, err := client.ShowServer(request)
+	if err != nil {
+		_logUtils.Printf("ShowServer error %s", err.Error())
+		return
+	}
+
+	name = response.Server.Name
+	status = response.Server.Status
+
+	for _, items := range response.Server.Addresses {
+		item := items[0]
+		ip = item.Addr
+		mac = *item.OSEXTIPSMACmacAddr
+
+		break
+	}
+
+	return
+}
+
+func (s HuaweiCloudService) QueryVnc(id string, client *ecs.EcsClient) (url string, err error) {
+	request := &ecsModel.ShowServerRemoteConsoleRequest{
+		ServerId: id,
+	}
+	response, err := client.ShowServerRemoteConsole(request)
+	if err != nil {
+		_logUtils.Printf("ShowServer error %s", err.Error())
+		return
+	}
+
+	url = response.RemoteConsole.Url
 
 	return
 }

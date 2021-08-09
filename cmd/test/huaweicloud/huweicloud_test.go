@@ -7,6 +7,7 @@ import (
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
 	"github.com/easysoft/zagent/internal/server/service/vendors"
 	"testing"
+	"time"
 )
 
 func TestHuaweiCloud(t *testing.T) {
@@ -22,8 +23,21 @@ func TestHuaweiCloud(t *testing.T) {
 		return
 	}
 
-	id, name, _ := vendors.NewHuaweiCloudService().CreateInst(
-		"win10-"+_stringUtils.NewUuidWithSep(), "win10", ecsClient, imgClient, vpcClient)
+	huaweiCloudService := vendors.NewHuaweiCloudService()
+	id, name, err := huaweiCloudService.CreateInst(
+		"win10-x64-pro-zh_cn-"+_stringUtils.NewUuidWithSep(), "win10-x64-pro-zh_cn", ecsClient, imgClient, vpcClient)
 
-	_logUtils.Infof("%s, %s", id, name)
+	<-time.After(5 * time.Second)
+
+	name, status, ip, mac, err := huaweiCloudService.QueryVm(id, ecsClient)
+	_logUtils.Infof("vm name %s, status %s, ip %s, mac %s, err %s", name, status, ip, mac)
+
+	url, err := huaweiCloudService.QueryVnc(id, ecsClient)
+	_logUtils.Infof("vm url %s", id, name, url)
+
+	err = huaweiCloudService.RemoveInst(id, ecsClient)
+
+	err = huaweiCloudService.RemoveInst(id, ecsClient)
+
+	_logUtils.Infof("%s, %s, error %s", id, name, err.Error())
 }
