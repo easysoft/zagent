@@ -67,12 +67,20 @@ func (r HostRepo) QueryByBackings(backingIds []uint, busyHostIds []uint) (hostId
 
 func (r HostRepo) QueryBusy() (hostIds []uint) {
 	hosts := make([]HostResult, 0)
-	r.DB.Raw(`SELECT host.id host_id, host.max_vm_num num
+	r.DB.Raw(fmt.Sprintf(
+		`SELECT host.id host_id, host.max_vm_num num, host.vm_platform vm_platform
 					FROM biz_host host
-					WHERE NOT host.deleted AND NOT host.disabled`).
+					WHERE host.status = '%s' AND NOT host.deleted AND NOT host.disabled
+					ORDER BY host.priority`,
+		consts.HostReady)).
 		Scan(&hosts)
 
 	for _, host := range hosts {
+		if strings.Index(host.VmPlatform.ToString(), "_cloud") > -1 {
+			hostIds = append(hostIds, host.HostId)
+			continue
+		}
+
 		items := make([]HostResult, 0)
 
 		r.DB.Raw(`SELECT vm.host_id host_id, COUNT(vm.id) num
@@ -85,8 +93,7 @@ func (r HostRepo) QueryBusy() (hostIds []uint) {
 			Scan(&items)
 
 		for _, item := range items {
-			hostId := item.HostId
-			hostIds = append(hostIds, hostId)
+			hostIds = append(hostIds, item.HostId)
 		}
 	}
 
@@ -114,6 +121,7 @@ func (r HostRepo) QueryUnBusy(busyHostIds []uint) (hostId uint) {
 }
 
 type HostResult struct {
-	HostId uint
-	Num    int
+	HostId     uint
+	Num        int
+	VmPlatform consts.VmPlatform
 }
