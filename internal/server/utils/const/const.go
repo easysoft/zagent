@@ -1,7 +1,5 @@
 package serverConst
 
-type VmPlatform string
-
 const (
 	WsNamespace   = "default"
 	WsEvent       = "OnChat"
@@ -9,12 +7,7 @@ const (
 
 	TrainingTimeout = 60 * 60 // sec
 
-	PageSize             = 15
-	KvmNative VmPlatform = "kvmNative"
-	Pve       VmPlatform = "pve"
-
-	DockerNative ContainerPlatform = "dockerNative"
-	Portainer    ContainerPlatform = "portainer"
+	PageSize = 15
 )
 
 type WsEventAction string
@@ -30,5 +23,3 @@ func (e WsEventAction) ToString() string {
 var (
 	SlotTypeAbbrMap = map[string]string{"synonym": "syn", "lookup": "lkp", "regex": "rgx"}
 )
-
-type ContainerPlatform string

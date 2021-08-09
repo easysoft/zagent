@@ -25,7 +25,7 @@ func (c *VmCtrl) Create(ctx context.Context, req domain.KvmReq, reply *_domain.R
 		vmName, _ := dom.GetName()
 		vm := domain.Vm{
 			Name:        vmName,
-			VncPort:     vncPort,
+			VncAddress:  vncPort,
 			ImagePath:   vmRawPath,
 			BackingPath: vmBackingPath,
 		}

@@ -1,5 +1,29 @@
 package consts
 
+type VmPlatform string
+
+const (
+	KvmNative   VmPlatform = "kvmNative"
+	Pve         VmPlatform = "pve"
+	HuaweiCloud VmPlatform = "huawei_cloud"
+	AwsCloud    VmPlatform = "aws_cloud"
+)
+
+func (e VmPlatform) ToString() string {
+	return string(e)
+}
+
+type ContainerPlatform string
+
+const (
+	DockerNative ContainerPlatform = "dockerNative"
+	Portainer    ContainerPlatform = "portainer"
+)
+
+func (e ContainerPlatform) ToString() string {
+	return string(e)
+}
+
 type HostStatus string
 
 const (

@@ -38,7 +38,7 @@ type Vm struct {
 	MacAddress string `json:"macAddress"`
 	RpcPort    int    `json:"rpcPort"`
 	SshPort    int    `json:"sshPort"`
-	VncPort    int    `json:"vncPort"`
+	VncAddress string `json:"vncAddress"`
 	WorkDir    string `json:"workDir"`
 
 	DefPath          string `json:"defPath"`
@@ -50,6 +50,8 @@ type Vm struct {
 	ResolutionWidth  int    `json:"resolutionWidth"`
 
 	Histories []History `json:"histories" gorm:"polymorphic:Owner;polymorphicValue:vm"`
+
+	CouldInstId string `json:"couldInstId"`
 }
 
 func GenKvmReq(po Vm) (req domain.KvmReq) {
@@ -78,7 +80,7 @@ func VmFromDomain(v domain.Vm) (po Vm) {
 		MacAddress: v.MacAddress,
 		RpcPort:    v.RpcPort,
 		SshPort:    v.SshPort,
-		VncPort:    v.VncPort,
+		VncAddress: v.VncAddress,
 		WorkDir:    v.WorkDir,
 	}
 

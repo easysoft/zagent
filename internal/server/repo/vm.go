@@ -2,7 +2,6 @@ package repo
 
 import (
 	"github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/comm/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"gorm.io/gorm"
 	"time"
@@ -45,14 +44,19 @@ func (r VmRepo) Save(po *model.Vm) {
 func (r VmRepo) UpdateVmName(vm model.Vm) {
 	r.DB.Model(&model.Vm{}).Where("id=?", vm.ID).Update("name", vm.Name)
 }
+func (r VmRepo) UpdateVmCloudInstId(vm model.Vm) {
+	r.DB.Model(&model.Vm{}).Where("id=?", vm.ID).Update("could_inst_id", vm.CouldInstId)
+}
 
-func (r VmRepo) Launch(vm domain.Vm, id uint) {
+func (r VmRepo) Launch(vncAddress, imagePath, backingPath string, id uint) {
 	r.DB.Model(&model.Vm{}).Where("id=?", id).
 		Updates(
-			map[string]interface{}{"status": consts.VmLaunch,
-				"image_path":   vm.ImagePath,
-				"backing_path": vm.BackingPath,
-				"vnc_port":     vm.VncPort})
+			map[string]interface{}{
+				"status":       consts.VmLaunch,
+				"vnc_port":     vncAddress,
+				"image_path":   imagePath,
+				"backing_path": backingPath,
+			})
 
 	return
 }

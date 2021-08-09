@@ -30,7 +30,7 @@ type Vm struct {
 	MacAddress string
 	RpcPort    int
 	SshPort    int
-	VncPort    int
+	VncAddress string
 	WorkDir    string
 
 	DefPath          string
