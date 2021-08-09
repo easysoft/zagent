@@ -3,7 +3,7 @@ package consts
 type VmPlatform string
 
 const (
-	KvmNative   VmPlatform = "kvmNative"
+	KvmNative   VmPlatform = "kvm_native"
 	Pve         VmPlatform = "pve"
 	HuaweiCloud VmPlatform = "huawei_cloud"
 	AwsCloud    VmPlatform = "aws_cloud"
@@ -16,7 +16,7 @@ func (e VmPlatform) ToString() string {
 type ContainerPlatform string
 
 const (
-	DockerNative ContainerPlatform = "dockerNative"
+	DockerNative ContainerPlatform = "docker_native"
 	Portainer    ContainerPlatform = "portainer"
 )
 

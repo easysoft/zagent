@@ -44,8 +44,13 @@ func (r VmRepo) Save(po *model.Vm) {
 func (r VmRepo) UpdateVmName(vm model.Vm) {
 	r.DB.Model(&model.Vm{}).Where("id=?", vm.ID).Update("name", vm.Name)
 }
-func (r VmRepo) UpdateVmCloudInstId(vm model.Vm) {
-	r.DB.Model(&model.Vm{}).Where("id=?", vm.ID).Update("could_inst_id", vm.CouldInstId)
+func (r VmRepo) UpdateVmCloudInst(vm model.Vm) {
+	r.DB.Model(&model.Vm{}).Where("id=?", vm.ID).
+		Updates(map[string]interface{}{
+			"could_inst_id": vm.CouldInstId,
+			"node_ip":       vm.NodeIp,
+			"mac_address":   vm.MacAddress,
+		})
 }
 
 func (r VmRepo) Launch(vncAddress, imagePath, backingPath string, id uint) {
@@ -63,6 +68,16 @@ func (r VmRepo) Launch(vncAddress, imagePath, backingPath string, id uint) {
 
 func (r VmRepo) UpdateStatusByNames(vms []string, status consts.VmStatus) {
 	db := r.DB.Model(&model.Vm{}).Where("name IN (?)", vms)
+
+	if status == consts.VmRunning {
+		db.Where("status != ?", consts.VmReady) // not to update active vm status
+	}
+
+	db.Updates(map[string]interface{}{"status": status})
+}
+
+func (r VmRepo) UpdateStatusByCloudInstId(ids []string, status consts.VmStatus) {
+	db := r.DB.Model(&model.Vm{}).Where("could_inst_id IN (?)", ids)
 
 	if status == consts.VmRunning {
 		db.Where("status != ?", consts.VmReady) // not to update active vm status

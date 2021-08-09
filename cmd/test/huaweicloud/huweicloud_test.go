@@ -36,7 +36,5 @@ func TestHuaweiCloud(t *testing.T) {
 
 	err = huaweiCloudService.RemoveInst(id, ecsClient)
 
-	err = huaweiCloudService.RemoveInst(id, ecsClient)
-
 	_logUtils.Infof("%s, %s, error %s", id, name, err.Error())
 }

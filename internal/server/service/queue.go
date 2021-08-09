@@ -13,9 +13,10 @@ type QueueService struct {
 	QueueRepo  *repo.QueueRepo  `inject:""`
 
 	TaskService      *TaskService                    `inject:""`
-	VmService        VmService                       `inject:""`
 	HistoryService   *HistoryService                 `inject:""`
 	WebSocketService *commonService.WebSocketService `inject:""`
+
+	VmService VmService `inject:""`
 }
 
 func NewQueueService() *QueueService {

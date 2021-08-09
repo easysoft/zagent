@@ -1,7 +1,6 @@
 package serverService
 
 import (
-	"fmt"
 	"github.com/easysoft/zagent/internal/comm/const"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
@@ -35,15 +34,29 @@ func (s HuaweiCloudService) CreateRemote(hostId, backingId, tmplId, queueId uint
 	vpcClient, err := srv.CreateVpcClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
 
 	if err != nil {
+		result.Fail(err.Error())
+		s.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, "", "", "")
 		return
 	}
 
 	huaweiCloudService := vendors.NewHuaweiCloudService()
-	id, _, err := huaweiCloudService.CreateInst(vm.Name, backing.Name, ecsClient, imgClient, vpcClient)
-	vm.CouldInstId = id
-	s.VmRepo.UpdateVmCloudInstId(vm)
+	vm.CouldInstId, _, err = huaweiCloudService.CreateInst(vm.Name, backing.Name, ecsClient, imgClient, vpcClient)
+	if err != nil {
+		result.Fail(err.Error())
+		s.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, "", "", "")
+		return
+	}
 
-	url, _ := huaweiCloudService.QueryVnc(id, ecsClient)
+	_, result.Msg, vm.NodeIp, vm.MacAddress, err = huaweiCloudService.QueryVm(vm.CouldInstId, ecsClient)
+	if err != nil {
+		result.Fail(err.Error())
+		s.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, "", "", "")
+		return
+	}
+
+	s.VmRepo.UpdateVmCloudInst(vm)
+
+	url, _ := huaweiCloudService.QueryVnc(vm.CouldInstId, ecsClient)
 	s.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, url, "", "")
 
 	return
@@ -51,22 +64,24 @@ func (s HuaweiCloudService) CreateRemote(hostId, backingId, tmplId, queueId uint
 
 func (s HuaweiCloudService) DestroyRemote(vmId, queueId uint) (result _domain.RpcResp) {
 	vm := s.VmRepo.GetById(vmId)
+	host := s.HostRepo.Get(vm.HostId)
 
-	var status consts.VmStatus
-	if result.IsSuccess() {
-		status = consts.VmDestroy
-	} else {
+	status := consts.VmDestroy
+
+	srv := vendors.NewHuaweiCloudService()
+	ecsClient, err := srv.CreateEcsClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
+	if err != nil {
 		status = consts.VmFailDestroy
+	} else {
+		err = srv.RemoveInst(vm.CouldInstId, ecsClient)
+		if err != nil {
+			status = consts.VmFailDestroy
+		}
 	}
-	s.VmRepo.UpdateStatusByNames([]string{vm.Name}, status)
+
+	s.VmRepo.UpdateStatusByCloudInstId([]string{vm.CouldInstId}, status)
 
 	s.HistoryService.Create(consts.Vm, vmId, queueId, "", status.ToString())
-
-	return
-}
-
-func (s HuaweiCloudService) genVmName(backing model.VmBacking, vmId uint) (name string) {
-	name = fmt.Sprintf("test-%s-%s-%s-%d", backing.OsType, backing.OsVersion, backing.OsLang, vmId)
 
 	return
 }

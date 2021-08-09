@@ -34,6 +34,8 @@ type Host struct {
 	Backings []VmBacking `gorm:"many2many:host_backing_r;"`
 	Vms      []Vm        `json:"vms" gorm:"-"`
 
+	Priority int `json:"priority"`
+
 	// vm
 	VmPlatform  consts.VmPlatform `json:"vmPlatform"`
 	CloudKey    string            `json:"taskCount"`
@@ -41,7 +43,7 @@ type Host struct {
 	CloudRegion string            `json:"taskCount"`
 
 	// Container
-	ContainerPlatform consts.ContainerPlatform `json:"containerPlatform"`
+	ContainerPlatform consts.VmPlatform `json:"containerPlatform"`
 }
 
 func NewHost() Host {

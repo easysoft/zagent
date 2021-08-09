@@ -2,10 +2,10 @@ package serverConf
 
 import (
 	"fmt"
+	consts "github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/pkg/lib/common"
 	"github.com/easysoft/zagent/internal/pkg/lib/file"
 	"github.com/easysoft/zagent/internal/pkg/lib/log"
-	"github.com/easysoft/zagent/internal/server/utils/const"
 	"github.com/easysoft/zagent/res/server"
 	"github.com/jinzhu/configor"
 	logger "github.com/sirupsen/logrus"
@@ -64,8 +64,8 @@ type Config struct {
 	Port     int    `default:"8085" env:"Port"`
 
 	Adapter struct {
-		VmPlatform        serverConst.VmPlatform        `yaml:"vmPlatform" env:"VmPlatform" default:"kvmNative"`
-		ContainerPlatform serverConst.ContainerPlatform `yaml:"containerPlatform" env:"ContainerPlatform" default:"dockerNative"`
+		VmPlatform        consts.VmPlatform `yaml:"vmPlatform" env:"VitualPlatform" default:"kvm_native"`
+		ContainerPlatform consts.VmPlatform `yaml:"containerPlatform" env:"ContainerPlatform" default:"docker_native"`
 	} `yaml:"adapter,flow"`
 
 	Admin struct {
