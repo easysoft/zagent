@@ -40,7 +40,7 @@ func (s HuaweiCloudService) CreateRemote(hostId, backingId, tmplId, queueId uint
 	}
 
 	huaweiCloudService := vendors.NewHuaweiCloudService()
-	vm.CouldInstId, _, err = huaweiCloudService.CreateInst(vm.Name, backing.Name, ecsClient, imgClient, vpcClient)
+	vm.CouldInstId, _, err = huaweiCloudService.CreateInst(vm.Name, "image-"+backing.Name, ecsClient, imgClient, vpcClient)
 	if err != nil {
 		result.Fail(err.Error())
 		s.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, "", "", "")
