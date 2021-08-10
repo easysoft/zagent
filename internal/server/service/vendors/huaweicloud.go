@@ -190,6 +190,12 @@ func (s HuaweiCloudService) QueryVm(id string, client *ecs.EcsClient) (name, sta
 func (s HuaweiCloudService) QueryVnc(id string, client *ecs.EcsClient) (url string, err error) {
 	request := &ecsModel.ShowServerRemoteConsoleRequest{
 		ServerId: id,
+		Body: &ecsModel.ShowServerRemoteConsoleRequestBody{
+			RemoteConsole: &ecsModel.GetServerRemoteConsoleOption{
+				Protocol: ecsModel.GetGetServerRemoteConsoleOptionProtocolEnum().VNC,
+				Type:     ecsModel.GetGetServerRemoteConsoleOptionTypeEnum().NOVNC,
+			},
+		},
 	}
 	response, err := client.ShowServerRemoteConsole(request)
 	if err != nil {

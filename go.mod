@@ -8,8 +8,7 @@ require (
 	github.com/Joker/hpp v1.0.0 // indirect
 	github.com/alibabacloud-go/darabonba-openapi v0.1.5
 	github.com/alibabacloud-go/ecs-20140526/v2 v2.0.2
-	github.com/alibabacloud-go/tea v1.1.15
-	github.com/aliyun/aliyun-oss-go-sdk v2.1.9+incompatible
+	github.com/alibabacloud-go/tea v1.1.17
 	github.com/azumads/faker v0.0.0-20150921074035-6cae71ddb107
 	github.com/casbin/casbin/v2 v2.31.5
 	github.com/containerd/containerd v1.5.2 // indirect
