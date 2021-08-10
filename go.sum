@@ -123,6 +123,8 @@ github.com/alibabacloud-go/tea v1.1.8/go.mod h1:/tmnEaQMyb4Ky1/5D+SE1BAsa5zj/KeG
 github.com/alibabacloud-go/tea v1.1.11/go.mod h1:/tmnEaQMyb4Ky1/5D+SE1BAsa5zj/KeGOFfwYm3N/p4=
 github.com/alibabacloud-go/tea v1.1.15 h1:IaBC1Mm5Ss+l7cWnOXSxCmnWoWrEdeHEtDgQzoCCgjY=
 github.com/alibabacloud-go/tea v1.1.15/go.mod h1:nXxjm6CIFkBhwW4FQkNrolwbfon8Svy6cujmKFUq98A=
+github.com/alibabacloud-go/tea v1.1.17 h1:05R5DnaJXe9sCNIe8KUgWHC/z6w/VZIwczgUwzRnul8=
+github.com/alibabacloud-go/tea v1.1.17/go.mod h1:nXxjm6CIFkBhwW4FQkNrolwbfon8Svy6cujmKFUq98A=
 github.com/alibabacloud-go/tea-utils v1.3.1/go.mod h1:EI/o33aBfj3hETm4RLiAxF/ThQdSngxrpF8rKUDJjPE=
 github.com/alibabacloud-go/tea-utils v1.3.9 h1:TtbzxS+BXrisA7wzbAMRtlU8A2eWLg0ufm7m/Tl6fc4=
 github.com/alibabacloud-go/tea-utils v1.3.9/go.mod h1:EI/o33aBfj3hETm4RLiAxF/ThQdSngxrpF8rKUDJjPE=
