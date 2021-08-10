@@ -24,9 +24,9 @@ func TestHuaweiCloud(t *testing.T) {
 
 	huaweiCloudService := vendors.NewHuaweiCloudService()
 	id, name, err := huaweiCloudService.CreateInst(
-		"win10-x64-pro-zh_cn-"+_stringUtils.NewUuidWithSep(), "win10-x64-pro-zh_cn", ecsClient, imgClient, vpcClient)
+		"win10-x64-pro-zh_cn-"+_stringUtils.NewUuidWithSep(), "image-win10-x64-pro-zh_cn", ecsClient, imgClient, vpcClient)
 
-	<-time.After(3 * time.Second)
+	<-time.After(5 * time.Second)
 
 	name, status, ip, mac, err := huaweiCloudService.QueryVm(id, ecsClient)
 	_logUtils.Infof("vm name %s, status %s, ip %s, mac %s", name, status, ip, mac)

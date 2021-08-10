@@ -17,7 +17,7 @@ func TestHuaweiCloudQuery(t *testing.T) {
 		return
 	}
 
-	id := "3532bae9-265c-4bde-94af-cdc9ce78c27a"
+	id := "6eca6332-5c8c-4cae-9d62-b17bcf806d2d"
 
 	huaweiCloudService := vendors.NewHuaweiCloudService()
 	name, status, ip, mac, err := huaweiCloudService.QueryVm(id, ecsClient)

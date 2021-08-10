@@ -177,11 +177,17 @@ func (s HuaweiCloudService) QueryVm(id string, client *ecs.EcsClient) (name, sta
 	status = response.Server.Status
 
 	for _, items := range response.Server.Addresses {
-		item := items[0]
-		ip = item.Addr
-		mac = *item.OSEXTIPSMACmacAddr
+		for _, item := range items {
+			if *item.OSEXTIPStype == ecsModel.GetServerAddressOSEXTIPStypeEnum().FLOATING {
+				ip = item.Addr
+				mac = *item.OSEXTIPSMACmacAddr
 
-		break
+				break
+			}
+		}
+		if ip != "" {
+			break
+		}
 	}
 
 	return
