@@ -39,6 +39,16 @@ func (s ExecService) QueryForExec() {
 	queuesToBuild := s.QueueRepo.QueryForExec()
 	for _, queue := range queuesToBuild {
 		s.CheckAndCall(queue)
+		s.WebSocketService.UpdateTask(queue.TaskId, "CheckAndCall Test")
+	}
+}
+
+func (s ExecService) QueryForRetry() {
+	queues := s.QueueRepo.QueryForRetry()
+
+	for _, queue := range queues {
+		s.CheckAndCall(queue)
+		s.WebSocketService.UpdateTask(queue.TaskId, "CheckAndCall Test")
 	}
 }
 
@@ -49,15 +59,6 @@ func (s ExecService) QueryForTimeout() {
 		s.QueueRepo.Timeout(queue.ID)
 		s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressTimeout, "")
 		s.WebSocketService.UpdateTask(queue.TaskId, "set queue timeout")
-	}
-}
-
-func (s ExecService) QueryForRetry() {
-	queues := s.QueueRepo.QueryForRetry()
-
-	for _, queue := range queues {
-		s.CheckAndCall(queue)
-		s.WebSocketService.UpdateTask(queue.TaskId, "CheckAndCall Test")
 	}
 }
 
@@ -137,7 +138,6 @@ func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {
 		if rpcResult.IsSuccess() {
 			s.QueueRepo.Run(queue) // start
 			s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressRunning, "")
-			s.WebSocketService.UpdateTask(queue.TaskId, "success to run appium queue")
 
 			newTaskProgress = consts.ProgressRunning
 		} else {
@@ -172,7 +172,6 @@ func (s ExecService) CheckAndCallUnitTest(queue model.Queue) {
 		if result.IsSuccess() {
 			s.QueueRepo.Run(queue)
 			s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressRunning, "")
-			s.WebSocketService.UpdateTask(queue.TaskId, "success to run unit queue")
 
 			newTaskProgress = consts.ProgressRunning
 		} else {

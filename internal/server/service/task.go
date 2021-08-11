@@ -122,6 +122,5 @@ func (s *TaskService) SetTaskStatus(taskId uint) {
 	if isAllQueuesCompleted {
 		s.TaskRepo.SetResult(taskId, progress, status)
 		s.HistoryService.Create(consts.Task, taskId, 0, progress, status.ToString())
-		s.WebSocketService.UpdateTask(taskId, "update task status")
 	}
 }
