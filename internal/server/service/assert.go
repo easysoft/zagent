@@ -10,8 +10,9 @@ import (
 )
 
 type AssertService struct {
-	HostRepo *repo.HostRepo `inject:""`
-	VmRepo   *repo.VmRepo   `inject:""`
+	HostRepo  *repo.HostRepo  `inject:""`
+	QueueRepo *repo.QueueRepo `inject:""`
+	VmRepo    *repo.VmRepo    `inject:""`
 
 	HistoryService *HistoryService `inject:""`
 }
@@ -35,14 +36,15 @@ func (s AssertService) RegisterHost(host domain.HostNode) (result _domain.RpcRes
 }
 
 func (s AssertService) RegisterVm(vmObj domain.Vm) (result _domain.RpcResp) {
-	vm := model.VmFromDomain(vmObj)
-
-	vm, err := s.VmRepo.Register(vm)
+	vm, statusChanged, err := s.VmRepo.Register(vmObj)
 	if err != nil {
 		result.Fail(fmt.Sprintf("fail to register host %s ", vm.NodeIp))
 	}
 
-	s.HistoryService.Create(consts.Vm, vm.ID, 0, "", vm.Status.ToString())
+	if statusChanged {
+		queue := s.QueueRepo.GetByVmId(vm.ID)
+		s.HistoryService.Create(consts.Vm, vm.ID, queue.ID, "", vm.Status.ToString())
+	}
 
 	result.Pass("")
 

@@ -54,7 +54,7 @@ export function getTaskBuildHistories (buildHistories, that) {
       type: historyTypes[item.ownerType],
       progress: buildProgress[item.progress],
       status: item.ownerType !== 'vm' ? buildStatus[item.status] : vmStatus[item.status],
-      time: item.createdAt
+      createdAt: item.createdAt
     }
     if (!his.progress) his.progress = '-'
     if (!his.status) his.status = '-'

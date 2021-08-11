@@ -48,9 +48,11 @@ func (r *HistoryRepo) GetBuildHistoriesByTask(taskId uint) (histories []domain.B
 		`SELECT his.id, his.queue_id,his.progress, his.status, 
 			 his.owner_type, his.owner_id, his.created_at,
              bld.result_path, vm.node_ip, vm.vnc_address 
+
              FROM biz_history his 
 			 LEFT JOIN biz_build bld ON bld.id = his.owner_id 
-			 LEFT JOIN biz_vm vm ON vm.id = bld.vm_id 
+			 LEFT JOIN biz_queue queue ON queue.id = his.queue_id
+			 LEFT JOIN biz_vm vm ON vm.id = queue.vm_id 
 			 WHERE his.queue_id IN (
 				SELECT id FROM biz_queue 
 			   WHERE task_id = ?

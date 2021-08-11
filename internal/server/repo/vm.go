@@ -2,6 +2,7 @@ package repo
 
 import (
 	"github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"gorm.io/gorm"
 	"time"
@@ -16,21 +17,28 @@ func NewVmRepo() *VmRepo {
 	return &VmRepo{}
 }
 
-func (r VmRepo) Register(vm model.Vm) (po model.Vm, err error) {
+func (r VmRepo) Register(vm domain.Vm) (po model.Vm, statusChanged bool, err error) {
+	err = r.DB.Model(&model.Vm{}).
+		Where("mac_address=?", vm.MacAddress).First(&po).Error
+	srcStatus := po.Status
+
 	r.DB.Model(&model.Vm{}).
 		Where("mac_address=? AND node_ip IS NULL", vm.MacAddress).
-		Updates(map[string]interface{}{"node_ip": vm.NodeIp})
+		Updates(map[string]interface{}{"node_ip": vm.PublicIp})
 
 	// just update status by mac for exist vm
 	r.DB.Model(&model.Vm{}).
 		Where("mac_address=?", vm.MacAddress).
 		Updates(
 			map[string]interface{}{"status": vm.Status, "work_dir": vm.WorkDir,
-				"node_port":          vm.NodePort,
+				"node_port":          vm.PublicPort,
 				"last_register_time": time.Now()})
 
 	err = r.DB.Model(&model.Vm{}).
 		Where("mac_address=?", vm.MacAddress).First(&po).Error
+	dictStatus := po.Status
+
+	statusChanged = srcStatus != dictStatus
 
 	return
 }

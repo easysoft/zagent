@@ -73,6 +73,11 @@ func (r QueueRepo) GetQueue(id uint) (queue model.Queue) {
 
 	return
 }
+func (r QueueRepo) GetByVmId(vmId uint) (queue model.Queue) {
+	r.DB.Model(&model.Queue{}).Where("vm_id=?", vmId).First(&queue)
+
+	return
+}
 
 func (r QueueRepo) Save(queue *model.Queue) (err error) {
 	err = r.DB.Model(&model.Queue{}).
