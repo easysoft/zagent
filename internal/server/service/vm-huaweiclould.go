@@ -59,9 +59,9 @@ func (s HuaweiCloudService) CreateRemote(hostId, backingId, tmplId, queueId uint
 		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, "", "", "")
 		return
 	}
+	result.Pass("")
 
 	s.VmRepo.UpdateVmCloudInst(vm)
-
 	url, _ := huaweiCloudService.QueryVnc(vm.CouldInstId, ecsClient)
 	s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, url, "", "")
 
