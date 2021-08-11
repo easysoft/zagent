@@ -48,6 +48,7 @@ func (s AssertService) RegisterVm(vm domain.Vm) (result _domain.RpcResp) {
 func (s AssertService) updateVmsStatus(host domain.HostNode, hostId uint) {
 	runningVms, shutOffVms, unknownVms, vmNames := s.getVmsByStatus(host)
 
+	// only 3 kind of status from host register
 	if len(runningVms) > 0 {
 		// should not update vm status that is active like launch, ready etc.
 		//s.VmRepo.UpdateStatusByNames(runningVms, consts.VmRunning)
@@ -58,6 +59,9 @@ func (s AssertService) updateVmsStatus(host domain.HostNode, hostId uint) {
 	if len(unknownVms) > 0 {
 		s.VmRepo.UpdateStatusByNames(unknownVms, consts.VmUnknown)
 	}
+
+	// destroy timeout vms
+	s.VmRepo.DestroyTimeoutVms()
 
 	// destroy vms already removed by host agent
 	s.VmRepo.DestroyMissedVmsStatus(vmNames, hostId)

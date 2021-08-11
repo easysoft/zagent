@@ -79,7 +79,7 @@ func (r *TaskRepo) SetDefault(id uint) (err error) {
 			return err
 		}
 
-		err = r.DB.Model(&model.Task{}).Where("id != ?", id).
+		err = r.DB.Model(&model.Task{}).Where("id <> ?", id).
 			Updates(map[string]interface{}{"is_default": false}).Error
 
 		return nil

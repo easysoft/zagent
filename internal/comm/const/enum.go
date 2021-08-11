@@ -45,13 +45,13 @@ const (
 
 	VmRunning     VmStatus = "running"         // report by agent on host
 	VmShutOff     VmStatus = "shutoff"         // report by agent on host
-	VmDestroy     VmStatus = "destroy"         // report by agent on host
 	VmFailDestroy VmStatus = "vm_fail_destroy" // set after fail to call vm destroy remotely
 
 	VmBusy  VmStatus = "busy"  // report by agent in vm
 	VmReady VmStatus = "ready" // report by agent in vm
 
 	VmUnknown VmStatus = "unknown" // report by agent on host, not running, destroy and shutoff
+	VmDestroy VmStatus = "destroy" // final status
 )
 
 func (e VmStatus) ToString() string {

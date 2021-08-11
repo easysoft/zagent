@@ -37,7 +37,7 @@ func (s *VmService) GetVms() (vms []domain.Vm) {
 		domainState, _, _ := dom.GetState()
 		if domainState == libvirt.DOMAIN_RUNNING {
 			vm.Status = consts.VmRunning
-		} else if domainState == libvirt.DOMAIN_SHUTOFF {
+		} else if domainState == libvirt.DOMAIN_SHUTOFF || domainState == libvirt.DOMAIN_SHUTDOWN {
 			vm.Status = consts.VmShutOff
 		}
 

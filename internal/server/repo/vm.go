@@ -70,7 +70,7 @@ func (r VmRepo) UpdateStatusByNames(vms []string, status consts.VmStatus) {
 	db := r.DB.Model(&model.Vm{}).Where("name IN (?)", vms)
 
 	if status == consts.VmRunning {
-		db.Where("status != ?", consts.VmReady) // not to update active vm status
+		db.Where("status <> ?", consts.VmReady) // not to update active vm status
 	}
 
 	db.Updates(map[string]interface{}{"status": status})
@@ -80,7 +80,7 @@ func (r VmRepo) UpdateStatusByCloudInstId(ids []string, status consts.VmStatus) 
 	db := r.DB.Model(&model.Vm{}).Where("could_inst_id IN (?)", ids)
 
 	if status == consts.VmRunning {
-		db.Where("status != ?", consts.VmReady) // not to update active vm status
+		db.Where("status <> ?", consts.VmReady) // not to update active vm status
 	}
 
 	db.Updates(map[string]interface{}{"status": status})
@@ -88,13 +88,22 @@ func (r VmRepo) UpdateStatusByCloudInstId(ids []string, status consts.VmStatus) 
 
 func (r VmRepo) DestroyMissedVmsStatus(vms []string, hostId uint) {
 	db := r.DB.Model(&model.Vm{}).
-		Where("host_id=? AND status!=? "+
+		Where("host_id = ? AND status <> ? "+
 			" AND strftime('%s','now') - strftime('%s',created_at) > ?",
 			hostId, consts.VmDestroy, consts.AgentCheckInterval)
 
 	if len(vms) > 0 {
 		db.Where("name NOT IN (?)", vms)
 	}
+
+	db.Updates(map[string]interface{}{"status": consts.VmDestroy})
+}
+
+func (r VmRepo) DestroyTimeoutVms() {
+	db := r.DB.Model(&model.Vm{}).
+		Where("status <> ? AND "+
+			" strftime('%s','now') - strftime('%s',created_at) > ?",
+			consts.VmDestroy, consts.WaitVmLifecycleTimeout)
 
 	db.Updates(map[string]interface{}{"status": consts.VmDestroy})
 }

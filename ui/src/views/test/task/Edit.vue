@@ -258,7 +258,7 @@ export default {
             'name': 'test',
             'buildType': 'selenium',
             'browserType': 'chrome',
-            'browserVersion': '91',
+            'browserVersion': '92',
             'envVars': 'abc=123',
             'scriptUrl': 'https://gitee.com/ngtesting/ci_test_selenium.git',
             'buildCommands': 'mvn clean test -Dtestng.suite=target/test-classes/baidu-test.xml',
