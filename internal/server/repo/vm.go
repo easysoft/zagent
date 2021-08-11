@@ -114,3 +114,10 @@ func (r VmRepo) FailToCreate(id uint, msg string) {
 		Updates(map[string]interface{}{
 			"status": consts.VmFailCreate, "desc": msg})
 }
+
+func (r VmRepo) Distroy(id uint) {
+	r.DB.Model(&model.Vm{}).Where("id=?", id).Update("status", consts.VmDestroy)
+}
+func (r VmRepo) FailToDistroy(id uint) {
+	r.DB.Model(&model.Vm{}).Where("id=?", id).Update("status", consts.VmFailDestroy)
+}

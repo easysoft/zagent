@@ -36,24 +36,26 @@ func (r HostRepo) Get(id uint) (host model.Host) {
 }
 
 func (r HostRepo) QueryByBackings(backingIds []uint, busyHostIds []uint) (hostId, backingId uint) {
-	list := make([]domain.VmHost, 0)
+	vmHostList := make([]domain.VmHost, 0)
 
 	sql := fmt.Sprintf(`SELECT r.host_id, r.vm_backing_id
 			FROM biz_host_backing_r r 
 		    INNER JOIN biz_host host on r.host_id = host.id 
 
 	        WHERE host.status = '%s' 
-			AND r.vm_backing_id IN (%s) AND host.id NOT IN (%s) LIMIT 1`,
+			AND r.vm_backing_id IN (%s) AND host.id NOT IN (%s) 
+			ORDER BY host.priority
+            LIMIT 1`,
 
 		consts.HostReady,
 		strings.Join(_commonUtils.UintToStrArr(backingIds), ","),
 		strings.Join(_commonUtils.UintToStrArr(busyHostIds), ","))
 
-	r.DB.Raw(sql).Find(&list)
+	r.DB.Raw(sql).Find(&vmHostList)
 
 	for _, id := range backingIds { // get the most fittest one by backing order
-		for _, item := range list {
-			if id == item.HostId {
+		for _, item := range vmHostList {
+			if id == item.VmBackingId {
 				hostId = item.HostId
 				backingId = item.VmBackingId
 
@@ -68,7 +70,7 @@ func (r HostRepo) QueryByBackings(backingIds []uint, busyHostIds []uint) (hostId
 func (r HostRepo) QueryBusy() (hostIds []uint) {
 	hosts := make([]HostResult, 0)
 	r.DB.Raw(fmt.Sprintf(
-		`SELECT host.id host_id, host.max_vm_num num, host.vm_platform vm_platform
+		`SELECT host.id host_id, host.max_vm_num max_num, host.vm_platform vm_platform
 					FROM biz_host host
 					WHERE host.status = '%s' AND NOT host.deleted AND NOT host.disabled
 					ORDER BY host.priority`,
@@ -77,23 +79,20 @@ func (r HostRepo) QueryBusy() (hostIds []uint) {
 
 	for _, host := range hosts {
 		if strings.Index(host.VmPlatform.ToString(), "_cloud") > -1 {
-			hostIds = append(hostIds, host.HostId)
 			continue
 		}
 
-		items := make([]HostResult, 0)
+		items := make([]uint, 0)
 
-		r.DB.Raw(`SELECT vm.host_id host_id, COUNT(vm.id) num
+		r.DB.Raw(`SELECT vm.id
 					FROM biz_vm vm
-					WHERE vm.status == ? AND vm.host_id = ?
-					GROUP BY host_id
-					HAVING num > ?
+					WHERE vm.status <> ? AND vm.host_id = ?
 					ORDER BY num`,
-			consts.VmRunning, host.HostId, host.Num).
+			consts.VmDestroy, host.HostId).
 			Scan(&items)
 
-		for _, item := range items {
-			hostIds = append(hostIds, item.HostId)
+		if len(items) >= host.MaxNum {
+			hostIds = append(hostIds, host.HostId)
 		}
 	}
 
@@ -122,6 +121,6 @@ func (r HostRepo) QueryUnBusy(busyHostIds []uint) (hostId uint) {
 
 type HostResult struct {
 	HostId     uint
-	Num        int
+	MaxNum     int
 	VmPlatform consts.VmPlatform
 }

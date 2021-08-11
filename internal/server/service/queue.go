@@ -12,11 +12,14 @@ type QueueService struct {
 	DeviceRepo *repo.DeviceRepo `inject:""`
 	QueueRepo  *repo.QueueRepo  `inject:""`
 	VmRepo     *repo.VmRepo     `inject:""`
+	HostRepo   *repo.HostRepo   `inject:""`
 
 	TaskService      *TaskService                    `inject:""`
-	VmCommonService  *VmCommonService                `inject:""`
 	HistoryService   *HistoryService                 `inject:""`
 	WebSocketService *commonService.WebSocketService `inject:""`
+
+	KvmNativeService   *KvmNativeService   `inject:""`
+	HuaweiCloudService *HuaweiCloudService `inject:""`
 }
 
 func NewQueueService() *QueueService {
@@ -153,8 +156,13 @@ func (s QueueService) SaveResult(queueId uint, progress consts.BuildProgress, st
 
 	if queue.VmId > 0 {
 		vm := s.VmRepo.GetById(queue.VmId)
-		vmService := s.VmCommonService.GetVmService(vm.HostId)
-		vmService.DestroyRemote(queue.VmId, queue.ID)
+
+		host := s.HostRepo.Get(vm.HostId)
+		if host.VmPlatform == consts.KvmNative {
+			s.KvmNativeService.DestroyRemote(queue.VmId, queue.ID)
+		} else if host.VmPlatform == consts.HuaweiCloud {
+			s.HuaweiCloudService.DestroyRemote(queue.VmId, queue.ID)
+		}
 	}
 
 	s.HistoryService.Create(consts.Queue, queueId, queueId, progress, status.ToString())

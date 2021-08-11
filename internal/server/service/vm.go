@@ -17,27 +17,12 @@ type VmService interface {
 }
 
 type VmCommonService struct {
-	VmRepo           *repo.VmRepo                    `inject:""`
 	HostRepo         *repo.HostRepo                  `inject:""`
-	BackingRepo      *repo.BackingRepo               `inject:""`
 	QueueRepo        *repo.QueueRepo                 `inject:""`
-	RpcService       *commonService.RpcService       `inject:""`
+	VmRepo           *repo.VmRepo                    `inject:""`
 	HistoryService   *HistoryService                 `inject:""`
-	WebSocketService *commonService.WebSocketService `inject:""`
 	QueueService     *QueueService                   `inject:""`
-}
-
-func (s VmCommonService) GetVmService(hostId uint) VmService {
-	host := s.HostRepo.Get(hostId)
-
-	var service VmService
-	if host.VmPlatform == consts.KvmNative {
-		service = &KvmNativeService{}
-	} else if host.VmPlatform == consts.HuaweiCloud {
-		service = &HuaweiCloudService{}
-	}
-
-	return service
+	WebSocketService *commonService.WebSocketService `inject:""`
 }
 
 func (s VmCommonService) SaveVmCreationResult(isSuccess bool, result string, queueId uint, vmId uint,

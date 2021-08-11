@@ -2,6 +2,7 @@ package testing
 
 import (
 	"github.com/easysoft/zagent/internal/comm/const"
+	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 	serverService "github.com/easysoft/zagent/internal/server/service"
@@ -24,8 +25,10 @@ type ExecService struct {
 	UnitService      *UnitService                    `inject:""`
 	HostService      *serverService.HostService      `inject:""`
 	HistoryService   *serverService.HistoryService   `inject:""`
-	VmCommonService  *serverService.VmCommonService  `inject:""`
 	WebSocketService *commonService.WebSocketService `inject:""`
+
+	KvmNativeService   *serverService.KvmNativeService   `inject:""`
+	HuaweiCloudService *serverService.HuaweiCloudService `inject:""`
 }
 
 func NewExecService() *ExecService {
@@ -95,8 +98,14 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 		hostId, backingId, tmplId, found := s.HostService.GetValidForQueueByVm(queue)
 		if found {
 			// create kvm
-			vmService := s.VmCommonService.GetVmService(hostId)
-			result := vmService.CreateRemote(hostId, backingId, tmplId, queue.ID)
+			host := s.HostRepo.Get(hostId)
+
+			result := _domain.RpcResp{}
+			if host.VmPlatform == consts.KvmNative {
+				result = s.KvmNativeService.CreateRemote(hostId, backingId, tmplId, queue.ID)
+			} else if host.VmPlatform == consts.HuaweiCloud {
+				result = s.HuaweiCloudService.CreateRemote(hostId, backingId, tmplId, queue.ID)
+			}
 			if result.IsSuccess() { // success to create
 				newTaskProgress = consts.ProgressLaunchVm
 			} else {

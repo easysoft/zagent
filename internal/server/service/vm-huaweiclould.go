@@ -4,11 +4,17 @@ import (
 	"github.com/easysoft/zagent/internal/comm/const"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
+	"github.com/easysoft/zagent/internal/server/repo"
 	"github.com/easysoft/zagent/internal/server/service/vendors"
 )
 
 type HuaweiCloudService struct {
-	VmCommonService
+	HostRepo    *repo.HostRepo    `inject:""`
+	BackingRepo *repo.BackingRepo `inject:""`
+	VmRepo      *repo.VmRepo      `inject:""`
+
+	VmCommonService *VmCommonService `inject:""`
+	HistoryService  *HistoryService  `inject:""`
 }
 
 func (s HuaweiCloudService) CreateRemote(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp) {
@@ -25,7 +31,7 @@ func (s HuaweiCloudService) CreateRemote(hostId, backingId, tmplId, queueId uint
 		BackingId:  backing.ID,
 	}
 	s.VmRepo.Save(&vm) // save vm to db, then update name with id
-	vm.Name = s.genVmName(backing, vm.ID)
+	vm.Name = s.VmCommonService.genVmName(backing, vm.ID)
 	s.VmRepo.UpdateVmName(vm)
 
 	srv := vendors.NewHuaweiCloudService()
@@ -35,7 +41,7 @@ func (s HuaweiCloudService) CreateRemote(hostId, backingId, tmplId, queueId uint
 
 	if err != nil {
 		result.Fail(err.Error())
-		s.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, "", "", "")
+		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, "", "", "")
 		return
 	}
 
@@ -43,21 +49,21 @@ func (s HuaweiCloudService) CreateRemote(hostId, backingId, tmplId, queueId uint
 	vm.CouldInstId, _, err = huaweiCloudService.CreateInst(vm.Name, "image-"+backing.Name, ecsClient, imgClient, vpcClient)
 	if err != nil {
 		result.Fail(err.Error())
-		s.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, "", "", "")
+		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, "", "", "")
 		return
 	}
 
 	_, result.Msg, vm.NodeIp, vm.MacAddress, err = huaweiCloudService.QueryVm(vm.CouldInstId, ecsClient)
 	if err != nil {
 		result.Fail(err.Error())
-		s.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, "", "", "")
+		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, "", "", "")
 		return
 	}
 
 	s.VmRepo.UpdateVmCloudInst(vm)
 
 	url, _ := huaweiCloudService.QueryVnc(vm.CouldInstId, ecsClient)
-	s.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, url, "", "")
+	s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, url, "", "")
 
 	return
 }

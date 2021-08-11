@@ -6,14 +6,20 @@ import (
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
+	commonService "github.com/easysoft/zagent/internal/server/service/common"
 	"github.com/mitchellh/mapstructure"
 )
 
 type KvmNativeService struct {
-	VmCommonService
+	HostRepo    *repo.HostRepo    `inject:""`
+	IsoRepo     *repo.IsoRepo     `inject:""`
+	TmplRepo    *repo.TmplRepo    `inject:""`
+	BackingRepo *repo.BackingRepo `inject:""`
+	VmRepo      *repo.VmRepo      `inject:""`
 
-	IsoRepo  *repo.IsoRepo  `inject:""`
-	TmplRepo *repo.TmplRepo `inject:""`
+	VmCommonService *VmCommonService          `inject:""`
+	RpcService      *commonService.RpcService `inject:""`
+	HistoryService  *HistoryService           `inject:""`
 }
 
 func (s KvmNativeService) CreateRemote(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp) {
@@ -30,7 +36,7 @@ func (s KvmNativeService) CreateRemote(hostId, backingId, tmplId, queueId uint) 
 
 	tmpl := s.TmplRepo.Get(tmplId)
 
-	macAddress := s.genValidMacAddress() // get a unique mac address
+	macAddress := s.VmCommonService.genValidMacAddress() // get a unique mac address
 
 	vm := model.Vm{
 		HostId: host.ID, HostName: host.Name,
@@ -59,7 +65,7 @@ func (s KvmNativeService) CreateRemote(hostId, backingId, tmplId, queueId uint) 
 	}
 
 	s.VmRepo.Save(&vm) // save vm to db, then update name with id
-	vm.Name = s.genVmName(backing, vm.ID)
+	vm.Name = s.VmCommonService.genVmName(backing, vm.ID)
 	s.VmRepo.UpdateVmName(vm)
 
 	kvmReq := model.GenKvmReq(vm)
@@ -70,7 +76,7 @@ func (s KvmNativeService) CreateRemote(hostId, backingId, tmplId, queueId uint) 
 		mp := result.Payload.(map[string]interface{})
 		mapstructure.Decode(mp, &vmInResp)
 	}
-	s.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID,
+	s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID,
 		vmInResp.VncAddress, vmInResp.ImagePath, vmInResp.BackingPath)
 
 	return
