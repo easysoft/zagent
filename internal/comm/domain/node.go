@@ -37,8 +37,8 @@ type Node struct {
 	OsType     consts.OsType     `json:"osType" yaml:"osType"`
 	SysLang    consts.OsLang     `json:"sysLang" yaml:"sysLang"`
 
-	SshPort int `json:"sshPort" yaml:"sshPort"`
-	VncPort int `json:"vncPort" yaml:"vncPort"`
+	SshPort    int    `json:"sshPort" yaml:"sshPort"`
+	VncAddress string `json:"vncAddress" yaml:"vncAddress"`
 
 	LastRegisterDate time.Time `json:"lastRegisterDate" yaml:"lastRegisterDate"`
 }

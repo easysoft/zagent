@@ -18,14 +18,14 @@ func NewVmCtrl() *VmCtrl {
 }
 
 func (c *VmCtrl) Create(ctx context.Context, req domain.KvmReq, reply *_domain.RpcResp) error {
-	dom, vncPort, vmRawPath, vmBackingPath, err := c.LibvirtService.CreateVm(&req, true)
+	dom, vncAddress, vmRawPath, vmBackingPath, err := c.LibvirtService.CreateVm(&req, true)
 	if err == nil {
 		reply.Pass("success to create vm.")
 
 		vmName, _ := dom.GetName()
 		vm := domain.Vm{
 			Name:        vmName,
-			VncAddress:  vncPort,
+			VncAddress:  vncAddress,
 			ImagePath:   vmRawPath,
 			BackingPath: vmBackingPath,
 		}

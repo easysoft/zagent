@@ -26,7 +26,7 @@ func TestLibVirt(t *testing.T) {
 		OsCategory: consts.Windows, OsType: consts.Win10,
 		OsVersion: "x64-pro", OsLang: consts.ZH_CN}
 
-	dom, macAddress, vncPort, err := service.CreateVmTest(&vm)
+	dom, macAddress, vncAddress, err := service.CreateVmTest(&vm)
 	if err != nil {
 		_logUtils.Infof("fail to create vm, err %s", err.Error())
 		return
@@ -34,5 +34,5 @@ func TestLibVirt(t *testing.T) {
 	defer dom.Free()
 
 	name, _ := dom.GetName()
-	_logUtils.Infof("%s: %s, %d", name, macAddress, vncPort)
+	_logUtils.Infof("%s: %s, %s", name, macAddress, vncAddress)
 }

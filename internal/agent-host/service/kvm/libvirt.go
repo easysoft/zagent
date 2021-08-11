@@ -11,6 +11,7 @@ import (
 	"github.com/libvirt/libvirt-go"
 	"github.com/libvirt/libvirt-go-xml"
 	"path/filepath"
+	"strconv"
 )
 
 const (
@@ -41,7 +42,7 @@ func NewLibvirtService() *LibvirtService {
 }
 
 func (s *LibvirtService) CreateVm(req *domain.KvmReq, removeSameName bool) (dom *libvirt.Domain,
-	vmVncPort int, vmRawPath, vmBackingPath string, err error) {
+	vmVncAddress, vmRawPath, vmBackingPath string, err error) {
 	vmMacAddress := req.VmMacAddress
 	vmUniqueName := req.VmUniqueName
 	vmBackingPath = filepath.Join(agentConf.Inst.DirKvm, req.VmBackingPath)
@@ -77,14 +78,14 @@ func (s *LibvirtService) CreateVm(req *domain.KvmReq, removeSameName bool) (dom 
 		err = newDomCfg.Unmarshal(newXml)
 
 		vmMacAddress = newDomCfg.Devices.Interfaces[0].MAC.Address
-		vmVncPort = newDomCfg.Devices.Graphics[0].VNC.Port
+		vmVncAddress = strconv.Itoa(newDomCfg.Devices.Graphics[0].VNC.Port)
 	}
 
 	return
 }
 
 func (s *LibvirtService) CreateVmTest(vm *domain.Vm) (
-	dom *libvirt.Domain, macAddress string, vncPort int, err error) {
+	dom *libvirt.Domain, macAddress string, vncAddress int, err error) {
 	s.setVmProps(vm)
 
 	srcXml := s.GetVmDef(vm.Tmpl)
@@ -119,7 +120,7 @@ func (s *LibvirtService) CreateVmTest(vm *domain.Vm) (
 		err = newDomCfg.Unmarshal(newXml)
 
 		macAddress = newDomCfg.Devices.Interfaces[0].MAC.Address
-		vncPort = newDomCfg.Devices.Graphics[0].VNC.Port
+		vncAddress = newDomCfg.Devices.Graphics[0].VNC.Port
 	}
 
 	return

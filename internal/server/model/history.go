@@ -13,9 +13,9 @@ type History struct {
 	Progress string `json:"progress"`
 	Status   string `json:"status"`
 
-	QueueId uint   `json:"queueId"`
-	NodeIp  string `json:"nodeIp" gorm:"-"`
-	VncPort int    `json:"vncPort" gorm:"-"`
+	QueueId    uint   `json:"queueId"`
+	NodeIp     string `json:"nodeIp" gorm:"-"`
+	VncAddress string `json:"vncAddress" gorm:"-"`
 }
 
 func NewHistoryPo(tp consts.EntityType, id, queueId uint, progress consts.BuildProgress, status string) History {

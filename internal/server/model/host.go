@@ -23,9 +23,9 @@ type Host struct {
 	Port    int    `json:"port"`
 	WorkDir string `json:"workDir"`
 
-	SshPort int               `json:"sshPort"`
-	VncPort int               `json:"vncPort"`
-	Status  consts.HostStatus `json:"status"`
+	SshPort    int               `json:"sshPort"`
+	VncAddress string            `json:"vncAddress"`
+	Status     consts.HostStatus `json:"status"`
 
 	TaskCount        int        `json:"taskCount"`
 	MaxVmNum         int        `json:"maxVmNum"`
@@ -60,9 +60,9 @@ func HostFromDomain(h domain.HostNode) (po Host) {
 		Port:    h.Port,
 		WorkDir: h.WorkDir,
 
-		SshPort: h.SshPort,
-		VncPort: h.VncPort,
-		Status:  h.Status,
+		SshPort:    h.SshPort,
+		VncAddress: h.VncAddress,
+		Status:     h.Status,
 	}
 
 	if po.Name == "" {

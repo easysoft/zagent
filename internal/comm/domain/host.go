@@ -20,9 +20,9 @@ type Host struct {
 	Port    int    `json:"port"`
 	WorkDir string `json:"workDir"`
 
-	SshPort int               `json:"sshPort"`
-	VncPort int               `json:"vncPort"`
-	Status  consts.HostStatus `json:"status"`
+	SshPort    int               `json:"sshPort"`
+	VncAddress string            `json:"vncAddress"`
+	Status     consts.HostStatus `json:"status"`
 
 	TaskCount        int        `json:"taskCount"`
 	LastRegisterDate *time.Time `json:"lastRegisterDate"`

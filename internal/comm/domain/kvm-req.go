@@ -22,10 +22,10 @@ type KvmReq struct {
 }
 
 type KvmResponse struct {
-	Code    int    `json:"code"`
-	Msg     int    `json:"msg"`
-	Name    string `json:"name"`
-	VncPort int    `json:"vncPort"`
-	Path    string `json:"path"`
-	Mac     string `json:"mac"`
+	Code       int    `json:"code"`
+	Msg        int    `json:"msg"`
+	Name       string `json:"name"`
+	VncAddress string `json:"vncAddress"`
+	Path       string `json:"path"`
+	Mac        string `json:"mac"`
 }

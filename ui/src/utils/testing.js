@@ -61,7 +61,11 @@ export function getTaskBuildHistories (buildHistories, that) {
 
     if (item.ownerType === 'build' && item.status !== 'created') his.resultUrl = WebBaseDev + item.resultPath
     if (item.ownerType === 'build' && ['launch', 'running', 'busy', 'ready'].indexOf(item.status) > -1) {
-      his.vncUrl = 'http://' + item.nodeIp + ':' + item.vncPort
+      if (item.vncAddress.indexOf('http:') > -1) {
+        his.vncUrl = item.vncAddress
+      } else {
+        his.vncUrl = 'http://' + item.nodeIp + ':' + item.vncAddress
+      }
     }
 
     ret[item.queueId].push(his)

@@ -23,7 +23,7 @@ type BuildHistory struct {
 	Status     string     `json:"status"`
 	QueueId    uint       `json:"queueId"`
 	NodeIp     string     `json:"nodeIp"`
-	VncPort    int        `json:"vncPort"`
+	VncAddress string     `json:"vncAddress"`
 	ResultPath string     `json:"resultPath"`
 	CreatedAt  *time.Time `json:"createdAt"`
 
