@@ -38,10 +38,11 @@ type Queue struct {
 	TaskName string `json:"taskName"`
 	UserName string `json:"userName"`
 
-	StartTime   *time.Time `json:"startTime"`
-	PendingTime *time.Time `json:"pendingTime"`
-	ResultTime  *time.Time `json:"resultTime"`
-	TimeoutTime *time.Time `json:"timeoutTime"`
+	ResPendingTime  *time.Time `json:"resPendingTime"`
+	ResLaunchedTime *time.Time `json:"resLaunchedTime"`
+	RunTime         *time.Time `json:"runTime"`
+	ResultTime      *time.Time `json:"resultTime"`
+	TimeoutTime     *time.Time `json:"timeoutTime"`
 
 	TaskId  uint `json:"taskId"`
 	GroupId uint `json:"groupId"`

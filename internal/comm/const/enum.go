@@ -65,14 +65,14 @@ const (
 	ProgressCreated BuildProgress = "created"
 
 	// res group
-	ProgressPendingRes   BuildProgress = "pending_res"
-	ProgressLaunchVm     BuildProgress = "launch_vm"
-	ProgressCreateVmFail BuildProgress = "create_vm_fail"
+	ProgressResPending  BuildProgress = "res_pending"
+	ProgressResLaunched BuildProgress = "res_launched"
+	ProgressResReady    BuildProgress = "res_ready"
+	ProgressResFailed   BuildProgress = "res_failed"
 
 	// exec group
-	ProgressRunning           BuildProgress = "running"
-	ProgressRunFail           BuildProgress = "run_fail"
-	ProgressAppiumServiceFail BuildProgress = "appium_service_fail"
+	ProgressRunning BuildProgress = "running"
+	ProgressRunFail BuildProgress = "run_fail"
 
 	// end group
 	ProgressCompleted BuildProgress = "completed"

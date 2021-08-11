@@ -45,6 +45,11 @@ func (s AssertService) RegisterVm(vmObj domain.Vm) (result _domain.RpcResp) {
 
 	if statusChanged {
 		queue := s.QueueRepo.GetByVmId(vm.ID)
+
+		if vm.Status == consts.VmReady {
+			s.QueueRepo.ResReady(queue.ID)
+		}
+
 		s.HistoryService.Create(consts.Vm, vm.ID, queue.ID, "", vm.Status.ToString())
 		s.WebSocketService.UpdateTask(queue.TaskId, "vm ready")
 	}

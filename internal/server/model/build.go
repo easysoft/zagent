@@ -34,8 +34,8 @@ type Build struct {
 	ResultFiles     string `json:"resultFiles"`
 	KeepResultFiles bool   `json:"keepResultFiles"`
 
-	StartTime    *time.Time `json:"startTime"`
-	CompleteTime *time.Time `json:"completeTime"`
+	StartTime *time.Time `json:"startTime"`
+	EndTime   *time.Time `json:"endTime"`
 
 	ResultPath string `json:"resultPath"`
 	ResultMsg  string `json:"resultMsg"`

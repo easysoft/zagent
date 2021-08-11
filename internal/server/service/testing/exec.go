@@ -75,22 +75,17 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 	originalProgress := queue.Progress
 	var newTaskProgress consts.BuildProgress
 
-	if queue.Progress == consts.ProgressLaunchVm { // run if vm launched
-		vmId := queue.VmId
-		vm := s.VmRepo.GetById(vmId)
+	if queue.Progress == consts.ProgressResReady { // run if vm ready
+		result := s.SeleniumService.RemoteRun(queue)
 
-		if vm.Status == consts.VmReady { // begin to run if vm ready
-			result := s.SeleniumService.RemoteRun(queue)
+		if result.IsSuccess() {
+			s.QueueRepo.Run(queue)
+			s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressRunning, "")
 
-			if result.IsSuccess() {
-				s.QueueRepo.Run(queue)
-				s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressRunning, "")
-
-				newTaskProgress = consts.ProgressRunning
-			} else {
-				s.QueueService.SaveResult(queue.ID, consts.ProgressRunFail, consts.StatusFail)
-				s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressRunFail, consts.StatusFail.ToString())
-			}
+			newTaskProgress = consts.ProgressRunning
+		} else {
+			s.QueueService.SaveResult(queue.ID, consts.ProgressRunFail, consts.StatusFail)
+			s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressRunFail, consts.StatusFail.ToString())
 		}
 	} else {
 		s.QueueRepo.Retry(queue)
@@ -108,15 +103,15 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 				result = s.HuaweiCloudService.CreateRemote(hostId, backingId, tmplId, queue.ID)
 			}
 			if result.IsSuccess() { // success to create
-				newTaskProgress = consts.ProgressLaunchVm
+				newTaskProgress = consts.ProgressResLaunched
 			} else {
-				newTaskProgress = consts.ProgressCreateVmFail
+				newTaskProgress = consts.ProgressResFailed
 			}
 		} else {
 			// only pending new queue
-			if queue.Progress == consts.ProgressCreated || queue.Progress == consts.ProgressPendingRes {
-				s.QueueRepo.Pending(queue.ID) // pending
-				newTaskProgress = consts.ProgressPendingRes
+			if queue.Progress == consts.ProgressCreated || queue.Progress == consts.ProgressResPending {
+				s.QueueRepo.ResPending(queue.ID) // pending
+				newTaskProgress = consts.ProgressResPending
 			}
 		}
 	}
@@ -150,9 +145,9 @@ func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {
 		}
 	} else {
 		// only pending new queue
-		if queue.Progress == consts.ProgressCreated || queue.Progress == consts.ProgressPendingRes {
-			s.QueueRepo.Pending(queue.ID) // pending
-			newTaskProgress = consts.ProgressPendingRes
+		if queue.Progress == consts.ProgressCreated || queue.Progress == consts.ProgressResPending {
+			s.QueueRepo.ResPending(queue.ID) // pending
+			newTaskProgress = consts.ProgressResPending
 		}
 	}
 
@@ -185,9 +180,9 @@ func (s ExecService) CheckAndCallUnitTest(queue model.Queue) {
 		}
 	} else {
 		// only pending new queue
-		if queue.Progress == consts.ProgressCreated || queue.Progress == consts.ProgressPendingRes {
-			s.QueueRepo.Pending(queue.ID) // pending
-			newTaskProgress = consts.ProgressPendingRes
+		if queue.Progress == consts.ProgressCreated || queue.Progress == consts.ProgressResPending {
+			s.QueueRepo.ResPending(queue.ID) // pending
+			newTaskProgress = consts.ProgressResPending
 		}
 	}
 

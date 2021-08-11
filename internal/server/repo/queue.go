@@ -5,7 +5,6 @@ import (
 	serverConf "github.com/easysoft/zagent/internal/server/conf"
 	"github.com/easysoft/zagent/internal/server/model"
 	"gorm.io/gorm"
-	"strings"
 	"time"
 )
 
@@ -33,7 +32,9 @@ func (r QueueRepo) QueryForExec() (queues []model.Queue) {
 	queues = make([]model.Queue, 0)
 
 	r.DB.Model(&model.Queue{}).Where("progress=? OR progress=? OR progress=?",
-		consts.ProgressCreated, consts.ProgressPendingRes, consts.ProgressLaunchVm).
+		consts.ProgressCreated,
+		consts.ProgressResPending,
+		consts.ProgressResReady).
 		Order("priority").Find(&queues)
 
 	return
@@ -43,27 +44,29 @@ func (r QueueRepo) QueryForTimeout() (queues []model.Queue) {
 
 	where := ""
 	if serverConf.Inst.DB.Adapter == "sqlite3" {
-		where = "(progress = ? AND strftime('%s','now') - strftime('%s',pending_time) > ?)" +
-			" OR (progress = ? AND strftime('%s','now') - strftime('%s',start_time) > ?)" +
-			" OR (progress = ? AND strftime('%s','now') - strftime('%s',start_time) > ?)"
+		where = "(progress = ? AND strftime('%s','now') - strftime('%s',res_pending_time) > ?)" +
+			" OR (progress = ? AND strftime('%s','now') - strftime('%s',res_launched_time) > ?)" +
+			" OR (progress = ? AND strftime('%s','now') - strftime('%s',run_time) > ?)"
 	} else if serverConf.Inst.DB.Adapter == "mysql" {
-		where = "(progress = ? AND unix_timestamp(NOW()) - unix_timestamp(pending_time) > ?)" +
-			" OR (progress = ? AND unix_timestamp(NOW()) - unix_timestamp(start_time) > ?)" +
-			" OR (progress = ? AND unix_timestamp(NOW()) - unix_timestamp(start_time) > ?)"
+		where = "(progress = ? AND unix_timestamp(NOW()) - unix_timestamp(res_pending_time) > ?)" +
+			" OR (progress = ? AND unix_timestamp(NOW()) - unix_timestamp(res_launched_time) > ?)" +
+			" OR (progress = ? AND unix_timestamp(NOW()) - unix_timestamp(run_time) > ?)"
 	}
 
 	r.DB.Model(&model.Queue{}).Where(where,
-		consts.ProgressPendingRes, consts.WaitResPendingTimeout,
-		consts.ProgressLaunchVm, consts.WaitForVmReadyTimeout,
-		consts.ProgressRunning, consts.WaitTestCompletedTimeout).
+		consts.ProgressResPending, consts.WaitResPendingTimeout,
+		consts.ProgressResLaunched, consts.WaitResReadyTimeout,
+		consts.ProgressRunning, consts.WaitRunCompletedTimeout).
 		Order("priority").Find(&queues)
 	return
 }
 func (r QueueRepo) QueryForRetry() (queues []model.Queue) {
 	queues = make([]model.Queue, 0)
 
-	r.DB.Model(&model.Queue{}).Where("retry < ? AND (progress = ? OR status = ? )",
-		consts.QueueRetryTime, consts.ProgressTimeout, consts.StatusFail).
+	r.DB.Model(&model.Queue{}).Where("(progress = ? OR status = ? ) AND retry < ?",
+		consts.ProgressTimeout, consts.StatusFail,
+		consts.QueueRetryTime,
+	).
 		Order("priority").Find(&queues)
 	return
 }
@@ -81,35 +84,40 @@ func (r QueueRepo) GetByVmId(vmId uint) (queue model.Queue) {
 
 func (r QueueRepo) Save(queue *model.Queue) (err error) {
 	err = r.DB.Model(&model.Queue{}).
-		Omit("StartTime", "PendingTime", "ResultTime", "TimeoutTime").
+		Omit("ResPendingTime", "ResLaunchedTime", "RunTime", "EndTime", "TimeoutTime").
 		Create(&queue).Error
 	return
 }
 
-func (r QueueRepo) LaunchVm(queueId uint) (err error) {
+func (r QueueRepo) ResLaunched(queueId uint) (err error) {
 	r.DB.Model(&model.Queue{}).Where("id=?", queueId).Updates(
-		map[string]interface{}{"progress": consts.ProgressLaunchVm})
+		map[string]interface{}{"progress": consts.ProgressResLaunched, "res_launched_time": time.Now()})
+	return
+}
+func (r QueueRepo) ResReady(queueId uint) (err error) {
+	r.DB.Model(&model.Queue{}).Where("id=?", queueId).Updates(
+		map[string]interface{}{"progress": consts.ProgressResReady})
+	return
+}
+func (r QueueRepo) ResPending(queueId uint) (err error) {
+	r.DB.Model(&model.Queue{}).
+		Where("id=?", queueId).
+		Updates(map[string]interface{}{
+			"progress": consts.ProgressResPending,
+		})
+
+	r.DB.Model(&model.Queue{}). // only update once, used for timeout checking
+					Where("id=? AND res_pending_time IS NULL", queueId).
+					Updates(map[string]interface{}{
+			"res_pending_time": time.Now(),
+		})
+
 	return
 }
 func (r QueueRepo) Run(queue model.Queue) (err error) {
 	r.DB.Model(&model.Queue{}).Where("id=?", queue.ID).Updates(
 		map[string]interface{}{
-			"progress": consts.ProgressRunning, "start_time": time.Now()})
-	return
-}
-func (r QueueRepo) Pending(queueId uint) (err error) {
-	r.DB.Model(&model.Queue{}).
-		Where("id=?", queueId).
-		Updates(map[string]interface{}{
-			"progress": consts.ProgressPendingRes,
-		})
-
-	r.DB.Model(&model.Queue{}). // only update once, used for timeout checking
-					Where("id=? AND pending_time IS NULL", queueId).
-					Updates(map[string]interface{}{
-			"pending_time": time.Now(),
-		})
-
+			"progress": consts.ProgressRunning, "run_time": time.Now()})
 	return
 }
 func (r QueueRepo) Timeout(id uint) (err error) {
@@ -140,10 +148,5 @@ func (r QueueRepo) Retry(queue model.Queue) (err error) {
 	r.DB.Model(&model.Queue{}).
 		Where("id=?", queue.ID).
 		Updates(map[string]interface{}{"retry": gorm.Expr("retry +1")})
-	return
-}
-
-func (r QueueRepo) DeleteInSameGroup(groupId uint, serials []string) (err error) {
-	r.DB.Model(&model.Queue{}).Where("group_id=? AND serial IN (?)", groupId, strings.Join(serials, ",")).Delete(&model.Queue{})
 	return
 }

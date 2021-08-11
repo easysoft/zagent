@@ -34,8 +34,8 @@ type Task struct {
 	Status   consts.BuildStatus   `json:"status"`
 
 	StartTime   *time.Time `json:"startTime"`
+	EndTime     *time.Time `json:"endTime"`
 	PendingTime *time.Time `json:"pendingTime"`
-	ResultTime  *time.Time `json:"resultTime"`
 
 	UserName string `json:"userName"`
 	UserId   uint   `json:"userId"`

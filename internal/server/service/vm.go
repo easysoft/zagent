@@ -31,15 +31,15 @@ func (s VmCommonService) SaveVmCreationResult(isSuccess bool, result string, que
 		s.VmRepo.Launch(vncAddress, imagePath, backingPath, vmId) // update vm status, mac address
 		s.HistoryService.Create(consts.Vm, vmId, queueId, "", consts.VmLaunch.ToString())
 
-		s.QueueRepo.LaunchVm(queueId)
+		s.QueueRepo.ResLaunched(queueId)
 		s.QueueRepo.UpdateVm(queueId, vmId)
 
-		s.HistoryService.Create(consts.Queue, queueId, queueId, consts.ProgressLaunchVm, "")
+		s.HistoryService.Create(consts.Queue, queueId, queueId, consts.ProgressResLaunched, "")
 	} else {
 		s.VmRepo.FailToCreate(vmId, result)
-		s.QueueService.SaveResult(queueId, consts.ProgressCreateVmFail, consts.StatusFail)
+		s.QueueService.SaveResult(queueId, consts.ProgressResFailed, consts.StatusFail)
 
-		s.HistoryService.Create(consts.Queue, queueId, queueId, consts.ProgressCreateVmFail, consts.StatusFail.ToString())
+		s.HistoryService.Create(consts.Queue, queueId, queueId, consts.ProgressResFailed, consts.StatusFail.ToString())
 	}
 
 	return

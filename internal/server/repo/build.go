@@ -27,7 +27,7 @@ func (r BuildRepo) GetBuild(id uint) (build model.Build) {
 
 func (r BuildRepo) Save(build *model.Build) (err error) {
 	err = r.DB.Model(&build).
-		Omit("StartTime", "CompleteTime").
+		Omit("StartTime", "EndTime").
 		Create(&build).Error
 	return
 }
@@ -47,7 +47,7 @@ func (r BuildRepo) SaveResult(build domain.Build) (err error) {
 	err = r.DB.Model(&model.Build{}).Where("id=?", build.ID).Updates(
 		map[string]interface{}{"progress": build.Progress, "status": build.Status,
 			"result_path": build.ResultPath, "result_msg": build.ResultMsg,
-			"complete_time": time.Now()}).Error
+			"end_time": time.Now()}).Error
 	return
 }
 
