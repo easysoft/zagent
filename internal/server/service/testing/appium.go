@@ -23,7 +23,7 @@ func NewAppiumService() *AppiumService {
 	return &AppiumService{}
 }
 
-func (s AppiumService) Run(queue model.Queue) (result _domain.RpcResp) {
+func (s AppiumService) RemoteRun(queue model.Queue) (result _domain.RpcResp) {
 	serial := queue.Serial
 	device := s.DeviceRepo.GetBySerial(serial)
 
@@ -31,7 +31,6 @@ func (s AppiumService) Run(queue model.Queue) (result _domain.RpcResp) {
 	s.BuildRepo.Save(&build)
 
 	s.HistoryService.Create(consts.Build, build.ID, queue.ID, consts.ProgressCreated, consts.StatusCreated.ToString())
-	s.WebSocketService.UpdateTask(queue.TaskId, "run appium queue")
 
 	build = s.BuildRepo.GetBuild(build.ID)
 	build.AppiumPort = device.AppiumPort

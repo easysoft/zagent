@@ -166,7 +166,6 @@ func (s QueueService) SaveResult(queueId uint, progress consts.BuildProgress, st
 	}
 
 	s.HistoryService.Create(consts.Queue, queueId, queueId, progress, status.ToString())
-	s.WebSocketService.UpdateTask(queue.TaskId, "save queue result")
 }
 
 func (s QueueService) removeOldQueuesByTask(taskId uint) {

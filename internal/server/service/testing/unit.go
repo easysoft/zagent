@@ -23,12 +23,11 @@ func NewUnitService() *UnitService {
 	return &UnitService{}
 }
 
-func (s UnitService) Run(queue model.Queue, host model.Host) (result _domain.RpcResp) {
+func (s UnitService) RemoteRun(queue model.Queue, host model.Host) (result _domain.RpcResp) {
 	build := model.NewUnitBuildPo(queue, host)
 	s.BuildRepo.Save(&build)
 
 	s.HistoryService.Create(consts.Build, build.ID, queue.ID, consts.ProgressCreated, consts.StatusCreated.ToString())
-	s.WebSocketService.UpdateTask(queue.TaskId, "run selenium queue")
 
 	build = s.BuildRepo.GetBuild(build.ID)
 

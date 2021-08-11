@@ -23,7 +23,7 @@ func NewSeleniumService() *SeleniumService {
 	return &SeleniumService{}
 }
 
-func (s SeleniumService) Run(queue model.Queue) (result _domain.RpcResp) {
+func (s SeleniumService) RemoteRun(queue model.Queue) (result _domain.RpcResp) {
 	vmId := queue.VmId
 	vm := s.VmRepo.GetById(vmId)
 
@@ -31,7 +31,6 @@ func (s SeleniumService) Run(queue model.Queue) (result _domain.RpcResp) {
 	s.BuildRepo.Save(&build)
 
 	s.HistoryService.Create(consts.Build, build.ID, queue.ID, consts.ProgressCreated, consts.StatusCreated.ToString())
-	s.WebSocketService.UpdateTask(queue.TaskId, "run selenium queue")
 
 	build = s.BuildRepo.GetBuild(build.ID)
 

@@ -27,7 +27,6 @@ type VmCommonService struct {
 
 func (s VmCommonService) SaveVmCreationResult(isSuccess bool, result string, queueId uint, vmId uint,
 	vncAddress, imagePath, backingPath string) {
-	queue := s.QueueRepo.GetQueue(queueId)
 	if isSuccess { // success to create vm
 		s.VmRepo.Launch(vncAddress, imagePath, backingPath, vmId) // update vm status, mac address
 		s.HistoryService.Create(consts.Vm, vmId, queueId, "", consts.VmLaunch.ToString())
@@ -36,13 +35,11 @@ func (s VmCommonService) SaveVmCreationResult(isSuccess bool, result string, que
 		s.QueueRepo.UpdateVm(queueId, vmId)
 
 		s.HistoryService.Create(consts.Queue, queueId, queueId, consts.ProgressLaunchVm, "")
-		s.WebSocketService.UpdateTask(queue.TaskId, "success to create vm")
 	} else {
 		s.VmRepo.FailToCreate(vmId, result)
 		s.QueueService.SaveResult(queueId, consts.ProgressCreateVmFail, consts.StatusFail)
 
 		s.HistoryService.Create(consts.Queue, queueId, queueId, consts.ProgressCreateVmFail, consts.StatusFail.ToString())
-		s.WebSocketService.UpdateTask(queue.TaskId, "fail to create vm")
 	}
 
 	return

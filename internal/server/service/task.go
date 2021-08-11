@@ -94,7 +94,6 @@ func (s *TaskService) SetProgress(id uint, progress consts.BuildProgress) {
 	s.TaskRepo.SetProgress(id, progress)
 
 	s.HistoryService.Create(consts.Task, id, 0, progress, "")
-	s.WebSocketService.UpdateTask(id, "update task progress")
 }
 
 func (s *TaskService) SetTaskStatus(taskId uint) {

@@ -32,7 +32,7 @@ func TestExecProcessor(t *testing.T) {
 	build.TestScenario.Processor = processor
 
 	url := fmt.Sprintf("http://127.0.0.1:%d/", _const.RpcPort)
-	result := _rpcUtils.Post(url, string(_const.Post), "task", "Run", build)
+	result := _rpcUtils.Post(url, string(_const.Post), "task", "RemoteRun", build)
 
 	log.Printf("%v", result)
 }

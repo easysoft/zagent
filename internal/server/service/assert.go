@@ -7,6 +7,7 @@ import (
 	"github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
+	commonService "github.com/easysoft/zagent/internal/server/service/common"
 )
 
 type AssertService struct {
@@ -14,7 +15,8 @@ type AssertService struct {
 	QueueRepo *repo.QueueRepo `inject:""`
 	VmRepo    *repo.VmRepo    `inject:""`
 
-	HistoryService *HistoryService `inject:""`
+	HistoryService   *HistoryService                 `inject:""`
+	WebSocketService *commonService.WebSocketService `inject:""`
 }
 
 func NewAssertService() *AssertService {
@@ -44,6 +46,7 @@ func (s AssertService) RegisterVm(vmObj domain.Vm) (result _domain.RpcResp) {
 	if statusChanged {
 		queue := s.QueueRepo.GetByVmId(vm.ID)
 		s.HistoryService.Create(consts.Vm, vm.ID, queue.ID, "", vm.Status.ToString())
+		s.WebSocketService.UpdateTask(queue.TaskId, "vm ready")
 	}
 
 	result.Pass("")

@@ -57,6 +57,7 @@ func (s ExecService) QueryForRetry() {
 
 	for _, queue := range queues {
 		s.CheckAndCall(queue)
+		s.WebSocketService.UpdateTask(queue.TaskId, "CheckAndCall Test")
 	}
 }
 
@@ -79,16 +80,16 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 		vm := s.VmRepo.GetById(vmId)
 
 		if vm.Status == consts.VmReady { // begin to run if vm ready
-			result := s.SeleniumService.Run(queue)
+			result := s.SeleniumService.RemoteRun(queue)
 
 			if result.IsSuccess() {
 				s.QueueRepo.Run(queue)
 				s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressRunning, "")
-				s.WebSocketService.UpdateTask(queue.TaskId, "success to run selenium queue")
 
 				newTaskProgress = consts.ProgressRunning
 			} else {
 				s.QueueService.SaveResult(queue.ID, consts.ProgressRunFail, consts.StatusFail)
+				s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressRunFail, consts.StatusFail.ToString())
 			}
 		}
 	} else {
@@ -136,7 +137,7 @@ func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {
 	var newTaskProgress consts.BuildProgress
 
 	if s.DeviceService.IsDeviceReady(device) {
-		rpcResult := s.AppiumService.Run(queue)
+		rpcResult := s.AppiumService.RemoteRun(queue)
 
 		if rpcResult.IsSuccess() {
 			s.QueueRepo.Run(queue) // start
@@ -171,7 +172,7 @@ func (s ExecService) CheckAndCallUnitTest(queue model.Queue) {
 	if found {
 		host := s.HostRepo.Get(hostId)
 
-		result := s.UnitService.Run(queue, host)
+		result := s.UnitService.RemoteRun(queue, host)
 
 		if result.IsSuccess() {
 			s.QueueRepo.Run(queue)
