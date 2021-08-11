@@ -6,6 +6,7 @@ import (
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 	"github.com/easysoft/zagent/internal/server/service/vendors"
+	"time"
 )
 
 type HuaweiCloudService struct {
@@ -53,17 +54,27 @@ func (s HuaweiCloudService) CreateRemote(hostId, backingId, tmplId, queueId uint
 		return
 	}
 
-	_, result.Msg, vm.NodeIp, vm.MacAddress, err = huaweiCloudService.QueryVm(vm.CouldInstId, ecsClient)
-	if err != nil {
-		result.Fail(err.Error())
-		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, "", "", "")
-		return
-	}
 	result.Pass("")
 
+	for i := 0; i < 60; i++ {
+		<-time.After(1 * time.Second)
+
+		_, result.Msg, vm.NodeIp, vm.MacAddress, err = huaweiCloudService.QueryVm(vm.CouldInstId, ecsClient)
+		if err != nil {
+			result.Fail(err.Error())
+			s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, vm.VncAddress, "", "")
+			return
+		}
+
+		if vm.NodeIp != "" {
+			break
+		}
+	}
+
 	s.VmRepo.UpdateVmCloudInst(vm)
-	url, _ := huaweiCloudService.QueryVnc(vm.CouldInstId, ecsClient)
-	s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, url, "", "")
+
+	vm.VncAddress, _ = huaweiCloudService.QueryVnc(vm.CouldInstId, ecsClient)
+	s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, vm.VncAddress, "", "")
 
 	return
 }

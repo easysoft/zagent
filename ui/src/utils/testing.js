@@ -60,16 +60,18 @@ export function getTaskBuildHistories (buildHistories, that) {
     if (!his.status) his.status = '-'
 
     if (item.ownerType === 'build' && item.status !== 'created') his.resultUrl = WebBaseDev + item.resultPath
-    if (item.ownerType === 'build' && ['launch', 'running', 'busy', 'ready'].indexOf(item.status) > -1) {
-      if (item.vncAddress.indexOf('http:') > -1) {
+    if (item.ownerType === 'vm') { // && ['launch', 'running', 'busy', 'ready'].indexOf(item.status) > -1) {
+      if (item.vncAddress.indexOf('http') > -1) {
         his.vncUrl = item.vncAddress
-      } else {
+      } else if (item.vncAddress) {
         his.vncUrl = 'http://' + item.nodeIp + ':' + item.vncAddress
       }
     }
 
     ret[item.queueId].push(his)
   }
+
+  console.log(ret)
 
   return ret
 }

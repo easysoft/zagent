@@ -119,7 +119,7 @@
           </span>
           <span v-if="record.resultUrl && record.vncUrl"> | </span>
           <span v-if="record.vncUrl">
-            <a :href="record.vncUrl">{{ $t('form.vnc.url') }}</a>
+            <a :href="record.vncUrl" target="_blank">{{ $t('form.vnc.url') }}</a>
           </span>
         </span>
       </a-table>

@@ -6,6 +6,7 @@ import (
 	"github.com/easysoft/zagent/internal/comm/domain"
 	"github.com/easysoft/zagent/internal/pkg/domain"
 	"golang.org/x/net/context"
+	"strconv"
 )
 
 type VmCtrl struct {
@@ -18,14 +19,14 @@ func NewVmCtrl() *VmCtrl {
 }
 
 func (c *VmCtrl) Create(ctx context.Context, req domain.KvmReq, reply *_domain.RpcResp) error {
-	dom, vncAddress, vmRawPath, vmBackingPath, err := c.LibvirtService.CreateVm(&req, true)
+	dom, vmVncPort, vmRawPath, vmBackingPath, err := c.LibvirtService.CreateVm(&req, true)
 	if err == nil {
 		reply.Pass("success to create vm.")
 
 		vmName, _ := dom.GetName()
 		vm := domain.Vm{
 			Name:        vmName,
-			VncAddress:  vncAddress,
+			VncAddress:  strconv.Itoa(vmVncPort),
 			ImagePath:   vmRawPath,
 			BackingPath: vmBackingPath,
 		}

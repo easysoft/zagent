@@ -16,13 +16,21 @@ func NewVmRepo() *VmRepo {
 	return &VmRepo{}
 }
 
-func (r VmRepo) Register(vm model.Vm) (err error) {
+func (r VmRepo) Register(vm model.Vm) (po model.Vm, err error) {
+	r.DB.Model(&model.Vm{}).
+		Where("mac_address=? AND node_ip IS NULL", vm.MacAddress).
+		Updates(map[string]interface{}{"node_ip": vm.NodeIp})
+
 	// just update status by mac for exist vm
-	r.DB.Model(&model.Vm{}).Where("mac_address=?", vm.MacAddress).
+	r.DB.Model(&model.Vm{}).
+		Where("mac_address=?", vm.MacAddress).
 		Updates(
 			map[string]interface{}{"status": vm.Status, "work_dir": vm.WorkDir,
-				"node_ip": vm.NodeIp, "node_port": vm.NodePort,
+				"node_port":          vm.NodePort,
 				"last_register_time": time.Now()})
+
+	err = r.DB.Model(&model.Vm{}).
+		Where("mac_address=?", vm.MacAddress).First(&po).Error
 
 	return
 }
@@ -58,7 +66,7 @@ func (r VmRepo) Launch(vncAddress, imagePath, backingPath string, id uint) {
 		Updates(
 			map[string]interface{}{
 				"status":       consts.VmLaunch,
-				"vnc_port":     vncAddress,
+				"vnc_address":  vncAddress,
 				"image_path":   imagePath,
 				"backing_path": backingPath,
 			})
