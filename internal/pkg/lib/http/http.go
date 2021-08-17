@@ -13,11 +13,7 @@ import (
 	"strings"
 )
 
-func Get(url string) (interface{}, bool) {
-	return GetObj(url, "farm")
-}
-
-func GetObj(url string, requestTo string) (interface{}, bool) {
+func Get(url string, requestTo string) (interface{}, bool) {
 	client := &http.Client{}
 
 	if _var.Verbose {

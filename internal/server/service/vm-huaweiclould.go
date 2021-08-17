@@ -35,7 +35,7 @@ func (s HuaweiCloudService) CreateRemote(hostId, backingId, tmplId, queueId uint
 	vm.Name = s.VmCommonService.genVmName(backing, vm.ID)
 	s.VmRepo.UpdateVmName(vm)
 
-	srv := vendors.NewHuaweiCloudService()
+	srv := vendors.NewHuaweiCloudEcsService()
 	ecsClient, err := srv.CreateEcsClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
 	imgClient, err := srv.CreateImgClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
 	vpcClient, err := srv.CreateVpcClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
@@ -46,7 +46,7 @@ func (s HuaweiCloudService) CreateRemote(hostId, backingId, tmplId, queueId uint
 		return
 	}
 
-	huaweiCloudService := vendors.NewHuaweiCloudService()
+	huaweiCloudService := vendors.NewHuaweiCloudEcsService()
 	vm.CouldInstId, _, err = huaweiCloudService.CreateInst(vm.Name, "image-"+backing.Name, ecsClient, imgClient, vpcClient)
 	if err != nil {
 		result.Fail(err.Error())
@@ -85,7 +85,7 @@ func (s HuaweiCloudService) DestroyRemote(vmId, queueId uint) (result _domain.Rp
 
 	status := consts.VmDestroy
 
-	srv := vendors.NewHuaweiCloudService()
+	srv := vendors.NewHuaweiCloudEcsService()
 	ecsClient, err := srv.CreateEcsClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
 	if err != nil {
 		status = consts.VmFailDestroy

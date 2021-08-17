@@ -10,10 +10,10 @@ import (
 	"time"
 )
 
-func TestHuaweiCloud(t *testing.T) {
+func TestHuaweiCloudEcs(t *testing.T) {
 	_logUtils.Init(consts.AppNameAgent)
 
-	srv := vendors.NewHuaweiCloudService()
+	srv := vendors.NewHuaweiCloudEcsService()
 	ecsClient, err := srv.CreateEcsClient(_const.HUAWEI_CLOUD_KEY, _const.HUAWEI_CLOUD_Secret, _const.HUAWEI_CLOUD_REGION)
 	imgClient, err := srv.CreateImgClient(_const.HUAWEI_CLOUD_KEY, _const.HUAWEI_CLOUD_Secret, _const.HUAWEI_CLOUD_REGION)
 	vpcClient, err := srv.CreateVpcClient(_const.HUAWEI_CLOUD_KEY, _const.HUAWEI_CLOUD_Secret, _const.HUAWEI_CLOUD_REGION)
@@ -22,7 +22,7 @@ func TestHuaweiCloud(t *testing.T) {
 		return
 	}
 
-	huaweiCloudService := vendors.NewHuaweiCloudService()
+	huaweiCloudService := vendors.NewHuaweiCloudEcsService()
 	id, name, err := huaweiCloudService.CreateInst(
 		"win10-x64-pro-zh_cn-"+_stringUtils.NewUuidWithSep(), "image-win10-x64-pro-zh_cn", ecsClient, imgClient, vpcClient)
 

@@ -18,14 +18,14 @@ import (
 	imgModel "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/ims/v2/model"
 )
 
-type HuaweiCloudService struct {
+type HuaweiCloudEcsService struct {
 }
 
-func NewHuaweiCloudService() *HuaweiCloudService {
-	return &HuaweiCloudService{}
+func NewHuaweiCloudEcsService() *HuaweiCloudEcsService {
+	return &HuaweiCloudEcsService{}
 }
 
-func (s HuaweiCloudService) CreateInst(instName, img string,
+func (s HuaweiCloudEcsService) CreateInst(instName, img string,
 	ecsClient *ecs.EcsClient, imgClient *ims.ImsClient, vpcClient *vpc.VpcClient) (id, name string, err error) {
 	specId, _, _ := s.QuerySpec(ecsClient)
 	imageId, _, _ := s.QueryImage(img, imgClient)
@@ -70,7 +70,7 @@ func (s HuaweiCloudService) CreateInst(instName, img string,
 	return
 }
 
-func (s HuaweiCloudService) RemoveInst(id string, ecsClient *ecs.EcsClient) (err error) {
+func (s HuaweiCloudEcsService) RemoveInst(id string, ecsClient *ecs.EcsClient) (err error) {
 	request := &ecsModel.DeleteServersRequest{
 		Body: &ecsModel.DeleteServersRequestBody{
 			Servers: []ecsModel.ServerId{{
@@ -86,7 +86,7 @@ func (s HuaweiCloudService) RemoveInst(id string, ecsClient *ecs.EcsClient) (err
 
 	return
 }
-func (s HuaweiCloudService) QuerySpec(client *ecs.EcsClient) (id, name string, err error) {
+func (s HuaweiCloudEcsService) QuerySpec(client *ecs.EcsClient) (id, name string, err error) {
 	request := &ecsModel.ListFlavorsRequest{}
 	response, err := client.ListFlavors(request)
 	if err != nil {
@@ -107,7 +107,7 @@ func (s HuaweiCloudService) QuerySpec(client *ecs.EcsClient) (id, name string, e
 	return
 }
 
-func (s HuaweiCloudService) QueryImage(keywords string, client *ims.ImsClient) (id, name string, err error) {
+func (s HuaweiCloudEcsService) QueryImage(keywords string, client *ims.ImsClient) (id, name string, err error) {
 	request := &imgModel.ListImagesRequest{}
 	response, err := client.ListImages(request)
 
@@ -127,7 +127,7 @@ func (s HuaweiCloudService) QueryImage(keywords string, client *ims.ImsClient) (
 	return
 }
 
-func (s HuaweiCloudService) QueryVpc(client *vpc.VpcClient) (id, name string, err error) {
+func (s HuaweiCloudEcsService) QueryVpc(client *vpc.VpcClient) (id, name string, err error) {
 	request := &model.ListVpcsRequest{}
 	response, err := client.ListVpcs(request)
 
@@ -145,7 +145,7 @@ func (s HuaweiCloudService) QueryVpc(client *vpc.VpcClient) (id, name string, er
 	return
 }
 
-func (s HuaweiCloudService) QuerySubNet(client *vpc.VpcClient) (id, name string, err error) {
+func (s HuaweiCloudEcsService) QuerySubNet(client *vpc.VpcClient) (id, name string, err error) {
 	request := &model.ListSubnetsRequest{}
 	response, err := client.ListSubnets(request)
 
@@ -163,7 +163,7 @@ func (s HuaweiCloudService) QuerySubNet(client *vpc.VpcClient) (id, name string,
 	return
 }
 
-func (s HuaweiCloudService) QueryVm(id string, client *ecs.EcsClient) (name, status, ip, mac string, err error) {
+func (s HuaweiCloudEcsService) QueryVm(id string, client *ecs.EcsClient) (name, status, ip, mac string, err error) {
 	request := &ecsModel.ShowServerRequest{
 		ServerId: id,
 	}
@@ -193,7 +193,7 @@ func (s HuaweiCloudService) QueryVm(id string, client *ecs.EcsClient) (name, sta
 	return
 }
 
-func (s HuaweiCloudService) QueryVnc(id string, client *ecs.EcsClient) (url string, err error) {
+func (s HuaweiCloudEcsService) QueryVnc(id string, client *ecs.EcsClient) (url string, err error) {
 	request := &ecsModel.ShowServerRemoteConsoleRequest{
 		ServerId: id,
 		Body: &ecsModel.ShowServerRemoteConsoleRequestBody{
@@ -214,7 +214,7 @@ func (s HuaweiCloudService) QueryVnc(id string, client *ecs.EcsClient) (url stri
 	return
 }
 
-func (s HuaweiCloudService) CreateEcsClient(ak, sk, regionId string) (
+func (s HuaweiCloudEcsService) CreateEcsClient(ak, sk, regionId string) (
 	client *ecs.EcsClient, err error) {
 
 	auth := basic.NewCredentialsBuilder().
@@ -231,7 +231,7 @@ func (s HuaweiCloudService) CreateEcsClient(ak, sk, regionId string) (
 	return
 }
 
-func (s HuaweiCloudService) CreateImgClient(ak, sk, regionId string) (
+func (s HuaweiCloudEcsService) CreateImgClient(ak, sk, regionId string) (
 	client *ims.ImsClient, err error) {
 
 	auth := basic.NewCredentialsBuilder().
@@ -248,7 +248,7 @@ func (s HuaweiCloudService) CreateImgClient(ak, sk, regionId string) (
 	return
 }
 
-func (s HuaweiCloudService) CreateVpcClient(ak, sk, regionId string) (
+func (s HuaweiCloudEcsService) CreateVpcClient(ak, sk, regionId string) (
 	client *vpc.VpcClient, err error) {
 
 	auth := basic.NewCredentialsBuilder().

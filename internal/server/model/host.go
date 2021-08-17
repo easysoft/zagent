@@ -38,9 +38,14 @@ type Host struct {
 
 	// vm
 	VmPlatform  consts.VmPlatform `json:"vmPlatform"`
-	CloudKey    string            `json:"taskCount"`
-	CloudSecret string            `json:"taskCount"`
-	CloudRegion string            `json:"taskCount"`
+	CloudKey    string            `json:"cloudKey"`
+	CloudSecret string            `json:"cloudSecret"`
+	CloudRegion string            `json:"cloudRegion"`
+
+	CloudUser        string `json:"cloudUser"`
+	CloudIamUser     string `json:"cloudIamUser"`
+	CloudIamPassword string `json:"cloudIamPassword"`
+	CloudIamKey      string `json:"cloudIamKey"`
 
 	// Container
 	ContainerPlatform consts.VmPlatform `json:"containerPlatform"`

@@ -11,7 +11,7 @@ import (
 func TestHuaweiCloudQuery(t *testing.T) {
 	_logUtils.Init(consts.AppNameAgent)
 
-	srv := vendors.NewHuaweiCloudService()
+	srv := vendors.NewHuaweiCloudEcsService()
 	ecsClient, err := srv.CreateEcsClient(_const.HUAWEI_CLOUD_KEY, _const.HUAWEI_CLOUD_Secret, _const.HUAWEI_CLOUD_REGION)
 	if err != nil {
 		return
@@ -19,7 +19,7 @@ func TestHuaweiCloudQuery(t *testing.T) {
 
 	id := "6eca6332-5c8c-4cae-9d62-b17bcf806d2d"
 
-	huaweiCloudService := vendors.NewHuaweiCloudService()
+	huaweiCloudService := vendors.NewHuaweiCloudEcsService()
 	name, status, ip, mac, err := huaweiCloudService.QueryVm(id, ecsClient)
 	_logUtils.Infof("vm name %s, status %s, ip %s, mac %s", name, status, ip, mac)
 

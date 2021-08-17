@@ -26,4 +26,6 @@ const (
 	ResDownDir    = "down"
 	ResDriverDir  = "driver"
 	ResDriverName = "driver"
+
+	HuaweiCloudUrlIamToken = "https://iam.myhuaweicloud.com/v3/auth/tokens?nocatalog=true"
 )
