@@ -7,6 +7,7 @@ import (
 	"github.com/easysoft/zagent/internal/server/repo"
 	serverService "github.com/easysoft/zagent/internal/server/service"
 	commonService "github.com/easysoft/zagent/internal/server/service/common"
+	"strings"
 )
 
 type ExecService struct {
@@ -27,8 +28,9 @@ type ExecService struct {
 	HistoryService   *serverService.HistoryService   `inject:""`
 	WebSocketService *commonService.WebSocketService `inject:""`
 
-	KvmNativeService   *serverService.KvmNativeService   `inject:""`
-	HuaweiCloudService *serverService.HuaweiCloudService `inject:""`
+	KvmNativeService         *serverService.KvmNativeService         `inject:""`
+	HuaweiCloudVmService     *serverService.HuaweiCloudVmService     `inject:""`
+	HuaweiCloudDockerService *serverService.HuaweiCloudDockerService `inject:""`
 }
 
 func NewExecService() *ExecService {
@@ -93,16 +95,24 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 
 		// looking for valid host
 		hostId, backingId, tmplId, found := s.HostService.GetValidForQueueByVm(queue)
+
 		if found {
 			// create kvm
 			host := s.HostRepo.Get(hostId)
 
 			result := _domain.RpcResp{}
-			if host.VmPlatform == consts.KvmNative {
-				result = s.KvmNativeService.CreateRemote(hostId, backingId, tmplId, queue.ID)
-			} else if host.VmPlatform == consts.HuaweiCloud {
-				result = s.HuaweiCloudService.CreateRemote(hostId, backingId, tmplId, queue.ID)
+			if strings.Index(host.Platform.ToString(), consts.PlatformVm.ToString()) > -1 {
+				if strings.Index(host.Platform.ToString(), consts.PlatformNative.ToString()) > -1 {
+					result = s.KvmNativeService.CreateRemote(hostId, backingId, tmplId, queue.ID)
+				} else if strings.Index(host.Platform.ToString(), consts.PlatformHuawei.ToString()) > -1 {
+					result = s.HuaweiCloudVmService.CreateRemote(hostId, backingId, tmplId, queue.ID)
+				}
+			} else if strings.Index(host.Platform.ToString(), consts.PlatformDocker.ToString()) > -1 {
+				if strings.Index(host.Platform.ToString(), consts.PlatformHuawei.ToString()) > -1 {
+					s.HuaweiCloudDockerService.DestroyRemote(queue.VmId, queue.ID)
+				}
 			}
+
 			if result.IsSuccess() { // success to create
 				newTaskProgress = consts.ProgressResLaunched
 			} else {

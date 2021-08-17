@@ -23,7 +23,7 @@ func (s HostService) GetValidForQueueByVm(queue model.Queue) (hostId, backingId,
 		return
 	}
 
-	busyHostIds := s.getBusyHosts()
+	busyHostIds := s.getBusyHosts("vm")
 	hostId, backingId = s.HostRepo.QueryByBackings(backingIds, busyHostIds)
 
 	tmplId, found = s.TmplRepo.QueryByOs(queue.OsCategory, queue.OsType, queue.OsLang)
@@ -36,7 +36,7 @@ func (s HostService) GetValidForQueueByVm(queue model.Queue) (hostId, backingId,
 }
 
 func (s HostService) GetValidForQueueByContainer(queue model.Queue) (hostId uint, found bool) {
-	busyHostIds := s.getBusyHosts()
+	busyHostIds := s.getBusyHosts("container")
 	hostId = s.HostRepo.QueryUnBusy(busyHostIds)
 
 	if hostId != 0 {
@@ -46,8 +46,8 @@ func (s HostService) GetValidForQueueByContainer(queue model.Queue) (hostId uint
 	return
 }
 
-func (s HostService) getBusyHosts() (ids []uint) {
-	ids = s.HostRepo.QueryBusy()
+func (s HostService) getBusyHosts(tp string) (ids []uint) {
+	ids = s.HostRepo.QueryBusy(tp)
 
 	return
 }

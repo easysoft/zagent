@@ -1,26 +1,22 @@
 package consts
 
-type VmPlatform string
+type Platform string
 
 const (
-	KvmNative   VmPlatform = "kvm_native"
-	Pve         VmPlatform = "pve"
-	HuaweiCloud VmPlatform = "huawei_cloud"
-	AwsCloud    VmPlatform = "aws_cloud"
+	PlatformVm     Platform = "vm"
+	PlatformDocker Platform = "docker"
+
+	PlatformNative Platform = "native"
+	PlatformCloud  Platform = "cloud"
+
+	PlatformHuawei Platform = "huawei"
+	PlatformAli    Platform = "ali"
+
+	PlatformPve       Platform = "pve"
+	PlatformPortainer Platform = "portainer"
 )
 
-func (e VmPlatform) ToString() string {
-	return string(e)
-}
-
-type ContainerPlatform string
-
-const (
-	DockerNative ContainerPlatform = "docker_native"
-	Portainer    ContainerPlatform = "portainer"
-)
-
-func (e ContainerPlatform) ToString() string {
+func (e Platform) ToString() string {
 	return string(e)
 }
 

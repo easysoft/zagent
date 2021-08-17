@@ -67,18 +67,18 @@ func (r HostRepo) QueryByBackings(backingIds []uint, busyHostIds []uint) (hostId
 	return
 }
 
-func (r HostRepo) QueryBusy() (hostIds []uint) {
+func (r HostRepo) QueryBusy(tp string) (hostIds []uint) {
 	hosts := make([]HostResult, 0)
 	r.DB.Raw(fmt.Sprintf(
 		`SELECT host.id host_id, host.max_vm_num max_num, host.vm_platform vm_platform
 					FROM biz_host host
-					WHERE host.status = '%s' AND NOT host.deleted AND NOT host.disabled
+					WHERE host.status = '%s' AND host AND NOT host.deleted AND NOT host.disabled
 					ORDER BY host.priority`,
 		consts.HostReady)).
 		Scan(&hosts)
 
 	for _, host := range hosts {
-		if strings.Index(host.VmPlatform.ToString(), "_cloud") > -1 {
+		if strings.Index(host.Platform.ToString(), "_cloud") > -1 {
 			continue
 		}
 
@@ -120,7 +120,7 @@ func (r HostRepo) QueryUnBusy(busyHostIds []uint) (hostId uint) {
 }
 
 type HostResult struct {
-	HostId     uint
-	MaxNum     int
-	VmPlatform consts.VmPlatform
+	HostId   uint
+	MaxNum   int
+	Platform consts.Platform
 }

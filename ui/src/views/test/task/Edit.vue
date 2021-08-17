@@ -56,8 +56,11 @@
           </a-row>
 
           <a-form-model-item :label="$t('form.exec.cmd')" prop="buildCommands" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
-            <a-textarea v-model="model.buildCommands" />
+            <a-textarea
+              v-model="model.buildCommands"
+              :auto-size="{ minRows: 6, maxRows: 6 }" />
             <span>{{ $t('form.exec.cmd.tips') }}</span>
+            <span v-if="model.buildType == 'unittest'" class="form-tips">{{ $t('form.exec.cmd.tips.container') }}</span>
           </a-form-model-item>
 
           <a-form-model-item :label="$t('form.result.files')" prop="resultFiles" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
@@ -251,7 +254,7 @@ export default {
     },
     loadData () {
       if (!this.id) {
-        const a = 1
+        const a = 3
 
         if (a === 1) {
           this.model = {
@@ -265,13 +268,29 @@ export default {
             'resultFiles': 'target/surefire-reports',
             'environments': [ { 'osCategory': 'windows', 'osType': 'win10', 'osLang': 'zh_cn' } ]
           }
-        } else {
+        } else if (a === 2) {
           this.model = {
             'name': 'test',
-            'buildType': 'testng',
+            'buildType': 'unittest',
             'envVars': 'abc=123',
             'scriptUrl': 'https://gitee.com/ngtesting/ci_test_testng.git',
             'buildCommands': 'docker run -i --rm --name testng-in-docker -v "$(pwd)":/usr/src/mymaven -v ~/.m2:/root/.m2 -w /usr/src/mymaven maven mvn clean package',
+            'resultFiles': 'target/surefire-reports',
+            'environments': [ { 'osCategory': 'linux', 'osType': 'ubuntu', 'osVersion': '20', 'osLang': 'zh_cn' } ]
+          }
+        } else if (a === 3) {
+          this.model = {
+            'name': 'test',
+            'buildType': 'unittest',
+            'envVars': 'abc=123',
+            'scriptUrl': 'https://gitee.com/ngtesting/ci_test_testng.git',
+            'buildCommands': `echo $abc
+sleep 30
+rm -rf ci_test_testng
+git clone https://gitee.com/ngtesting/ci_test_testng.git
+cd ci_test_testng
+mvn clean package > logs.txt
+sleep 600`,
             'resultFiles': 'target/surefire-reports',
             'environments': [ { 'osCategory': 'linux', 'osType': 'ubuntu', 'osVersion': '20', 'osLang': 'zh_cn' } ]
           }

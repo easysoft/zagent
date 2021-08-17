@@ -87,6 +87,7 @@ const locale = {
 
   'form.exec.cmd': 'Test Command',
   'form.exec.cmd.tips': 'Input the command, may use environment variables in it.',
+  'form.exec.cmd.tips.container': 'Input CMD lines only if running on Docker cloud.',
   'form.env.var': 'Environment Variable',
   'form.env.var.tips': 'Environment variables need to passed, format NAME=value.',
   'form.result.files': 'Result Files',
@@ -96,8 +97,7 @@ const locale = {
   'form.appium': 'Appium',
   'form.selenium.test': 'Selenium Test',
   'form.appium.test': 'Appium Test',
-  'form.testng': 'TestNG',
-  'form.junit': 'JUint',
+  'form.unittest': 'UintTest',
   'form.ztf': 'ZTF',
   'form.interface_scenario': 'Interface Scenario',
   'form.interface_set': 'Interface Set',

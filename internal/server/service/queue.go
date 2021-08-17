@@ -18,8 +18,9 @@ type QueueService struct {
 	HistoryService   *HistoryService                 `inject:""`
 	WebSocketService *commonService.WebSocketService `inject:""`
 
-	KvmNativeService   *KvmNativeService   `inject:""`
-	HuaweiCloudService *HuaweiCloudService `inject:""`
+	KvmNativeService         *KvmNativeService         `inject:""`
+	HuaweiCloudVmService     *HuaweiCloudVmService     `inject:""`
+	HuaweiCloudDockerService *HuaweiCloudDockerService `inject:""`
 }
 
 func NewQueueService() *QueueService {
@@ -158,10 +159,16 @@ func (s QueueService) SaveResult(queueId uint, progress consts.BuildProgress, st
 		vm := s.VmRepo.GetById(queue.VmId)
 
 		host := s.HostRepo.Get(vm.HostId)
-		if host.VmPlatform == consts.KvmNative {
-			s.KvmNativeService.DestroyRemote(queue.VmId, queue.ID)
-		} else if host.VmPlatform == consts.HuaweiCloud {
-			s.HuaweiCloudService.DestroyRemote(queue.VmId, queue.ID)
+		if strings.Index(host.Platform.ToString(), consts.PlatformVm.ToString()) > -1 {
+			if strings.Index(host.Platform.ToString(), consts.PlatformNative.ToString()) > -1 {
+				s.KvmNativeService.DestroyRemote(queue.VmId, queue.ID)
+			} else if strings.Index(host.Platform.ToString(), consts.PlatformHuawei.ToString()) > -1 {
+				s.HuaweiCloudVmService.DestroyRemote(queue.VmId, queue.ID)
+			}
+		} else if strings.Index(host.Platform.ToString(), consts.PlatformDocker.ToString()) > -1 {
+			if strings.Index(host.Platform.ToString(), consts.PlatformHuawei.ToString()) > -1 {
+				s.HuaweiCloudDockerService.DestroyRemote(queue.VmId, queue.ID)
+			}
 		}
 	}
 

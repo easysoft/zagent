@@ -10,6 +10,7 @@ import (
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
 	_i118Utils "github.com/easysoft/zagent/internal/pkg/lib/i118"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	"strings"
 )
 
 type HostService struct {
@@ -41,7 +42,10 @@ func (s *HostService) Check() {
 	s.Register(true)
 
 	s.JobService.StartTask()
+
+	s.PassEnvsToContainerIfNeeded(&job)
 	s.TestService.Run(&job)
+
 	s.JobService.RemoveTask()
 	s.JobService.EndTask()
 }
@@ -66,5 +70,17 @@ func (s *HostService) Register(isBusy bool) {
 		_logUtils.Info(_i118Utils.I118Prt.Sprintf("success_to_register", agentConf.Inst.Server))
 	} else {
 		_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_register", agentConf.Inst.Server, resp))
+	}
+}
+
+func (s *HostService) PassEnvsToContainerIfNeeded(build *domain.Build) {
+	str := "docker run"
+	if strings.Index(build.BuildCommands, "docker run") > -1 {
+		newStr := str
+		for _, env := range strings.Split(build.EnvVars, "\n") {
+			newStr += " -e " + env + " "
+		}
+
+		build.BuildCommands = strings.Replace(build.BuildCommands, str, newStr, -1)
 	}
 }

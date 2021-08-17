@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-type HuaweiCloudService struct {
+type HuaweiCloudVmService struct {
 	HostRepo    *repo.HostRepo    `inject:""`
 	BackingRepo *repo.BackingRepo `inject:""`
 	VmRepo      *repo.VmRepo      `inject:""`
@@ -18,7 +18,7 @@ type HuaweiCloudService struct {
 	HistoryService  *HistoryService  `inject:""`
 }
 
-func (s HuaweiCloudService) CreateRemote(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp) {
+func (s HuaweiCloudVmService) CreateRemote(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp) {
 	host := s.HostRepo.Get(hostId)
 	backing := s.BackingRepo.Get(backingId)
 
@@ -79,7 +79,7 @@ func (s HuaweiCloudService) CreateRemote(hostId, backingId, tmplId, queueId uint
 	return
 }
 
-func (s HuaweiCloudService) DestroyRemote(vmId, queueId uint) (result _domain.RpcResp) {
+func (s HuaweiCloudVmService) DestroyRemote(vmId, queueId uint) (result _domain.RpcResp) {
 	vm := s.VmRepo.GetById(vmId)
 	host := s.HostRepo.Get(vm.HostId)
 
