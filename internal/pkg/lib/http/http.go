@@ -65,7 +65,7 @@ func Get(url string, requestTo string) (interface{}, bool) {
 	}
 }
 
-func Post(url string, params interface{}) (interface{}, bool) {
+func Post(url string, params interface{}, headers map[string]string) (interface{}, bool) {
 	if _var.Verbose {
 		_logUtils.Info(url)
 	}
@@ -84,6 +84,11 @@ func Post(url string, params interface{}) (interface{}, bool) {
 	}
 
 	req.Header.Set("Content-Type", "application/json")
+	if headers != nil {
+		for key, val := range headers {
+			req.Header.Set(key, val)
+		}
+	}
 
 	resp, respErr := client.Do(req)
 	if respErr != nil {

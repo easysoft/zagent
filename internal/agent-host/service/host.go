@@ -60,7 +60,7 @@ func (s *HostService) Register(isBusy bool) {
 	s.VmService.UpdateVmMapAndDestroyTimeout(host.Vms)
 
 	url := _httpUtils.GenUrl(agentConf.Inst.Server, "client/host/register")
-	resp, ok := _httpUtils.Post(url, host)
+	resp, ok := _httpUtils.Post(url, host, nil)
 
 	if ok {
 		_logUtils.Info(_i118Utils.I118Prt.Sprintf("success_to_register", agentConf.Inst.Server))

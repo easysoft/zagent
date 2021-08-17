@@ -1,12 +1,17 @@
 package vendors
 
 import (
+	"encoding/json"
 	"github.com/alibabacloud-go/tea/tea"
 	testconst "github.com/easysoft/zagent/cmd/test/const"
+	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"github.com/huaweicloud/huaweicloud-sdk-go-v3/core/auth/basic"
 	iam "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/iam/v3"
 	iamModel "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/iam/v3/model"
 	region "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/iam/v3/region"
+	"io/ioutil"
+	"net/http"
+	"strings"
 )
 
 type HuaweiCloudCommService struct {
@@ -64,5 +69,47 @@ func (s HuaweiCloudCommService) CreateIamClient(ak, sk, regionId string) (
 			WithCredential(auth).
 			Build())
 
+	return
+}
+
+func (s HuaweiCloudCommService) Post(url string, reqBody interface{}, params, headers map[string]string) (
+	ret string, success bool) {
+	client := &http.Client{}
+
+	reqBodyStr, err := json.Marshal(reqBody)
+	if err != nil {
+		_logUtils.Error(err.Error())
+		return "", false
+	}
+
+	if params != nil {
+		url += "?"
+		for key, val := range params {
+			url += key + "=" + val + "&"
+		}
+	}
+
+	req, reqErr := http.NewRequest("POST", url, strings.NewReader(string(reqBodyStr)))
+	if reqErr != nil {
+		_logUtils.Error(reqErr.Error())
+		return "", false
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	if headers != nil {
+		for key, val := range headers {
+			req.Header.Set(key, val)
+		}
+	}
+
+	resp, respErr := client.Do(req)
+	if respErr != nil {
+		_logUtils.Error(respErr.Error())
+		return "", false
+	}
+
+	body, _ := ioutil.ReadAll(resp.Body)
+	ret = string(body)
+	success = true
 	return
 }
