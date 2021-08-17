@@ -1,6 +1,7 @@
 package aliyun
 
 import (
+	"fmt"
 	"github.com/easysoft/zagent/cmd/test/const"
 	consts "github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/comm/domain"
@@ -18,19 +19,23 @@ func TestHuaweiCloudCci(t *testing.T) {
 
 	token, _ := srv.GetIamToken(client)
 
-	image := "maven"
+	image := "swr.cn-east-3.myhuaweicloud.com/tester-im/maven-testng:1.0"
 	name := "maven-testng"
 	cmd := []string{
-		"sleep 30",
-		"rm -rf ci_test_testng",
-		"git clone https://gitee.com/ngtesting/ci_test_testng.git; cd ci_test_testng",
-		"mvn clean package > logs.txt",
-		"sleep 600",
+		"/bin/bash",
+		"-c",
+		strings.Join([]string{
+			"sleep 30",
+			"rm -rf ci_test_testng",
+			"git clone https://gitee.com/ngtesting/ci_test_testng.git; cd ci_test_testng",
+			"mvn clean package > logs.txt",
+			"sleep 600",
+		}, "; "),
 	}
 
-	req := domain.CciReq{
+	reqCreate := domain.CciReqCreate{
 		APIVersion: "batch/v1",
-		Kind:       "job",
+		Kind:       "Job",
 		Metadata: domain.CciMetadata{
 			Name: name,
 		},
@@ -67,9 +72,19 @@ func TestHuaweiCloudCci(t *testing.T) {
 		},
 	}
 
-	url := strings.ReplaceAll(testconst.HuaweiCloudUrlIamToken, "${region}", testconst.HUAWEI_CLOUD_REGION)
-	url = strings.ReplaceAll(url, "${namespace}", testconst.HUAWEI_CLOUD_NAMEAPACE)
-	resp, success := srv.Post(url, req, nil, map[string]string{"X-Auth-Token": token})
+	createUrl := fmt.Sprintf(testconst.HuaweiCloudUrlJobCreate,
+		testconst.HUAWEI_CLOUD_REGION, testconst.HUAWEI_CLOUD_NAMEAPACE)
+	resp, success := srv.Post(createUrl, reqCreate, nil, map[string]string{"X-Auth-Token": token})
+	_logUtils.Infof("%#v, %#v", resp, success)
 
+	reqDestroy := domain.CciReqDestroy{
+		Kind:              "DeleteOptions",
+		APIVersion:        "v1",
+		PropagationPolicy: "Orphan",
+	}
+
+	destroyUrl := fmt.Sprintf(testconst.HuaweiCloudUrlJobDestroy,
+		testconst.HUAWEI_CLOUD_REGION, testconst.HUAWEI_CLOUD_NAMEAPACE, name)
+	resp, success = srv.Delete(destroyUrl, reqDestroy, nil, map[string]string{"X-Auth-Token": token})
 	_logUtils.Infof("%#v, %#v", resp, success)
 }

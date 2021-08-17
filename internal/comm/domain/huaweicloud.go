@@ -1,6 +1,6 @@
 package domain
 
-type CciReq struct {
+type CciReqCreate struct {
 	APIVersion string       `json:"apiVersion"`
 	Kind       string       `json:"kind"`
 	Metadata   CciMetadata  `json:"metadata"`
@@ -41,4 +41,10 @@ type CciTemplate struct {
 }
 type CciSpecTempl struct {
 	Template CciTemplate `json:"template"`
+}
+
+type CciReqDestroy struct {
+	Kind              string `json:"Kind"`
+	APIVersion        string `json:"apiVersion"`
+	PropagationPolicy string `json:"propagationPolicy"`
 }

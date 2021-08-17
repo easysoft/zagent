@@ -72,6 +72,51 @@ func (s HuaweiCloudCommService) CreateIamClient(ak, sk, regionId string) (
 	return
 }
 
+func (s HuaweiCloudCommService) Delete(url string, reqBody interface{}, params, headers map[string]string) (
+	ret string, success bool) {
+
+	client := &http.Client{}
+
+	reqBodyStr, err := json.Marshal(reqBody)
+	if err != nil {
+		_logUtils.Error(err.Error())
+		return "", false
+	}
+
+	if params != nil {
+		url += "?"
+		for key, val := range params {
+			url += key + "=" + val + "&"
+		}
+	}
+
+	req, reqErr := http.NewRequest("DELETE", url, strings.NewReader(string(reqBodyStr)))
+	if reqErr != nil {
+		_logUtils.Error(reqErr.Error())
+		return "", false
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	if headers != nil {
+		for key, val := range headers {
+			req.Header.Set(key, val)
+		}
+	}
+
+	resp, respErr := client.Do(req)
+	if respErr != nil {
+		_logUtils.Error(respErr.Error())
+		return "", false
+	}
+
+	body, _ := ioutil.ReadAll(resp.Body)
+	ret = string(body)
+	success = true
+	return
+
+	return
+}
+
 func (s HuaweiCloudCommService) Post(url string, reqBody interface{}, params, headers map[string]string) (
 	ret string, success bool) {
 	client := &http.Client{}
