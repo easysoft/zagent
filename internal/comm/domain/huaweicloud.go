@@ -6,6 +6,27 @@ type CciReqCreate struct {
 	Metadata   CciMetadata  `json:"metadata"`
 	SpecTempl  CciSpecTempl `json:"spec"`
 }
+
+type CciReqDestroy struct {
+	Kind              string `json:"Kind"`
+	APIVersion        string `json:"apiVersion"`
+	PropagationPolicy string `json:"propagationPolicy"`
+}
+
+type CciRepsCreate struct {
+	APIVersion string       `json:"apiVersion"`
+	Kind       string       `json:"kind"`
+	Metadata   CciMetadata  `json:"metadata"`
+	Spec       CciSpecTempl `json:"spec"`
+}
+
+type CciRepsDestroy struct {
+	APIVersion string      `json:"apiVersion"`
+	Code       int         `json:"code"`
+	Message    string      `json:"message"`
+	Metadata   CciMetadata `json:"metadata"`
+}
+
 type CciMetadata struct {
 	Name string `json:"name"`
 }
@@ -41,10 +62,4 @@ type CciTemplate struct {
 }
 type CciSpecTempl struct {
 	Template CciTemplate `json:"template"`
-}
-
-type CciReqDestroy struct {
-	Kind              string `json:"Kind"`
-	APIVersion        string `json:"apiVersion"`
-	PropagationPolicy string `json:"propagationPolicy"`
 }
