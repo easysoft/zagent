@@ -83,9 +83,11 @@ const locale = {
   'form.test.code.tips': '输入项目Git仓库或Zip文件的下载地址。',
   'form.scm.account': 'Git账号',
   'form.scm.password': 'Git账号密码',
+
+  'form.exec.docker.image': '容器镜像',
   'form.exec.cmd': '测试命令',
   'form.exec.cmd.tips': '输入执行测试的命令，可引用环境变量。',
-  'form.exec.cmd.tips.container': '使用容器云平台时，只输入CMD指令即可。',
+  'form.exec.cmd.tips.container': '使用容器云平台时，可提供多个Docker镜像环境，此处只输入CMD指令即可。',
   'form.env.var': '环境变量',
   'form.env.var.tips': '需要传递的环境变量，格式"变量名=取值"，支持多行。',
   'form.result.files': '结果文件',
@@ -117,6 +119,10 @@ const locale = {
   'form.os.lang': '系统语言',
   'form.os.lang.en_us': '美国英语',
   'form.os.lang.zh_cn': '简体中文',
+  'form.docker.image': 'Docker镜像',
+  'form.docker.image.name': '镜像名称',
+  'form.docker.image.src': '镜像来源',
+  'form.docker.image.src.cloud': '容器云',
 
   'form.edit.env': '编辑环境',
 
@@ -170,6 +176,8 @@ const locale = {
   'valid.required.scriptUrl': '请输入测试项目的地址',
   'valid.required.buildCommands': '构建命令不能为空',
   'valid.required.resultFiles': '结果文件不能为空',
+  'valid.required.imageName': '请输入镜像名称。',
+  'valid.required.imageSrc': '请输入镜像来源。',
 
   'common.login': '登录',
   'common.logout': '登出',

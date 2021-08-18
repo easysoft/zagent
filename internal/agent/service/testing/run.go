@@ -25,7 +25,7 @@ func (s *RunService) Run(build *commDomain.Build) {
 	var err error
 
 	// download res
-	if build.BuildType == consts.AutoSelenium {
+	if build.BuildType == consts.SeleniumTest {
 		err = s.SeleniumService.DownloadDriver(build)
 		if err != nil {
 			result.Failf("fail to download driver, err: %s", err.Error())

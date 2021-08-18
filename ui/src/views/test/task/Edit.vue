@@ -58,8 +58,8 @@
           <a-form-model-item :label="$t('form.exec.cmd')" prop="buildCommands" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
             <a-textarea
               v-model="model.buildCommands"
-              :auto-size="{ minRows: 6, maxRows: 6 }" />
-            <span>{{ $t('form.exec.cmd.tips') }}</span>
+              :auto-size="{ minRows: 7, maxRows: 7 }" />
+            <span>{{ $t('form.exec.cmd.tips') }}</span> <br />
             <span v-if="model.buildType == 'unittest'" class="form-tips">{{ $t('form.exec.cmd.tips.container') }}</span>
           </a-form-model-item>
 
@@ -82,7 +82,7 @@
             <span>  {{ $t('form.group.tips') }}</span>
           </a-form-model-item>-->
 
-          <a-form-model-item :label="$t('form.test.env')" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
+          <a-form-model-item v-if="model.buildType!='unittest'" :label="$t('form.test.env')" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
             <div class="environments">
               <a-row :gutter="cols" class="title">
                 <a-col :offset="1" :span="col">{{ $t('form.os.category') }}</a-col>
@@ -119,6 +119,39 @@
             </div>
           </a-form-model-item>
 
+          <a-form-model-item v-else :label="$t('form.docker.image')" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
+            <div class="environments">
+              <a-row :gutter="cols" class="title">
+                <a-col :offset="1" :span="col * 3 - 3">{{ $t('form.docker.image.name') }}</a-col>
+                <a-col :span="col-2">{{ $t('form.docker.image.src') }}</a-col>
+                <a-col :span="col-2">{{ $t('form.opt') }}</a-col>
+              </a-row>
+              <a-row v-if="!model.environments || model.environments.length == 0" :gutter="cols">
+                <a-col :offset="col + 1" :span="col-1">
+                  <a class="edit">
+                    <a @click="addEnv(0)" class="edit">{{ $t('form.add') }}</a>
+                  </a>
+                </a-col>
+              </a-row>
+              <a-row v-for="(item, index) in model.environments" :key="index" :gutter="cols">
+                <a-col :offset="1" :span="col * 3 - 3">
+                  <span>{{ item.imageName }}</span>
+                </a-col>
+                <a-col :span="col-2">
+                  {{ $t('form.docker.image.src.cloud') }}
+                </a-col>
+
+                <a-col :span="col-2">
+                  <a class="edit">
+                    <a @click="addEnv(index)" class="edit"><a-icon type="file-add" /></a> &nbsp;
+                    <a @click="editEnv(index)" class="edit"><a-icon type="edit" /> </a> &nbsp;
+                    <a @click="removeEnv(index)" class="edit"><a-icon type="delete" /></a> &nbsp;
+                  </a>
+                </a-col>
+              </a-row>
+            </div>
+          </a-form-model-item>
+
           <a-form-item :wrapperCol="wrapperColFull" style="text-align: center">
             <a-button @click="save()" htmlType="submit" type="primary">{{ $t('form.save') }}</a-button>
             <a-button @click="reset()" style="margin-left: 8px">{{ $t('form.reset') }}</a-button>
@@ -137,29 +170,46 @@
       @cancel="cancelEnv">
       <div>
         <a-form-model ref="editEnvForm" :model="environment" :rules="rules">
-          <a-form-model-item :label="$t('form.os.category')" prop="osCategory" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
-            <a-select v-model="environment.osCategory" @change="envChanged()">
-              <a-select-option v-for="(value, key) in envData.categories" :value="value" :key="key">
-                {{ osCategories[value] }}
-              </a-select-option>
-            </a-select>
-          </a-form-model-item>
+          <template v-if="model.buildType!='unittest'">
+            <a-form-model-item :label="$t('form.os.category')" prop="osCategory" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
+              <a-select v-model="environment.osCategory" @change="envChanged()">
+                <a-select-option v-for="(value, key) in envData.categories" :value="value" :key="key">
+                  {{ osCategories[value] }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
 
-          <a-form-model-item :label="$t('form.os.type')" prop="osType" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
-            <a-select v-model="environment.osType" @change="envChanged()">
-              <a-select-option v-for="(value, key) in envData.types" :value="value" :key="key">
-                {{ osTypes[value] }}
-              </a-select-option>
-            </a-select>
-          </a-form-model-item>
+            <a-form-model-item :label="$t('form.os.type')" prop="osType" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
+              <a-select v-model="environment.osType" @change="envChanged()">
+                <a-select-option v-for="(value, key) in envData.types" :value="value" :key="key">
+                  {{ osTypes[value] }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
 
-          <a-form-model-item :label="$t('form.os.lang')" prop="osLang" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
-            <a-select v-model="environment.osLang">
-              <a-select-option v-for="(value, key) in envData.langs" :value="value" :key="key">
-                {{ osLangs[value] }}
-              </a-select-option>
-            </a-select>
-          </a-form-model-item>
+            <a-form-model-item :label="$t('form.os.lang')" prop="osLang" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
+              <a-select v-model="environment.osLang">
+                <a-select-option v-for="(value, key) in envData.langs" :value="value" :key="key">
+                  {{ osLangs[value] }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </template>
+
+          <template v-else>
+            <a-form-model-item :label="$t('form.docker.image.name')" prop="imageName" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
+              <a-input v-model="environment.imageName" />
+            </a-form-model-item>
+
+            <a-form-model-item :label="$t('form.docker.image.src')" prop="imageSrc" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
+              <a-select v-model="environment.imageSrc">
+                <a-select-option value="cloud">
+                  {{ $t('form.docker.image.src.cloud') }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </template>
+
         </a-form-model>
       </div>
     </a-modal>
@@ -222,6 +272,8 @@ export default {
         osCategory: [{ required: true, message: this.$t('valid.required.osCategory'), trigger: 'blur' }],
         osType: [{ required: true, message: this.$t('valid.required.osType'), trigger: 'blur' }],
         osLang: [{ required: true, message: this.$t('valid.required.osLang'), trigger: 'blur' }],
+        imageName: [{ required: true, message: this.$t('valid.required.imageName'), trigger: 'blur' }],
+        imageSrc: [{ required: true, message: this.$t('valid.required.imageSrc'), trigger: 'blur' }],
         scriptUrl: [{ required: true, message: this.$t('valid.required.scriptUrl'), trigger: 'blur' }],
         buildCommands: [{ required: true, message: this.$t('valid.required.buildCommands'), trigger: 'blur' }],
         resultFiles: [{ required: true, message: this.$t('valid.required.resultFiles'), trigger: 'blur' }]
@@ -292,7 +344,13 @@ cd ci_test_testng
 mvn clean package > logs.txt
 sleep 600`,
             'resultFiles': 'target/surefire-reports',
-            'environments': [ { 'osCategory': 'linux', 'osType': 'ubuntu', 'osVersion': '20', 'osLang': 'zh_cn' } ]
+            'environments': [ {
+              'imageName': 'swr.cn-east-3.myhuaweicloud.com/tester-im/maven-testng:1.0',
+              'imageSrc': 'cloud',
+              'osCategory': 'nil',
+              'osType': 'nil',
+              'osLang': 'nil'
+            } ]
           }
         }
 
@@ -334,7 +392,12 @@ sleep 600`,
 
     addEnv (index) {
       console.log('addEnv', index)
-      this.environment = {}
+      this.environment = {
+        'imageSrc': 'cloud',
+        'osCategory': 'nil',
+        'osType': 'nil',
+        'osLang': 'nil'
+      }
       this.environmentIndex = index
       this.isInsert = true
 

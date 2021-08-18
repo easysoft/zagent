@@ -65,11 +65,11 @@ func (s ExecService) QueryForTimeout() {
 }
 
 func (s ExecService) CheckAndCall(queue model.Queue) {
-	if queue.BuildType == consts.AutoSelenium {
+	if queue.BuildType == consts.SeleniumTest {
 		s.CheckAndCallSeleniumTest(queue)
-	} else if queue.BuildType == consts.AutoAppium {
+	} else if queue.BuildType == consts.AppiumTest {
 		s.CheckAndCallAppiumTest(queue)
-	} else if queue.BuildType == consts.UnitJunit || queue.BuildType == consts.UnitTestNG {
+	} else if queue.BuildType == consts.UnitTest {
 		s.CheckAndCallUnitTest(queue)
 	}
 }
@@ -98,20 +98,7 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 
 		if found {
 			// create kvm
-			host := s.HostRepo.Get(hostId)
-
-			result := _domain.RpcResp{}
-			if strings.Index(host.Platform.ToString(), consts.PlatformVm.ToString()) > -1 {
-				if strings.Index(host.Platform.ToString(), consts.PlatformNative.ToString()) > -1 {
-					result = s.KvmNativeService.CreateRemote(hostId, backingId, tmplId, queue.ID)
-				} else if strings.Index(host.Platform.ToString(), consts.PlatformHuawei.ToString()) > -1 {
-					result = s.HuaweiCloudVmService.CreateRemote(hostId, backingId, tmplId, queue.ID)
-				}
-			} else if strings.Index(host.Platform.ToString(), consts.PlatformDocker.ToString()) > -1 {
-				if strings.Index(host.Platform.ToString(), consts.PlatformHuawei.ToString()) > -1 {
-					s.HuaweiCloudDockerService.DestroyRemote(queue.VmId, queue.ID)
-				}
-			}
+			result := s.CreateRemoteForDifferentPlatform(hostId, backingId, tmplId, queue.ID)
 
 			if result.IsSuccess() { // success to create
 				newTaskProgress = consts.ProgressResLaunched
@@ -131,6 +118,26 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 		s.TaskRepo.SetProgress(queue.TaskId, newTaskProgress)
 		s.HistoryService.Create(consts.Task, queue.TaskId, 0, newTaskProgress, "")
 	}
+}
+
+func (s ExecService) CreateRemoteForDifferentPlatform(hostId, backingId, tmplId, queueId uint) (
+	result _domain.RpcResp) {
+
+	platform := s.HostRepo.Get(hostId).Platform.ToString()
+
+	if strings.Index(platform, consts.PlatformVm.ToString()) > -1 {
+		if strings.Index(platform, consts.PlatformNative.ToString()) > -1 {
+			result = s.KvmNativeService.CreateRemote(hostId, backingId, tmplId, queueId)
+		} else if strings.Index(platform, consts.PlatformHuawei.ToString()) > -1 {
+			result = s.HuaweiCloudVmService.CreateRemote(hostId, backingId, tmplId, queueId)
+		}
+	} else if strings.Index(platform, consts.PlatformDocker.ToString()) > -1 {
+		if strings.Index(platform, consts.PlatformHuawei.ToString()) > -1 {
+			result = s.HuaweiCloudDockerService.CreateRemote(hostId, backingId, tmplId, queueId)
+		}
+	}
+
+	return
 }
 
 func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {

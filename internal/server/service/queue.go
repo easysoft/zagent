@@ -30,11 +30,11 @@ func NewQueueService() *QueueService {
 func (s QueueService) GenerateFromTask(task *model.Task) (count int) {
 	s.removeOldQueuesByTask(task.ID)
 
-	if task.BuildType == consts.AutoSelenium {
+	if task.BuildType == consts.SeleniumTest {
 		count = s.GenerateSeleniumQueuesFromTask(task)
-	} else if task.BuildType == consts.AutoAppium {
+	} else if task.BuildType == consts.AppiumTest {
 		count = s.GenerateAppiumQueuesFromTask(task)
-	} else if task.BuildType == consts.UnitTestNG {
+	} else if task.BuildType == consts.UnitTest {
 		count = s.GenerateUnitQueuesFromTask(task)
 	}
 
@@ -156,23 +156,27 @@ func (s QueueService) SaveResult(queueId uint, progress consts.BuildProgress, st
 	s.TaskService.SetTaskStatus(queue.TaskId)
 
 	if queue.VmId > 0 {
-		vm := s.VmRepo.GetById(queue.VmId)
-
-		host := s.HostRepo.Get(vm.HostId)
-		if strings.Index(host.Platform.ToString(), consts.PlatformVm.ToString()) > -1 {
-			if strings.Index(host.Platform.ToString(), consts.PlatformNative.ToString()) > -1 {
-				s.KvmNativeService.DestroyRemote(queue.VmId, queue.ID)
-			} else if strings.Index(host.Platform.ToString(), consts.PlatformHuawei.ToString()) > -1 {
-				s.HuaweiCloudVmService.DestroyRemote(queue.VmId, queue.ID)
-			}
-		} else if strings.Index(host.Platform.ToString(), consts.PlatformDocker.ToString()) > -1 {
-			if strings.Index(host.Platform.ToString(), consts.PlatformHuawei.ToString()) > -1 {
-				s.HuaweiCloudDockerService.DestroyRemote(queue.VmId, queue.ID)
-			}
-		}
+		s.DestroyRemoteForDifferentPlatform(queue)
 	}
 
 	s.HistoryService.Create(consts.Queue, queueId, queueId, progress, status.ToString())
+}
+
+func (s QueueService) DestroyRemoteForDifferentPlatform(queue model.Queue) {
+	vm := s.VmRepo.GetById(queue.VmId)
+	platform := s.HostRepo.Get(vm.HostId).Platform.ToString()
+
+	if strings.Index(platform, consts.PlatformVm.ToString()) > -1 {
+		if strings.Index(platform, consts.PlatformNative.ToString()) > -1 {
+			s.KvmNativeService.DestroyRemote(queue.VmId, queue.ID)
+		} else if strings.Index(platform, consts.PlatformHuawei.ToString()) > -1 {
+			s.HuaweiCloudVmService.DestroyRemote(queue.VmId, queue.ID)
+		}
+	} else if strings.Index(platform, consts.PlatformDocker.ToString()) > -1 {
+		if strings.Index(platform, consts.PlatformHuawei.ToString()) > -1 {
+			s.HuaweiCloudDockerService.DestroyRemote(queue.VmId, queue.ID)
+		}
+	}
 }
 
 func (s QueueService) removeOldQueuesByTask(taskId uint) {

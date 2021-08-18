@@ -85,9 +85,10 @@ const locale = {
   'form.scm.account': 'Git Account',
   'form.scm.password': 'Git Password',
 
+  'form.exec.docker.image': 'Docker Image',
   'form.exec.cmd': 'Test Command',
   'form.exec.cmd.tips': 'Input the command, may use environment variables in it.',
-  'form.exec.cmd.tips.container': 'Input CMD lines only if running on Docker cloud.',
+  'form.exec.cmd.tips.container': 'Provide more than one images if running on Docker cloud, here just input CMD lines only.',
   'form.env.var': 'Environment Variable',
   'form.env.var.tips': 'Environment variables need to passed, format NAME=value.',
   'form.result.files': 'Result Files',
@@ -119,6 +120,10 @@ const locale = {
   'form.os.lang': 'System Language',
   'form.os.lang.en_us': 'US English',
   'form.os.lang.zh_cn': 'Simple Chinese',
+  'form.docker.image': 'Docker Image',
+  'form.docker.image.name': 'Image Name',
+  'form.docker.image.src': 'Image Source',
+  'form.docker.image.src.cloud': 'Docker Cloud',
 
   'form.edit.env': 'Edit Environment',
 
@@ -172,6 +177,8 @@ const locale = {
   'valid.required.scriptUrl': 'Please input test project address.',
   'valid.required.buildCommands': 'Please input test command.',
   'valid.required.resultFiles': 'Please input result files.',
+  'valid.required.imageName': 'Please input image name.',
+  'valid.required.imageSrc': 'Please input image source.',
 
   'common.login': 'Login',
   'common.logout': 'Logout',

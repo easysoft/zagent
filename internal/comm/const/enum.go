@@ -96,16 +96,11 @@ func (e BuildStatus) ToString() string {
 type BuildType string
 
 const (
-	AutoSelenium BuildType = "selenium"
-	AutoAppium   BuildType = "appium"
-
-	UnitTestNG BuildType = "testng"
-	UnitJunit  BuildType = "junit"
-
-	Ztf BuildType = "ztf"
-
-	InterfaceScenario BuildType = "interface_scenario"
-	InterfaceSet      BuildType = "interface_set"
+	SeleniumTest  BuildType = "selenium"
+	AppiumTest    BuildType = "appium"
+	UnitTest      BuildType = "unittest"
+	ZtfTest       BuildType = "ztf"
+	InterfaceTest BuildType = "interface"
 )
 
 func (e BuildType) ToString() string {
