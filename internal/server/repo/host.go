@@ -67,12 +67,13 @@ func (r HostRepo) QueryByBackings(backingIds []uint, busyHostIds []uint) (hostId
 	return
 }
 
-func (r HostRepo) QueryBusy(tp string) (hostIds []uint) {
+func (r HostRepo) QueryBusy() (hostIds []uint) {
 	hosts := make([]HostResult, 0)
 	r.DB.Raw(fmt.Sprintf(
-		`SELECT host.id host_id, host.max_vm_num max_num, host.vm_platform vm_platform
+		`SELECT host.id host_id, host.max_vm_num max_num, host.platform platform
 					FROM biz_host host
-					WHERE host.status = '%s' AND host AND NOT host.deleted AND NOT host.disabled
+					WHERE host.status = '%s' 
+					AND host AND NOT host.deleted AND NOT host.disabled
 					ORDER BY host.priority`,
 		consts.HostReady)).
 		Scan(&hosts)
@@ -99,18 +100,20 @@ func (r HostRepo) QueryBusy(tp string) (hostIds []uint) {
 	return
 }
 
-func (r HostRepo) QueryUnBusy(busyHostIds []uint) (hostId uint) {
+func (r HostRepo) QueryUnBusy(busyHostIds []uint, tp string) (hostId uint) {
 	list := make([]model.Host, 0)
 
-	whr := r.DB.Model(&model.Host{}).Where(
-		"status = ?",
-		consts.HostReady).Find(&list)
+	whr := r.DB.Model(&model.Host{}).
+		Where("status = ? AND platform LIKE ?",
+			consts.HostReady, "%"+tp+"%")
 
 	if busyHostIds != nil {
 		whr.Where(
 			"id NOT IN (?)",
 			busyHostIds)
 	}
+	whr.Order("priority ASC").
+		Find(&list)
 
 	if len(list) > 0 {
 		hostId = list[0].ID
