@@ -82,75 +82,75 @@
             <span>  {{ $t('form.group.tips') }}</span>
           </a-form-model-item>-->
 
-          <a-form-model-item v-if="model.buildType!='unittest'" :label="$t('form.test.env')" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
-            <div class="environments">
-              <a-row :gutter="cols" class="title">
-                <a-col :offset="1" :span="col">{{ $t('form.os.category') }}</a-col>
-                <a-col :span="col">{{ $t('form.os.type') }}</a-col>
-                <a-col :span="col">{{ $t('form.os.lang') }}</a-col>
-                <a-col :span="col-1">{{ $t('form.opt') }}</a-col>
-              </a-row>
-              <a-row v-if="!model.environments || model.environments.length == 0" :gutter="cols">
-                <a-col :offset="col * 3 + 1" :span="col-1">
-                  <a class="edit">
-                    <a @click="addEnv(0)" class="edit">{{ $t('form.add') }}</a>
-                  </a>
-                </a-col>
-              </a-row>
-              <a-row v-for="(item, index) in model.environments" :key="index" :gutter="cols">
-                <a-col :offset="1" :span="col">
-                  <span>{{ osCategories[item.osCategory] }}</span>
-                </a-col>
-                <a-col :span="col">
-                  <span>{{ osTypes[item.osType] }}</span>
-                </a-col>
-                <a-col :span="col">
-                  <span>{{ osLangs[item.osLang] }}</span>
-                </a-col>
+          <a-form-model-item v-if="!isUnitTest" :label="$t('form.test.env')" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
+          <div class="environments">
+            <a-row :gutter="cols" class="title">
+              <a-col :offset="1" :span="col">{{ $t('form.os.category') }}</a-col>
+              <a-col :span="col">{{ $t('form.os.type') }}</a-col>
+              <a-col :span="col">{{ $t('form.os.lang') }}</a-col>
+              <a-col :span="col-1">{{ $t('form.opt') }}</a-col>
+            </a-row>
+            <a-row v-if="!model.environments || model.environments.length == 0" :gutter="cols">
+              <a-col :offset="col * 3 + 1" :span="col-1">
+                <a class="edit">
+                  <a @click="addEnv(0)" class="edit">{{ $t('form.add') }}</a>
+                </a>
+              </a-col>
+            </a-row>
+            <a-row v-for="(item, index) in model.environments" :key="index" :gutter="cols">
+              <a-col :offset="1" :span="col">
+                <span>{{ osCategories[item.osCategory] }}</span>
+              </a-col>
+              <a-col :span="col">
+                <span>{{ osTypes[item.osType] }}</span>
+              </a-col>
+              <a-col :span="col">
+                <span>{{ osLangs[item.osLang] }}</span>
+              </a-col>
 
-                <a-col :span="col-1">
-                  <a class="edit">
-                    <a @click="addEnv(index)" class="edit"><a-icon type="file-add" /></a> &nbsp;
-                    <a @click="editEnv(index)" class="edit"><a-icon type="edit" /> </a> &nbsp;
-                    <a @click="removeEnv(index)" class="edit"><a-icon type="delete" /></a> &nbsp;
-                  </a>
-                </a-col>
-              </a-row>
-            </div>
-          </a-form-model-item>
+              <a-col :span="col-1">
+                <a class="edit">
+                  <a @click="addEnv(index)" class="edit"><a-icon type="file-add" /></a> &nbsp;
+                  <a @click="editEnv(index)" class="edit"><a-icon type="edit" /> </a> &nbsp;
+                  <a @click="removeEnv(index)" class="edit"><a-icon type="delete" /></a> &nbsp;
+                </a>
+              </a-col>
+            </a-row>
+          </div>
+        </a-form-model-item>
 
-          <a-form-model-item v-else :label="$t('form.docker.image')" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
-            <div class="environments">
-              <a-row :gutter="cols" class="title">
-                <a-col :offset="1" :span="col * 3 - 3">{{ $t('form.docker.image.name') }}</a-col>
-                <a-col :span="col-2">{{ $t('form.docker.image.src') }}</a-col>
-                <a-col :span="col-2">{{ $t('form.opt') }}</a-col>
-              </a-row>
-              <a-row v-if="!model.environments || model.environments.length == 0" :gutter="cols">
-                <a-col :offset="col + 1" :span="col-1">
-                  <a class="edit">
-                    <a @click="addEnv(0)" class="edit">{{ $t('form.add') }}</a>
-                  </a>
-                </a-col>
-              </a-row>
-              <a-row v-for="(item, index) in model.environments" :key="index" :gutter="cols">
-                <a-col :offset="1" :span="col * 3 - 3">
-                  <span>{{ item.imageName }}</span>
-                </a-col>
-                <a-col :span="col-2">
-                  {{ $t('form.docker.image.src.cloud') }}
-                </a-col>
+          <a-form-model-item v-if="isUnitTest && !isDockerNative" :label="$t('form.docker.image')" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
+          <div class="environments">
+            <a-row :gutter="cols" class="title">
+              <a-col :offset="1" :span="col * 3 - 3">{{ $t('form.docker.image.name') }}</a-col>
+              <a-col :span="col-2">{{ $t('form.docker.image.src') }}</a-col>
+              <a-col :span="col-2">{{ $t('form.opt') }}</a-col>
+            </a-row>
+            <a-row v-if="!model.environments || model.environments.length == 0" :gutter="cols">
+              <a-col :offset="col + 1" :span="col-1">
+                <a class="edit">
+                  <a @click="addEnv(0)" class="edit">{{ $t('form.add') }}</a>
+                </a>
+              </a-col>
+            </a-row>
+            <a-row v-for="(item, index) in model.environments" :key="index" :gutter="cols">
+              <a-col :offset="1" :span="col * 3 - 3">
+                <span>{{ item.imageName }}</span>
+              </a-col>
+              <a-col :span="col-2">
+                {{ $t('form.docker.image.src.cloud') }}
+              </a-col>
 
-                <a-col :span="col-2">
-                  <a class="edit">
-                    <a @click="addEnv(index)" class="edit"><a-icon type="file-add" /></a> &nbsp;
-                    <a @click="editEnv(index)" class="edit"><a-icon type="edit" /> </a> &nbsp;
-                    <a @click="removeEnv(index)" class="edit"><a-icon type="delete" /></a> &nbsp;
-                  </a>
-                </a-col>
-              </a-row>
-            </div>
-          </a-form-model-item>
+              <a-col :span="col-2">
+                <a class="edit">
+                  <a @click="addEnv(index)" class="edit"><a-icon type="file-add" /></a> &nbsp;
+                  <a @click="editEnv(index)" class="edit"><a-icon type="edit" /> </a> &nbsp;
+                  <a @click="removeEnv(index)" class="edit"><a-icon type="delete" /></a> &nbsp;
+                </a>
+              </a-col>
+            </a-row>
+          </div>
+        </a-form-model-item>
 
           <a-form-item :wrapperCol="wrapperColFull" style="text-align: center">
             <a-button @click="save()" htmlType="submit" type="primary">{{ $t('form.save') }}</a-button>
@@ -241,6 +241,12 @@ export default {
     }
   },
   computed: {
+    isUnitTest: function () {
+      return this.model.buildType === 'unittest'
+    },
+    isDockerNative: function () {
+      return this.model.buildCommands.match(/docker[ ]+run/)
+    }
   },
   data () {
     return {
@@ -375,6 +381,7 @@ sleep 600`,
           return false
         }
 
+        this.model.isDockerNative = this.isDockerNative
         saveTask(this.model).then(json => {
           console.log('saveTask', json)
           if (requestSuccess(json.code)) {

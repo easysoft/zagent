@@ -11,10 +11,11 @@ type Task struct {
 	Name string `json:"name"`
 	Desc string `json:"desc"`
 
-	BuildType    consts.BuildType `json:"buildType"`
-	Priority     int              `json:"priority"`
-	Serials      string           `json:"serials"`                                // for appium test
-	Environments []Environment    `json:"environments" gorm:"foreignKey:task_id"` // for selenium test
+	BuildType      consts.BuildType `json:"buildType"`
+	IsDockerNative bool             `json:"isDockerNative"`
+	Priority       int              `json:"priority"`
+	Serials        string           `json:"serials"`                                // for appium test
+	Environments   []Environment    `json:"environments" gorm:"foreignKey:task_id"` // for selenium test
 
 	ScriptUrl   string `json:"scriptUrl"`
 	ScmAddress  string `json:"scmAddress"`

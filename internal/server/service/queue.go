@@ -115,7 +115,7 @@ func (s QueueService) GenerateAppiumQueuesFromTask(task *model.Task) (count int)
 
 func (s QueueService) GenerateUnitQueuesFromTask(task *model.Task) (count int) {
 	envs := task.Environments
-	if len(envs) == 0 {
+	if (task.BuildType != consts.UnitTest || !task.IsDockerNative) && len(envs) == 0 {
 		return
 	}
 
