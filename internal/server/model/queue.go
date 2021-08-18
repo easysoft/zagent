@@ -18,6 +18,7 @@ type Queue struct {
 	OsLang         consts.OsLang      `json:"osLang"`
 	BrowserType    consts.BrowserType `json:"browserType"`
 	BrowserVersion string             `json:"browserVersion"`
+	DockerImage    string             `json:"dockerImage"`
 
 	ScriptUrl   string `json:"scriptUrl"`
 	ScmAddress  string `json:"ScmAddress"`
@@ -51,7 +52,7 @@ type Queue struct {
 }
 
 func NewQueue(buildType consts.BuildType, groupId uint, taskId uint, taskPriority int,
-	osCategory consts.OsCategory, osType consts.OsType, osLang consts.OsLang,
+	osCategory consts.OsCategory, osType consts.OsType, osLang consts.OsLang, dockerImage string,
 	scriptUrl string, scmAddress string, scmAccount string, scmPassword string,
 	resultFiles string, keepResultFiles bool, taskName string, userName string,
 	serial, appUrl, buildCommands, envVars string,
@@ -86,6 +87,7 @@ func NewQueue(buildType consts.BuildType, groupId uint, taskId uint, taskPriorit
 
 		BrowserType:    browserType,
 		BrowserVersion: browserVersion,
+		DockerImage:    dockerImage,
 	}
 	return Task
 }

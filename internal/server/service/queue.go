@@ -61,7 +61,7 @@ func (s QueueService) GenerateSeleniumQueuesFromTask(task *model.Task) (count in
 
 		queue := model.NewQueue(
 			task.BuildType, groupId, task.ID, task.Priority,
-			osCategory, osType, osLang,
+			osCategory, osType, osLang, "",
 			task.ScriptUrl, task.ScmAddress, task.ScmAccount, task.ScmPassword,
 			task.ResultFiles, task.KeepResultFiles, task.Name, task.UserName,
 			"", "", task.BuildCommands, task.EnvVars,
@@ -98,7 +98,7 @@ func (s QueueService) GenerateAppiumQueuesFromTask(task *model.Task) (count int)
 		device := s.DeviceRepo.GetBySerial(serial)
 		if device.ID != 0 {
 			queue := model.NewQueue(task.BuildType, groupId, task.ID, task.Priority,
-				"", "", "",
+				"", "", "", "",
 				task.ScriptUrl, task.ScmAddress, task.ScmAccount, task.ScmPassword,
 				task.ResultFiles, task.KeepResultFiles, task.Name, task.UserName,
 				serial, task.AppUrl, task.BuildCommands, task.EnvVars,
@@ -114,38 +114,39 @@ func (s QueueService) GenerateAppiumQueuesFromTask(task *model.Task) (count int)
 }
 
 func (s QueueService) GenerateUnitQueuesFromTask(task *model.Task) (count int) {
-	envs := task.Environments
-	if (task.BuildType != consts.UnitTest || !task.IsDockerNative) && len(envs) == 0 {
+	if task.GroupId == 0 {
+		task.GroupId = task.ID
+	}
+
+	if task.IsDockerNative {
+		env := model.Environment{}
+		s.GenerateUnitTestQueue(*task, env)
+
+		count = 1
 		return
 	}
 
-	var groupId uint
-	if task.GroupId != 0 {
-		groupId = task.GroupId
-	} else {
-		groupId = task.ID
-	}
-
+	envs := task.Environments
 	for _, env := range envs {
-		osCategory := env.OsCategory
-		osType := env.OsType
-		osLang := env.OsLang
-
-		queue := model.NewQueue(
-			task.BuildType, groupId, task.ID, task.Priority,
-			osCategory, osType, osLang,
-			task.ScriptUrl, task.ScmAddress, task.ScmAccount, task.ScmPassword,
-			task.ResultFiles, task.KeepResultFiles, task.Name, task.UserName,
-			"", "", task.BuildCommands, task.EnvVars,
-			"", "",
-		)
-
-		s.QueueRepo.Save(&queue)
-		s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressCreated, "")
+		s.GenerateUnitTestQueue(*task, env)
 		count++
 	}
 
 	return
+}
+
+func (s QueueService) GenerateUnitTestQueue(task model.Task, env model.Environment) {
+	queue := model.NewQueue(
+		task.BuildType, task.GroupId, task.ID, task.Priority,
+		env.OsCategory, env.OsType, env.OsLang, env.ImageName,
+		task.ScriptUrl, task.ScmAddress, task.ScmAccount, task.ScmPassword,
+		task.ResultFiles, task.KeepResultFiles, task.Name, task.UserName,
+		"", "", task.BuildCommands, task.EnvVars,
+		"", "",
+	)
+
+	s.QueueRepo.Save(&queue)
+	s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressCreated, "")
 }
 
 // SaveResult not just update queue status, but also update parent task

@@ -14,7 +14,7 @@
           </a-form-model-item>
 
           <a-form-model-item :label="$t('form.test.type')" prop="buildType" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
-            <a-select v-model="model.buildType">
+            <a-select v-model="model.buildType" @change="loadData">
               <a-select-option v-for="(value, key) in buildTypes" :value="key" :key="key">
                 {{ value }}
               </a-select-option>
@@ -77,80 +77,80 @@
             <a-textarea v-model="model.desc" />
           </a-form-model-item>
 
-<!--          <a-form-model-item :label="$t('form.group')" prop="groupId" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
+          <!-- <a-form-model-item :label="$t('form.group')" prop="groupId" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
             <a-input-number v-model="model.groupId" />
             <span>  {{ $t('form.group.tips') }}</span>
           </a-form-model-item>-->
 
           <a-form-model-item v-if="!isUnitTest" :label="$t('form.test.env')" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
-          <div class="environments">
-            <a-row :gutter="cols" class="title">
-              <a-col :offset="1" :span="col">{{ $t('form.os.category') }}</a-col>
-              <a-col :span="col">{{ $t('form.os.type') }}</a-col>
-              <a-col :span="col">{{ $t('form.os.lang') }}</a-col>
-              <a-col :span="col-1">{{ $t('form.opt') }}</a-col>
-            </a-row>
-            <a-row v-if="!model.environments || model.environments.length == 0" :gutter="cols">
-              <a-col :offset="col * 3 + 1" :span="col-1">
-                <a class="edit">
-                  <a @click="addEnv(0)" class="edit">{{ $t('form.add') }}</a>
-                </a>
-              </a-col>
-            </a-row>
-            <a-row v-for="(item, index) in model.environments" :key="index" :gutter="cols">
-              <a-col :offset="1" :span="col">
-                <span>{{ osCategories[item.osCategory] }}</span>
-              </a-col>
-              <a-col :span="col">
-                <span>{{ osTypes[item.osType] }}</span>
-              </a-col>
-              <a-col :span="col">
-                <span>{{ osLangs[item.osLang] }}</span>
-              </a-col>
+            <div class="environments">
+              <a-row :gutter="cols" class="title">
+                <a-col :offset="1" :span="col">{{ $t('form.os.category') }}</a-col>
+                <a-col :span="col">{{ $t('form.os.type') }}</a-col>
+                <a-col :span="col">{{ $t('form.os.lang') }}</a-col>
+                <a-col :span="col-1">{{ $t('form.opt') }}</a-col>
+              </a-row>
+              <a-row v-if="!model.environments || model.environments.length == 0" :gutter="cols">
+                <a-col :offset="col * 3 + 1" :span="col-1">
+                  <a class="edit">
+                    <a @click="addEnv(0)" class="edit">{{ $t('form.add') }}</a>
+                  </a>
+                </a-col>
+              </a-row>
+              <a-row v-for="(item, index) in model.environments" :key="index" :gutter="cols">
+                <a-col :offset="1" :span="col">
+                  <span>{{ osCategories[item.osCategory] }}</span>
+                </a-col>
+                <a-col :span="col">
+                  <span>{{ osTypes[item.osType] }}</span>
+                </a-col>
+                <a-col :span="col">
+                  <span>{{ osLangs[item.osLang] }}</span>
+                </a-col>
 
-              <a-col :span="col-1">
-                <a class="edit">
-                  <a @click="addEnv(index)" class="edit"><a-icon type="file-add" /></a> &nbsp;
-                  <a @click="editEnv(index)" class="edit"><a-icon type="edit" /> </a> &nbsp;
-                  <a @click="removeEnv(index)" class="edit"><a-icon type="delete" /></a> &nbsp;
-                </a>
-              </a-col>
-            </a-row>
-          </div>
-        </a-form-model-item>
+                <a-col :span="col-1">
+                  <a class="edit">
+                    <a @click="addEnv(index)" class="edit"><a-icon type="file-add" /></a> &nbsp;
+                    <a @click="editEnv(index)" class="edit"><a-icon type="edit" /> </a> &nbsp;
+                    <a @click="removeEnv(index)" class="edit"><a-icon type="delete" /></a> &nbsp;
+                  </a>
+                </a-col>
+              </a-row>
+            </div>
+          </a-form-model-item>
 
           <a-form-model-item v-if="isUnitTest && !isDockerNative" :label="$t('form.docker.image')" :labelCol="labelColFull" :wrapperCol="wrapperColFull">
-          <div class="environments">
-            <a-row :gutter="cols" class="title">
-              <a-col :offset="1" :span="col * 3 - 3">{{ $t('form.docker.image.name') }}</a-col>
-              <a-col :span="col-2">{{ $t('form.docker.image.src') }}</a-col>
-              <a-col :span="col-2">{{ $t('form.opt') }}</a-col>
-            </a-row>
-            <a-row v-if="!model.environments || model.environments.length == 0" :gutter="cols">
-              <a-col :offset="col + 1" :span="col-1">
-                <a class="edit">
-                  <a @click="addEnv(0)" class="edit">{{ $t('form.add') }}</a>
-                </a>
-              </a-col>
-            </a-row>
-            <a-row v-for="(item, index) in model.environments" :key="index" :gutter="cols">
-              <a-col :offset="1" :span="col * 3 - 3">
-                <span>{{ item.imageName }}</span>
-              </a-col>
-              <a-col :span="col-2">
-                {{ $t('form.docker.image.src.cloud') }}
-              </a-col>
+            <div class="environments">
+              <a-row :gutter="cols" class="title">
+                <a-col :offset="1" :span="col * 3 - 3">{{ $t('form.docker.image.name') }}</a-col>
+                <a-col :span="col-2">{{ $t('form.docker.image.src') }}</a-col>
+                <a-col :span="col-2">{{ $t('form.opt') }}</a-col>
+              </a-row>
+              <a-row v-if="!model.environments || model.environments.length == 0" :gutter="cols">
+                <a-col :offset="col + 1" :span="col-1">
+                  <a class="edit">
+                    <a @click="addEnv(0)" class="edit">{{ $t('form.add') }}</a>
+                  </a>
+                </a-col>
+              </a-row>
+              <a-row v-for="(item, index) in model.environments" :key="index" :gutter="cols">
+                <a-col :offset="1" :span="col * 3 - 3">
+                  <span>{{ item.imageName }}</span>
+                </a-col>
+                <a-col :span="col-2">
+                  {{ $t('form.docker.image.src.cloud') }}
+                </a-col>
 
-              <a-col :span="col-2">
-                <a class="edit">
-                  <a @click="addEnv(index)" class="edit"><a-icon type="file-add" /></a> &nbsp;
-                  <a @click="editEnv(index)" class="edit"><a-icon type="edit" /> </a> &nbsp;
-                  <a @click="removeEnv(index)" class="edit"><a-icon type="delete" /></a> &nbsp;
-                </a>
-              </a-col>
-            </a-row>
-          </div>
-        </a-form-model-item>
+                <a-col :span="col-2">
+                  <a class="edit">
+                    <a @click="addEnv(index)" class="edit"><a-icon type="file-add" /></a> &nbsp;
+                    <a @click="editEnv(index)" class="edit"><a-icon type="edit" /> </a> &nbsp;
+                    <a @click="removeEnv(index)" class="edit"><a-icon type="delete" /></a> &nbsp;
+                  </a>
+                </a-col>
+              </a-row>
+            </div>
+          </a-form-model-item>
 
           <a-form-item :wrapperCol="wrapperColFull" style="text-align: center">
             <a-button @click="save()" htmlType="submit" type="primary">{{ $t('form.save') }}</a-button>
@@ -245,7 +245,7 @@ export default {
       return this.model.buildType === 'unittest'
     },
     isDockerNative: function () {
-      return this.model.buildCommands.match(/docker[ ]+run/)
+      return this.model.buildCommands && this.model.buildCommands.match(/docker[ ]+run/)
     }
   },
   data () {
@@ -260,7 +260,7 @@ export default {
       labelColHalf2: labelColHalf2,
       wrapperColHalf: wrapperColHalf,
 
-      model: {},
+      model: { buildType: 'unittest' },
       envData: {},
       environment: {},
       environmentIndex: -1,
@@ -275,11 +275,6 @@ export default {
       rules: {
         name: [{ required: true, message: this.$t('valid.required.name'), trigger: 'blur' }],
         buildType: [{ required: true, message: this.$t('valid.required.buildType'), trigger: 'blur' }],
-        osCategory: [{ required: true, message: this.$t('valid.required.osCategory'), trigger: 'blur' }],
-        osType: [{ required: true, message: this.$t('valid.required.osType'), trigger: 'blur' }],
-        osLang: [{ required: true, message: this.$t('valid.required.osLang'), trigger: 'blur' }],
-        imageName: [{ required: true, message: this.$t('valid.required.imageName'), trigger: 'blur' }],
-        imageSrc: [{ required: true, message: this.$t('valid.required.imageSrc'), trigger: 'blur' }],
         scriptUrl: [{ required: true, message: this.$t('valid.required.scriptUrl'), trigger: 'blur' }],
         buildCommands: [{ required: true, message: this.$t('valid.required.buildCommands'), trigger: 'blur' }],
         resultFiles: [{ required: true, message: this.$t('valid.required.resultFiles'), trigger: 'blur' }]
@@ -306,15 +301,16 @@ export default {
   },
   methods: {
     loadTestEnvs () {
+      if (this.model.buildType === 'unittest') return
       getTestEnvs(this.environment).then(json => {
         this.envData = json.data
       })
     },
     loadData () {
       if (!this.id) {
-        const a = 3
+        const a = 2
 
-        if (a === 1) {
+        if (this.model.buildType === 'selenium') {
           this.model = {
             'name': 'test',
             'buildType': 'selenium',
@@ -326,37 +322,36 @@ export default {
             'resultFiles': 'target/surefire-reports',
             'environments': [ { 'osCategory': 'windows', 'osType': 'win10', 'osLang': 'zh_cn' } ]
           }
-        } else if (a === 2) {
-          this.model = {
-            'name': 'test',
-            'buildType': 'unittest',
-            'envVars': 'abc=123',
-            'scriptUrl': 'https://gitee.com/ngtesting/ci_test_testng.git',
-            'buildCommands': 'docker run -i --rm --name testng-in-docker -v "$(pwd)":/usr/src/mymaven -v ~/.m2:/root/.m2 -w /usr/src/mymaven maven mvn clean package',
-            'resultFiles': 'target/surefire-reports',
-            'environments': [ { 'osCategory': 'linux', 'osType': 'ubuntu', 'osVersion': '20', 'osLang': 'zh_cn' } ]
-          }
-        } else if (a === 3) {
-          this.model = {
-            'name': 'test',
-            'buildType': 'unittest',
-            'envVars': 'abc=123',
-            'scriptUrl': 'https://gitee.com/ngtesting/ci_test_testng.git',
-            'buildCommands': `echo $abc
+        } else if (this.model.buildType === 'unittest') {
+          if (a === 1) {
+            this.model = {
+              'name': 'test',
+              'buildType': 'unittest',
+              'envVars': 'abc=123',
+              'scriptUrl': 'https://gitee.com/ngtesting/ci_test_testng.git',
+              'buildCommands': 'docker run -i --rm --name testng-in-docker -v "$(pwd)":/usr/src/mymaven -v ~/.m2:/root/.m2 -w /usr/src/mymaven maven mvn clean package',
+              'resultFiles': 'target/surefire-reports',
+              'environments': [ { 'osCategory': 'linux', 'osType': 'ubuntu', 'osVersion': '20', 'osLang': 'zh_cn' } ]
+            }
+          } else {
+            this.model = {
+              'name': 'test',
+              'buildType': 'unittest',
+              'envVars': 'abc=123',
+              'scriptUrl': 'https://gitee.com/ngtesting/ci_test_testng.git',
+              'buildCommands': `echo $abc
 sleep 30
 rm -rf ci_test_testng
 git clone https://gitee.com/ngtesting/ci_test_testng.git
 cd ci_test_testng
 mvn clean package > logs.txt
 sleep 600`,
-            'resultFiles': 'target/surefire-reports',
-            'environments': [ {
-              'imageName': 'swr.cn-east-3.myhuaweicloud.com/tester-im/maven-testng:1.0',
-              'imageSrc': 'cloud',
-              'osCategory': 'nil',
-              'osType': 'nil',
-              'osLang': 'nil'
-            } ]
+              'resultFiles': 'target/surefire-reports',
+              'environments': [{
+                'imageName': 'swr.cn-east-3.myhuaweicloud.com/tester-im/maven-testng:1.0',
+                'imageSrc': 'cloud'
+              }]
+            }
           }
         }
 
@@ -375,6 +370,7 @@ sleep 600`,
     },
     save (e) {
       console.log(this.model)
+
       this.$refs.form.validate(valid => {
         if (!valid) {
           console.log('validate fail', valid)
@@ -400,10 +396,7 @@ sleep 600`,
     addEnv (index) {
       console.log('addEnv', index)
       this.environment = {
-        'imageSrc': 'cloud',
-        'osCategory': 'nil',
-        'osType': 'nil',
-        'osLang': 'nil'
+        'imageSrc': 'cloud'
       }
       this.environmentIndex = index
       this.isInsert = true
@@ -427,6 +420,22 @@ sleep 600`,
     },
     saveEnv () {
       console.log('saveEnv')
+
+      if (this.model.buildType !== 'unittest') {
+        this.rules.osCategory = [{ required: true, message: this.$t('valid.required.osCategory'), trigger: 'blur' }]
+        this.rules.osType = [{ required: true, message: this.$t('valid.required.osType'), trigger: 'blur' }]
+        this.rules.osLang = [{ required: true, message: this.$t('valid.required.osLang'), trigger: 'blur' }]
+
+        this.rules.imageName = undefined
+        this.rules.imageSrc = undefined
+      } else {
+        this.rules.osCategory = undefined
+        this.rules.osType = undefined
+        this.rules.osLang = undefined
+
+        this.rules.imageName = [{ required: true, message: this.$t('valid.required.imageName'), trigger: 'blur' }]
+        this.rules.imageSrc = [{ required: true, message: this.$t('valid.required.imageSrc'), trigger: 'blur' }]
+      }
 
       this.$refs.editEnvForm.validate(valid => {
         if (!valid) {
