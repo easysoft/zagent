@@ -2,12 +2,10 @@ package testing
 
 import (
 	"github.com/easysoft/zagent/internal/comm/const"
-	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 	serverService "github.com/easysoft/zagent/internal/server/service"
 	commonService "github.com/easysoft/zagent/internal/server/service/common"
-	"strings"
 )
 
 type ExecService struct {
@@ -21,16 +19,18 @@ type ExecService struct {
 	DeviceService    *serverService.DeviceService    `inject:""`
 	TaskService      *serverService.TaskService      `inject:""`
 	QueueService     *serverService.QueueService     `inject:""`
-	SeleniumService  *SeleniumService                `inject:""`
-	AppiumService    *AppiumService                  `inject:""`
-	UnitService      *UnitService                    `inject:""`
+	SeleniumService  *serverService.SeleniumService  `inject:""`
+	AppiumService    *serverService.AppiumService    `inject:""`
+	UnitService      *serverService.UnitService      `inject:""`
 	HostService      *serverService.HostService      `inject:""`
 	HistoryService   *serverService.HistoryService   `inject:""`
 	WebSocketService *commonService.WebSocketService `inject:""`
 
-	KvmNativeService         *serverService.KvmNativeService         `inject:""`
+	KvmNativeService         *serverService.NativeKvmService         `inject:""`
 	HuaweiCloudVmService     *serverService.HuaweiCloudVmService     `inject:""`
 	HuaweiCloudDockerService *serverService.HuaweiCloudDockerService `inject:""`
+
+	FacadeService *serverService.FacadeService `inject:""`
 }
 
 func NewExecService() *ExecService {
@@ -79,7 +79,7 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 	var newTaskProgress consts.BuildProgress
 
 	if queue.Progress == consts.ProgressResReady { // run if vm ready
-		result := s.SeleniumService.RemoteRun(queue)
+		result := s.FacadeService.RunSeleniumTest(queue)
 
 		if result.IsSuccess() {
 			s.QueueRepo.Run(queue)
@@ -98,7 +98,7 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 
 		if found {
 			// create kvm
-			result := s.CreateRemoteForDifferentPlatform(hostId, backingId, tmplId, queue.ID)
+			result := s.FacadeService.Create(hostId, backingId, tmplId, queue.ID)
 
 			if result.IsSuccess() { // success to create
 				newTaskProgress = consts.ProgressResLaunched
@@ -120,26 +120,6 @@ func (s ExecService) CheckAndCallSeleniumTest(queue model.Queue) {
 	}
 }
 
-func (s ExecService) CreateRemoteForDifferentPlatform(hostId, backingId, tmplId, queueId uint) (
-	result _domain.RpcResp) {
-
-	platform := s.HostRepo.Get(hostId).Platform.ToString()
-
-	if strings.Index(platform, consts.PlatformVm.ToString()) > -1 {
-		if strings.Index(platform, consts.PlatformNative.ToString()) > -1 {
-			result = s.KvmNativeService.CreateRemote(hostId, backingId, tmplId, queueId)
-		} else if strings.Index(platform, consts.PlatformHuawei.ToString()) > -1 {
-			result = s.HuaweiCloudVmService.CreateRemote(hostId, backingId, tmplId, queueId)
-		}
-	} else if strings.Index(platform, consts.PlatformDocker.ToString()) > -1 {
-		if strings.Index(platform, consts.PlatformHuawei.ToString()) > -1 {
-			result = s.HuaweiCloudDockerService.CreateRemote(hostId, backingId, tmplId, queueId)
-		}
-	}
-
-	return
-}
-
 func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {
 	s.QueueRepo.Retry(queue)
 
@@ -150,7 +130,7 @@ func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {
 	var newTaskProgress consts.BuildProgress
 
 	if s.DeviceService.IsDeviceReady(device) {
-		rpcResult := s.AppiumService.RemoteRun(queue)
+		rpcResult := s.FacadeService.RunAppiumTest(queue)
 
 		if rpcResult.IsSuccess() {
 			s.QueueRepo.Run(queue) // start
@@ -184,7 +164,7 @@ func (s ExecService) CheckAndCallUnitTest(queue model.Queue) {
 	if found {
 		host := s.HostRepo.Get(hostId)
 
-		result := s.UnitService.RemoteRun(queue, host)
+		result := s.FacadeService.RunUnitTest(queue, host)
 
 		if result.IsSuccess() {
 			s.QueueRepo.Run(queue)

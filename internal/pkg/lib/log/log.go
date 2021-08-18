@@ -22,7 +22,7 @@ func Init(app string) {
 	}
 
 	usr, _ := user.Current()
-	log.Info("RemoteRun as user " + usr.Username)
+	log.Info("RunRemote as user " + usr.Username)
 
 	_var.WorkDir = addPathSepIfNeeded(filepath.Join(usr.HomeDir, consts.AppName))
 	logDir := addPathSepIfNeeded("log")

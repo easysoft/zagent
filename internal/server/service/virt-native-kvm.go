@@ -10,7 +10,7 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
-type KvmNativeService struct {
+type NativeKvmService struct {
 	HostRepo    *repo.HostRepo    `inject:""`
 	IsoRepo     *repo.IsoRepo     `inject:""`
 	TmplRepo    *repo.TmplRepo    `inject:""`
@@ -22,7 +22,7 @@ type KvmNativeService struct {
 	HistoryService  *HistoryService           `inject:""`
 }
 
-func (s KvmNativeService) CreateRemote(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp) {
+func (s NativeKvmService) CreateRemote(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp) {
 	host := s.HostRepo.Get(hostId)
 	backing := s.BackingRepo.Get(backingId)
 	sysIso := s.IsoRepo.Get(backing.SysIsoId)
@@ -82,7 +82,7 @@ func (s KvmNativeService) CreateRemote(hostId, backingId, tmplId, queueId uint) 
 	return
 }
 
-func (s KvmNativeService) DestroyRemote(vmId, queueId uint) (result _domain.RpcResp) {
+func (s NativeKvmService) DestroyRemote(vmId, queueId uint) (result _domain.RpcResp) {
 	vm := s.VmRepo.GetById(vmId)
 	host := s.HostRepo.Get(vm.HostId)
 

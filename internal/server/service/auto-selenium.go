@@ -1,11 +1,10 @@
-package testing
+package serverService
 
 import (
 	consts "github.com/easysoft/zagent/internal/comm/const"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
-	serverService "github.com/easysoft/zagent/internal/server/service"
 	commonService "github.com/easysoft/zagent/internal/server/service/common"
 )
 
@@ -14,8 +13,8 @@ type SeleniumService struct {
 	VmRepo    *repo.VmRepo    `inject:""`
 
 	RpcService       *commonService.RpcService       `inject:""`
-	QueueService     *serverService.QueueService     `inject:""`
-	HistoryService   *serverService.HistoryService   `inject:""`
+	QueueService     *QueueService                   `inject:""`
+	HistoryService   *HistoryService                 `inject:""`
 	WebSocketService *commonService.WebSocketService `inject:""`
 }
 
@@ -23,7 +22,7 @@ func NewSeleniumService() *SeleniumService {
 	return &SeleniumService{}
 }
 
-func (s SeleniumService) RemoteRun(queue model.Queue) (result _domain.RpcResp) {
+func (s SeleniumService) RunRemote(queue model.Queue) (result _domain.RpcResp) {
 	vmId := queue.VmId
 	vm := s.VmRepo.GetById(vmId)
 
