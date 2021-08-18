@@ -100,12 +100,18 @@ func (r HostRepo) QueryBusy() (hostIds []uint) {
 	return
 }
 
-func (r HostRepo) QueryUnBusy(busyHostIds []uint, tp string) (hostId uint) {
+func (r HostRepo) QueryUnBusy(busyHostIds []uint, plf consts.Platform, isNative bool) (hostId uint) {
 	list := make([]model.Host, 0)
 
 	whr := r.DB.Model(&model.Host{}).
 		Where("status = ? AND platform LIKE ?",
-			consts.HostReady, "%"+tp+"%")
+			consts.HostReady, "%"+plf+"%")
+
+	if isNative {
+		whr.Where("platform LIKE ?", "%"+consts.PlatformNative+"%")
+	} else {
+		whr.Where("platform LIKE ?", "%"+consts.PlatformCloud+"%")
+	}
 
 	if busyHostIds != nil {
 		whr.Where(

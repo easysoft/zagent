@@ -1,6 +1,7 @@
 package serverService
 
 import (
+	consts "github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 )
@@ -35,9 +36,11 @@ func (s HostService) GetValidForQueueByVm(queue model.Queue) (hostId, backingId,
 	return
 }
 
-func (s HostService) GetValidForQueueByContainer(queue model.Queue) (hostId uint, found bool) {
+func (s HostService) GetValidForQueueByDocker(queue model.Queue) (hostId uint, found bool) {
 	busyHostIds := s.getBusyHosts()
-	hostId = s.HostRepo.QueryUnBusy(busyHostIds, "docker")
+
+	isNative := queue.DockerImage == ""
+	hostId = s.HostRepo.QueryUnBusy(busyHostIds, consts.PlatformDocker, isNative)
 
 	if hostId != 0 {
 		found = true

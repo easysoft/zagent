@@ -180,7 +180,7 @@ func (s ExecService) CheckAndCallUnitTest(queue model.Queue) {
 	originalProgress := queue.Progress
 	var newTaskProgress consts.BuildProgress
 
-	hostId, found := s.HostService.GetValidForQueueByContainer(queue)
+	hostId, found := s.HostService.GetValidForQueueByDocker(queue)
 	if found {
 		host := s.HostRepo.Get(hostId)
 
