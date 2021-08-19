@@ -24,11 +24,14 @@ func (s HuaweiCloudCciService) CreateByQueue(queue model.Queue, host model.Host)
 	client, _ := s.HuaweiCloudCommService.CreateIamClient(
 		testconst.HUAWEI_CLOUD_KEY, testconst.HUAWEI_CLOUD_Secret, testconst.HUAWEI_CLOUD_REGION)
 	token, _ := s.HuaweiCloudCommService.GetIamToken(client)
-
-	cmd := strings.Split(queue.BuildCommands, "\n")
+	cmd := []string{
+		"/bin/bash",
+		"-c",
+		strings.Join(strings.Split(queue.BuildCommands, "\n"), "; "),
+	}
 
 	image := queue.DockerImage
-	jobName := queue.TaskName + _stringUtils.NewUuid()
+	jobName := queue.TaskName + "-" + _stringUtils.NewUuid()
 	region := host.CloudRegion
 	namespace := host.CloudNamespace
 
