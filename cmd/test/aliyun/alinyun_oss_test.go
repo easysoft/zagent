@@ -2,9 +2,9 @@ package aliyun
 
 import (
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
-	_const "github.com/easysoft/zagent/cmd/test/const"
-	consts "github.com/easysoft/zagent/internal/comm/const"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	"github.com/easysoft/zagent/cmd/test/const"
+	"github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/pkg/lib/log"
 	"os"
 	"testing"
 )
@@ -12,7 +12,7 @@ import (
 func TestOss(t *testing.T) {
 	_logUtils.Init(consts.AppNameAgent)
 
-	client, err := oss.New("oss-cn-beijing.aliyuncs.com", _const.ALIYUN_KEY, _const.ALIYUN_Secret)
+	client, err := oss.New("oss-cn-beijing.aliyuncs.com", testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
 	if err != nil {
 		_logUtils.Printf("oss.New error %s", err.Error())
 		os.Exit(-1)

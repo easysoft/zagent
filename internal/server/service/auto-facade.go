@@ -25,20 +25,20 @@ func NewRunService() *FacadeService {
 	return &FacadeService{}
 }
 
-// create machine
+// Create create machine
 func (s FacadeService) Create(hostId, backingId, tmplId, queueId uint) (
 	result _domain.RpcResp) {
 
 	platform := s.HostRepo.Get(hostId).Platform.ToString()
 
-	if strings.Index(platform, consts.PlatformVm.ToString()) > -1 {
-		if strings.Index(platform, consts.PlatformNative.ToString()) > -1 {
+	if s.IsVm(platform) {
+		if s.IsNative(platform) {
 			s.CreateVmKvmNative(hostId, backingId, tmplId, queueId)
-		} else if strings.Index(platform, consts.PlatformHuawei.ToString()) > -1 {
+		} else if s.IsHuaweiCloud(platform) {
 			s.CreateVmHuaweiCloud(hostId, backingId, tmplId, queueId)
 		}
-	} else if strings.Index(platform, consts.PlatformDocker.ToString()) > -1 {
-		if strings.Index(platform, consts.PlatformHuawei.ToString()) > -1 {
+	} else if s.IsDocker(platform) {
+		if s.IsHuaweiCloud(platform) {
 			s.CreateDockerHuaweiCloud(hostId, backingId, tmplId, queueId)
 		}
 	}
@@ -58,7 +58,7 @@ func (s FacadeService) CreateDockerHuaweiCloud(hostId, backingId, tmplId, queueI
 	return
 }
 
-// run testing
+// RunTest run testing
 func (s FacadeService) RunTest(queue model.Queue, host model.Host) (result _domain.RpcResp) {
 	if queue.BuildType == consts.SeleniumTest {
 		s.RunSeleniumTest(queue)
@@ -83,19 +83,19 @@ func (s FacadeService) RunUnitTest(queue model.Queue, host model.Host) (result _
 	return
 }
 
-// destory machine
+// Destroy destory machine
 func (s FacadeService) Destroy(queue model.Queue) {
 	vm := s.VmRepo.GetById(queue.VmId)
 	platform := s.HostRepo.Get(vm.HostId).Platform.ToString()
 
-	if strings.Index(platform, consts.PlatformVm.ToString()) > -1 {
-		if strings.Index(platform, consts.PlatformNative.ToString()) > -1 {
+	if s.IsVm(platform) {
+		if s.IsNative(platform) {
 			s.DestroyVmKvmNative(queue)
-		} else if strings.Index(platform, consts.PlatformHuawei.ToString()) > -1 {
+		} else if s.IsHuaweiCloud(platform) {
 			s.DestroyVmHuaweiCloud(queue)
 		}
-	} else if strings.Index(platform, consts.PlatformDocker.ToString()) > -1 {
-		if strings.Index(platform, consts.PlatformHuawei.ToString()) > -1 {
+	} else if s.IsDocker(platform) {
+		if s.IsHuaweiCloud(platform) {
 			s.DestroyDockerHuaweiCloud(queue)
 		}
 	}
@@ -110,5 +110,26 @@ func (s FacadeService) DestroyVmHuaweiCloud(queue model.Queue) (result _domain.R
 }
 func (s FacadeService) DestroyDockerHuaweiCloud(queue model.Queue) (result _domain.RpcResp) {
 	s.HuaweiCloudDockerService.DestroyRemote(queue.VmId, queue.ID)
+	return
+}
+
+func (s FacadeService) IsVm(platform string) (result bool) {
+	result = strings.Index(platform, consts.PlatformVm.ToString()) > -1
+	return
+}
+func (s FacadeService) IsDocker(platform string) (result bool) {
+	result = strings.Index(platform, consts.PlatformDocker.ToString()) > -1
+	return
+}
+func (s FacadeService) IsNative(platform string) (result bool) {
+	result = strings.Index(platform, consts.PlatformNative.ToString()) > -1
+	return
+}
+func (s FacadeService) IsHuaweiCloud(platform string) (result bool) {
+	result = strings.Index(platform, consts.PlatformHuawei.ToString()) > -1
+	return
+}
+func (s FacadeService) IsAliyun(platform string) (result bool) {
+	result = strings.Index(platform, consts.PlatformAli.ToString()) > -1
 	return
 }
