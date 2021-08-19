@@ -7,16 +7,12 @@ import (
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
-	commonService "github.com/easysoft/zagent/internal/server/service/common"
 	"time"
 )
 
 type DeviceService struct {
 	DeviceRepo *repo.DeviceRepo `inject:""`
 	BuildRepo  *repo.BuildRepo  `inject:""`
-
-	QueueService *QueueService             `inject:""`
-	RpcService   *commonService.RpcService `inject:""`
 }
 
 func NewDeviceService() *DeviceService {
