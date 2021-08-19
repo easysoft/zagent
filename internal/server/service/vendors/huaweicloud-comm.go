@@ -2,10 +2,8 @@ package vendors
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/alibabacloud-go/tea/tea"
 	testconst "github.com/easysoft/zagent/cmd/test/const"
-	"github.com/easysoft/zagent/internal/comm/domain"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"github.com/huaweicloud/huaweicloud-sdk-go-v3/core/auth/basic"
 	iam "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/iam/v3"
@@ -70,80 +68,6 @@ func (s HuaweiCloudCommService) CreateIamClient(ak, sk, regionId string) (
 			WithRegion(region.ValueOf(regionId)).
 			WithCredential(auth).
 			Build())
-
-	return
-}
-
-func (s HuaweiCloudCommService) Create(image string, jobName string, cmd []string,
-	token string, region string, nameapace string) (ret domain.CciRepsCreate, success bool) {
-
-	reqCreate := domain.CciReqCreate{
-		APIVersion: "batch/v1",
-		Kind:       "Job",
-		Metadata: domain.CciMetadata{
-			Name: jobName,
-		},
-		SpecTempl: domain.CciSpecTempl{
-			Template: domain.CciTemplate{
-				Metadata: domain.CciMetadata{
-					Name: jobName,
-				},
-				Spec: domain.CciSpec{
-					Containers: []domain.CciContainers{
-						{
-							Name:  jobName,
-							Image: image,
-							Resources: domain.CciResources{
-								Limits: domain.CciLimits{
-									CPU:    "2000m",
-									Memory: "4096Mi",
-								},
-								Requests: domain.CciRequests{
-									CPU:    "2000m",
-									Memory: "4096Mi",
-								},
-							},
-							Command: cmd,
-						}},
-					ImagePullSecrets: []domain.ImagePullSecrets{
-						{
-							Name: "imagepull-secret",
-						},
-					},
-					RestartPolicy: "Never",
-				},
-			},
-		},
-	}
-
-	createUrl := fmt.Sprintf(testconst.HuaweiCloudUrlJobCreate, region, nameapace)
-	var resp []byte
-	resp, success = s.post(createUrl, reqCreate, nil, map[string]string{"X-Auth-Token": token})
-
-	json.Unmarshal(resp, &ret)
-	name := ret.Metadata.Name
-	_logUtils.Infof("%s#v", name)
-
-	return
-}
-
-func (s HuaweiCloudCommService) Destroy(jobName string, token string, region string, nameapace string) (
-	ret domain.CciRepsDestroy, success bool) {
-
-	reqDestroy := domain.CciReqDestroy{
-		Kind:              "DeleteOptions",
-		APIVersion:        "v1",
-		PropagationPolicy: "Orphan",
-	}
-
-	destroyUrl := fmt.Sprintf(testconst.HuaweiCloudUrlJobDestroy,
-		testconst.HUAWEI_CLOUD_REGION, testconst.HUAWEI_CLOUD_NAMEAPACE, jobName)
-
-	var resp []byte
-	resp, success = s.delete(destroyUrl, reqDestroy, nil, map[string]string{"X-Auth-Token": token})
-
-	json.Unmarshal(resp, ret)
-	_logUtils.Infof("%#v", ret)
 
 	return
 }

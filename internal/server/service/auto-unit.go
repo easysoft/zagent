@@ -35,7 +35,7 @@ func (s UnitService) RunRemote(queue model.Queue, host model.Host) (result _doma
 	if queue.DockerImage == "" {
 		result = s.RpcService.UnitTest(build)
 	} else {
-		result = s.HuaweiCloudCciService.Run(build)
+		result = s.HuaweiCloudCciService.CreateByQueue(queue, host)
 	}
 
 	return

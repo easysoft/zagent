@@ -14,7 +14,10 @@ func TestHuaweiCloudCci(t *testing.T) {
 	_logUtils.Init(consts.AppNameAgent)
 
 	srv := vendors.NewHuaweiCloudCommService()
-	client, _ := srv.CreateIamClient(testconst.HUAWEI_CLOUD_KEY, testconst.HUAWEI_CLOUD_Secret, testconst.HUAWEI_CLOUD_REGION)
+	cci := vendors.NewHuaweiCloudCciService()
+
+	client, _ := srv.CreateIamClient(
+		testconst.HUAWEI_CLOUD_KEY, testconst.HUAWEI_CLOUD_Secret, testconst.HUAWEI_CLOUD_REGION)
 
 	token, _ := srv.GetIamToken(client)
 
@@ -32,10 +35,10 @@ func TestHuaweiCloudCci(t *testing.T) {
 		}, "; "),
 	}
 
-	respCreate, success := srv.Create(image, name, cmd, token, testconst.HUAWEI_CLOUD_REGION, testconst.HUAWEI_CLOUD_NAMEAPACE)
+	respCreate, success := cci.Create(image, name, cmd, token, testconst.HUAWEI_CLOUD_REGION, testconst.HUAWEI_CLOUD_NAMEAPACE)
 	_logUtils.Infof("%#v, %#v", respCreate, success)
 
-	respDestroy, success := srv.Destroy(respCreate.Metadata.Name, token,
+	respDestroy, success := cci.Destroy(respCreate.Metadata.Name, token,
 		testconst.HUAWEI_CLOUD_REGION, testconst.HUAWEI_CLOUD_NAMEAPACE)
 	_logUtils.Infof("%#v, %#v", respDestroy, success)
 }
