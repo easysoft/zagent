@@ -22,18 +22,22 @@ func (s AliyunEcsService) CreateInst(vmName, imageName string, client *ecs.Clien
 		return
 	}
 
-	zoneId, err := s.QuerySpec(regionId, client)
+	zoneId, spec, err := s.QuerySpec(regionId, client)
 	if err != nil {
 		return
 	}
 
 	imageId, err := s.QueryImage(imageName, regionId, client)
+	if err != nil {
+		return
+	}
 
 	req := &ecs.CreateInstanceRequest{
 		InstanceName:       tea.String(vmName),
 		RegionId:           tea.String(regionId),
 		ImageId:            tea.String(imageId),
-		InstanceType:       tea.String(zoneId),
+		ZoneId:             tea.String(zoneId),
+		InstanceType:       tea.String(spec),
 		InternetChargeType: tea.String("PayByTraffic"),
 	}
 
@@ -121,7 +125,7 @@ func (s AliyunEcsService) QueryImage(imageName, regionId string, client *ecs.Cli
 	return
 }
 
-func (s AliyunEcsService) QuerySpec(regionId string, client *ecs.Client) (zoneId string, err error) {
+func (s AliyunEcsService) QuerySpec(regionId string, client *ecs.Client) (zoneId, spec string, err error) {
 	req := &ecs.DescribeAvailableResourceRequest{
 		RegionId:            tea.String(regionId),
 		InstanceChargeType:  tea.String("PostPaid"),
@@ -137,12 +141,9 @@ func (s AliyunEcsService) QuerySpec(regionId string, client *ecs.Client) (zoneId
 		return
 	}
 
-	for _, item := range result.Body.AvailableZones.AvailableZone {
-		zoneId = *item.ZoneId
-		_logUtils.Infof("region: %s, %s", *item.ZoneId, *item.Status)
-
-		return
-	}
+	zoneId = *result.Body.AvailableZones.AvailableZone[0].ZoneId
+	spec = *result.Body.AvailableZones.AvailableZone[0].
+		AvailableResources.AvailableResource[0].SupportedResources.SupportedResource[0].Value
 
 	return
 }
