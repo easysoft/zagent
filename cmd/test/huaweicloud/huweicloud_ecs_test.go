@@ -28,7 +28,7 @@ func TestHuaweiCloudEcs(t *testing.T) {
 
 	<-time.After(5 * time.Second)
 
-	name, status, ip, mac, err := huaweiCloudService.QueryVm(id, ecsClient)
+	name, status, ip, mac, err := huaweiCloudService.QueryInst(id, ecsClient)
 	_logUtils.Infof("vm name %s, status %s, ip %s, mac %s", name, status, ip, mac)
 
 	url, err := huaweiCloudService.QueryVnc(id, ecsClient)

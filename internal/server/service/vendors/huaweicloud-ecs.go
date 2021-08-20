@@ -163,7 +163,7 @@ func (s HuaweiCloudEcsService) QuerySubNet(client *vpc.VpcClient) (id, name stri
 	return
 }
 
-func (s HuaweiCloudEcsService) QueryVm(id string, client *ecs.EcsClient) (name, status, ip, mac string, err error) {
+func (s HuaweiCloudEcsService) QueryInst(id string, client *ecs.EcsClient) (name, status, ip, mac string, err error) {
 	request := &ecsModel.ShowServerRequest{
 		ServerId: id,
 	}

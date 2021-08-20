@@ -60,7 +60,7 @@ func (s HuaweiCloudVmService) CreateRemote(hostId, backingId, tmplId, queueId ui
 	for i := 0; i < 60; i++ {
 		<-time.After(1 * time.Second)
 
-		_, result.Msg, vm.NodeIp, vm.MacAddress, err = huaweiCloudService.QueryVm(vm.CouldInstId, ecsClient)
+		_, result.Msg, vm.NodeIp, vm.MacAddress, err = huaweiCloudService.QueryInst(vm.CouldInstId, ecsClient)
 		if err != nil {
 			result.Fail(err.Error())
 			s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, vm.VncAddress, "", "")

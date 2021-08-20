@@ -27,7 +27,7 @@ func (s AliyunEcsService) CreateInst(vmName, imageName string, client *ecs.Clien
 		return
 	}
 
-	imageId, err := s.QueryImage(imageName+".qcow2", regionId, client)
+	imageId, err := s.QueryImage(imageName, regionId, client)
 
 	req := &ecs.CreateInstanceRequest{
 		InstanceName:       tea.String(vmName),
@@ -45,6 +45,19 @@ func (s AliyunEcsService) CreateInst(vmName, imageName string, client *ecs.Clien
 
 	id = *result.Body.InstanceId
 	name = vmName
+
+	return
+}
+
+func (s AliyunEcsService) RemoveInst(id string, ecsClient *ecs.Client) (err error) {
+	req := &ecs.DeleteInstanceRequest{
+		InstanceId: tea.String(id),
+	}
+	_, err = ecsClient.DeleteInstance(req)
+	if err != nil {
+		_logUtils.Errorf("DeleteInstance %s error %s", id, err.Error())
+		return
+	}
 
 	return
 }

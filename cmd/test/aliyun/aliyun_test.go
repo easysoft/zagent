@@ -19,9 +19,11 @@ func TestAliyun(t *testing.T) {
 		return
 	}
 
-	id, name, _ := srv.CreateInst("vm-001", "tmpl-ubt20-x64-desktop-zh_cn.qcow2", client)
+	id, name, _ := srv.CreateInst("vm-001", "tmpl-ubt20-x64-desktop-zh_cn", client)
 
 	vnc, _ := srv.QueryVnc(id, client)
-
 	_logUtils.Infof("%s, %s, %s", id, name, vnc)
+
+	err = srv.RemoveInst(id, client)
+	_logUtils.Infof("%s", err.Error())
 }
