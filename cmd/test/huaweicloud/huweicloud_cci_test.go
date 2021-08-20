@@ -1,7 +1,7 @@
 package aliyun
 
 import (
-	"github.com/easysoft/zagent/cmd/test/const"
+	"github.com/easysoft/zagent/cmd/test/_const"
 	consts "github.com/easysoft/zagent/internal/comm/const"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
@@ -38,7 +38,6 @@ func TestHuaweiCloudCci(t *testing.T) {
 	respCreate, success := cci.Create(image, name, cmd, token, testconst.HUAWEI_CLOUD_REGION, testconst.HUAWEI_CLOUD_NAMEAPACE)
 	_logUtils.Infof("%#v, %#v", respCreate, success)
 
-	respDestroy, success := cci.Destroy(respCreate.Metadata.Name, token,
-		testconst.HUAWEI_CLOUD_REGION, testconst.HUAWEI_CLOUD_NAMEAPACE)
+	respDestroy, success := cci.Destroy(respCreate.Metadata.Name, token, testconst.HUAWEI_CLOUD_REGION, testconst.HUAWEI_CLOUD_NAMEAPACE)
 	_logUtils.Infof("%#v, %#v", respDestroy, success)
 }

@@ -2,7 +2,7 @@ package aliyun
 
 import (
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
-	"github.com/easysoft/zagent/cmd/test/const"
+	"github.com/easysoft/zagent/cmd/test/_const"
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/pkg/lib/log"
 	"os"
@@ -12,15 +12,15 @@ import (
 func TestOss(t *testing.T) {
 	_logUtils.Init(consts.AppNameAgent)
 
-	client, err := oss.New("oss-cn-beijing.aliyuncs.com", testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
+	client, err := oss.New("oss-cn-hangzhou.aliyuncs.com", testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
 	if err != nil {
 		_logUtils.Printf("oss.New error %s", err.Error())
 		os.Exit(-1)
 	}
 
-	bucketName := "tester-im"
-	objectName := "x64-pro-zh_cn.qcow2"
-	locaFilename := "/Users/aaron/Downloads/x64-pro-zh_cn.qcow2"
+	bucketName := "com-deeptest"
+	objectName := "tmpl-ubt20-x64-desktop-zh_cn.qcow2"
+	locaFilename := "/Users/aaron/Downloads/tmpl-ubt20-x64-desktop-zh_cn.qcow2"
 
 	// 获取存储空间。
 	bucket, err := client.Bucket(bucketName)

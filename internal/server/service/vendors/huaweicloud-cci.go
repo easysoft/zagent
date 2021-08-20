@@ -3,13 +3,9 @@ package vendors
 import (
 	"encoding/json"
 	"fmt"
-	testconst "github.com/easysoft/zagent/cmd/test/const"
+	"github.com/easysoft/zagent/cmd/test/_const"
 	"github.com/easysoft/zagent/internal/comm/domain"
-	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
-	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
-	"github.com/easysoft/zagent/internal/server/model"
-	"strings"
 )
 
 type HuaweiCloudCciService struct {
@@ -18,32 +14,6 @@ type HuaweiCloudCciService struct {
 
 func NewHuaweiCloudCciService() *HuaweiCloudCciService {
 	return &HuaweiCloudCciService{}
-}
-
-func (s HuaweiCloudCciService) CreateByQueue(queue model.Queue, host model.Host) (result _domain.RpcResp) {
-	client, _ := s.HuaweiCloudCommService.CreateIamClient(
-		testconst.HUAWEI_CLOUD_KEY, testconst.HUAWEI_CLOUD_Secret, testconst.HUAWEI_CLOUD_REGION)
-	token, _ := s.HuaweiCloudCommService.GetIamToken(client)
-	cmd := []string{
-		"/bin/bash",
-		"-c",
-		strings.Join(strings.Split(queue.BuildCommands, "\n"), "; "),
-	}
-
-	image := queue.DockerImage
-	jobName := queue.TaskName + "-" + _stringUtils.NewUuid()
-	region := host.CloudRegion
-	namespace := host.CloudNamespace
-
-	resp, success := s.Create(image, jobName, cmd, token, region, namespace)
-	if success {
-		result.Pass("")
-	} else {
-		bytes, _ := json.Marshal(resp)
-		result.Fail(string(bytes))
-	}
-
-	return
 }
 
 func (s HuaweiCloudCciService) Create(image string, jobName string, cmd []string,
@@ -99,7 +69,7 @@ func (s HuaweiCloudCciService) Create(image string, jobName string, cmd []string
 	return
 }
 
-func (s HuaweiCloudCciService) Destroy(jobName string, token string, region string, nameapace string) (
+func (s HuaweiCloudCciService) Destroy(jobName, token, region, namespace string) (
 	ret domain.CciRepsDestroy, success bool) {
 
 	reqDestroy := domain.CciReqDestroy{
@@ -108,8 +78,7 @@ func (s HuaweiCloudCciService) Destroy(jobName string, token string, region stri
 		PropagationPolicy: "Orphan",
 	}
 
-	destroyUrl := fmt.Sprintf(testconst.HuaweiCloudUrlJobDestroy,
-		testconst.HUAWEI_CLOUD_REGION, testconst.HUAWEI_CLOUD_NAMEAPACE, jobName)
+	destroyUrl := fmt.Sprintf(testconst.HuaweiCloudUrlJobDestroy, region, namespace, jobName)
 
 	var resp []byte
 	resp, success = s.HuaweiCloudCommService.delete(destroyUrl, reqDestroy, nil, map[string]string{"X-Auth-Token": token})

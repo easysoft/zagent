@@ -1,6 +1,8 @@
 package serverService
 
 import (
+	"fmt"
+	testconst "github.com/easysoft/zagent/cmd/test/_const"
 	"github.com/easysoft/zagent/internal/comm/const"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
@@ -9,17 +11,17 @@ import (
 	"time"
 )
 
-type HuaweiCloudVmService struct {
+type AliyunVmService struct {
 	HostRepo    *repo.HostRepo    `inject:""`
 	BackingRepo *repo.BackingRepo `inject:""`
 	VmRepo      *repo.VmRepo      `inject:""`
 
-	VmCommonService       *VmCommonService               `inject:""`
-	HistoryService        *HistoryService                `inject:""`
-	HuaweiCloudEcsService *vendors.HuaweiCloudEcsService `inject:""`
+	VmCommonService  *VmCommonService          `inject:""`
+	HistoryService   *HistoryService           `inject:""`
+	AliyunEcsService *vendors.AliyunEcsService `inject:""`
 }
 
-func (s HuaweiCloudVmService) CreateRemote(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp) {
+func (s AliyunVmService) CreateRemote(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp) {
 	host := s.HostRepo.Get(hostId)
 	backing := s.BackingRepo.Get(backingId)
 	backing.Name = s.VmCommonService.genTmplName(backing)
@@ -37,9 +39,8 @@ func (s HuaweiCloudVmService) CreateRemote(hostId, backingId, tmplId, queueId ui
 	vm.Name = s.VmCommonService.genVmName(backing, vm.ID)
 	s.VmRepo.UpdateVmName(vm)
 
-	ecsClient, err := s.HuaweiCloudEcsService.CreateEcsClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
-	imgClient, err := s.HuaweiCloudEcsService.CreateImgClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
-	vpcClient, err := s.HuaweiCloudEcsService.CreateVpcClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
+	url := fmt.Sprintf(testconst.ALIYUN_URL, host.CloudRegion)
+	ecsClient, err := s.AliyunEcsService.CreateClient(url, host.CloudKey, host.CloudSecret)
 
 	if err != nil {
 		result.Fail(err.Error())
@@ -47,8 +48,7 @@ func (s HuaweiCloudVmService) CreateRemote(hostId, backingId, tmplId, queueId ui
 		return
 	}
 
-	huaweiCloudService := vendors.NewHuaweiCloudEcsService()
-	vm.CouldInstId, _, err = huaweiCloudService.CreateInst(vm.Name, backing.Name, ecsClient, imgClient, vpcClient)
+	vm.CouldInstId, _, err = s.AliyunEcsService.CreateInst(vm.Name, backing.Name, ecsClient)
 	if err != nil {
 		result.Fail(err.Error())
 		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, "", "", "")
@@ -60,46 +60,27 @@ func (s HuaweiCloudVmService) CreateRemote(hostId, backingId, tmplId, queueId ui
 	for i := 0; i < 60; i++ {
 		<-time.After(1 * time.Second)
 
-		_, result.Msg, vm.NodeIp, vm.MacAddress, err = huaweiCloudService.QueryVm(vm.CouldInstId, ecsClient)
+		vm.NodeIp, vm.MacAddress, err = s.AliyunEcsService.QueryInst(vm.CouldInstId, ecsClient)
 		if err != nil {
 			result.Fail(err.Error())
 			s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, vm.VncAddress, "", "")
 			return
 		}
 
-		if vm.NodeIp != "" {
+		if vm.MacAddress != "" {
 			break
 		}
 	}
 
 	s.VmRepo.UpdateVmCloudInst(vm)
 
-	vm.VncAddress, _ = huaweiCloudService.QueryVnc(vm.CouldInstId, ecsClient)
+	vm.VncAddress, _ = s.AliyunEcsService.QueryVnc(vm.CouldInstId, ecsClient)
 	s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, vm.VncAddress, "", "")
 
 	return
 }
 
-func (s HuaweiCloudVmService) DestroyRemote(vmId, queueId uint) (result _domain.RpcResp) {
-	vm := s.VmRepo.GetById(vmId)
-	host := s.HostRepo.Get(vm.HostId)
-
-	status := consts.VmDestroy
-
-	srv := vendors.NewHuaweiCloudEcsService()
-	ecsClient, err := srv.CreateEcsClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
-	if err != nil {
-		status = consts.VmFailDestroy
-	} else {
-		err = srv.RemoveInst(vm.CouldInstId, ecsClient)
-		if err != nil {
-			status = consts.VmFailDestroy
-		}
-	}
-
-	s.VmRepo.UpdateStatusByCloudInstId([]string{vm.CouldInstId}, status)
-
-	s.HistoryService.Create(consts.Vm, vmId, queueId, "", status.ToString())
+func (s AliyunVmService) DestroyRemote(vmId, queueId uint) (result _domain.RpcResp) {
 
 	return
 }

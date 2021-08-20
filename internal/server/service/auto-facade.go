@@ -16,6 +16,8 @@ type FacadeService struct {
 	HuaweiCloudVmService     *HuaweiCloudVmService     `inject:""`
 	HuaweiCloudDockerService *HuaweiCloudDockerService `inject:""`
 
+	AliyunVmService *AliyunVmService `inject:""`
+
 	SeleniumService *SeleniumService `inject:""`
 	AppiumService   *AppiumService   `inject:""`
 	UnitService     *UnitService     `inject:""`
@@ -39,7 +41,9 @@ func (s FacadeService) Create(hostId, backingId, tmplId, queueId uint) (
 		}
 	} else if s.IsDocker(platform) {
 		if s.IsHuaweiCloud(platform) {
-			s.CreateDockerHuaweiCloud(hostId, backingId, tmplId, queueId)
+			s.CreateDockerHuaweiCloud(hostId, queueId)
+		} else if s.IsAliyun(platform) {
+			//s.CreateDockerAliyun(hostId, queueId)
 		}
 	}
 
@@ -49,12 +53,18 @@ func (s FacadeService) CreateVmKvmNative(hostId, backingId, tmplId, queueId uint
 	result = s.KvmNativeService.CreateRemote(hostId, backingId, tmplId, queueId)
 	return
 }
+
 func (s FacadeService) CreateVmHuaweiCloud(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp) {
 	result = s.HuaweiCloudVmService.CreateRemote(hostId, backingId, tmplId, queueId)
 	return
 }
-func (s FacadeService) CreateDockerHuaweiCloud(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp) {
-	result = s.HuaweiCloudDockerService.CreateRemote(hostId, backingId, tmplId, queueId)
+func (s FacadeService) CreateVmAliyun(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp) {
+	result = s.HuaweiCloudVmService.CreateRemote(hostId, backingId, tmplId, queueId)
+	return
+}
+
+func (s FacadeService) CreateDockerHuaweiCloud(hostId, queueId uint) (result _domain.RpcResp) {
+	result = s.HuaweiCloudDockerService.CreateRemote(hostId, queueId)
 	return
 }
 

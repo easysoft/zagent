@@ -8,4 +8,4 @@
 /*.db
 /res/server/res.go
 /down/upload/*
-/cmd/test/const/const.go
+/cmd/test/_const/const.go

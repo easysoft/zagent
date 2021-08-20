@@ -1,7 +1,7 @@
 package aliyun
 
 import (
-	_const "github.com/easysoft/zagent/cmd/test/const"
+	_const "github.com/easysoft/zagent/cmd/test/_const"
 	consts "github.com/easysoft/zagent/internal/comm/const"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"github.com/easysoft/zagent/internal/server/service/vendors"

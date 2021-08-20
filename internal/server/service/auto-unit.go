@@ -6,18 +6,17 @@ import (
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 	commonService "github.com/easysoft/zagent/internal/server/service/common"
-	"github.com/easysoft/zagent/internal/server/service/vendors"
 )
 
 type UnitService struct {
 	BuildRepo *repo.BuildRepo `inject:""`
 	VmRepo    *repo.VmRepo    `inject:""`
 
-	QueueService          *QueueService                   `inject:""`
-	RpcService            *commonService.RpcService       `inject:""`
-	HuaweiCloudCciService *vendors.HuaweiCloudCciService  `inject:""`
-	HistoryService        *HistoryService                 `inject:""`
-	WebSocketService      *commonService.WebSocketService `inject:""`
+	QueueService     *QueueService                   `inject:""`
+	RpcService       *commonService.RpcService       `inject:""`
+	FacadeService    *FacadeService                  `inject:""`
+	HistoryService   *HistoryService                 `inject:""`
+	WebSocketService *commonService.WebSocketService `inject:""`
 }
 
 func NewUnitService() *UnitService {
@@ -35,7 +34,7 @@ func (s UnitService) RunRemote(queue model.Queue, host model.Host) (result _doma
 	if queue.DockerImage == "" {
 		result = s.RpcService.UnitTest(build)
 	} else {
-		result = s.HuaweiCloudCciService.CreateByQueue(queue, host)
+		result = s.FacadeService.Create(host.ID, 0, 0, queue.ID)
 	}
 
 	return

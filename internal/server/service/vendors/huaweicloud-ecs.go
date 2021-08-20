@@ -25,10 +25,10 @@ func NewHuaweiCloudEcsService() *HuaweiCloudEcsService {
 	return &HuaweiCloudEcsService{}
 }
 
-func (s HuaweiCloudEcsService) CreateInst(instName, img string,
+func (s HuaweiCloudEcsService) CreateInst(instName, imageName string,
 	ecsClient *ecs.EcsClient, imgClient *ims.ImsClient, vpcClient *vpc.VpcClient) (id, name string, err error) {
 	specId, _, _ := s.QuerySpec(ecsClient)
-	imageId, _, _ := s.QueryImage(img, imgClient)
+	imageId, _, _ := s.QueryImage(imageName, imgClient)
 	vpcId, _, _ := s.QueryVpc(vpcClient)
 	subnetId, _, _ := s.QuerySubNet(vpcClient)
 

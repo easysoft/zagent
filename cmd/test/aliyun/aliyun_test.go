@@ -1,7 +1,8 @@
 package aliyun
 
 import (
-	"github.com/easysoft/zagent/cmd/test/const"
+	"fmt"
+	testconst "github.com/easysoft/zagent/cmd/test/_const"
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/pkg/lib/log"
 	"github.com/easysoft/zagent/internal/server/service/vendors"
@@ -11,14 +12,16 @@ import (
 func TestAliyun(t *testing.T) {
 	_logUtils.Init(consts.AppNameAgent)
 
-	srv := vendors.NewAliyunService()
-
-	client, err := srv.CreateClient("ecs-cn-hangzhou.aliyuncs.com", testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
+	srv := vendors.NewAliyunEcsService()
+	url := fmt.Sprintf("ecs-%s.aliyuncs.com", testconst.ALIYUN_REGION)
+	client, err := srv.CreateClient(url, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
 	if err != nil {
 		return
 	}
 
-	id, name, _ := vendors.NewAliyunService().CreateInst("windows", "x86_64", client)
+	id, name, _ := srv.CreateInst("vm-001", "tmpl-ubt20-x64-desktop-zh_cn.qcow2", client)
 
-	_logUtils.Infof("%s, %s", id, name)
+	vnc, _ := srv.QueryVnc(id, client)
+
+	_logUtils.Infof("%s, %s, %s", id, name, vnc)
 }

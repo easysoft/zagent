@@ -3,7 +3,7 @@ package vendors
 import (
 	"encoding/json"
 	"github.com/alibabacloud-go/tea/tea"
-	testconst "github.com/easysoft/zagent/cmd/test/const"
+	testconst "github.com/easysoft/zagent/cmd/test/_const"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"github.com/huaweicloud/huaweicloud-sdk-go-v3/core/auth/basic"
 	iam "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/iam/v3"
