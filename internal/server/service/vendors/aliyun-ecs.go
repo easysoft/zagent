@@ -96,8 +96,9 @@ func (s AliyunEcsService) QueryVnc(id string, client *ecs.Client) (url string, e
 
 func (s AliyunEcsService) QueryImage(imageName, regionId string, client *ecs.Client) (imageId string, err error) {
 	req := &ecs.DescribeImagesRequest{
-		RegionId:  tea.String(regionId),
-		ImageName: tea.String(imageName),
+		RegionId:        tea.String(regionId),
+		ImageName:       tea.String(imageName),
+		ImageOwnerAlias: tea.String("self"),
 	}
 
 	result, err := client.DescribeImages(req)
@@ -106,6 +107,7 @@ func (s AliyunEcsService) QueryImage(imageName, regionId string, client *ecs.Cli
 		return
 	} else if len(result.Body.Images.Image) == 0 {
 		_logUtils.Errorf("DescribeImages found %d images, request %#v", len(result.Body.Images.Image), req)
+		return
 	}
 
 	for _, item := range result.Body.Images.Image {
