@@ -54,6 +54,17 @@ func (s AliyunEcsService) CreateInst(vmName, imageName string, client *ecs.Clien
 		InstanceId: tea.String(id),
 	}
 	_, err = client.StartInstance(startReq)
+	if err != nil {
+		_logUtils.Errorf("StartInstance error %s", err.Error())
+		return
+	}
+
+	ipReq := &ecs.AllocatePublicIpAddressRequest{}
+	_, err = client.AllocatePublicIpAddress(ipReq)
+	if err != nil {
+		_logUtils.Errorf("AllocatePublicIpAddress error %s", err.Error())
+		return
+	}
 
 	return
 }
