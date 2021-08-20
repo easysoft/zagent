@@ -15,9 +15,6 @@ func TestAliyun(t *testing.T) {
 	srv := vendors.NewAliyunEcsService()
 	url := fmt.Sprintf("ecs-%s.aliyuncs.com", testconst.ALIYUN_REGION)
 	client, err := srv.CreateClient(url, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
-	if err != nil {
-		return
-	}
 
 	id, name, _ := srv.CreateInst("vm-001", "ubuntu-20-desktop-x64-zh_cn", client)
 

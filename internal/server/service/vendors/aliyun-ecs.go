@@ -1,6 +1,7 @@
 package vendors
 
 import (
+	"encoding/json"
 	openapi "github.com/alibabacloud-go/darabonba-openapi/client"
 	ecs "github.com/alibabacloud-go/ecs-20140526/v2/client"
 	"github.com/alibabacloud-go/tea/tea"
@@ -42,8 +43,14 @@ func (s AliyunEcsService) CreateInst(vmName, imageName string, client *ecs.Clien
 	}
 
 	result, err := client.CreateInstance(req)
+
+	reqJson, _ := json.Marshal(req)
+	_logUtils.Errorf("CreateInstance Req %s", reqJson)
+	respJson, _ := json.Marshal(result)
+	_logUtils.Errorf("CreateInstance Resp %s, err %s", respJson, err.Error())
+
 	if err != nil {
-		_logUtils.Errorf("CreateInstance image %s error %s", imageName, err.Error())
+		_logUtils.Errorf("CreateInstance Resp %s, error %s", imageName, err.Error())
 		return
 	}
 
@@ -136,6 +143,12 @@ func (s AliyunEcsService) QuerySpec(regionId string, client *ecs.Client) (zoneId
 	}
 
 	result, err := client.DescribeAvailableResource(req)
+
+	reqJson, _ := json.Marshal(req)
+	_logUtils.Errorf("DescribeAvailableResource Req %s", reqJson)
+	respJson, _ := json.Marshal(result)
+	_logUtils.Errorf("DescribeAvailableResource Resp %s", respJson)
+
 	if err != nil {
 		_logUtils.Errorf("DescribeAvailableResource error %s", err.Error())
 		return
