@@ -92,7 +92,7 @@ func (s AliyunVmService) CreateRemote(hostId, backingId, tmplId, queueId uint) (
 	result.Pass("")
 	s.VmRepo.UpdateVmCloudInst(vm)
 
-	vm.VncAddress, _ = s.AliyunEcsService.QueryVnc(
+	vm.VncAddress, _ = s.AliyunEcsService.QueryVncUrl(
 		vm.CouldInstId, host.CloudRegion, vm.OsCategory == consts.Windows, ecsClient)
 	s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, vm.VncAddress, "", "")
 

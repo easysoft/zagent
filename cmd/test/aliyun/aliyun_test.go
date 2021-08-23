@@ -35,8 +35,10 @@ func TestAliyun(t *testing.T) {
 	_logUtils.Infof("%s %s", status, macAddress)
 
 	ip, err := srv.AllocateIp(id, client)
-	vnc, _ := srv.QueryVnc(id, testconst.ALIYUN_REGION, false, client)
-	_logUtils.Infof("%s, %s, %s, %s", id, name, vnc, ip)
+	vncUrl, _ := srv.QueryVncUrl(id, testconst.ALIYUN_REGION, false, client)
+	vncPassword, _ := srv.QueryVncPassword(id, testconst.ALIYUN_REGION, client)
+
+	_logUtils.Infof("%s, %s, %s, %s, %s", id, name, ip, vncUrl, vncPassword)
 
 	err = srv.RemoveInst(id, client)
 	_logUtils.Infof("%#v", err)

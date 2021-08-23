@@ -119,7 +119,7 @@ func (s AliyunEcsService) QueryInst(id, regionId string, client *ecs.Client) (st
 
 	return
 }
-func (s AliyunEcsService) QueryVnc(id, regionId string, isWindows bool, client *ecs.Client) (url string, err error) {
+func (s AliyunEcsService) QueryVncUrl(id, regionId string, isWindows bool, client *ecs.Client) (url string, err error) {
 	req := &ecs.DescribeInstanceVncUrlRequest{
 		InstanceId: tea.String(id),
 		RegionId:   tea.String(regionId),
@@ -132,6 +132,22 @@ func (s AliyunEcsService) QueryVnc(id, regionId string, isWindows bool, client *
 	}
 
 	url = fmt.Sprintf(testconst.ALIYUN_URL_VNC, *resp.Body.VncUrl, id, isWindows)
+
+	return
+}
+func (s AliyunEcsService) QueryVncPassword(id, regionId string, client *ecs.Client) (password string, err error) {
+	req := &ecs.DescribeInstanceVncPasswdRequest{
+		InstanceId: tea.String(id),
+		RegionId:   tea.String(regionId),
+	}
+
+	resp, err := client.DescribeInstanceVncPasswd(req)
+	if err != nil {
+		_logUtils.Errorf("DescribeInstanceVncPasswd %s error %s", id, err.Error())
+		return
+	}
+
+	password = *resp.Body.VncPasswd
 
 	return
 }
