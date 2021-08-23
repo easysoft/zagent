@@ -40,6 +40,8 @@ func TestAliyun(t *testing.T) {
 
 	_logUtils.Infof("%s, %s, %s, %s, %s", id, name, ip, vncUrl, vncPassword)
 
+	<-time.After(20 * time.Second)
+
 	err = srv.RemoveInst(id, client)
 	_logUtils.Infof("%#v", err)
 }
