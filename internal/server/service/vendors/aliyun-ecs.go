@@ -8,6 +8,7 @@ import (
 	"github.com/alibabacloud-go/tea/tea"
 	testconst "github.com/easysoft/zagent/cmd/test/_const"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
 	"strings"
 )
 
@@ -86,7 +87,9 @@ func (s AliyunEcsService) AllocateIp(id string, ecsClient *ecs.Client) (ip strin
 
 func (s AliyunEcsService) RemoveInst(id string, ecsClient *ecs.Client) (err error) {
 	req := &ecs.DeleteInstanceRequest{
-		InstanceId: tea.String(id),
+		InstanceId:            tea.String(id),
+		Force:                 tea.Bool(true),
+		TerminateSubscription: tea.Bool(true),
 	}
 	_, err = ecsClient.DeleteInstance(req)
 	if err != nil {
@@ -119,7 +122,7 @@ func (s AliyunEcsService) QueryInst(id, regionId string, client *ecs.Client) (st
 
 	return
 }
-func (s AliyunEcsService) QueryVncUrl(id, regionId string, isWindows bool, client *ecs.Client) (url string, err error) {
+func (s AliyunEcsService) QueryVncUrl(id, vncPassword, regionId string, isWindows bool, client *ecs.Client) (url string, err error) {
 	req := &ecs.DescribeInstanceVncUrlRequest{
 		InstanceId: tea.String(id),
 		RegionId:   tea.String(regionId),
@@ -131,23 +134,24 @@ func (s AliyunEcsService) QueryVncUrl(id, regionId string, isWindows bool, clien
 		return
 	}
 
-	url = fmt.Sprintf(testconst.ALIYUN_URL_VNC, *resp.Body.VncUrl, id, isWindows)
+	url = fmt.Sprintf(testconst.ALIYUN_URL_VNC, *resp.Body.VncUrl, id, isWindows, vncPassword)
 
 	return
 }
 func (s AliyunEcsService) QueryVncPassword(id, regionId string, client *ecs.Client) (password string, err error) {
-	req := &ecs.DescribeInstanceVncPasswdRequest{
-		InstanceId: tea.String(id),
-		RegionId:   tea.String(regionId),
+	password = "P2" + _stringUtils.NewUuid()[:4]
+
+	req := &ecs.ModifyInstanceVncPasswdRequest{
+		InstanceId:  tea.String(id),
+		RegionId:    tea.String(regionId),
+		VncPassword: tea.String(password),
 	}
 
-	resp, err := client.DescribeInstanceVncPasswd(req)
+	_, err = client.ModifyInstanceVncPasswd(req)
 	if err != nil {
 		_logUtils.Errorf("DescribeInstanceVncPasswd %s error %s", id, err.Error())
 		return
 	}
-
-	password = *resp.Body.VncPasswd
 
 	return
 }

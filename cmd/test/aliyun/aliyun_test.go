@@ -35,8 +35,8 @@ func TestAliyun(t *testing.T) {
 	_logUtils.Infof("%s %s", status, macAddress)
 
 	ip, err := srv.AllocateIp(id, client)
-	vncUrl, _ := srv.QueryVncUrl(id, testconst.ALIYUN_REGION, false, client)
 	vncPassword, _ := srv.QueryVncPassword(id, testconst.ALIYUN_REGION, client)
+	vncUrl, _ := srv.QueryVncUrl(id, vncPassword, testconst.ALIYUN_REGION, false, client)
 
 	_logUtils.Infof("%s, %s, %s, %s, %s", id, name, ip, vncUrl, vncPassword)
 
