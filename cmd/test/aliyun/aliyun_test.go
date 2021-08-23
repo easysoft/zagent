@@ -7,6 +7,7 @@ import (
 	"github.com/easysoft/zagent/internal/pkg/lib/log"
 	"github.com/easysoft/zagent/internal/server/service/vendors"
 	"testing"
+	"time"
 )
 
 func TestAliyun(t *testing.T) {
@@ -17,10 +18,26 @@ func TestAliyun(t *testing.T) {
 	client, err := srv.CreateClient(url, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
 
 	id, name, _ := srv.CreateInst("vm-001", "ubuntu-20-desktop-x64-zh_cn", client)
+	err = srv.StartInst(id, client)
 
-	vnc, _ := srv.QueryVnc(id, client)
-	_logUtils.Infof("%s, %s, %s", id, name, vnc)
+	status := ""
+	macAddress := ""
+	for i := 0; i < 2*60; i++ {
+		<-time.After(1 * time.Second)
+
+		status, macAddress, err = srv.QueryInst(id, testconst.ALIYUN_REGION, client)
+
+		if status == "Running" {
+			break
+		}
+	}
+
+	_logUtils.Infof("%s %s", status, macAddress)
+
+	ip, err := srv.AllocateIp(id, client)
+	vnc, _ := srv.QueryVnc(id, testconst.ALIYUN_REGION, client)
+	_logUtils.Infof("%s, %s, %s, %s", id, name, vnc, ip)
 
 	err = srv.RemoveInst(id, client)
-	_logUtils.Infof("%s", err.Error())
+	_logUtils.Infof("%#v", err)
 }

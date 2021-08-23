@@ -21,6 +21,10 @@ type AliyunVmService struct {
 	AliyunEcsService *vendors.AliyunEcsService `inject:""`
 }
 
+func NewAliyunVmService() *AliyunVmService {
+	return &AliyunVmService{}
+}
+
 func (s AliyunVmService) CreateRemote(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp) {
 	host := s.HostRepo.Get(hostId)
 	backing := s.BackingRepo.Get(backingId)
@@ -44,37 +48,51 @@ func (s AliyunVmService) CreateRemote(hostId, backingId, tmplId, queueId uint) (
 
 	if err != nil {
 		result.Fail(err.Error())
-		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, "", "", "")
+		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "CreateClient fail %s"+err.Error(), queueId, vm.ID, "", "", "")
 		return
 	}
 
 	vm.CouldInstId, _, err = s.AliyunEcsService.CreateInst(vm.Name, backing.Name, ecsClient)
 	if err != nil {
 		result.Fail(err.Error())
-		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, "", "", "")
+		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "CreateInst fail %s"+err.Error(), queueId, vm.ID, "", "", "")
 		return
 	}
 
-	result.Pass("")
+	err = s.AliyunEcsService.StartInst(vm.CouldInstId, ecsClient)
+	if err != nil {
+		result.Fail(err.Error())
+		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "StartInst fail %s"+err.Error(), queueId, vm.ID, "", "", "")
+		return
+	}
 
-	for i := 0; i < 60; i++ {
+	for i := 0; i < 2*60; i++ {
 		<-time.After(1 * time.Second)
 
-		vm.NodeIp, vm.MacAddress, err = s.AliyunEcsService.QueryInst(vm.CouldInstId, ecsClient)
+		status := ""
+		status, vm.MacAddress, err = s.AliyunEcsService.QueryInst(vm.CouldInstId, host.CloudRegion, ecsClient)
 		if err != nil {
 			result.Fail(err.Error())
-			s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, vm.VncAddress, "", "")
+			s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "QueryInst fail %s"+err.Error(), queueId, vm.ID, vm.VncAddress, "", "")
 			return
 		}
 
-		if vm.MacAddress != "" {
+		if status == "Running" {
 			break
 		}
 	}
 
+	vm.NodeIp, err = s.AliyunEcsService.AllocateIp(vm.CouldInstId, ecsClient)
+	if err != nil {
+		result.Fail(err.Error())
+		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "AllocateIp fail %s"+err.Error(), queueId, vm.ID, vm.VncAddress, "", "")
+		return
+	}
+
+	result.Pass("")
 	s.VmRepo.UpdateVmCloudInst(vm)
 
-	vm.VncAddress, _ = s.AliyunEcsService.QueryVnc(vm.CouldInstId, ecsClient)
+	vm.VncAddress, _ = s.AliyunEcsService.QueryVnc(vm.CouldInstId, host.CloudRegion, ecsClient)
 	s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, vm.VncAddress, "", "")
 
 	return

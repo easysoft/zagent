@@ -1,6 +1,7 @@
 package vendors
 
 import (
+	"encoding/json"
 	openapi "github.com/alibabacloud-go/darabonba-openapi/client"
 	ecs "github.com/alibabacloud-go/ecs-20140526/v2/client"
 	"github.com/alibabacloud-go/tea/tea"
@@ -50,21 +51,34 @@ func (s AliyunEcsService) CreateInst(vmName, imageName string, client *ecs.Clien
 	id = *result.Body.InstanceId
 	name = vmName
 
+	return
+}
+
+func (s AliyunEcsService) StartInst(id string, ecsClient *ecs.Client) (err error) {
 	startReq := &ecs.StartInstanceRequest{
 		InstanceId: tea.String(id),
 	}
-	_, err = client.StartInstance(startReq)
+	_, err = ecsClient.StartInstance(startReq)
 	if err != nil {
 		_logUtils.Errorf("StartInstance error %s", err.Error())
 		return
 	}
 
-	ipReq := &ecs.AllocatePublicIpAddressRequest{}
-	_, err = client.AllocatePublicIpAddress(ipReq)
+	return
+}
+
+func (s AliyunEcsService) AllocateIp(id string, ecsClient *ecs.Client) (ip string, err error) {
+	ipReq := &ecs.AllocatePublicIpAddressRequest{
+		InstanceId: tea.String(id),
+	}
+
+	resp, err := ecsClient.AllocatePublicIpAddress(ipReq)
 	if err != nil {
 		_logUtils.Errorf("AllocatePublicIpAddress error %s", err.Error())
 		return
 	}
+
+	ip = *resp.Body.IpAddress
 
 	return
 }
@@ -82,9 +96,13 @@ func (s AliyunEcsService) RemoveInst(id string, ecsClient *ecs.Client) (err erro
 	return
 }
 
-func (s AliyunEcsService) QueryInst(id string, client *ecs.Client) (nodeIp, macAddress string, err error) {
+func (s AliyunEcsService) QueryInst(id, regionId string, client *ecs.Client) (status, macAddress string, err error) {
+	arr := []string{id}
+	jsn, _ := json.Marshal(arr)
+
 	req := &ecs.DescribeInstancesRequest{
-		InstanceIds: tea.String(id),
+		InstanceIds: tea.String(string(jsn)),
+		RegionId:    tea.String(regionId),
 	}
 
 	resp, err := client.DescribeInstances(req)
@@ -93,14 +111,17 @@ func (s AliyunEcsService) QueryInst(id string, client *ecs.Client) (nodeIp, macA
 		return
 	}
 
-	nodeIp = *resp.Body.Instances.Instance[0].NetworkInterfaces.NetworkInterface[0].PrimaryIpAddress
-	macAddress = *resp.Body.Instances.Instance[0].NetworkInterfaces.NetworkInterface[0].MacAddress
+	status = *resp.Body.Instances.Instance[0].Status
+	if resp.Body.Instances.Instance[0].NetworkInterfaces != nil {
+		macAddress = *resp.Body.Instances.Instance[0].NetworkInterfaces.NetworkInterface[0].MacAddress
+	}
 
 	return
 }
-func (s AliyunEcsService) QueryVnc(id string, client *ecs.Client) (url string, err error) {
+func (s AliyunEcsService) QueryVnc(id, regionId string, client *ecs.Client) (url string, err error) {
 	req := &ecs.DescribeInstanceVncUrlRequest{
 		InstanceId: tea.String(id),
+		RegionId:   tea.String(regionId),
 	}
 
 	resp, err := client.DescribeInstanceVncUrl(req)
