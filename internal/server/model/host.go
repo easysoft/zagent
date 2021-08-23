@@ -38,10 +38,11 @@ type Host struct {
 
 	Platform consts.Platform `json:"platform"`
 
-	CloudKey       string `json:"cloudKey"`
-	CloudSecret    string `json:"cloudSecret"`
-	CloudRegion    string `json:"cloudRegion"`
-	CloudNamespace string `json:"cloudNamespace"`
+	CloudRegion        string `json:"cloudRegion"`
+	CloudSecurityGroup string `json:"cloudSecurityGroup"`
+	CloudKey           string `json:"cloudKey"`
+	CloudSecret        string `json:"cloudSecret"`
+	CloudNamespace     string `json:"cloudNamespace"`
 
 	CloudUser        string `json:"cloudUser"`
 	CloudIamUser     string `json:"cloudIamUser"`

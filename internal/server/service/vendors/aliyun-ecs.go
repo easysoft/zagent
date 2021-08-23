@@ -19,7 +19,7 @@ func NewAliyunEcsService() *AliyunEcsService {
 	return &AliyunEcsService{}
 }
 
-func (s AliyunEcsService) CreateInst(vmName, imageName string, client *ecs.Client) (id, name string, err error) {
+func (s AliyunEcsService) CreateInst(vmName, imageName, securityGroupId string, client *ecs.Client) (id, name string, err error) {
 	regionId, _, err := s.GetRegion(client)
 	if err != nil {
 		return
@@ -38,6 +38,7 @@ func (s AliyunEcsService) CreateInst(vmName, imageName string, client *ecs.Clien
 	req := &ecs.CreateInstanceRequest{
 		InstanceName:       tea.String(vmName),
 		RegionId:           tea.String(regionId),
+		SecurityGroupId:    tea.String(securityGroupId),
 		ImageId:            tea.String(imageId),
 		ZoneId:             tea.String(zoneId),
 		InstanceType:       tea.String(spec),
@@ -115,7 +116,10 @@ func (s AliyunEcsService) QueryInst(id, regionId string, client *ecs.Client) (st
 		return
 	}
 
-	status = *resp.Body.Instances.Instance[0].Status
+	if resp.Body.Instances != nil {
+		status = *resp.Body.Instances.Instance[0].Status
+	}
+
 	if resp.Body.Instances.Instance[0].NetworkInterfaces != nil {
 		macAddress = *resp.Body.Instances.Instance[0].NetworkInterfaces.NetworkInterface[0].MacAddress
 	}
@@ -203,6 +207,25 @@ func (s AliyunEcsService) QuerySpec(regionId string, client *ecs.Client) (zoneId
 	zoneId = *result.Body.AvailableZones.AvailableZone[0].ZoneId
 	spec = *result.Body.AvailableZones.AvailableZone[0].
 		AvailableResources.AvailableResource[0].SupportedResources.SupportedResource[0].Value
+
+	return
+}
+
+func (s AliyunEcsService) QuerySecurityGroupByName(name, regionId string, client *ecs.Client) (id string, err error) {
+	req := &ecs.DescribeSecurityGroupsRequest{
+		SecurityGroupName: tea.String(name),
+		RegionId:          tea.String(regionId),
+	}
+
+	resp, err := client.DescribeSecurityGroups(req)
+	if err != nil {
+		_logUtils.Errorf("DescribeSecurityGroups %s error %s", id, err.Error())
+		return
+	}
+
+	if resp.Body.SecurityGroups != nil {
+		id = *resp.Body.SecurityGroups.SecurityGroup[0].SecurityGroupId
+	}
 
 	return
 }

@@ -17,7 +17,9 @@ func TestAliyun(t *testing.T) {
 	url := fmt.Sprintf("ecs-%s.aliyuncs.com", testconst.ALIYUN_REGION)
 	client, err := srv.CreateClient(url, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
 
-	id, name, _ := srv.CreateInst("vm-001", "ubuntu-20-desktop-x64-zh_cn", client)
+	securityGroupId, err := srv.QuerySecurityGroupByName("vm", testconst.ALIYUN_REGION, client)
+
+	id, name, _ := srv.CreateInst("vm-001", "ubuntu-20-desktop-x64-zh_cn", securityGroupId, client)
 	err = srv.StartInst(id, client)
 
 	status := ""
