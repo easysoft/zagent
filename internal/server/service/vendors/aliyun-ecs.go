@@ -2,6 +2,7 @@ package vendors
 
 import (
 	"encoding/json"
+	"fmt"
 	openapi "github.com/alibabacloud-go/darabonba-openapi/client"
 	ecs "github.com/alibabacloud-go/ecs-20140526/v2/client"
 	"github.com/alibabacloud-go/tea/tea"
@@ -118,7 +119,7 @@ func (s AliyunEcsService) QueryInst(id, regionId string, client *ecs.Client) (st
 
 	return
 }
-func (s AliyunEcsService) QueryVnc(id, regionId string, client *ecs.Client) (url string, err error) {
+func (s AliyunEcsService) QueryVnc(id, regionId string, isWindows bool, client *ecs.Client) (url string, err error) {
 	req := &ecs.DescribeInstanceVncUrlRequest{
 		InstanceId: tea.String(id),
 		RegionId:   tea.String(regionId),
@@ -130,7 +131,7 @@ func (s AliyunEcsService) QueryVnc(id, regionId string, client *ecs.Client) (url
 		return
 	}
 
-	url = *resp.Body.VncUrl
+	url = fmt.Sprintf(testconst.ALIYUN_URL_VNC, *resp.Body.VncUrl, id, isWindows)
 
 	return
 }
