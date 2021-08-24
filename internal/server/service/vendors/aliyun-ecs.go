@@ -36,13 +36,14 @@ func (s AliyunEcsService) CreateInst(vmName, imageName, securityGroupId string, 
 	}
 
 	req := &ecs.CreateInstanceRequest{
-		InstanceName:       tea.String(vmName),
-		RegionId:           tea.String(regionId),
-		SecurityGroupId:    tea.String(securityGroupId),
-		ImageId:            tea.String(imageId),
-		ZoneId:             tea.String(zoneId),
-		InstanceType:       tea.String(spec),
-		InternetChargeType: tea.String("PayByTraffic"),
+		InstanceName:            tea.String(vmName),
+		RegionId:                tea.String(regionId),
+		SecurityGroupId:         tea.String(securityGroupId),
+		ImageId:                 tea.String(imageId),
+		ZoneId:                  tea.String(zoneId),
+		InstanceType:            tea.String(spec),
+		InternetChargeType:      tea.String("PayByTraffic"),
+		InternetMaxBandwidthOut: tea.Int32(1),
 	}
 
 	result, err := client.CreateInstance(req)
