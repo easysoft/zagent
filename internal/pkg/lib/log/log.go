@@ -33,9 +33,9 @@ func Init(app string) {
 	logger.Out = ioutil.Discard
 
 	pathMap := lfshook.PathMap{
-		logrus.InfoLevel:  logDir + "log.txt",
-		logrus.WarnLevel:  logDir + "log.txt",
-		logrus.ErrorLevel: logDir + "error.txt",
+		logrus.InfoLevel:  logDir + "info.log",
+		logrus.WarnLevel:  logDir + "info.log",
+		logrus.ErrorLevel: logDir + "error.log",
 	}
 
 	logger.Hooks.Add(lfshook.NewHook(
