@@ -8,6 +8,7 @@ import (
 	"github.com/easysoft/zagent/internal/agent/utils/common"
 	"github.com/easysoft/zagent/internal/agent/utils/const"
 	consts "github.com/easysoft/zagent/internal/comm/const"
+	_const "github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/lib/log"
 	"github.com/fatih/color"
 	"os"
@@ -36,7 +37,7 @@ func main() {
 	flagSet.StringVar(&agentConf.Inst.Server, "s", "http://god902.tpddns.cn:8085", "")
 	flagSet.StringVar(&agentConf.Inst.NodeName, "n", "", "")
 	flagSet.StringVar(&agentConf.Inst.NodeIp, "i", "", "") // 192.168.0.56
-	flagSet.IntVar(&agentConf.Inst.NodePort, "p", 8085, "")
+	flagSet.IntVar(&agentConf.Inst.NodePort, "p", _const.RpcPort, "")
 	flagSet.StringVar(&agentConf.Inst.Language, "l", "zh", "")
 
 	flagSet.BoolVar(&help, "h", false, "")

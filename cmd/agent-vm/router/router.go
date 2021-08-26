@@ -19,7 +19,7 @@ func NewRouter() *Router {
 }
 
 func (r *Router) App() {
-	addr := agentConf.Inst.NodeIp + ":" + strconv.Itoa(agentConf.Inst.NodePort)
+	addr := "0.0.0.0:" + strconv.Itoa(agentConf.Inst.NodePort)
 	srv := server.NewServer()
 
 	srv.RegisterName("job", r.JobCtrl, "")
