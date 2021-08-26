@@ -1,7 +1,10 @@
 [Unit]
 Description=zagent service
 After=sshd.service
+
 [Service]
+User=aaron
+Group=aaron
 Environment="HOME=/home/aaron"
 Environment="GOROOT=/home/aaron/dev/sdk/go"
 Environment="GOPATH=/usr/local/go"
@@ -10,5 +13,6 @@ Environment="GOPROXY=https://goproxy.io,direct"
 Type=forking
 ExecStart=/home/aaron/dev/script/zagent.sh
 ExecStop=ps -ef | grep 't vm'|  grep -v grep | awk '{print $2}' | xargs kill -9
+
 [Install]
 WantedBy=multi-user.target

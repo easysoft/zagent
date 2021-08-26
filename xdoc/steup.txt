@@ -19,4 +19,5 @@ sudo vi /etc/systemd/system/zagent.service
 sudo systemctl daemon-reload
 sudo systemctl start zagent.service
 sudo systemctl stop zagent.service
+sudo systemctl restart zagent.service
 sudo systemctl enable reas.service

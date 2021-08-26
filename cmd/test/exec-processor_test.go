@@ -11,7 +11,7 @@ import (
 )
 
 func TestExecProcessor(t *testing.T) {
-	build := commDomain.Build{BuildType: commConst.InterfaceScenario}
+	build := commDomain.Build{BuildType: commConst.InterfaceTest}
 
 	processor := commDomain.TestProcessor{Type: commConst.Simple}
 
