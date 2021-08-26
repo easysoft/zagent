@@ -46,7 +46,7 @@ func (s VmCommonService) SaveVmCreationResult(isSuccess bool, result string, que
 }
 
 func (s VmCommonService) genTmplName(backing model.VmBacking) (name string) {
-	name = fmt.Sprintf("tmpl-%s-%s-%s", backing.OsType, backing.OsVersion, backing.OsLang)
+	name = fmt.Sprintf("%s-%s-%s", backing.OsType, backing.OsVersion, backing.OsLang)
 
 	return
 }

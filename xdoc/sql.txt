@@ -5,3 +5,6 @@ delete from biz_queue where 1=1;
 delete from biz_environment where 1=1;
 delete from biz_task where 1=1;
 
+delete from biz_environment where task_id=10;
+delete from biz_queue where task_id=10;
+delete from biz_task where id=10;

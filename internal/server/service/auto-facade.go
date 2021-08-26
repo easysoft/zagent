@@ -5,7 +5,7 @@ import (
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
-	"strings"
+	serverUitls "github.com/easysoft/zagent/internal/server/utils/lib"
 )
 
 type FacadeService struct {
@@ -33,16 +33,18 @@ func (s FacadeService) Create(hostId, backingId, tmplId, queueId uint) (
 
 	platform := s.HostRepo.Get(hostId).Platform.ToString()
 
-	if s.IsVm(platform) {
-		if s.IsNative(platform) {
+	if serverUitls.IsVm(platform) {
+		if serverUitls.IsNative(platform) {
 			s.CreateVmKvmNative(hostId, backingId, tmplId, queueId)
-		} else if s.IsHuaweiCloud(platform) {
-			s.CreateVmHuaweiCloud(hostId, backingId, tmplId, queueId)
+		} else if serverUitls.IsHuaweiCloud(platform) {
+			s.CreateVmHuaweiCloud(hostId, backingId, queueId)
+		} else if serverUitls.IsAliyun(platform) {
+			s.CreateVmAliyun(hostId, backingId, queueId)
 		}
-	} else if s.IsDocker(platform) {
-		if s.IsHuaweiCloud(platform) {
+	} else if serverUitls.IsDocker(platform) {
+		if serverUitls.IsHuaweiCloud(platform) {
 			s.CreateDockerHuaweiCloud(hostId, queueId)
-		} else if s.IsAliyun(platform) {
+		} else if serverUitls.IsAliyun(platform) {
 			//s.CreateDockerAliyun(hostId, queueId)
 		}
 	}
@@ -54,12 +56,12 @@ func (s FacadeService) CreateVmKvmNative(hostId, backingId, tmplId, queueId uint
 	return
 }
 
-func (s FacadeService) CreateVmHuaweiCloud(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp) {
-	result = s.HuaweiCloudVmService.CreateRemote(hostId, backingId, tmplId, queueId)
+func (s FacadeService) CreateVmHuaweiCloud(hostId, backingId, queueId uint) (result _domain.RpcResp) {
+	result = s.HuaweiCloudVmService.CreateRemote(hostId, backingId, queueId)
 	return
 }
-func (s FacadeService) CreateVmAliyun(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp) {
-	result = s.HuaweiCloudVmService.CreateRemote(hostId, backingId, tmplId, queueId)
+func (s FacadeService) CreateVmAliyun(hostId, backingId, queueId uint) (result _domain.RpcResp) {
+	result = s.AliyunVmService.CreateRemote(hostId, backingId, queueId)
 	return
 }
 
@@ -98,14 +100,14 @@ func (s FacadeService) Destroy(queue model.Queue) {
 	vm := s.VmRepo.GetById(queue.VmId)
 	platform := s.HostRepo.Get(vm.HostId).Platform.ToString()
 
-	if s.IsVm(platform) {
-		if s.IsNative(platform) {
+	if serverUitls.IsVm(platform) {
+		if serverUitls.IsNative(platform) {
 			s.DestroyVmKvmNative(queue)
-		} else if s.IsHuaweiCloud(platform) {
+		} else if serverUitls.IsHuaweiCloud(platform) {
 			s.DestroyVmHuaweiCloud(queue)
 		}
-	} else if s.IsDocker(platform) {
-		if s.IsHuaweiCloud(platform) {
+	} else if serverUitls.IsDocker(platform) {
+		if serverUitls.IsHuaweiCloud(platform) {
 			s.DestroyDockerHuaweiCloud(queue)
 		}
 	}
@@ -120,26 +122,5 @@ func (s FacadeService) DestroyVmHuaweiCloud(queue model.Queue) (result _domain.R
 }
 func (s FacadeService) DestroyDockerHuaweiCloud(queue model.Queue) (result _domain.RpcResp) {
 	s.HuaweiCloudDockerService.DestroyRemote(queue.VmId, queue.ID)
-	return
-}
-
-func (s FacadeService) IsVm(platform string) (result bool) {
-	result = strings.Index(platform, consts.PlatformVm.ToString()) > -1
-	return
-}
-func (s FacadeService) IsDocker(platform string) (result bool) {
-	result = strings.Index(platform, consts.PlatformDocker.ToString()) > -1
-	return
-}
-func (s FacadeService) IsNative(platform string) (result bool) {
-	result = strings.Index(platform, consts.PlatformNative.ToString()) > -1
-	return
-}
-func (s FacadeService) IsHuaweiCloud(platform string) (result bool) {
-	result = strings.Index(platform, consts.PlatformHuawei.ToString()) > -1
-	return
-}
-func (s FacadeService) IsAliyun(platform string) (result bool) {
-	result = strings.Index(platform, consts.PlatformAli.ToString()) > -1
 	return
 }

@@ -25,7 +25,7 @@ func NewAliyunVmService() *AliyunVmService {
 	return &AliyunVmService{}
 }
 
-func (s AliyunVmService) CreateRemote(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp) {
+func (s AliyunVmService) CreateRemote(hostId, backingId, queueId uint) (result _domain.RpcResp) {
 	host := s.HostRepo.Get(hostId)
 	backing := s.BackingRepo.Get(backingId)
 	backing.Name = s.VmCommonService.genTmplName(backing)
@@ -71,13 +71,6 @@ func (s AliyunVmService) CreateRemote(hostId, backingId, tmplId, queueId uint) (
 	if err != nil {
 		result.Fail(err.Error())
 		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "CreateInst fail %s"+err.Error(), queueId, vm.ID, "", "", "")
-		return
-	}
-
-	err = s.AliyunEcsService.StartInst(vm.CouldInstId, ecsClient)
-	if err != nil {
-		result.Fail(err.Error())
-		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "StartInst fail %s"+err.Error(), queueId, vm.ID, "", "", "")
 		return
 	}
 

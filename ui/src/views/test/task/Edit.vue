@@ -260,7 +260,7 @@ export default {
       labelColHalf2: labelColHalf2,
       wrapperColHalf: wrapperColHalf,
 
-      model: { buildType: 'unittest' },
+      model: { buildType: 'selenium' },
       envData: {},
       environment: {},
       environmentIndex: -1,
@@ -311,16 +311,30 @@ export default {
         const a = 2
 
         if (this.model.buildType === 'selenium') {
-          this.model = {
-            'name': 'test',
-            'buildType': 'selenium',
-            'browserType': 'chrome',
-            'browserVersion': '92',
-            'envVars': 'abc=123',
-            'scriptUrl': 'https://gitee.com/ngtesting/ci_test_selenium.git',
-            'buildCommands': 'mvn clean test -Dtestng.suite=target/test-classes/baidu-test.xml',
-            'resultFiles': 'target/surefire-reports',
-            'environments': [ { 'osCategory': 'windows', 'osType': 'win10', 'osLang': 'zh_cn' } ]
+          if (a === 1) {
+            this.model = {
+              'name': 'test',
+              'buildType': 'selenium',
+              'browserType': 'chrome',
+              'browserVersion': '92',
+              'envVars': 'abc=123',
+              'scriptUrl': 'https://gitee.com/ngtesting/ci_test_selenium.git',
+              'buildCommands': 'mvn clean test -Dtestng.suite=target/test-classes/baidu-test.xml',
+              'resultFiles': 'target/surefire-reports',
+              'environments': [ { 'osCategory': 'windows', 'osType': 'win10', 'osLang': 'zh_cn' } ]
+            }
+          } else {
+            this.model = {
+              'name': 'test',
+              'buildType': 'selenium',
+              'browserType': 'firefox',
+              'browserVersion': '85',
+              'envVars': 'abc=123',
+              'scriptUrl': 'https://gitee.com/ngtesting/ci_test_selenium.git',
+              'buildCommands': 'mvn clean test -Dtestng.suite=target/test-classes/baidu-test.xml',
+              'resultFiles': 'target/surefire-reports',
+              'environments': [ { 'osCategory': 'linux', 'osType': 'ubuntu', 'osLang': 'zh_cn' } ]
+            }
           }
         } else if (this.model.buildType === 'unittest') {
           if (a === 1) {

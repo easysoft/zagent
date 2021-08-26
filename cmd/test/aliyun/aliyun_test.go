@@ -21,7 +21,7 @@ func TestAliyun(t *testing.T) {
 	switchId, _, err := srv.GetSwitch(testconst.ALIYUN_VPC, testconst.ALIYUN_REGION, vpcClient)
 	securityGroupId, err := srv.QuerySecurityGroupByVpc(testconst.ALIYUN_VPC, testconst.ALIYUN_REGION, client)
 
-	id, name, _ := srv.CreateInst("vm-001", "ubuntu-20-desktop-x64-zh_cn", switchId, securityGroupId, client)
+	id, name, _ := srv.CreateInst("vm-001", "tmpl-ubuntu-20-desktop-x64-zh_cn", switchId, securityGroupId, client)
 	err = srv.StartInst(id, client)
 
 	status := ""

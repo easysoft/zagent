@@ -19,7 +19,7 @@ type HuaweiCloudVmService struct {
 	HuaweiCloudEcsService *vendors.HuaweiCloudEcsService `inject:""`
 }
 
-func (s HuaweiCloudVmService) CreateRemote(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp) {
+func (s HuaweiCloudVmService) CreateRemote(hostId, backingId, queueId uint) (result _domain.RpcResp) {
 	host := s.HostRepo.Get(hostId)
 	backing := s.BackingRepo.Get(backingId)
 	backing.Name = s.VmCommonService.genTmplName(backing)

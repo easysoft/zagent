@@ -4,6 +4,7 @@ import (
 	consts "github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
+	serverUitls "github.com/easysoft/zagent/internal/server/utils/lib"
 )
 
 type HostService struct {
@@ -27,7 +28,13 @@ func (s HostService) GetValidForQueueByVm(queue model.Queue) (hostId, backingId,
 	busyHostIds := s.getBusyHosts()
 	hostId, backingId = s.HostRepo.QueryByBackings(backingIds, busyHostIds)
 
-	tmplId, found = s.TmplRepo.QueryByOs(queue.OsCategory, queue.OsType, queue.OsLang)
+	platform := s.HostRepo.Get(hostId).Platform.ToString()
+
+	if serverUitls.IsCloud(platform) {
+		tmplId = 1 // not use tmpl for cloud
+	} else {
+		tmplId, found = s.TmplRepo.QueryByOs(queue.OsCategory, queue.OsType, queue.OsLang)
+	}
 
 	if hostId == 0 || backingId == 0 || tmplId == 0 {
 		found = false
