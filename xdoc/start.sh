@@ -16,4 +16,5 @@ echo "$(date): Connected - ${serverAdr}";
 cd /home/aaron/dev/project/zagent
 git pull
 go get all
+
 nohup go run cmd/agent-vm/main.go -t vm > zagent.log 2>&1
