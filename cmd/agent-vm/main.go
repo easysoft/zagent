@@ -36,7 +36,7 @@ func main() {
 	flagSet.StringVar(&agentConf.Inst.Server, "s", "http://god902.tpddns.cn:8085", "")
 	flagSet.StringVar(&agentConf.Inst.NodeName, "n", "", "")
 	flagSet.StringVar(&agentConf.Inst.NodeIp, "i", "", "") // 192.168.0.56
-	flagSet.IntVar(&agentConf.Inst.NodePort, "p", 8848, "")
+	flagSet.IntVar(&agentConf.Inst.NodePort, "p", 8085, "")
 	flagSet.StringVar(&agentConf.Inst.Language, "l", "zh", "")
 
 	flagSet.BoolVar(&help, "h", false, "")
