@@ -1,10 +1,12 @@
-@echo on
+serverAdr="114.114.114.114"
 
-:start
+ping -c 1 $serverAdr > /dev/null 2>&1
+while [ $? -ne 0 ]; do
+  echo -e "\e[1A\e[K $(date): Connecting - ${serverAdr}"
+  sleep 1
+  ping -c 1 $serverAdr > /dev/null 2>&1
+done
 
-ping /n 3 114.114.114.114 | findstr "TTL=" && goto next || goto start
+echo "$(date): Connected - ${serverAdr}";
 
-:next
-cmd /k "cd /d C:\Users\jenkins\dev\project\zagent && git pull && go run cmd\agent-vm\main.go -t vm"
-
-pause
+cd ~/dev/project/zagent && git pull && go get all && go run cmd/agent-vm/main.go -t vm

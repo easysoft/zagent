@@ -15,11 +15,13 @@ func TestAliyun(t *testing.T) {
 
 	srv := vendors.NewAliyunEcsService()
 	url := fmt.Sprintf("ecs-%s.aliyuncs.com", testconst.ALIYUN_REGION)
-	client, err := srv.CreateClient(url, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
+	client, err := srv.CreateEcsClient(url, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
+	vpcClient, err := srv.CreateVpcClient(url, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
 
-	securityGroupId, err := srv.QuerySecurityGroupByName("vm", testconst.ALIYUN_REGION, client)
+	switchId, _, err := srv.GetSwitch(testconst.ALIYUN_VPC, testconst.ALIYUN_REGION, vpcClient)
+	securityGroupId, err := srv.QuerySecurityGroupByVpc(testconst.ALIYUN_VPC, testconst.ALIYUN_REGION, client)
 
-	id, name, _ := srv.CreateInst("vm-001", "ubuntu-20-desktop-x64-zh_cn", securityGroupId, client)
+	id, name, _ := srv.CreateInst("vm-001", "ubuntu-20-desktop-x64-zh_cn", switchId, securityGroupId, client)
 	err = srv.StartInst(id, client)
 
 	status := ""
