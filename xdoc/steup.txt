@@ -17,5 +17,6 @@ qshell qupload2 --src-dir=/Users/aaron/work/zentao/qiniu/ --bucket=download --th
 sudo vi /etc/systemd/system/zagent.service
 
 sudo systemctl daemon-reload
-sudo systemctl stop zagent.service
 sudo systemctl start zagent.service
+sudo systemctl stop zagent.service
+sudo systemctl enable reas.service

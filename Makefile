@@ -10,6 +10,8 @@ BIN_WIN64=${BIN_OUT}win64/zagent-server/
 BIN_WIN32=${BIN_OUT}win32/zagent-server/
 BIN_LINUX=${BIN_OUT}linux/zagent-server/
 BIN_MAC=${BIN_OUT}mac/zagent-server/
+QINIU_DIR=/Users/aaron/work/zentao/qiniu/
+QINIU_DIST_DIR=${QINIU_DIR}${PROJECT}/${VERSION}/
 
 default: prepare_res compile_all copy_files package
 
@@ -17,6 +19,7 @@ win64: prepare_res compile_win64 copy_files package
 win32: prepare_res compile_win32 copy_files package
 linux: prepare_res compile_linux copy_files package
 mac: prepare_res compile_mac copy_files package
+upload: upload_to
 
 prepare_res:
 	@echo 'start prepare res'
@@ -54,3 +57,9 @@ package:
 
 	@cd ${BIN_OUT} && \
 		for subdir in `ls ./`; do cd $${subdir} && zip -r ${BIN_ZIP_RELAT}$${subdir}/${BINARY}.zip "${BINARY}" && cd ..; done
+
+upload_to:
+	@echo 'upload...'
+	@find ${QINIU_DIR} -name ".DS_Store" -type f -delete
+	@qshell qupload2 --src-dir=${QINIU_DIR} --bucket=download --thread-count=10 --log-file=qshell.log \
+					 --skip-path-prefixes=zd,ztf,zmanager --rescan-local --overwrite --check-hash
