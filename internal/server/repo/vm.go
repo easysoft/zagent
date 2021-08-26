@@ -30,7 +30,9 @@ func (r VmRepo) Register(vm domain.Vm) (po model.Vm, statusChanged bool, err err
 	r.DB.Model(&model.Vm{}).
 		Where("mac_address=?", vm.MacAddress).
 		Updates(
-			map[string]interface{}{"status": vm.Status, "work_dir": vm.WorkDir,
+			map[string]interface{}{
+				"status":             vm.Status,
+				"work_dir":           vm.WorkDir,
 				"node_port":          vm.PublicPort,
 				"last_register_time": time.Now()})
 

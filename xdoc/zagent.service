@@ -1,0 +1,12 @@
+[Unit]
+Description=zagent service
+After=sshd.service
+[Service]
+Environment="GOROOT=/home/aaron/dev/sdk/go"
+Environment="GOPATH=/usr/local/go"
+Environment="GO111MODULE=on"
+Environment="GOPROXY=https://goproxy.io,direct"
+Type=forking
+ExecStart=/home/aaron/dev/script/zagent.sh
+[Install]
+WantedBy=multi-user.target
