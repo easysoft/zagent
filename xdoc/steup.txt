@@ -14,7 +14,8 @@ qshell qupload2 --src-dir=/Users/aaron/work/zentao/qiniu/ --bucket=download --th
                      --skip-path-prefixes=ztf,zd,zmanager --rescan-local --overwrite --check-hash
 
 
-vi /etc/systemd/system/zagent.service
+sudo vi /etc/systemd/system/zagent.service
 
-systemctl daemon-reload
-systemctl start zagent.service
+sudo systemctl daemon-reload
+sudo systemctl stop zagent.service
+sudo systemctl start zagent.service
