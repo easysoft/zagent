@@ -27,6 +27,7 @@ func NewExecService() *ExecService {
 
 func (s *ExecService) ExcCommand(build *commDomain.Build) (err error) {
 	cmdStr := build.BuildCommands
+	_logUtils.Infof("exec command: " + cmdStr)
 
 	var out []string
 	out, err = _shellUtils.ExeShellWithOutputInDir(cmdStr, build.ProjectDir)
