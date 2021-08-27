@@ -33,7 +33,6 @@ func (s *RunService) Run(build *commDomain.Build) {
 			return
 		}
 
-		build.EnvVars += "\nDriverType=" + build.BrowserType.ToString()
 		build.EnvVars += "\nDriverPath=" + build.SeleniumDriverPath
 	}
 

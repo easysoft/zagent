@@ -35,17 +35,17 @@ func (s FacadeService) Create(hostId, backingId, tmplId, queueId uint) (
 
 	if serverUitls.IsVm(platform) {
 		if serverUitls.IsNative(platform) {
-			s.CreateVmKvmNative(hostId, backingId, tmplId, queueId)
+			result = s.CreateVmKvmNative(hostId, backingId, tmplId, queueId)
 		} else if serverUitls.IsHuaweiCloud(platform) {
-			s.CreateVmHuaweiCloud(hostId, backingId, queueId)
+			result = s.CreateVmHuaweiCloud(hostId, backingId, queueId)
 		} else if serverUitls.IsAliyun(platform) {
-			s.CreateVmAliyun(hostId, backingId, queueId)
+			result = s.CreateVmAliyun(hostId, backingId, queueId)
 		}
 	} else if serverUitls.IsDocker(platform) {
 		if serverUitls.IsHuaweiCloud(platform) {
-			s.CreateDockerHuaweiCloud(hostId, queueId)
+			result = s.CreateDockerHuaweiCloud(hostId, queueId)
 		} else if serverUitls.IsAliyun(platform) {
-			//s.CreateDockerAliyun(hostId, queueId)
+			// result = s.CreateDockerAliyun(hostId, queueId)
 		}
 	}
 

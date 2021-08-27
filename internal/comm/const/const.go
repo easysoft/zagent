@@ -23,7 +23,8 @@ const (
 	DiskSizeLinux   = 30
 	DiskSizeDefault = 30
 
-	ResDownDir    = "down"
-	ResDriverDir  = "driver"
-	ResDriverName = "driver"
+	DriverDownloadUrl = "https://dl.cnezsoft.com/driver/"
+	ResDownDir        = "down"
+	ResDriverDir      = "driver"
+	ResDriverName     = "driver"
 )
