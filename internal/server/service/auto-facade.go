@@ -82,6 +82,27 @@ func (s FacadeService) RunTest(queue model.Queue, host model.Host) (result _doma
 
 	return
 }
+
+// Destroy destory machine
+func (s FacadeService) Destroy(queue model.Queue) {
+	vm := s.VmRepo.GetById(queue.VmId)
+	platform := s.HostRepo.Get(vm.HostId).Platform.ToString()
+
+	if serverUitls.IsVm(platform) {
+		if serverUitls.IsNative(platform) {
+			s.DestroyVmKvmNative(queue)
+		} else if serverUitls.IsHuaweiCloud(platform) {
+			s.DestroyVmHuaweiCloud(queue)
+		} else if serverUitls.IsAliyun(platform) {
+			s.DestroyVmAliyun(queue)
+		}
+	} else if serverUitls.IsDocker(platform) {
+		if serverUitls.IsHuaweiCloud(platform) {
+			s.DestroyDockerHuaweiCloud(queue)
+		}
+	}
+}
+
 func (s FacadeService) RunSeleniumTest(queue model.Queue) (result _domain.RpcResp) {
 	result = s.SeleniumService.RunRemote(queue)
 	return
@@ -95,29 +116,16 @@ func (s FacadeService) RunUnitTest(queue model.Queue, host model.Host) (result _
 	return
 }
 
-// Destroy destory machine
-func (s FacadeService) Destroy(queue model.Queue) {
-	vm := s.VmRepo.GetById(queue.VmId)
-	platform := s.HostRepo.Get(vm.HostId).Platform.ToString()
-
-	if serverUitls.IsVm(platform) {
-		if serverUitls.IsNative(platform) {
-			s.DestroyVmKvmNative(queue)
-		} else if serverUitls.IsHuaweiCloud(platform) {
-			s.DestroyVmHuaweiCloud(queue)
-		}
-	} else if serverUitls.IsDocker(platform) {
-		if serverUitls.IsHuaweiCloud(platform) {
-			s.DestroyDockerHuaweiCloud(queue)
-		}
-	}
-}
 func (s FacadeService) DestroyVmKvmNative(queue model.Queue) (result _domain.RpcResp) {
 	s.KvmNativeService.DestroyRemote(queue.VmId, queue.ID)
 	return
 }
 func (s FacadeService) DestroyVmHuaweiCloud(queue model.Queue) (result _domain.RpcResp) {
 	s.HuaweiCloudVmService.DestroyRemote(queue.VmId, queue.ID)
+	return
+}
+func (s FacadeService) DestroyVmAliyun(queue model.Queue) (result _domain.RpcResp) {
+	s.AliyunVmService.DestroyRemote(queue.VmId, queue.ID)
 	return
 }
 func (s FacadeService) DestroyDockerHuaweiCloud(queue model.Queue) (result _domain.RpcResp) {

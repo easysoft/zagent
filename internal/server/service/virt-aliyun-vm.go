@@ -117,6 +117,24 @@ func (s AliyunVmService) CreateRemote(hostId, backingId, queueId uint) (result _
 }
 
 func (s AliyunVmService) DestroyRemote(vmId, queueId uint) (result _domain.RpcResp) {
+	vm := s.VmRepo.GetById(vmId)
+	host := s.HostRepo.Get(vm.HostId)
+
+	status := consts.VmDestroy
+
+	ecsClient, err := s.AliyunEcsService.CreateEcsClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
+	if err != nil {
+		status = consts.VmFailDestroy
+	} else {
+		err = s.AliyunEcsService.RemoveInst(vm.CouldInstId, ecsClient)
+		if err != nil {
+			status = consts.VmFailDestroy
+		}
+	}
+
+	s.VmRepo.UpdateStatusByCloudInstId([]string{vm.CouldInstId}, status)
+
+	s.HistoryService.Create(consts.Vm, vmId, queueId, "", status.ToString())
 
 	return
 }
