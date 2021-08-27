@@ -20,4 +20,5 @@ sudo systemctl daemon-reload
 sudo systemctl start zagent.service
 sudo systemctl stop zagent.service
 sudo systemctl restart zagent.service
-sudo systemctl enable reas.service
+sudo systemctl enable zagent.service
+sudo systemctl disable zagent.service
