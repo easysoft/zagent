@@ -25,13 +25,11 @@ func (s *SeleniumService) DownloadDriver(build *commDomain.Build) (err error) {
 		fileName += ".exe"
 	}
 
-	relatePath := filepath.Join(consts.ResDownDir, consts.ResDriverDir,
+	filePath := filepath.Join(agentConf.Inst.WorkDir, consts.ResDownDir, consts.ResDriverDir,
 		build.BrowserType.ToString(), _commonUtils.GetOs(), build.BrowserVersion, fileName)
 
 	url := fmt.Sprintf("%s%s/%s/%s/driver",
 		consts.DriverDownloadUrl, build.BrowserType.ToString(), _commonUtils.GetOs(), build.BrowserVersion)
-
-	filePath := filepath.Join(agentConf.Inst.WorkDir, relatePath)
 
 	if !_fileUtils.FileExist(filePath) {
 		err = _fileUtils.Download(url, filePath)

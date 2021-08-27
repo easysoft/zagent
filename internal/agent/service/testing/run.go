@@ -3,6 +3,7 @@ package agentTestingService
 import (
 	consts "github.com/easysoft/zagent/internal/comm/const"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
+	_shellUtils "github.com/easysoft/zagent/internal/pkg/lib/shell"
 )
 
 type RunService struct {
@@ -32,6 +33,8 @@ func (s *RunService) Run(build *commDomain.Build) {
 			s.ExecService.UploadResult(*build, result)
 			return
 		}
+
+		_shellUtils.ExeShell("chmod 777 " + build.SeleniumDriverPath)
 
 		build.EnvVars += "\nDriverType=" + build.BrowserType.ToString()
 		build.EnvVars += "\nDriverVersion=" + build.BrowserVersion
