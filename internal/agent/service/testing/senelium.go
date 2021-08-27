@@ -18,7 +18,7 @@ func NewSeleniumService() *SeleniumService {
 }
 
 func (s *SeleniumService) DownloadDriver(build *commDomain.Build) (err error) {
-	// http://127.0.0.1:8085/down/driver/chrome/windows/92/chrome.exe
+	// https://dl.cnezsoft.com/driver/chrome/windows/92/chrome.exe
 
 	fileName := consts.ResDriverName
 	if _commonUtils.IsWin() {
