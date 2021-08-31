@@ -141,7 +141,7 @@ func (s AliyunEcsService) QueryVncUrl(id, vncPassword, regionId string, isWindow
 		return
 	}
 
-	url = fmt.Sprintf(testconst.ALIYUN_URL_VNC, *resp.Body.VncUrl, id, isWindows, vncPassword)
+	url = fmt.Sprintf(testconst.ALIYUN_ECS_URL_VNC, *resp.Body.VncUrl, id, isWindows, vncPassword)
 
 	return
 }

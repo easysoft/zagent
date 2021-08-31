@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func TestAliyun(t *testing.T) {
+func TestAliyunEcs(t *testing.T) {
 	_logUtils.Init(consts.AppNameAgent)
 
 	srv := vendors.NewAliyunEcsService()

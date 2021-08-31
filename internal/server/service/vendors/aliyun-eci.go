@@ -14,24 +14,30 @@ func NewAliyunEciService() *AliyunEciService {
 	return &AliyunEciService{}
 }
 
-func (s AliyunEciService) CreateInst(groupName, imageName, image, cmd, regionId string, client *eci.Client) (
-	id, name string, err error) {
+func (s AliyunEciService) CreateInst(groupName, imageName, image string, cmd []string, regionId string, client *eci.Client) (
+	id string, err error) {
+
+	commands := make([]*string, 0)
+	for _, item := range cmd {
+		commands = append(commands, tea.String(item))
+	}
 
 	container := &eci.CreateContainerGroupRequestContainer{
 		Image:   tea.String(image),
 		Name:    tea.String(imageName),
-		Command: []*string{tea.String(cmd)},
+		Command: commands,
 	}
 
 	req := &eci.CreateContainerGroupRequest{
-		ContainerGroupName: tea.String(cmd),
+		ContainerGroupName: tea.String(groupName),
 		RegionId:           tea.String(regionId),
 		Cpu:                tea.Float32(2),
 		Memory:             tea.Float32(4),
 		Container:          []*eci.CreateContainerGroupRequestContainer{container},
 	}
 
-	_, err = client.CreateContainerGroup(req)
+	resp, err := client.CreateContainerGroup(req)
+	id = *resp.Body.ContainerGroupId
 
 	return
 }
