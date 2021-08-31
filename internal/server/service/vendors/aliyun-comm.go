@@ -1,0 +1,163 @@
+package vendors
+
+import (
+	openapi "github.com/alibabacloud-go/darabonba-openapi/client"
+	eci "github.com/alibabacloud-go/eci-20180808/v2/client"
+	ecs "github.com/alibabacloud-go/ecs-20140526/v2/client"
+	"github.com/alibabacloud-go/tea/tea"
+	vpc "github.com/alibabacloud-go/vpc-20160428/v2/client"
+	"github.com/aliyun/alibaba-cloud-sdk-go/services/ens"
+	testconst "github.com/easysoft/zagent/cmd/test/_const"
+	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	"strings"
+)
+
+type AliyunCommService struct {
+}
+
+func NewAliyunCommService() *AliyunCommService {
+	return &AliyunCommService{}
+}
+
+func (s AliyunCommService) QuerySecurityGroupByVpc(vpcId, regionId string, client *ecs.Client) (id string, err error) {
+	req := &ecs.DescribeSecurityGroupsRequest{
+		VpcId:       tea.String(vpcId),
+		RegionId:    tea.String(regionId),
+		NetworkType: tea.String("vpc"),
+	}
+
+	resp, err := client.DescribeSecurityGroups(req)
+	if err != nil {
+		_logUtils.Errorf("DescribeSecurityGroups %s error %s", id, err.Error())
+		return
+	}
+
+	if resp.Body.SecurityGroups != nil {
+		id = *resp.Body.SecurityGroups.SecurityGroup[0].SecurityGroupId
+	}
+
+	return
+}
+
+func (s AliyunCommService) GetSwitch(vpcId, regionId string, vpcClient *vpc.Client) (switchId, name string, err error) {
+	req := &vpc.DescribeVSwitchesRequest{
+		RegionId: tea.String(regionId),
+		VpcId:    tea.String(vpcId),
+	}
+
+	resp, err := vpcClient.DescribeVSwitches(req)
+
+	if resp.Body.VSwitches != nil {
+		switchId = *resp.Body.VSwitches.VSwitch[0].VSwitchId
+		name = *resp.Body.VSwitches.VSwitch[0].VSwitchId
+	}
+
+	return
+}
+
+func (s AliyunCommService) GetRegion(client *ecs.Client) (id, name string, err error) {
+	describeRegionsRequest := &ecs.DescribeRegionsRequest{
+		InstanceChargeType: tea.String("PostPaid"),
+		ResourceType:       tea.String("instance"),
+	}
+
+	result, err := client.DescribeRegions(describeRegionsRequest)
+	if err != nil {
+		_logUtils.Errorf("DescribeRegions error %s", err.Error())
+		return
+	}
+
+	for _, item := range result.Body.Regions.Region {
+		id = *item.RegionId
+		//_logUtils.Infof("region: %s, %s", *item.RegionId, *item.LocalName)
+		if strings.Index(id, testconst.ALIYUN_REGION) > -1 {
+			id = *item.RegionId
+
+			return
+		}
+	}
+
+	return
+}
+
+func (s AliyunCommService) GetEip(region string, client *ens.Client) (id string, err error) {
+	req := &ens.DescribeEipAddressesRequest{
+		Version:     "",
+		EnsRegionId: region,
+	}
+	resp, err := client.DescribeEipAddresses(req)
+	if err != nil {
+		_logUtils.Errorf("DescribeEipAddresses error %s", err.Error())
+		return
+	}
+
+	id = resp.EipAddresses.EipAddress[0].Eip
+
+	return
+}
+
+func (s AliyunCommService) CreateEcsClient(endpoint, accessKeyId, accessKeySecret string) (
+	result *ecs.Client, err error) {
+	config := &openapi.Config{
+		AccessKeyId:     tea.String(accessKeyId),
+		AccessKeySecret: tea.String(accessKeySecret),
+	}
+
+	config.Endpoint = tea.String(endpoint)
+	result = &ecs.Client{}
+	result, err = ecs.NewClient(config)
+	if err != nil {
+		_logUtils.Errorf("CreateEcsClient error %s", err.Error())
+		return
+	}
+
+	return result, err
+}
+
+func (s AliyunCommService) CreateVpcClient(endpoint, accessKeyId, accessKeySecret string) (
+	result *vpc.Client, err error) {
+	config := &openapi.Config{
+		AccessKeyId:     tea.String(accessKeyId),
+		AccessKeySecret: tea.String(accessKeySecret),
+	}
+
+	config.Endpoint = tea.String("vpc.aliyuncs.com")
+	result = &vpc.Client{}
+	result, err = vpc.NewClient(config)
+
+	if err != nil {
+		_logUtils.Errorf("CreateVpcClient error %s", err.Error())
+		return
+	}
+
+	return result, err
+}
+
+func (s AliyunCommService) CreateEciClient(endpoint, accessKeyId, accessKeySecret string) (
+	result *eci.Client, err error) {
+	config := &openapi.Config{
+		AccessKeyId:     tea.String(accessKeyId),
+		AccessKeySecret: tea.String(accessKeySecret),
+	}
+
+	config.Endpoint = tea.String(endpoint)
+	result = &eci.Client{}
+	result, err = eci.NewClient(config)
+	if err != nil {
+		_logUtils.Errorf("CreateEciClient error %s", err.Error())
+		return
+	}
+
+	return result, err
+}
+
+func (s AliyunCommService) CreateEnsClient(url string, accessKeyId string, accessKeySecret string) (client *ens.Client, err error) {
+	config := &openapi.Config{
+		AccessKeyId:     tea.String(accessKeyId),
+		AccessKeySecret: tea.String(accessKeySecret),
+	}
+	config.Endpoint = tea.String(url)
+	client = &ens.Client{}
+	//client, _err = ens.NewClient(config)
+	return client, err
+}

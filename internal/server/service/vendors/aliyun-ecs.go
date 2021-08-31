@@ -3,18 +3,15 @@ package vendors
 import (
 	"encoding/json"
 	"fmt"
-	openapi "github.com/alibabacloud-go/darabonba-openapi/client"
 	ecs "github.com/alibabacloud-go/ecs-20140526/v2/client"
 	"github.com/alibabacloud-go/tea/tea"
-	vpc "github.com/alibabacloud-go/vpc-20160428/v2/client"
-	testconst "github.com/easysoft/zagent/cmd/test/_const"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
 	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
-	"strings"
 )
 
 type AliyunEcsService struct {
+	AliyunCommService *AliyunCommService `inject:""`
 }
 
 func NewAliyunEcsService() *AliyunEcsService {
@@ -22,7 +19,7 @@ func NewAliyunEcsService() *AliyunEcsService {
 }
 
 func (s AliyunEcsService) CreateInst(vmName, imageName, switchId, securityGroupId string, client *ecs.Client) (id, name string, err error) {
-	regionId, _, err := s.GetRegion(client)
+	regionId, _, err := s.AliyunCommService.GetRegion(client)
 	if err != nil {
 		return
 	}
@@ -213,102 +210,4 @@ func (s AliyunEcsService) QuerySpec(regionId string, client *ecs.Client) (zoneId
 		AvailableResources.AvailableResource[0].SupportedResources.SupportedResource[0].Value
 
 	return
-}
-
-func (s AliyunEcsService) QuerySecurityGroupByVpc(vpcId, regionId string, client *ecs.Client) (id string, err error) {
-	req := &ecs.DescribeSecurityGroupsRequest{
-		VpcId:       tea.String(vpcId),
-		RegionId:    tea.String(regionId),
-		NetworkType: tea.String("vpc"),
-	}
-
-	resp, err := client.DescribeSecurityGroups(req)
-	if err != nil {
-		_logUtils.Errorf("DescribeSecurityGroups %s error %s", id, err.Error())
-		return
-	}
-
-	if resp.Body.SecurityGroups != nil {
-		id = *resp.Body.SecurityGroups.SecurityGroup[0].SecurityGroupId
-	}
-
-	return
-}
-
-func (s AliyunEcsService) GetSwitch(vpcId, regionId string, vpcClient *vpc.Client) (switchId, name string, err error) {
-	req := &vpc.DescribeVSwitchesRequest{
-		RegionId: tea.String(regionId),
-		VpcId:    tea.String(vpcId),
-	}
-
-	resp, err := vpcClient.DescribeVSwitches(req)
-
-	if resp.Body.VSwitches != nil {
-		switchId = *resp.Body.VSwitches.VSwitch[0].VSwitchId
-		name = *resp.Body.VSwitches.VSwitch[0].VSwitchId
-	}
-
-	return
-}
-
-func (s AliyunEcsService) GetRegion(client *ecs.Client) (id, name string, err error) {
-	describeRegionsRequest := &ecs.DescribeRegionsRequest{
-		InstanceChargeType: tea.String("PostPaid"),
-		ResourceType:       tea.String("instance"),
-	}
-
-	result, err := client.DescribeRegions(describeRegionsRequest)
-	if err != nil {
-		_logUtils.Errorf("DescribeRegions error %s", err.Error())
-		return
-	}
-
-	for _, item := range result.Body.Regions.Region {
-		id = *item.RegionId
-		//_logUtils.Infof("region: %s, %s", *item.RegionId, *item.LocalName)
-		if strings.Index(id, testconst.ALIYUN_REGION) > -1 {
-			id = *item.RegionId
-
-			return
-		}
-	}
-
-	return
-}
-
-func (s AliyunEcsService) CreateEcsClient(endpoint, accessKeyId, accessKeySecret string) (
-	result *ecs.Client, err error) {
-	config := &openapi.Config{
-		AccessKeyId:     tea.String(accessKeyId),
-		AccessKeySecret: tea.String(accessKeySecret),
-	}
-
-	config.Endpoint = tea.String(endpoint)
-	result = &ecs.Client{}
-	result, err = ecs.NewClient(config)
-	if err != nil {
-		_logUtils.Errorf("CreateEcsClient error %s", err.Error())
-		return
-	}
-
-	return result, err
-}
-
-func (s AliyunEcsService) CreateVpcClient(endpoint, accessKeyId, accessKeySecret string) (
-	result *vpc.Client, err error) {
-	config := &openapi.Config{
-		AccessKeyId:     tea.String(accessKeyId),
-		AccessKeySecret: tea.String(accessKeySecret),
-	}
-
-	config.Endpoint = tea.String("vpc.aliyuncs.com")
-	result = &vpc.Client{}
-	result, err = vpc.NewClient(config)
-
-	if err != nil {
-		_logUtils.Errorf("CreateVpcClient error %s", err.Error())
-		return
-	}
-
-	return result, err
 }

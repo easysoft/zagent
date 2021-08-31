@@ -12,10 +12,13 @@ import (
 func TestAliyunEci(t *testing.T) {
 	_logUtils.Init(consts.AppNameAgent)
 
-	srv := vendors.NewAliyunEciService()
-	client, _ := srv.CreateEciClient(serverConst.ALIYUN_ECI_URL, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
+	eciSrv := vendors.NewAliyunEciService()
+	commSrv := vendors.NewAliyunCommService()
 
-	id, _ := srv.CreateInst("maven-testng-001", "maven-testng",
+	eciClient, _ := commSrv.CreateEciClient(serverConst.ALIYUN_ECI_URL, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
+	ensClient, _ := commSrv.CreateEnsClient(serverConst.ALIYUN_ENS_URL, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
+
+	id, _ := eciSrv.CreateInst("maven-testng-001", "maven-testng",
 		"registry-vpc.cn-hangzhou.aliyuncs.com/com-deeptest/maven-testng",
 		[]string{
 			"sleep 6000",
@@ -25,9 +28,9 @@ func TestAliyunEci(t *testing.T) {
 			//"mvn clean package > logs.txt",
 			"sleep 6000",
 		},
-		testconst.ALIYUN_REGION, client)
+		testconst.ALIYUN_REGION, eciClient, ensClient)
 
 	_logUtils.Infof("%s", id)
 
-	srv.Destroy(id, testconst.ALIYUN_REGION, client)
+	eciSrv.Destroy(id, testconst.ALIYUN_REGION, eciClient)
 }

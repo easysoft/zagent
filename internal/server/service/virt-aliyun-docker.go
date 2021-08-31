@@ -1,12 +1,14 @@
 package serverService
 
 import (
+	"fmt"
 	"github.com/easysoft/zagent/internal/comm/const"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 	"github.com/easysoft/zagent/internal/server/service/vendors"
+	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
 	"strings"
 )
 
@@ -16,9 +18,10 @@ type AliyunDockerService struct {
 	VmRepo      *repo.VmRepo      `inject:""`
 	QueueRepo   *repo.QueueRepo   `inject:""`
 
-	VmCommonService  *VmCommonService          `inject:""`
-	HistoryService   *HistoryService           `inject:""`
-	AliyunEciService *vendors.AliyunEciService `inject:""`
+	VmCommonService   *VmCommonService           `inject:""`
+	HistoryService    *HistoryService            `inject:""`
+	AliyunEciService  *vendors.AliyunEciService  `inject:""`
+	AliyunCommService *vendors.AliyunCommService `inject:""`
 }
 
 func NewAliyunDockerService() *AliyunDockerService {
@@ -29,7 +32,11 @@ func (s AliyunDockerService) CreateRemote(hostId, queueId uint) (result _domain.
 	queue := s.QueueRepo.GetQueue(queueId)
 	host := s.HostRepo.Get(hostId)
 
-	client, _ := s.AliyunEciService.CreateEciClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
+	eciClient, _ := s.AliyunEciService.CreateEciClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
+
+	url := fmt.Sprintf(serverConst.ALIYUN_ECS_URL, host.CloudRegion)
+	vpcClient, err := s.AliyunCommService.CreateVpcClient(url, host.CloudKey, host.CloudSecret)
+
 	cmd := []string{
 		"/bin/bash",
 		"-c",
@@ -39,7 +46,7 @@ func (s AliyunDockerService) CreateRemote(hostId, queueId uint) (result _domain.
 	image := queue.DockerImage
 	jobName := queue.TaskName + "-" + _stringUtils.NewUuid()
 
-	id, err := s.AliyunEciService.CreateInst(jobName, jobName, image, cmd, host.CloudRegion, client)
+	id, err := s.AliyunEciService.CreateInst(jobName, jobName, image, cmd, host.CloudRegion, eciClient, vpcClient)
 	if err != nil {
 		result.Fail(err.Error())
 		return

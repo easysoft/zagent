@@ -13,23 +13,25 @@ import (
 func TestAliyunEcs(t *testing.T) {
 	_logUtils.Init(consts.AppNameAgent)
 
-	srv := vendors.NewAliyunEcsService()
+	commSrv := vendors.NewAliyunCommService()
+	ecsSrv := vendors.NewAliyunEcsService()
+
 	url := fmt.Sprintf("ecs-%s.aliyuncs.com", testconst.ALIYUN_REGION)
-	client, err := srv.CreateEcsClient(url, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
-	vpcClient, err := srv.CreateVpcClient(url, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
+	client, err := commSrv.CreateEcsClient(url, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
+	vpcClient, err := commSrv.CreateVpcClient(url, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
 
-	switchId, _, err := srv.GetSwitch(testconst.ALIYUN_VPC, testconst.ALIYUN_REGION, vpcClient)
-	securityGroupId, err := srv.QuerySecurityGroupByVpc(testconst.ALIYUN_VPC, testconst.ALIYUN_REGION, client)
+	switchId, _, err := commSrv.GetSwitch(testconst.ALIYUN_VPC, testconst.ALIYUN_REGION, vpcClient)
+	securityGroupId, err := commSrv.QuerySecurityGroupByVpc(testconst.ALIYUN_VPC, testconst.ALIYUN_REGION, client)
 
-	id, name, _ := srv.CreateInst("vm-001", "tmpl-ubuntu-20-desktop-x64-zh_cn", switchId, securityGroupId, client)
-	err = srv.StartInst(id, client)
+	id, name, _ := ecsSrv.CreateInst("vm-001", "tmpl-ubuntu-20-desktop-x64-zh_cn", switchId, securityGroupId, client)
+	err = ecsSrv.StartInst(id, client)
 
 	status := ""
 	macAddress := ""
 	for i := 0; i < 2*60; i++ {
 		<-time.After(1 * time.Second)
 
-		status, macAddress, err = srv.QueryInst(id, testconst.ALIYUN_REGION, client)
+		status, macAddress, err = ecsSrv.QueryInst(id, testconst.ALIYUN_REGION, client)
 
 		if status == "Running" {
 			break
@@ -38,14 +40,14 @@ func TestAliyunEcs(t *testing.T) {
 
 	_logUtils.Infof("%s %s", status, macAddress)
 
-	ip, err := srv.AllocateIp(id, client)
-	vncPassword, _ := srv.QueryVncPassword(id, testconst.ALIYUN_REGION, client)
-	vncUrl, _ := srv.QueryVncUrl(id, vncPassword, testconst.ALIYUN_REGION, false, client)
+	ip, err := ecsSrv.AllocateIp(id, client)
+	vncPassword, _ := ecsSrv.QueryVncPassword(id, testconst.ALIYUN_REGION, client)
+	vncUrl, _ := ecsSrv.QueryVncUrl(id, vncPassword, testconst.ALIYUN_REGION, false, client)
 
 	_logUtils.Infof("%s, %s, %s, %s, %s", id, name, ip, vncUrl, vncPassword)
 
 	<-time.After(60 * time.Second)
 
-	err = srv.RemoveInst(id, client)
+	err = ecsSrv.RemoveInst(id, client)
 	_logUtils.Infof("%#v", err)
 }

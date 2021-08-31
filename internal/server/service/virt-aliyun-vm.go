@@ -17,9 +17,10 @@ type AliyunVmService struct {
 	BackingRepo *repo.BackingRepo `inject:""`
 	VmRepo      *repo.VmRepo      `inject:""`
 
-	VmCommonService  *VmCommonService          `inject:""`
-	HistoryService   *HistoryService           `inject:""`
-	AliyunEcsService *vendors.AliyunEcsService `inject:""`
+	VmCommonService   *VmCommonService           `inject:""`
+	HistoryService    *HistoryService            `inject:""`
+	AliyunEcsService  *vendors.AliyunEcsService  `inject:""`
+	AliyunCommService *vendors.AliyunCommService `inject:""`
 }
 
 func NewAliyunVmService() *AliyunVmService {
@@ -45,8 +46,8 @@ func (s AliyunVmService) CreateRemote(hostId, backingId, queueId uint) (result _
 	s.VmRepo.UpdateVmName(vm)
 
 	url := fmt.Sprintf(serverConst.ALIYUN_ECS_URL, host.CloudRegion)
-	ecsClient, err := s.AliyunEcsService.CreateEcsClient(url, host.CloudKey, host.CloudSecret)
-	vpcClient, err := s.AliyunEcsService.CreateVpcClient(url, host.CloudKey, host.CloudSecret)
+	ecsClient, err := s.AliyunCommService.CreateEcsClient(url, host.CloudKey, host.CloudSecret)
+	vpcClient, err := s.AliyunCommService.CreateVpcClient(url, host.CloudKey, host.CloudSecret)
 
 	if err != nil {
 		result.Fail(err.Error())
@@ -54,14 +55,14 @@ func (s AliyunVmService) CreateRemote(hostId, backingId, queueId uint) (result _
 		return
 	}
 
-	switchId, _, err := s.AliyunEcsService.GetSwitch(host.VpcId, host.CloudRegion, vpcClient)
+	switchId, _, err := s.AliyunCommService.GetSwitch(host.VpcId, host.CloudRegion, vpcClient)
 	if err != nil {
 		result.Fail(err.Error())
 		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "GetSwitch fail %s"+err.Error(), queueId, vm.ID, "", "", "")
 		return
 	}
 
-	securityGroupId, err := s.AliyunEcsService.QuerySecurityGroupByVpc(host.VpcId, host.CloudRegion, ecsClient)
+	securityGroupId, err := s.AliyunCommService.QuerySecurityGroupByVpc(host.VpcId, host.CloudRegion, ecsClient)
 	if err != nil {
 		result.Fail(err.Error())
 		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "QuerySecurityGroupByVpc fail %s"+err.Error(), queueId, vm.ID, "", "", "")
@@ -124,7 +125,7 @@ func (s AliyunVmService) DestroyRemote(vmId, queueId uint) (result _domain.RpcRe
 	status := consts.VmDestroy
 
 	url := fmt.Sprintf(serverConst.ALIYUN_ECS_URL, host.CloudRegion)
-	ecsClient, err := s.AliyunEcsService.CreateEcsClient(url, host.CloudKey, host.CloudSecret)
+	ecsClient, err := s.AliyunCommService.CreateEcsClient(url, host.CloudKey, host.CloudSecret)
 	if err != nil {
 		status = consts.VmFailDestroy
 	} else {

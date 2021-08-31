@@ -1,23 +1,27 @@
 package vendors
 
 import (
-	openapi "github.com/alibabacloud-go/darabonba-openapi/client"
 	eci "github.com/alibabacloud-go/eci-20180808/v2/client"
 	"github.com/alibabacloud-go/tea/tea"
+	"github.com/aliyun/alibaba-cloud-sdk-go/services/ens"
+	"github.com/easysoft/zagent/cmd/test/_const"
 	"github.com/easysoft/zagent/internal/comm/domain"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"strings"
 )
 
 type AliyunEciService struct {
+	AliyunCommService *AliyunCommService `inject:""`
 }
 
 func NewAliyunEciService() *AliyunEciService {
 	return &AliyunEciService{}
 }
 
-func (s AliyunEciService) CreateInst(groupName, imageName, image string, cmd []string, regionId string, client *eci.Client) (
+func (s AliyunEciService) CreateInst(groupName, imageName, image string, cmd []string, regionId string,
+	eciClient *eci.Client, ensClient *ens.Client) (
 	id string, err error) {
+
+	eipId, err := s.AliyunCommService.GetEip(testconst.ALIYUN_REGION, ensClient)
 
 	args := []*string{tea.String("-c"), tea.String(strings.Join(cmd, " && "))}
 
@@ -63,9 +67,10 @@ func (s AliyunEciService) CreateInst(groupName, imageName, image string, cmd []s
 		Cpu:                tea.Float32(2),
 		Memory:             tea.Float32(4),
 		Container:          []*eci.CreateContainerGroupRequestContainer{container},
+		EipInstanceId:      tea.String(eipId),
 	}
 
-	resp, err := client.CreateContainerGroup(req)
+	resp, err := eciClient.CreateContainerGroup(req)
 	id = *resp.Body.ContainerGroupId
 
 	return
@@ -81,22 +86,4 @@ func (s AliyunEciService) Destroy(containerGroupId, region string, client *eci.C
 	_, err = client.DeleteContainerGroup(req)
 
 	return
-}
-
-func (s AliyunEciService) CreateEciClient(endpoint, accessKeyId, accessKeySecret string) (
-	result *eci.Client, err error) {
-	config := &openapi.Config{
-		AccessKeyId:     tea.String(accessKeyId),
-		AccessKeySecret: tea.String(accessKeySecret),
-	}
-
-	config.Endpoint = tea.String(endpoint)
-	result = &eci.Client{}
-	result, err = eci.NewClient(config)
-	if err != nil {
-		_logUtils.Errorf("CreateEciClient error %s", err.Error())
-		return
-	}
-
-	return result, err
 }
