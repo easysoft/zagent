@@ -6,6 +6,7 @@ import (
 	"github.com/alibabacloud-go/tea/tea"
 	"github.com/easysoft/zagent/internal/comm/domain"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	"strings"
 )
 
 type AliyunEciService struct {
@@ -18,10 +19,7 @@ func NewAliyunEciService() *AliyunEciService {
 func (s AliyunEciService) CreateInst(groupName, imageName, image string, cmd []string, regionId string, client *eci.Client) (
 	id string, err error) {
 
-	args := []*string{tea.String("-c")}
-	for _, item := range cmd {
-		args = append(args, tea.String(item))
-	}
+	args := []*string{tea.String("-c"), tea.String(strings.Join(cmd, " && "))}
 
 	container := &eci.CreateContainerGroupRequestContainer{
 		Image:      tea.String(image),
