@@ -8,6 +8,7 @@ import (
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 	"github.com/easysoft/zagent/internal/server/service/vendors"
+	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
 	"time"
 )
 
@@ -43,7 +44,7 @@ func (s AliyunVmService) CreateRemote(hostId, backingId, queueId uint) (result _
 	vm.Name = s.VmCommonService.genVmName(backing, vm.ID)
 	s.VmRepo.UpdateVmName(vm)
 
-	url := fmt.Sprintf(testconst.ALIYUN_ECS_URL, host.CloudRegion)
+	url := fmt.Sprintf(serverConst.ALIYUN_ECS_URL, host.CloudRegion)
 	ecsClient, err := s.AliyunEcsService.CreateEcsClient(url, host.CloudKey, host.CloudSecret)
 	vpcClient, err := s.AliyunEcsService.CreateVpcClient(url, host.CloudKey, host.CloudSecret)
 
@@ -122,7 +123,7 @@ func (s AliyunVmService) DestroyRemote(vmId, queueId uint) (result _domain.RpcRe
 
 	status := consts.VmDestroy
 
-	url := fmt.Sprintf(testconst.ALIYUN_ECS_URL, host.CloudRegion)
+	url := fmt.Sprintf(serverConst.ALIYUN_ECS_URL, host.CloudRegion)
 	ecsClient, err := s.AliyunEcsService.CreateEcsClient(url, host.CloudKey, host.CloudSecret)
 	if err != nil {
 		status = consts.VmFailDestroy

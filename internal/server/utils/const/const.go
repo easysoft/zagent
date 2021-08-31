@@ -5,9 +5,15 @@ const (
 	WsEvent       = "OnChat"
 	WsDefaultRoom = "square"
 
-	TrainingTimeout = 60 * 60 // sec
-
 	PageSize = 15
+
+	ALIYUN_ECS_URL     = "ecs-%s.aliyuncs.com"
+	ALIYUN_ECS_URL_VNC = "https://g.alicdn.com/aliyun/ecs-console-vnc2/0.0.8/index.html" +
+		"?vncUrl=%s&instanceId=%s&isWindows=%t&password=%s"
+	ALIYUN_ECI_URL = "eci.aliyuncs.com"
+
+	HuaweiCloudUrlJobCreate  = "https://cci.%s.myhuaweicloud.cn/apis/batch/v1/namespaces/%s/jobs"
+	HuaweiCloudUrlJobDestroy = "https://cci.%s.myhuaweicloud.cn/apis/batch/v1/namespaces/%s/jobs/%s"
 )
 
 type WsEventAction string

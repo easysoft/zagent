@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/easysoft/zagent/cmd/test/_const"
 	"github.com/easysoft/zagent/internal/comm/domain"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
 )
 
 type HuaweiCloudCciService struct {
@@ -59,7 +59,7 @@ func (s HuaweiCloudCciService) Create(image string, jobName string, cmd []string
 		},
 	}
 
-	createUrl := fmt.Sprintf(testconst.HuaweiCloudUrlJobCreate, region, namespace)
+	createUrl := fmt.Sprintf(serverConst.HuaweiCloudUrlJobCreate, region, namespace)
 	resp, success := s.HuaweiCloudCommService.post(createUrl, reqCreate, nil, map[string]string{"X-Auth-Token": token})
 
 	if !success {
@@ -82,7 +82,7 @@ func (s HuaweiCloudCciService) Destroy(jobName, token, region, namespace string)
 		PropagationPolicy: "Orphan",
 	}
 
-	destroyUrl := fmt.Sprintf(testconst.HuaweiCloudUrlJobDestroy, region, namespace, jobName)
+	destroyUrl := fmt.Sprintf(serverConst.HuaweiCloudUrlJobDestroy, region, namespace, jobName)
 
 	resp, success := s.HuaweiCloudCommService.delete(destroyUrl, reqDestroy, nil, map[string]string{"X-Auth-Token": token})
 

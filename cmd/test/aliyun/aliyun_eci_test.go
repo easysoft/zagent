@@ -5,6 +5,7 @@ import (
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/pkg/lib/log"
 	"github.com/easysoft/zagent/internal/server/service/vendors"
+	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
 	"testing"
 )
 
@@ -12,7 +13,7 @@ func TestAliyunEci(t *testing.T) {
 	_logUtils.Init(consts.AppNameAgent)
 
 	srv := vendors.NewAliyunEciService()
-	client, _ := srv.CreateEciClient(testconst.ALIYUN_ECI_URL, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
+	client, _ := srv.CreateEciClient(serverConst.ALIYUN_ECI_URL, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
 
 	id, _ := srv.CreateInst("maven-testng-001", "maven-testng",
 		"registry-vpc.cn-hangzhou.aliyuncs.com/com-deeptest/maven-testng",

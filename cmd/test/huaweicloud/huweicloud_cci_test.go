@@ -19,7 +19,9 @@ func TestHuaweiCloudCci(t *testing.T) {
 	client, _ := srv.CreateIamClient(
 		testconst.HUAWEI_CLOUD_KEY, testconst.HUAWEI_CLOUD_Secret, testconst.HUAWEI_CLOUD_REGION)
 
-	token, _ := srv.GetIamToken(client)
+	token, _ := srv.GetIamToken(
+		testconst.HUAWEI_CLOUD_USER, testconst.HUAWEI_CLOUD_IAM_USER, testconst.HUAWEI_CLOUD_IAM_PASSWORD,
+		client)
 
 	image := "swr.cn-east-3.myhuaweicloud.com/tester-im/maven-testng:1.0"
 	name := "maven-testng-" + _stringUtils.NewUuid()

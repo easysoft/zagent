@@ -27,7 +27,9 @@ func (s HuaweiCloudDockerService) CreateRemote(hostId, queueId uint) (result _do
 	host := s.HostRepo.Get(hostId)
 
 	client, _ := s.HuaweiCloudCommService.CreateIamClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
-	token, _ := s.HuaweiCloudCommService.GetIamToken(client)
+	token, _ := s.HuaweiCloudCommService.GetIamToken(
+		host.CloudUser, host.CloudIamUser, host.CloudIamPassword,
+		client)
 	cmd := []string{
 		"/bin/bash",
 		"-c",
@@ -63,7 +65,9 @@ func (s HuaweiCloudDockerService) DestroyRemote(vmId, queueId uint) {
 	host := s.HostRepo.Get(vm.HostId)
 
 	client, err := s.HuaweiCloudCommService.CreateIamClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
-	token, _ := s.HuaweiCloudCommService.GetIamToken(client)
+	token, _ := s.HuaweiCloudCommService.GetIamToken(
+		host.CloudUser, host.CloudIamUser, host.CloudIamPassword,
+		client)
 
 	var status consts.VmStatus
 	if err == nil {

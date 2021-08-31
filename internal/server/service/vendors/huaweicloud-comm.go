@@ -3,7 +3,6 @@ package vendors
 import (
 	"encoding/json"
 	"github.com/alibabacloud-go/tea/tea"
-	testconst "github.com/easysoft/zagent/cmd/test/_const"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"github.com/huaweicloud/huaweicloud-sdk-go-v3/core/auth/basic"
 	iam "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/iam/v3"
@@ -21,7 +20,8 @@ func NewHuaweiCloudCommService() *HuaweiCloudCommService {
 	return &HuaweiCloudCommService{}
 }
 
-func (s HuaweiCloudCommService) GetIamToken(client *iam.IamClient) (
+func (s HuaweiCloudCommService) GetIamToken(huaweiCloudUser, huaweiCloudIamUser, huaweiCloudIamPassword string,
+	client *iam.IamClient) (
 	token string, err error) {
 
 	request := &iamModel.KeystoneCreateUserTokenByPasswordRequest{
@@ -33,16 +33,16 @@ func (s HuaweiCloudCommService) GetIamToken(client *iam.IamClient) (
 					Password: &iamModel.PwdPassword{
 						User: &iamModel.PwdPasswordUser{
 							Domain: &iamModel.PwdPasswordUserDomain{
-								Name: testconst.HUAWEI_CLOUD_USER,
+								Name: huaweiCloudUser,
 							},
-							Name:     testconst.HUAWEI_CLOUD_IAM_USER,
-							Password: testconst.HUAWEI_CLOUD_IAM_PASSWORD,
+							Name:     huaweiCloudIamUser,
+							Password: huaweiCloudIamPassword,
 						},
 					},
 				},
 				Scope: &iamModel.AuthScope{
 					Domain: &iamModel.AuthScopeDomain{
-						Name: tea.String(testconst.HUAWEI_CLOUD_USER),
+						Name: tea.String(huaweiCloudUser),
 					},
 				},
 			},

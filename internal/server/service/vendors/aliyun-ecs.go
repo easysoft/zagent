@@ -10,6 +10,7 @@ import (
 	testconst "github.com/easysoft/zagent/cmd/test/_const"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
+	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
 	"strings"
 )
 
@@ -141,7 +142,7 @@ func (s AliyunEcsService) QueryVncUrl(id, vncPassword, regionId string, isWindow
 		return
 	}
 
-	url = fmt.Sprintf(testconst.ALIYUN_ECS_URL_VNC, *resp.Body.VncUrl, id, isWindows, vncPassword)
+	url = fmt.Sprintf(serverConst.ALIYUN_ECS_URL_VNC, *resp.Body.VncUrl, id, isWindows, vncPassword)
 
 	return
 }
