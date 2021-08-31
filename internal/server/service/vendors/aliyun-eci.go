@@ -4,6 +4,7 @@ import (
 	openapi "github.com/alibabacloud-go/darabonba-openapi/client"
 	eci "github.com/alibabacloud-go/eci-20180808/v2/client"
 	"github.com/alibabacloud-go/tea/tea"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 )
 
@@ -38,6 +39,18 @@ func (s AliyunEciService) CreateInst(groupName, imageName, image string, cmd []s
 
 	resp, err := client.CreateContainerGroup(req)
 	id = *resp.Body.ContainerGroupId
+
+	return
+}
+
+func (s AliyunEciService) Destroy(containerGroupId, region string, client *eci.Client) (
+	ret domain.CciRepsDestroy, err error) {
+
+	req := &eci.DeleteContainerGroupRequest{
+		ContainerGroupId: tea.String(containerGroupId),
+		RegionId:         tea.String(region),
+	}
+	_, err = client.DeleteContainerGroup(req)
 
 	return
 }

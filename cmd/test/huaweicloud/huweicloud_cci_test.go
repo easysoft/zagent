@@ -35,8 +35,8 @@ func TestHuaweiCloudCci(t *testing.T) {
 		}, "; "),
 	}
 
-	respCreate, success := cci.Create(image, name, cmd, token, testconst.HUAWEI_CLOUD_REGION, testconst.HUAWEI_CLOUD_NAMEAPACE)
-	_logUtils.Infof("%#v, %#v", respCreate, success)
+	respCreate, err := cci.Create(name, image, cmd, token, testconst.HUAWEI_CLOUD_REGION, testconst.HUAWEI_CLOUD_NAMEAPACE)
+	_logUtils.Infof("%#v, %#v", respCreate, err)
 
 	respDestroy, success := cci.Destroy(respCreate.Metadata.Name, token, testconst.HUAWEI_CLOUD_REGION, testconst.HUAWEI_CLOUD_NAMEAPACE)
 	_logUtils.Infof("%#v, %#v", respDestroy, success)

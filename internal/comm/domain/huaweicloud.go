@@ -29,6 +29,7 @@ type CciRepsDestroy struct {
 
 type CciMetadata struct {
 	Name string `json:"name"`
+	Uid  string `json:"uid"`
 }
 type CciLimits struct {
 	CPU    string `json:"cpu"`

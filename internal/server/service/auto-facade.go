@@ -16,7 +16,8 @@ type FacadeService struct {
 	HuaweiCloudVmService     *HuaweiCloudVmService     `inject:""`
 	HuaweiCloudDockerService *HuaweiCloudDockerService `inject:""`
 
-	AliyunVmService *AliyunVmService `inject:""`
+	AliyunVmService     *AliyunVmService     `inject:""`
+	AliyunDockerService *AliyunDockerService `inject:""`
 
 	SeleniumService *SeleniumService `inject:""`
 	AppiumService   *AppiumService   `inject:""`
@@ -45,7 +46,7 @@ func (s FacadeService) Create(hostId, backingId, tmplId, queueId uint) (
 		if serverUitls.IsHuaweiCloud(platform) {
 			result = s.CreateDockerHuaweiCloud(hostId, queueId)
 		} else if serverUitls.IsAliyun(platform) {
-			// result = s.CreateDockerAliyun(hostId, queueId)
+			result = s.CreateDockerAliyun(hostId, queueId)
 		}
 	}
 
@@ -67,6 +68,10 @@ func (s FacadeService) CreateVmAliyun(hostId, backingId, queueId uint) (result _
 
 func (s FacadeService) CreateDockerHuaweiCloud(hostId, queueId uint) (result _domain.RpcResp) {
 	result = s.HuaweiCloudDockerService.CreateRemote(hostId, queueId)
+	return
+}
+func (s FacadeService) CreateDockerAliyun(hostId, queueId uint) (result _domain.RpcResp) {
+	result = s.AliyunDockerService.CreateRemote(hostId, queueId)
 	return
 }
 
@@ -99,6 +104,8 @@ func (s FacadeService) Destroy(queue model.Queue) {
 	} else if serverUitls.IsDocker(platform) {
 		if serverUitls.IsHuaweiCloud(platform) {
 			s.DestroyDockerHuaweiCloud(queue)
+		} else if serverUitls.IsAliyun(platform) {
+			s.DestroyDockerAliyun(queue)
 		}
 	}
 }
@@ -130,5 +137,9 @@ func (s FacadeService) DestroyVmAliyun(queue model.Queue) (result _domain.RpcRes
 }
 func (s FacadeService) DestroyDockerHuaweiCloud(queue model.Queue) (result _domain.RpcResp) {
 	s.HuaweiCloudDockerService.DestroyRemote(queue.VmId, queue.ID)
+	return
+}
+func (s FacadeService) DestroyDockerAliyun(queue model.Queue) (result _domain.RpcResp) {
+	s.AliyunDockerService.DestroyRemote(queue.VmId, queue.ID)
 	return
 }

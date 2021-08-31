@@ -2,6 +2,7 @@ package vendors
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/easysoft/zagent/cmd/test/_const"
 	"github.com/easysoft/zagent/internal/comm/domain"
@@ -17,7 +18,7 @@ func NewHuaweiCloudCciService() *HuaweiCloudCciService {
 }
 
 func (s HuaweiCloudCciService) Create(image string, jobName string, cmd []string,
-	token string, region string, namespace string) (ret domain.CciRepsCreate, success bool) {
+	token string, region string, namespace string) (ret domain.CciRepsCreate, err error) {
 
 	reqCreate := domain.CciReqCreate{
 		APIVersion: "batch/v1",
@@ -59,8 +60,11 @@ func (s HuaweiCloudCciService) Create(image string, jobName string, cmd []string
 	}
 
 	createUrl := fmt.Sprintf(testconst.HuaweiCloudUrlJobCreate, region, namespace)
-	var resp []byte
-	resp, success = s.HuaweiCloudCommService.post(createUrl, reqCreate, nil, map[string]string{"X-Auth-Token": token})
+	resp, success := s.HuaweiCloudCommService.post(createUrl, reqCreate, nil, map[string]string{"X-Auth-Token": token})
+
+	if !success {
+		err = errors.New("fail to create huaweicloud cci")
+	}
 
 	json.Unmarshal(resp, &ret)
 	name := ret.Metadata.Name
@@ -70,7 +74,7 @@ func (s HuaweiCloudCciService) Create(image string, jobName string, cmd []string
 }
 
 func (s HuaweiCloudCciService) Destroy(jobName, token, region, namespace string) (
-	ret domain.CciRepsDestroy, success bool) {
+	ret domain.CciRepsDestroy, err error) {
 
 	reqDestroy := domain.CciReqDestroy{
 		Kind:              "DeleteOptions",
@@ -80,11 +84,15 @@ func (s HuaweiCloudCciService) Destroy(jobName, token, region, namespace string)
 
 	destroyUrl := fmt.Sprintf(testconst.HuaweiCloudUrlJobDestroy, region, namespace, jobName)
 
-	var resp []byte
-	resp, success = s.HuaweiCloudCommService.delete(destroyUrl, reqDestroy, nil, map[string]string{"X-Auth-Token": token})
+	resp, success := s.HuaweiCloudCommService.delete(destroyUrl, reqDestroy, nil, map[string]string{"X-Auth-Token": token})
 
-	json.Unmarshal(resp, ret)
-	_logUtils.Infof("%#v", ret)
+	if !success {
+		err = errors.New("fail to destroy huaweicloud cci")
+	}
+
+	json.Unmarshal(resp, &ret)
+	name := ret.Metadata.Name
+	_logUtils.Infof("%s#v", name)
 
 	return
 }

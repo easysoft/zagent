@@ -1,7 +1,7 @@
 package serverService
 
 import (
-	consts "github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/const"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
 	"github.com/easysoft/zagent/internal/server/model"
@@ -10,36 +10,36 @@ import (
 	"strings"
 )
 
-type HuaweiCloudDockerService struct {
+type AliyunDockerService struct {
 	HostRepo    *repo.HostRepo    `inject:""`
-	QueueRepo   *repo.QueueRepo   `inject:""`
 	BackingRepo *repo.BackingRepo `inject:""`
 	VmRepo      *repo.VmRepo      `inject:""`
+	QueueRepo   *repo.QueueRepo   `inject:""`
 
-	VmCommonService        *VmCommonService `inject:""`
-	HistoryService         *HistoryService  `inject:""`
-	HuaweiCloudCommService *vendors.HuaweiCloudCommService
-	HuaweiCloudCciService  *vendors.HuaweiCloudCciService `inject:""`
+	VmCommonService  *VmCommonService          `inject:""`
+	HistoryService   *HistoryService           `inject:""`
+	AliyunEciService *vendors.AliyunEciService `inject:""`
 }
 
-func (s HuaweiCloudDockerService) CreateRemote(hostId, queueId uint) (result _domain.RpcResp) {
+func NewAliyunDockerService() *AliyunDockerService {
+	return &AliyunDockerService{}
+}
+
+func (s AliyunDockerService) CreateRemote(hostId, queueId uint) (result _domain.RpcResp) {
 	queue := s.QueueRepo.GetQueue(queueId)
 	host := s.HostRepo.Get(hostId)
 
-	client, _ := s.HuaweiCloudCommService.CreateIamClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
-	token, _ := s.HuaweiCloudCommService.GetIamToken(client)
+	client, _ := s.AliyunEciService.CreateEciClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
 	cmd := []string{
 		"/bin/bash",
 		"-c",
 		strings.Join(strings.Split(queue.BuildCommands, "\n"), "; "),
 	}
 
-	jobName := queue.TaskName + "-" + _stringUtils.NewUuid()
 	image := queue.DockerImage
-	region := host.CloudRegion
-	namespace := host.CloudNamespace
+	jobName := queue.TaskName + "-" + _stringUtils.NewUuid()
 
-	resp, err := s.HuaweiCloudCciService.Create(jobName, image, cmd, token, region, namespace)
+	id, err := s.AliyunEciService.CreateInst(jobName, jobName, image, cmd, host.CloudRegion, client)
 	if err != nil {
 		result.Fail(err.Error())
 		return
@@ -49,25 +49,23 @@ func (s HuaweiCloudDockerService) CreateRemote(hostId, queueId uint) (result _do
 		HostId:      host.ID,
 		HostName:    host.Name,
 		Status:      consts.VmCreated,
-		CouldInstId: resp.Metadata.Uid,
+		CouldInstId: id,
 	}
 	s.VmRepo.Save(&vm)
 
 	return
 }
-
-func (s HuaweiCloudDockerService) DestroyRemote(vmId, queueId uint) {
+func (s AliyunDockerService) DestroyRemote(vmId, queueId uint) {
 	vm := s.VmRepo.GetById(vmId)
 	jobName := vm.CouldInstId
 
 	host := s.HostRepo.Get(vm.HostId)
 
-	client, err := s.HuaweiCloudCommService.CreateIamClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
-	token, _ := s.HuaweiCloudCommService.GetIamToken(client)
+	client, err := s.AliyunEciService.CreateEciClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
 
 	var status consts.VmStatus
 	if err == nil {
-		_, err = s.HuaweiCloudCciService.Destroy(jobName, token, host.CloudRegion, host.CloudNamespace)
+		_, err = s.AliyunEciService.Destroy(jobName, host.CloudRegion, client)
 	}
 
 	if err != nil {
