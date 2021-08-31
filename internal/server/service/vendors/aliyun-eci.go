@@ -30,6 +30,33 @@ func (s AliyunEciService) CreateInst(groupName, imageName, image string, cmd []s
 		Command:    []*string{tea.String("/bin/bash")},
 		Arg:        args,
 		Tty:        tea.Bool(true),
+		ReadinessProbe: &eci.CreateContainerGroupRequestContainerReadinessProbe{
+			TcpSocket: &eci.CreateContainerGroupRequestContainerReadinessProbeTcpSocket{
+				Port: tea.Int32(22),
+			},
+			HttpGet: &eci.CreateContainerGroupRequestContainerReadinessProbeHttpGet{
+				Scheme: tea.String("https"),
+			},
+			Exec: &eci.CreateContainerGroupRequestContainerReadinessProbeExec{
+				Command: []*string{tea.String("ls")},
+			},
+		},
+		SecurityContext: &eci.CreateContainerGroupRequestContainerSecurityContext{
+			Capability: &eci.CreateContainerGroupRequestContainerSecurityContextCapability{
+				Add: []*string{tea.String("NET_ADMIN")},
+			},
+		},
+		LivenessProbe: &eci.CreateContainerGroupRequestContainerLivenessProbe{
+			TcpSocket: &eci.CreateContainerGroupRequestContainerLivenessProbeTcpSocket{
+				Port: tea.Int32(22),
+			},
+			HttpGet: &eci.CreateContainerGroupRequestContainerLivenessProbeHttpGet{
+				Scheme: tea.String("https"),
+			},
+			Exec: &eci.CreateContainerGroupRequestContainerLivenessProbeExec{
+				Command: []*string{tea.String("ls")},
+			},
+		},
 	}
 
 	req := &eci.CreateContainerGroupRequest{
