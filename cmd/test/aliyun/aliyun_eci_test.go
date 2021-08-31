@@ -14,7 +14,7 @@ func TestAliyunEci(t *testing.T) {
 	srv := vendors.NewAliyunEciService()
 	client, _ := srv.CreateEciClient(testconst.ALIYUN_ECI_URL, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
 
-	id, _ := srv.CreateInst("docker-001", "maven-testng",
+	id, _ := srv.CreateInst("maven-testng-001", "maven-testng",
 		"registry-vpc.cn-hangzhou.aliyuncs.com/com-deeptest/maven-testng",
 		[]string{
 			"sleep 30",
@@ -23,9 +23,9 @@ func TestAliyunEci(t *testing.T) {
 			"cd ci_test_testng",
 			"mvn clean package > logs.txt",
 			"sleep 600"},
-
-		// []string{"sleep 3600"},
 		testconst.ALIYUN_REGION, client)
 
 	_logUtils.Infof("%s", id)
+
+	srv.Destroy(id, testconst.ALIYUN_REGION, client)
 }

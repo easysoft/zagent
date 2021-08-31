@@ -18,15 +18,18 @@ func NewAliyunEciService() *AliyunEciService {
 func (s AliyunEciService) CreateInst(groupName, imageName, image string, cmd []string, regionId string, client *eci.Client) (
 	id string, err error) {
 
-	commands := make([]*string, 0)
+	args := []*string{tea.String("-c")}
 	for _, item := range cmd {
-		commands = append(commands, tea.String(item))
+		args = append(args, tea.String(item))
 	}
 
 	container := &eci.CreateContainerGroupRequestContainer{
-		Image:   tea.String(image),
-		Name:    tea.String(imageName),
-		Command: commands,
+		Image:      tea.String(image),
+		Name:       tea.String(imageName),
+		WorkingDir: tea.String("/"),
+		Command:    []*string{tea.String("/bin/bash")},
+		Arg:        args,
+		Tty:        tea.Bool(true),
 	}
 
 	req := &eci.CreateContainerGroupRequest{

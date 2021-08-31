@@ -49,7 +49,7 @@ func (s HuaweiCloudDockerService) CreateRemote(hostId, queueId uint) (result _do
 		HostId:      host.ID,
 		HostName:    host.Name,
 		Status:      consts.VmCreated,
-		CouldInstId: resp.Metadata.Uid,
+		CouldInstId: resp.Metadata.Name,
 	}
 	s.VmRepo.Save(&vm)
 
