@@ -32,7 +32,7 @@ func (s AliyunDockerService) CreateRemote(hostId, queueId uint) (result _domain.
 	queue := s.QueueRepo.GetQueue(queueId)
 	host := s.HostRepo.Get(hostId)
 
-	eciClient, _ := s.AliyunEciService.CreateEciClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
+	eciClient, _ := s.AliyunCommService.CreateEciClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
 
 	url := fmt.Sprintf(serverConst.ALIYUN_ECS_URL, host.CloudRegion)
 	vpcClient, err := s.AliyunCommService.CreateVpcClient(url, host.CloudKey, host.CloudSecret)
@@ -68,7 +68,7 @@ func (s AliyunDockerService) DestroyRemote(vmId, queueId uint) {
 
 	host := s.HostRepo.Get(vm.HostId)
 
-	client, err := s.AliyunEciService.CreateEciClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
+	client, err := s.AliyunCommService.CreateEciClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
 
 	var status consts.VmStatus
 	if err == nil {

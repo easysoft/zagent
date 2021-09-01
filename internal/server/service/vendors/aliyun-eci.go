@@ -3,7 +3,7 @@ package vendors
 import (
 	eci "github.com/alibabacloud-go/eci-20180808/v2/client"
 	"github.com/alibabacloud-go/tea/tea"
-	"github.com/aliyun/alibaba-cloud-sdk-go/services/ens"
+	vpc "github.com/alibabacloud-go/vpc-20160428/v2/client"
 	"github.com/easysoft/zagent/cmd/test/_const"
 	"github.com/easysoft/zagent/internal/comm/domain"
 	"strings"
@@ -18,10 +18,10 @@ func NewAliyunEciService() *AliyunEciService {
 }
 
 func (s AliyunEciService) CreateInst(groupName, imageName, image string, cmd []string, regionId string,
-	eciClient *eci.Client, ensClient *ens.Client) (
+	eciClient *eci.Client, vpcClient *vpc.Client) (
 	id string, err error) {
 
-	eipId, err := s.AliyunCommService.GetEip(testconst.ALIYUN_REGION, ensClient)
+	eipId, err := s.AliyunCommService.GetEip(testconst.ALIYUN_REGION, vpcClient)
 
 	args := []*string{tea.String("-c"), tea.String(strings.Join(cmd, " && "))}
 

@@ -80,20 +80,34 @@ func (s AliyunCommService) GetRegion(client *ecs.Client) (id, name string, err e
 	return
 }
 
-func (s AliyunCommService) GetEip(region string, client *ens.Client) (id string, err error) {
-	req := &ens.DescribeEipAddressesRequest{
-		Version:     "",
-		EnsRegionId: region,
+func (s AliyunCommService) GetEip(region string, client *vpc.Client) (id string, err error) {
+	describeEipAddressesRequest := &vpc.DescribeEipAddressesRequest{
+		RegionId: tea.String(region),
 	}
-	resp, err := client.DescribeEipAddresses(req)
+
+	resp, err := client.DescribeEipAddresses(describeEipAddressesRequest)
 	if err != nil {
 		_logUtils.Errorf("DescribeEipAddresses error %s", err.Error())
 		return
 	}
 
-	id = resp.EipAddresses.EipAddress[0].Eip
-
+	id = *resp.Body.EipAddresses.EipAddress[0].AllocationId
 	return
+
+	// Use 2017 ENS API
+	//req := &ens.DescribeEipAddressesRequest{
+	//	Version:     "",
+	//	EnsRegionId: region,
+	//}
+	//resp, err := client.DescribeEipAddresses(req)
+	//if err != nil {
+	//	_logUtils.Errorf("DescribeEipAddresses error %s", err.Error())
+	//	return
+	//}
+	//
+	//id = resp.EipAddresses.EipAddress[0].Eip
+	//
+	//return
 }
 
 func (s AliyunCommService) CreateEcsClient(endpoint, accessKeyId, accessKeySecret string) (
