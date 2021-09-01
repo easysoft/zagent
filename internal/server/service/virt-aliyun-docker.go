@@ -33,6 +33,13 @@ func (s AliyunDockerService) CreateRemote(hostId, queueId uint) (result _domain.
 	host := s.HostRepo.Get(hostId)
 
 	eciClient, _ := s.AliyunCommService.CreateEciClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
+	ecsClient, _ := s.AliyunCommService.CreateEcsClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
+	vpcClient, _ := s.AliyunCommService.CreateVpcClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
+
+	eipId, _ := s.AliyunCommService.GetEip(host.CloudRegion, vpcClient)
+
+	switchId, _, _ := s.AliyunCommService.GetSwitch(host.VpcId, host.CloudRegion, vpcClient)
+	securityGroupId, _ := s.AliyunCommService.QuerySecurityGroupByVpc(host.VpcId, host.CloudRegion, ecsClient)
 
 	url := fmt.Sprintf(serverConst.ALIYUN_ECS_URL, host.CloudRegion)
 	vpcClient, err := s.AliyunCommService.CreateVpcClient(url, host.CloudKey, host.CloudSecret)
@@ -46,7 +53,8 @@ func (s AliyunDockerService) CreateRemote(hostId, queueId uint) (result _domain.
 	image := queue.DockerImage
 	jobName := queue.TaskName + "-" + _stringUtils.NewUuid()
 
-	id, err := s.AliyunEciService.CreateInst(jobName, jobName, image, cmd, host.CloudRegion, eciClient, vpcClient)
+	id, err := s.AliyunEciService.CreateInst(jobName, jobName, image, cmd,
+		eipId, switchId, securityGroupId, host.CloudRegion, eciClient)
 	if err != nil {
 		result.Fail(err.Error())
 		return

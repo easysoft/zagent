@@ -17,7 +17,16 @@ func TestAliyunEci(t *testing.T) {
 	eciSrv.AliyunCommService = commSrv
 
 	eciClient, _ := commSrv.CreateEciClient(serverConst.ALIYUN_ECI_URL, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
+	ecsClient, _ := commSrv.CreateEcsClient(serverConst.ALIYUN_ECI_URL, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
 	vpcClient, _ := commSrv.CreateVpcClient(serverConst.ALIYUN_ENS_URL, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
+
+	eipId, _ := commSrv.GetEip(testconst.ALIYUN_REGION, vpcClient)
+	_logUtils.Infof("eipId %s", eipId)
+
+	switchId, _, _ := commSrv.GetSwitch(testconst.ALIYUN_VPC, testconst.ALIYUN_REGION, vpcClient)
+	_logUtils.Infof("switchId %s", switchId)
+	securityGroupId, _ := commSrv.QuerySecurityGroupByVpc(testconst.ALIYUN_VPC, testconst.ALIYUN_REGION, ecsClient)
+	_logUtils.Infof("securityGroupId %s", securityGroupId)
 
 	eciId, _ := eciSrv.CreateInst("maven-testng-001", "maven-testng",
 		"registry-vpc.cn-hangzhou.aliyuncs.com/com-deeptest/maven-testng",
@@ -31,7 +40,7 @@ func TestAliyunEci(t *testing.T) {
 			"pwd > log.txt",
 			"sleep 6000",
 		},
-		testconst.ALIYUN_REGION, eciClient, vpcClient)
+		eipId, switchId, securityGroupId, testconst.ALIYUN_REGION, eciClient)
 
 	_logUtils.Infof("eciId %s", eciId)
 

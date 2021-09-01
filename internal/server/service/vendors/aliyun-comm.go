@@ -7,7 +7,6 @@ import (
 	"github.com/alibabacloud-go/tea/tea"
 	vpc "github.com/alibabacloud-go/vpc-20160428/v2/client"
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/ens"
-	testconst "github.com/easysoft/zagent/cmd/test/_const"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"strings"
 )
@@ -21,8 +20,8 @@ func NewAliyunCommService() *AliyunCommService {
 
 func (s AliyunCommService) QuerySecurityGroupByVpc(vpcId, regionId string, client *ecs.Client) (id string, err error) {
 	req := &ecs.DescribeSecurityGroupsRequest{
-		VpcId:       tea.String(vpcId),
 		RegionId:    tea.String(regionId),
+		VpcId:       tea.String(vpcId),
 		NetworkType: tea.String("vpc"),
 	}
 
@@ -55,7 +54,7 @@ func (s AliyunCommService) GetSwitch(vpcId, regionId string, vpcClient *vpc.Clie
 	return
 }
 
-func (s AliyunCommService) GetRegion(client *ecs.Client) (id, name string, err error) {
+func (s AliyunCommService) GetRegion(region string, client *ecs.Client) (id, name string, err error) {
 	describeRegionsRequest := &ecs.DescribeRegionsRequest{
 		InstanceChargeType: tea.String("PostPaid"),
 		ResourceType:       tea.String("instance"),
@@ -70,7 +69,7 @@ func (s AliyunCommService) GetRegion(client *ecs.Client) (id, name string, err e
 	for _, item := range result.Body.Regions.Region {
 		id = *item.RegionId
 		//_logUtils.Infof("region: %s, %s", *item.RegionId, *item.LocalName)
-		if strings.Index(id, testconst.ALIYUN_REGION) > -1 {
+		if strings.Index(id, region) > -1 {
 			id = *item.RegionId
 
 			return

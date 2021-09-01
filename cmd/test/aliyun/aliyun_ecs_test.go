@@ -23,7 +23,8 @@ func TestAliyunEcs(t *testing.T) {
 	switchId, _, err := commSrv.GetSwitch(testconst.ALIYUN_VPC, testconst.ALIYUN_REGION, vpcClient)
 	securityGroupId, err := commSrv.QuerySecurityGroupByVpc(testconst.ALIYUN_VPC, testconst.ALIYUN_REGION, client)
 
-	id, name, _ := ecsSrv.CreateInst("vm-001", "tmpl-ubuntu-20-desktop-x64-zh_cn", switchId, securityGroupId, client)
+	id, name, _ := ecsSrv.CreateInst("vm-001", "tmpl-ubuntu-20-desktop-x64-zh_cn",
+		switchId, securityGroupId, testconst.ALIYUN_REGION, client)
 	err = ecsSrv.StartInst(id, client)
 
 	status := ""

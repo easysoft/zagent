@@ -18,8 +18,8 @@ func NewAliyunEcsService() *AliyunEcsService {
 	return &AliyunEcsService{}
 }
 
-func (s AliyunEcsService) CreateInst(vmName, imageName, switchId, securityGroupId string, client *ecs.Client) (id, name string, err error) {
-	regionId, _, err := s.AliyunCommService.GetRegion(client)
+func (s AliyunEcsService) CreateInst(vmName, imageName, switchId, securityGroupId, region string, client *ecs.Client) (id, name string, err error) {
+	regionId, _, err := s.AliyunCommService.GetRegion(region, client)
 	if err != nil {
 		return
 	}

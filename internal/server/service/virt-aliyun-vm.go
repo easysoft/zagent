@@ -2,7 +2,6 @@ package serverService
 
 import (
 	"fmt"
-	testconst "github.com/easysoft/zagent/cmd/test/_const"
 	"github.com/easysoft/zagent/internal/comm/const"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
@@ -69,7 +68,8 @@ func (s AliyunVmService) CreateRemote(hostId, backingId, queueId uint) (result _
 		return
 	}
 
-	vm.CouldInstId, _, err = s.AliyunEcsService.CreateInst(vm.Name, backing.Name, switchId, securityGroupId, ecsClient)
+	vm.CouldInstId, _, err = s.AliyunEcsService.CreateInst(vm.Name, backing.Name, switchId, securityGroupId,
+		host.CloudRegion, ecsClient)
 	if err != nil {
 		result.Fail(err.Error())
 		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "CreateInst fail %s"+err.Error(), queueId, vm.ID, "", "", "")
@@ -109,7 +109,7 @@ func (s AliyunVmService) CreateRemote(hostId, backingId, queueId uint) (result _
 	result.Pass("")
 	s.VmRepo.UpdateVmCloudInst(vm)
 
-	vncPassword, _ := s.AliyunEcsService.QueryVncPassword(vm.CouldInstId, testconst.ALIYUN_REGION, ecsClient)
+	vncPassword, _ := s.AliyunEcsService.QueryVncPassword(vm.CouldInstId, host.CloudRegion, ecsClient)
 	vm.VncAddress, _ = s.AliyunEcsService.QueryVncUrl(
 		vm.CouldInstId, vncPassword, host.CloudRegion, vm.OsCategory == consts.Windows, ecsClient)
 
