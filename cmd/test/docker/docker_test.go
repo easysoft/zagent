@@ -1,4 +1,4 @@
-package main
+package docker
 
 import (
 	hostKvmService "github.com/easysoft/zagent/internal/agent-host/service/kvm"

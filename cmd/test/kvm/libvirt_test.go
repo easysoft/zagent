@@ -1,4 +1,4 @@
-package main
+package kvm
 
 import (
 	hostKvmService "github.com/easysoft/zagent/internal/agent-host/service/kvm"

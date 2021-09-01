@@ -6,6 +6,7 @@ import (
 	vpc "github.com/alibabacloud-go/vpc-20160428/v2/client"
 	"github.com/easysoft/zagent/cmd/test/_const"
 	"github.com/easysoft/zagent/internal/comm/domain"
+	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"strings"
 )
 
@@ -22,6 +23,7 @@ func (s AliyunEciService) CreateInst(groupName, imageName, image string, cmd []s
 	id string, err error) {
 
 	eipId, err := s.AliyunCommService.GetEip(testconst.ALIYUN_REGION, vpcClient)
+	_logUtils.Infof("eipId %s", eipId)
 
 	args := []*string{tea.String("-c"), tea.String(strings.Join(cmd, " && "))}
 

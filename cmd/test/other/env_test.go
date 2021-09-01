@@ -1,4 +1,4 @@
-package main
+package other
 
 import (
 	_shellUtils "github.com/easysoft/zagent/internal/pkg/lib/shell"

@@ -19,7 +19,7 @@ func TestAliyunEci(t *testing.T) {
 	eciClient, _ := commSrv.CreateEciClient(serverConst.ALIYUN_ECI_URL, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
 	vpcClient, _ := commSrv.CreateVpcClient(serverConst.ALIYUN_ENS_URL, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
 
-	id, _ := eciSrv.CreateInst("maven-testng-001", "maven-testng",
+	eciId, _ := eciSrv.CreateInst("maven-testng-001", "maven-testng",
 		"registry-vpc.cn-hangzhou.aliyuncs.com/com-deeptest/maven-testng",
 		[]string{
 			//"sleep 6000",
@@ -33,7 +33,7 @@ func TestAliyunEci(t *testing.T) {
 		},
 		testconst.ALIYUN_REGION, eciClient, vpcClient)
 
-	_logUtils.Infof("%s", id)
+	_logUtils.Infof("eciId %s", eciId)
 
-	eciSrv.Destroy(id, testconst.ALIYUN_REGION, eciClient)
+	eciSrv.Destroy(eciId, testconst.ALIYUN_REGION, eciClient)
 }
