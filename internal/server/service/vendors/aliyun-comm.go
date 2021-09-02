@@ -147,7 +147,7 @@ func (s AliyunCommService) CreateVpcClient(endpoint, accessKeyId, accessKeySecre
 		AccessKeySecret: tea.String(accessKeySecret),
 	}
 
-	config.Endpoint = tea.String("vpc.aliyuncs.com")
+	config.Endpoint = tea.String(endpoint)
 	result = &vpc.Client{}
 	result, err = vpc.NewClient(config)
 

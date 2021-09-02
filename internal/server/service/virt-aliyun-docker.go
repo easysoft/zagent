@@ -36,7 +36,7 @@ func (s AliyunDockerService) CreateRemote(hostId, queueId uint) (result _domain.
 	ecsUrl := fmt.Sprintf(serverConst.ALIYUN_ECS_URL, host.CloudRegion)
 	eciClient, _ := s.AliyunCommService.CreateEciClient(serverConst.ALIYUN_ECI_URL, host.CloudKey, host.CloudSecret)
 	ecsClient, _ := s.AliyunCommService.CreateEcsClient(ecsUrl, host.CloudKey, host.CloudSecret)
-	vpcClient, _ := s.AliyunCommService.CreateVpcClient(ecsUrl, host.CloudKey, host.CloudSecret)
+	vpcClient, _ := s.AliyunCommService.CreateVpcClient(serverConst.ALIYUN_VPC_URL, host.CloudKey, host.CloudSecret)
 
 	switchId, _, _ := s.AliyunCommService.GetSwitch(host.VpcId, host.CloudRegion, vpcClient)
 	securityGroupId, _ := s.AliyunCommService.QuerySecurityGroupByVpc(host.VpcId, host.CloudRegion, ecsClient)
@@ -49,9 +49,6 @@ func (s AliyunDockerService) CreateRemote(hostId, queueId uint) (result _domain.
 		result.Fail(msg)
 		return
 	}
-
-	url := fmt.Sprintf(serverConst.ALIYUN_ECS_URL, host.CloudRegion)
-	vpcClient, err := s.AliyunCommService.CreateVpcClient(url, host.CloudKey, host.CloudSecret)
 
 	cmd := []string{
 		"/bin/bash",
@@ -78,6 +75,7 @@ func (s AliyunDockerService) CreateRemote(hostId, queueId uint) (result _domain.
 	}
 	s.VmRepo.Save(&vm)
 
+	result.Pass("")
 	return
 }
 func (s AliyunDockerService) DestroyRemote(vmId, queueId uint) {
@@ -86,8 +84,8 @@ func (s AliyunDockerService) DestroyRemote(vmId, queueId uint) {
 
 	host := s.HostRepo.Get(vm.HostId)
 
-	client, err1 := s.AliyunCommService.CreateEciClient(serverConst.ALIYUN_ECI_URL, host.CloudKey, host.CloudSecret)
 	ecsUrl := fmt.Sprintf(serverConst.ALIYUN_ECS_URL, host.CloudRegion)
+	client, err1 := s.AliyunCommService.CreateEciClient(serverConst.ALIYUN_ECI_URL, host.CloudKey, host.CloudSecret)
 	vpcClient, err2 := s.AliyunCommService.CreateVpcClient(ecsUrl, host.CloudKey, host.CloudSecret)
 
 	var status consts.VmStatus
