@@ -61,7 +61,7 @@ func (s AliyunDockerService) CreateRemote(hostId, queueId uint) (result _domain.
 	image := queue.DockerImage
 	jobName := queue.TaskName + "-" + _stringUtils.NewUuid()
 
-	id, err := s.AliyunEciService.CreateInst(jobName, jobName, image, cmd,
+	id, err := s.AliyunEciService.CreateInst(jobName, image, "", cmd,
 		eipId, switchId, securityGroupId, host.CloudRegion, eciClient)
 	if err != nil {
 		result.Fail(err.Error())

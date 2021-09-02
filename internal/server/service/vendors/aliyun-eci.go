@@ -15,7 +15,7 @@ func NewAliyunEciService() *AliyunEciService {
 	return &AliyunEciService{}
 }
 
-func (s AliyunEciService) CreateInst(groupName, imageName, image string, cmd []string,
+func (s AliyunEciService) CreateInst(groupName, image, imageCacheId string, cmd []string,
 	eipId, switchId, securityGroupId, regionId string,
 	eciClient *eci.Client) (
 	id string, err error) {
@@ -23,8 +23,8 @@ func (s AliyunEciService) CreateInst(groupName, imageName, image string, cmd []s
 	args := []*string{tea.String("-c"), tea.String(strings.Join(cmd, " && "))}
 
 	container := &eci.CreateContainerGroupRequestContainer{
+		Name:       tea.String(groupName),
 		Image:      tea.String(image),
-		Name:       tea.String(imageName),
 		WorkingDir: tea.String("/"),
 		Command:    []*string{tea.String("/bin/bash")},
 		Arg:        args,
@@ -67,6 +67,10 @@ func (s AliyunEciService) CreateInst(groupName, imageName, image string, cmd []s
 		EipInstanceId:      tea.String(eipId),
 		VSwitchId:          tea.String(switchId),
 		SecurityGroupId:    tea.String(securityGroupId),
+	}
+
+	if imageCacheId != "" {
+		req.ImageSnapshotId = tea.String(imageCacheId)
 	}
 
 	resp, err := eciClient.CreateContainerGroup(req)

@@ -39,8 +39,10 @@ func TestAliyunEci(t *testing.T) {
 		return
 	}
 
-	eciId, _ := eciSrv.CreateInst("maven-testng-001", "maven-testng",
+	eciId, _ := eciSrv.CreateInst(
+		"maven-testng-001",
 		"registry-vpc.cn-hangzhou.aliyuncs.com/com-deeptest/maven-testng",
+		"imc-bp1frwjer5gmb9tp5831",
 		[]string{
 			"pwd > log.txt",
 			"sleep 10",
