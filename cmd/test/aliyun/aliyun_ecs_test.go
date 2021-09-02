@@ -16,9 +16,9 @@ func TestAliyunEcs(t *testing.T) {
 	commSrv := vendors.NewAliyunCommService()
 	ecsSrv := vendors.NewAliyunEcsService()
 
-	url := fmt.Sprintf("ecs-%s.aliyuncs.com", testconst.ALIYUN_REGION)
-	client, err := commSrv.CreateEcsClient(url, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
-	vpcClient, err := commSrv.CreateVpcClient(url, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
+	ecsUrl := fmt.Sprintf("ecs-%s.aliyuncs.com", testconst.ALIYUN_REGION)
+	client, err := commSrv.CreateEcsClient(ecsUrl, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
+	vpcClient, err := commSrv.CreateVpcClient(ecsUrl, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
 
 	switchId, _, err := commSrv.GetSwitch(testconst.ALIYUN_VPC, testconst.ALIYUN_REGION, vpcClient)
 	securityGroupId, err := commSrv.QuerySecurityGroupByVpc(testconst.ALIYUN_VPC, testconst.ALIYUN_REGION, client)
