@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/easysoft/zagent/internal/comm/const"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
+	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
@@ -37,9 +38,16 @@ func (s AliyunDockerService) CreateRemote(hostId, queueId uint) (result _domain.
 	vpcClient, _ := s.AliyunCommService.CreateVpcClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
 
 	eipId, _ := s.AliyunCommService.GetEip(host.CloudRegion, vpcClient)
-
 	switchId, _, _ := s.AliyunCommService.GetSwitch(host.VpcId, host.CloudRegion, vpcClient)
 	securityGroupId, _ := s.AliyunCommService.QuerySecurityGroupByVpc(host.VpcId, host.CloudRegion, ecsClient)
+
+	if eipId == "" || switchId == "" || securityGroupId == "" {
+		msg := fmt.Sprintf("eipId (%s), switchId (%s) or securityGroupId (%s) is empty, cancel.",
+			eipId, switchId, securityGroupId)
+		_logUtils.Infof(msg)
+		result.Fail(msg)
+		return
+	}
 
 	url := fmt.Sprintf(serverConst.ALIYUN_ECS_URL, host.CloudRegion)
 	vpcClient, err := s.AliyunCommService.CreateVpcClient(url, host.CloudKey, host.CloudSecret)

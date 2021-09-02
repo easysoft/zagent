@@ -82,6 +82,7 @@ func (s AliyunCommService) GetRegion(region string, client *ecs.Client) (id, nam
 func (s AliyunCommService) GetEip(region string, client *vpc.Client) (id string, err error) {
 	describeEipAddressesRequest := &vpc.DescribeEipAddressesRequest{
 		RegionId: tea.String(region),
+		Status:   tea.String("Available"),
 	}
 
 	resp, err := client.DescribeEipAddresses(describeEipAddressesRequest)
@@ -90,23 +91,13 @@ func (s AliyunCommService) GetEip(region string, client *vpc.Client) (id string,
 		return
 	}
 
+	if len(resp.Body.EipAddresses.EipAddress) == 0 {
+		_logUtils.Errorf("DescribeEipAddresses, can not find any EIP instances in 'Available' status, all are 'InUse' status?")
+		return
+	}
+
 	id = *resp.Body.EipAddresses.EipAddress[0].AllocationId
 	return
-
-	// Use 2017 ENS API
-	//req := &ens.DescribeEipAddressesRequest{
-	//	Version:     "",
-	//	EnsRegionId: region,
-	//}
-	//resp, err := client.DescribeEipAddresses(req)
-	//if err != nil {
-	//	_logUtils.Errorf("DescribeEipAddresses error %s", err.Error())
-	//	return
-	//}
-	//
-	//id = resp.EipAddresses.EipAddress[0].Eip
-	//
-	//return
 }
 
 func (s AliyunCommService) CreateEcsClient(endpoint, accessKeyId, accessKeySecret string) (
