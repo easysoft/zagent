@@ -37,9 +37,9 @@ func (s AliyunDockerService) CreateRemote(hostId, queueId uint) (result _domain.
 	ecsClient, _ := s.AliyunCommService.CreateEcsClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
 	vpcClient, _ := s.AliyunCommService.CreateVpcClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
 
-	eipId, _ := s.AliyunCommService.GetEip(host.CloudRegion, vpcClient)
 	switchId, _, _ := s.AliyunCommService.GetSwitch(host.VpcId, host.CloudRegion, vpcClient)
 	securityGroupId, _ := s.AliyunCommService.QuerySecurityGroupByVpc(host.VpcId, host.CloudRegion, ecsClient)
+	eipId, _ := s.AliyunCommService.CreateEip(host.CloudRegion, vpcClient)
 
 	if eipId == "" || switchId == "" || securityGroupId == "" {
 		msg := fmt.Sprintf("eipId (%s), switchId (%s) or securityGroupId (%s) is empty, cancel.",
@@ -72,7 +72,8 @@ func (s AliyunDockerService) CreateRemote(hostId, queueId uint) (result _domain.
 		HostId:      host.ID,
 		HostName:    host.Name,
 		Status:      consts.VmCreated,
-		CouldInstId: id,
+		CloudInstId: id,
+		CloudEipId:  eipId,
 	}
 	s.VmRepo.Save(&vm)
 
@@ -80,22 +81,27 @@ func (s AliyunDockerService) CreateRemote(hostId, queueId uint) (result _domain.
 }
 func (s AliyunDockerService) DestroyRemote(vmId, queueId uint) {
 	vm := s.VmRepo.GetById(vmId)
-	jobName := vm.CouldInstId
+	jobName := vm.CloudInstId
 
 	host := s.HostRepo.Get(vm.HostId)
 
-	client, err := s.AliyunCommService.CreateEciClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
+	client, err1 := s.AliyunCommService.CreateEciClient(serverConst.ALIYUN_ECI_URL, host.CloudKey, host.CloudSecret)
+	ecsUrl := fmt.Sprintf(serverConst.ALIYUN_ECS_URL, host.CloudRegion)
+	vpcClient, err2 := s.AliyunCommService.CreateVpcClient(ecsUrl, host.CloudKey, host.CloudSecret)
 
 	var status consts.VmStatus
-	if err == nil {
-		_, err = s.AliyunEciService.Destroy(jobName, host.CloudRegion, client)
-	}
-
-	if err != nil {
+	if err1 == nil && err2 == nil {
+		_, err := s.AliyunEciService.Destroy(jobName, host.CloudRegion, client)
+		if err == nil {
+			err = s.AliyunCommService.DestroyEip(vm.CloudEipId, host.CloudRegion, vpcClient)
+		} else {
+			status = consts.VmFailDestroy
+		}
+	} else {
 		status = consts.VmFailDestroy
 	}
 
-	s.VmRepo.UpdateStatusByCloudInstId([]string{vm.CouldInstId}, status)
+	s.VmRepo.UpdateStatusByCloudInstId([]string{vm.CloudInstId}, status)
 	s.HistoryService.Create(consts.Vm, vmId, queueId, "", status.ToString())
 
 	return

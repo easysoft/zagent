@@ -5,6 +5,7 @@ import (
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
+	"github.com/easysoft/zagent/internal/server/service/vendors"
 	serverUitls "github.com/easysoft/zagent/internal/server/utils/lib"
 )
 
@@ -16,8 +17,9 @@ type FacadeService struct {
 	HuaweiCloudVmService     *HuaweiCloudVmService     `inject:""`
 	HuaweiCloudDockerService *HuaweiCloudDockerService `inject:""`
 
-	AliyunVmService     *AliyunVmService     `inject:""`
-	AliyunDockerService *AliyunDockerService `inject:""`
+	AliyunVmService     *AliyunVmService           `inject:""`
+	AliyunDockerService *AliyunDockerService       `inject:""`
+	AliyunCommService   *vendors.AliyunCommService `inject:""`
 
 	SeleniumService *SeleniumService `inject:""`
 	AppiumService   *AppiumService   `inject:""`

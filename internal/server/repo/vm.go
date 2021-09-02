@@ -65,7 +65,7 @@ func (r VmRepo) UpdateVmName(vm model.Vm) {
 func (r VmRepo) UpdateVmCloudInst(vm model.Vm) {
 	r.DB.Model(&model.Vm{}).Where("id=?", vm.ID).
 		Updates(map[string]interface{}{
-			"could_inst_id": vm.CouldInstId,
+			"could_inst_id": vm.CloudInstId,
 			"node_ip":       vm.NodeIp,
 			"mac_address":   vm.MacAddress,
 		})

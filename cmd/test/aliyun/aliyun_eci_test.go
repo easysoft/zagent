@@ -23,14 +23,14 @@ func TestAliyunEci(t *testing.T) {
 	ecsClient, _ := commSrv.CreateEcsClient(ecsUrl, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
 	vpcClient, _ := commSrv.CreateVpcClient(ecsUrl, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
 
-	eipId, _ := commSrv.GetEip(testconst.ALIYUN_REGION, vpcClient)
-	_logUtils.Infof("eipId %s", eipId)
-
 	switchId, _, _ := commSrv.GetSwitch(testconst.ALIYUN_VPC, testconst.ALIYUN_REGION, vpcClient)
 	_logUtils.Infof("switchId %s", switchId)
 
 	securityGroupId, _ := commSrv.QuerySecurityGroupByVpc(testconst.ALIYUN_VPC, testconst.ALIYUN_REGION, ecsClient)
 	_logUtils.Infof("securityGroupId %s", securityGroupId)
+
+	eipId, _ := commSrv.CreateEip(testconst.ALIYUN_REGION, vpcClient)
+	_logUtils.Infof("eipId %s", eipId)
 
 	if eipId == "" || switchId == "" || securityGroupId == "" {
 		msg := fmt.Sprintf("eipId (%s), switchId (%s) or securityGroupId (%s) is empty, cancel.",
@@ -57,4 +57,5 @@ func TestAliyunEci(t *testing.T) {
 	_logUtils.Infof("eciId %s", eciId)
 
 	eciSrv.Destroy(eciId, testconst.ALIYUN_REGION, eciClient)
+	commSrv.DestroyEip(eipId, testconst.ALIYUN_REGION, vpcClient)
 }

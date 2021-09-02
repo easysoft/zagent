@@ -51,7 +51,8 @@ type Vm struct {
 
 	Histories []History `json:"histories" gorm:"polymorphic:Owner;polymorphicValue:vm"`
 
-	CouldInstId string `json:"couldInstId"`
+	CloudInstId string `json:"cloudInstId"`
+	CloudEipId  string `json:"cloudEipId"`
 }
 
 func GenKvmReq(po Vm) (req domain.KvmReq) {

@@ -51,7 +51,7 @@ func (s HuaweiCloudDockerService) CreateRemote(hostId, queueId uint) (result _do
 		HostId:      host.ID,
 		HostName:    host.Name,
 		Status:      consts.VmCreated,
-		CouldInstId: resp.Metadata.Name,
+		CloudInstId: resp.Metadata.Name,
 	}
 	s.VmRepo.Save(&vm)
 
@@ -60,7 +60,7 @@ func (s HuaweiCloudDockerService) CreateRemote(hostId, queueId uint) (result _do
 
 func (s HuaweiCloudDockerService) DestroyRemote(vmId, queueId uint) {
 	vm := s.VmRepo.GetById(vmId)
-	jobName := vm.CouldInstId
+	jobName := vm.CloudInstId
 
 	host := s.HostRepo.Get(vm.HostId)
 
@@ -78,7 +78,7 @@ func (s HuaweiCloudDockerService) DestroyRemote(vmId, queueId uint) {
 		status = consts.VmFailDestroy
 	}
 
-	s.VmRepo.UpdateStatusByCloudInstId([]string{vm.CouldInstId}, status)
+	s.VmRepo.UpdateStatusByCloudInstId([]string{vm.CloudInstId}, status)
 	s.HistoryService.Create(consts.Vm, vmId, queueId, "", status.ToString())
 
 	return

@@ -68,7 +68,7 @@ func (s AliyunVmService) CreateRemote(hostId, backingId, queueId uint) (result _
 		return
 	}
 
-	vm.CouldInstId, _, err = s.AliyunEcsService.CreateInst(vm.Name, backing.Name, switchId, securityGroupId,
+	vm.CloudInstId, _, err = s.AliyunEcsService.CreateInst(vm.Name, backing.Name, switchId, securityGroupId,
 		host.CloudRegion, ecsClient)
 	if err != nil {
 		result.Fail(err.Error())
@@ -76,7 +76,7 @@ func (s AliyunVmService) CreateRemote(hostId, backingId, queueId uint) (result _
 		return
 	}
 
-	err = s.AliyunEcsService.StartInst(vm.CouldInstId, ecsClient)
+	err = s.AliyunEcsService.StartInst(vm.CloudInstId, ecsClient)
 	if err != nil {
 		result.Fail(err.Error())
 		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "StartInst fail %s"+err.Error(), queueId, vm.ID, "", "", "")
@@ -87,7 +87,7 @@ func (s AliyunVmService) CreateRemote(hostId, backingId, queueId uint) (result _
 		<-time.After(1 * time.Second)
 
 		status := ""
-		status, vm.MacAddress, err = s.AliyunEcsService.QueryInst(vm.CouldInstId, host.CloudRegion, ecsClient)
+		status, vm.MacAddress, err = s.AliyunEcsService.QueryInst(vm.CloudInstId, host.CloudRegion, ecsClient)
 		if err != nil {
 			result.Fail(err.Error())
 			s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "QueryInst fail %s"+err.Error(), queueId, vm.ID, vm.VncAddress, "", "")
@@ -99,7 +99,7 @@ func (s AliyunVmService) CreateRemote(hostId, backingId, queueId uint) (result _
 		}
 	}
 
-	vm.NodeIp, err = s.AliyunEcsService.AllocateIp(vm.CouldInstId, ecsClient)
+	vm.NodeIp, err = s.AliyunEcsService.AllocateIp(vm.CloudInstId, ecsClient)
 	if err != nil {
 		result.Fail(err.Error())
 		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "AllocateIp fail %s"+err.Error(), queueId, vm.ID, vm.VncAddress, "", "")
@@ -109,9 +109,9 @@ func (s AliyunVmService) CreateRemote(hostId, backingId, queueId uint) (result _
 	result.Pass("")
 	s.VmRepo.UpdateVmCloudInst(vm)
 
-	vncPassword, _ := s.AliyunEcsService.QueryVncPassword(vm.CouldInstId, host.CloudRegion, ecsClient)
+	vncPassword, _ := s.AliyunEcsService.QueryVncPassword(vm.CloudInstId, host.CloudRegion, ecsClient)
 	vm.VncAddress, _ = s.AliyunEcsService.QueryVncUrl(
-		vm.CouldInstId, vncPassword, host.CloudRegion, vm.OsCategory == consts.Windows, ecsClient)
+		vm.CloudInstId, vncPassword, host.CloudRegion, vm.OsCategory == consts.Windows, ecsClient)
 
 	s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, vm.VncAddress, "", "")
 
@@ -129,13 +129,13 @@ func (s AliyunVmService) DestroyRemote(vmId, queueId uint) (result _domain.RpcRe
 	if err != nil {
 		status = consts.VmFailDestroy
 	} else {
-		err = s.AliyunEcsService.RemoveInst(vm.CouldInstId, ecsClient)
+		err = s.AliyunEcsService.RemoveInst(vm.CloudInstId, ecsClient)
 		if err != nil {
 			status = consts.VmFailDestroy
 		}
 	}
 
-	s.VmRepo.UpdateStatusByCloudInstId([]string{vm.CouldInstId}, status)
+	s.VmRepo.UpdateStatusByCloudInstId([]string{vm.CloudInstId}, status)
 
 	s.HistoryService.Create(consts.Vm, vmId, queueId, "", status.ToString())
 

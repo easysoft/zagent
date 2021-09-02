@@ -79,7 +79,29 @@ func (s AliyunCommService) GetRegion(region string, client *ecs.Client) (id, nam
 	return
 }
 
-func (s AliyunCommService) GetEip(region string, client *vpc.Client) (id string, err error) {
+func (s AliyunCommService) CreateEip(region string, client *vpc.Client) (id string, err error) {
+	req := &vpc.AllocateEipAddressRequest{
+		RegionId:  tea.String(region),
+		Bandwidth: tea.String("1"),
+	}
+
+	resp, err := client.AllocateEipAddress(req)
+	id = *resp.Body.AllocationId
+
+	return
+}
+func (s AliyunCommService) DestroyEip(id, region string, client *vpc.Client) (err error) {
+	req := &vpc.ReleaseEipAddressRequest{
+		AllocationId: tea.String(id),
+		RegionId:     tea.String(region),
+	}
+
+	_, err = client.ReleaseEipAddress(req)
+
+	return
+}
+
+func (s AliyunCommService) GetAvailableEip(region string, client *vpc.Client) (id string, err error) {
 	describeEipAddressesRequest := &vpc.DescribeEipAddressesRequest{
 		RegionId: tea.String(region),
 		Status:   tea.String("Available"),

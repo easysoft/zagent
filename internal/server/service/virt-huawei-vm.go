@@ -48,7 +48,7 @@ func (s HuaweiCloudVmService) CreateRemote(hostId, backingId, queueId uint) (res
 	}
 
 	huaweiCloudService := vendors.NewHuaweiCloudEcsService()
-	vm.CouldInstId, _, err = huaweiCloudService.CreateInst(vm.Name, backing.Name, ecsClient, imgClient, vpcClient)
+	vm.CloudInstId, _, err = huaweiCloudService.CreateInst(vm.Name, backing.Name, ecsClient, imgClient, vpcClient)
 	if err != nil {
 		result.Fail(err.Error())
 		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, "", "", "")
@@ -60,7 +60,7 @@ func (s HuaweiCloudVmService) CreateRemote(hostId, backingId, queueId uint) (res
 	for i := 0; i < 60; i++ {
 		<-time.After(1 * time.Second)
 
-		_, result.Msg, vm.NodeIp, vm.MacAddress, err = huaweiCloudService.QueryInst(vm.CouldInstId, ecsClient)
+		_, result.Msg, vm.NodeIp, vm.MacAddress, err = huaweiCloudService.QueryInst(vm.CloudInstId, ecsClient)
 		if err != nil {
 			result.Fail(err.Error())
 			s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, vm.VncAddress, "", "")
@@ -74,7 +74,7 @@ func (s HuaweiCloudVmService) CreateRemote(hostId, backingId, queueId uint) (res
 
 	s.VmRepo.UpdateVmCloudInst(vm)
 
-	vm.VncAddress, _ = huaweiCloudService.QueryVnc(vm.CouldInstId, ecsClient)
+	vm.VncAddress, _ = huaweiCloudService.QueryVnc(vm.CloudInstId, ecsClient)
 	s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, vm.VncAddress, "", "")
 
 	return
@@ -90,13 +90,13 @@ func (s HuaweiCloudVmService) DestroyRemote(vmId, queueId uint) (result _domain.
 	if err != nil {
 		status = consts.VmFailDestroy
 	} else {
-		err = s.HuaweiCloudEcsService.RemoveInst(vm.CouldInstId, ecsClient)
+		err = s.HuaweiCloudEcsService.RemoveInst(vm.CloudInstId, ecsClient)
 		if err != nil {
 			status = consts.VmFailDestroy
 		}
 	}
 
-	s.VmRepo.UpdateStatusByCloudInstId([]string{vm.CouldInstId}, status)
+	s.VmRepo.UpdateStatusByCloudInstId([]string{vm.CloudInstId}, status)
 
 	s.HistoryService.Create(consts.Vm, vmId, queueId, "", status.ToString())
 
