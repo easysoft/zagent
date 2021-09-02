@@ -5,6 +5,7 @@ import (
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 	commonService "github.com/easysoft/zagent/internal/server/service/common"
+	"regexp"
 	"strings"
 )
 
@@ -120,6 +121,7 @@ func (s QueueService) GenerateUnitQueuesFromTask(task *model.Task) (count int) {
 		task.GroupId = task.ID
 	}
 
+	task.IsDockerNative, _ = regexp.MatchString(`docker\s+run`, task.BuildCommands)
 	if task.IsDockerNative {
 		env := model.Environment{}
 		s.GenerateUnitTestQueue(*task, env)

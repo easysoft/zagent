@@ -260,7 +260,7 @@ export default {
       labelColHalf2: labelColHalf2,
       wrapperColHalf: wrapperColHalf,
 
-      model: { buildType: 'selenium' },
+      model: { buildType: 'unittest' },
       envData: {},
       environment: {},
       environmentIndex: -1,
@@ -353,16 +353,17 @@ export default {
               'buildType': 'unittest',
               'envVars': 'abc=123',
               'scriptUrl': 'https://gitee.com/ngtesting/ci_test_testng.git',
-              'buildCommands': `echo $abc
+              'buildCommands': `pwd > log.txt
 sleep 30
 rm -rf ci_test_testng
 git clone https://gitee.com/ngtesting/ci_test_testng.git
 cd ci_test_testng
 mvn clean package > logs.txt
-sleep 600`,
+sleep 6000`,
               'resultFiles': 'target/surefire-reports',
               'environments': [{
-                'imageName': 'swr.cn-east-3.myhuaweicloud.com/tester-im/maven-testng:1.0',
+                // 'imageName': 'swr.cn-east-3.myhuaweicloud.com/tester-im/maven-testng:1.0',
+                'imageName': 'registry-vpc.cn-hangzhou.aliyuncs.com/com-deeptest/maven-testng',
                 'imageSrc': 'cloud'
               }]
             }

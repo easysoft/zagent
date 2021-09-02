@@ -19,7 +19,7 @@ func TestAliyunEci(t *testing.T) {
 
 	eciClient, _ := commSrv.CreateEciClient(serverConst.ALIYUN_ECI_URL, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
 
-	ecsUrl := fmt.Sprintf("ecs-%s.aliyuncs.com", testconst.ALIYUN_REGION)
+	ecsUrl := fmt.Sprintf(serverConst.ALIYUN_ECS_URL, testconst.ALIYUN_REGION)
 	ecsClient, _ := commSrv.CreateEcsClient(ecsUrl, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
 	vpcClient, _ := commSrv.CreateVpcClient(ecsUrl, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
 

@@ -33,9 +33,10 @@ func (s AliyunDockerService) CreateRemote(hostId, queueId uint) (result _domain.
 	queue := s.QueueRepo.GetQueue(queueId)
 	host := s.HostRepo.Get(hostId)
 
-	eciClient, _ := s.AliyunCommService.CreateEciClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
-	ecsClient, _ := s.AliyunCommService.CreateEcsClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
-	vpcClient, _ := s.AliyunCommService.CreateVpcClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
+	ecsUrl := fmt.Sprintf(serverConst.ALIYUN_ECS_URL, host.CloudRegion)
+	eciClient, _ := s.AliyunCommService.CreateEciClient(serverConst.ALIYUN_ECI_URL, host.CloudKey, host.CloudSecret)
+	ecsClient, _ := s.AliyunCommService.CreateEcsClient(ecsUrl, host.CloudKey, host.CloudSecret)
+	vpcClient, _ := s.AliyunCommService.CreateVpcClient(ecsUrl, host.CloudKey, host.CloudSecret)
 
 	switchId, _, _ := s.AliyunCommService.GetSwitch(host.VpcId, host.CloudRegion, vpcClient)
 	securityGroupId, _ := s.AliyunCommService.QuerySecurityGroupByVpc(host.VpcId, host.CloudRegion, ecsClient)
