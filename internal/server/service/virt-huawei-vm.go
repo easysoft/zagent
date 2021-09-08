@@ -5,7 +5,7 @@ import (
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
-	"github.com/easysoft/zagent/internal/server/service/vendors"
+	"github.com/easysoft/zagent/internal/server/service/vendors/huaweicloud"
 	"time"
 )
 
@@ -14,9 +14,9 @@ type HuaweiCloudVmService struct {
 	BackingRepo *repo.BackingRepo `inject:""`
 	VmRepo      *repo.VmRepo      `inject:""`
 
-	VmCommonService       *VmCommonService               `inject:""`
-	HistoryService        *HistoryService                `inject:""`
-	HuaweiCloudEcsService *vendors.HuaweiCloudEcsService `inject:""`
+	VmCommonService       *VmCommonService                   `inject:""`
+	HistoryService        *HistoryService                    `inject:""`
+	HuaweiCloudEcsService *huaweicloud.HuaweiCloudEcsService `inject:""`
 }
 
 func (s HuaweiCloudVmService) CreateRemote(hostId, backingId, queueId uint) (result _domain.RpcResp) {
@@ -47,7 +47,7 @@ func (s HuaweiCloudVmService) CreateRemote(hostId, backingId, queueId uint) (res
 		return
 	}
 
-	huaweiCloudService := vendors.NewHuaweiCloudEcsService()
+	huaweiCloudService := huaweicloud.NewHuaweiCloudEcsService()
 	vm.CloudInstId, _, err = huaweiCloudService.CreateInst(vm.Name, backing.Name, ecsClient, imgClient, vpcClient)
 	if err != nil {
 		result.Fail(err.Error())

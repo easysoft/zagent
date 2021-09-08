@@ -1,4 +1,4 @@
-package vendors
+package aliyun
 
 import (
 	eci "github.com/alibabacloud-go/eci-20180808/v2/client"

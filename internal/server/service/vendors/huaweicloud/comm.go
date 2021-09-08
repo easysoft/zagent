@@ -1,4 +1,4 @@
-package vendors
+package huaweicloud
 
 import (
 	"encoding/json"

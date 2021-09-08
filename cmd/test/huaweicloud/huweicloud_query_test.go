@@ -4,14 +4,14 @@ import (
 	_const "github.com/easysoft/zagent/cmd/test/_const"
 	consts "github.com/easysoft/zagent/internal/comm/const"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
-	"github.com/easysoft/zagent/internal/server/service/vendors"
+	"github.com/easysoft/zagent/internal/server/service/vendors/huaweicloud"
 	"testing"
 )
 
 func TestHuaweiCloudQuery(t *testing.T) {
 	_logUtils.Init(consts.AppNameAgent)
 
-	srv := vendors.NewHuaweiCloudEcsService()
+	srv := huaweicloud.NewHuaweiCloudEcsService()
 	ecsClient, err := srv.CreateEcsClient(_const.HUAWEI_CLOUD_KEY, _const.HUAWEI_CLOUD_Secret, _const.HUAWEI_CLOUD_REGION)
 	if err != nil {
 		return
@@ -19,7 +19,7 @@ func TestHuaweiCloudQuery(t *testing.T) {
 
 	id := "6eca6332-5c8c-4cae-9d62-b17bcf806d2d"
 
-	huaweiCloudService := vendors.NewHuaweiCloudEcsService()
+	huaweiCloudService := huaweicloud.NewHuaweiCloudEcsService()
 	name, status, ip, mac, err := huaweiCloudService.QueryInst(id, ecsClient)
 	_logUtils.Infof("vm name %s, status %s, ip %s, mac %s", name, status, ip, mac)
 

@@ -1,4 +1,4 @@
-package vendors
+package aliyun
 
 import (
 	openapi "github.com/alibabacloud-go/darabonba-openapi/client"

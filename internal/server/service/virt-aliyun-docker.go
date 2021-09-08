@@ -8,7 +8,7 @@ import (
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
-	"github.com/easysoft/zagent/internal/server/service/vendors"
+	"github.com/easysoft/zagent/internal/server/service/vendors/aliyun"
 	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
 	"strings"
 )
@@ -19,10 +19,10 @@ type AliyunDockerService struct {
 	VmRepo      *repo.VmRepo      `inject:""`
 	QueueRepo   *repo.QueueRepo   `inject:""`
 
-	VmCommonService   *VmCommonService           `inject:""`
-	HistoryService    *HistoryService            `inject:""`
-	AliyunEciService  *vendors.AliyunEciService  `inject:""`
-	AliyunCommService *vendors.AliyunCommService `inject:""`
+	VmCommonService   *VmCommonService          `inject:""`
+	HistoryService    *HistoryService           `inject:""`
+	AliyunEciService  *aliyun.AliyunEciService  `inject:""`
+	AliyunCommService *aliyun.AliyunCommService `inject:""`
 }
 
 func NewAliyunDockerService() *AliyunDockerService {

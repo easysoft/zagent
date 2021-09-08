@@ -6,7 +6,7 @@ import (
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
-	"github.com/easysoft/zagent/internal/server/service/vendors"
+	"github.com/easysoft/zagent/internal/server/service/vendors/huaweicloud"
 	"strings"
 )
 
@@ -18,8 +18,8 @@ type HuaweiCloudDockerService struct {
 
 	VmCommonService        *VmCommonService `inject:""`
 	HistoryService         *HistoryService  `inject:""`
-	HuaweiCloudCommService *vendors.HuaweiCloudCommService
-	HuaweiCloudCciService  *vendors.HuaweiCloudCciService `inject:""`
+	HuaweiCloudCommService *huaweicloud.HuaweiCloudCommService
+	HuaweiCloudCciService  *huaweicloud.HuaweiCloudCciService `inject:""`
 }
 
 func (s HuaweiCloudDockerService) CreateRemote(hostId, queueId uint) (result _domain.RpcResp) {

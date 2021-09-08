@@ -1,4 +1,4 @@
-package vendors
+package aliyun
 
 import (
 	"encoding/json"

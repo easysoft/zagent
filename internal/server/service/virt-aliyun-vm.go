@@ -6,7 +6,7 @@ import (
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
-	"github.com/easysoft/zagent/internal/server/service/vendors"
+	"github.com/easysoft/zagent/internal/server/service/vendors/aliyun"
 	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
 	"time"
 )
@@ -16,10 +16,10 @@ type AliyunVmService struct {
 	BackingRepo *repo.BackingRepo `inject:""`
 	VmRepo      *repo.VmRepo      `inject:""`
 
-	VmCommonService   *VmCommonService           `inject:""`
-	HistoryService    *HistoryService            `inject:""`
-	AliyunEcsService  *vendors.AliyunEcsService  `inject:""`
-	AliyunCommService *vendors.AliyunCommService `inject:""`
+	VmCommonService   *VmCommonService          `inject:""`
+	HistoryService    *HistoryService           `inject:""`
+	AliyunEcsService  *aliyun.AliyunEcsService  `inject:""`
+	AliyunCommService *aliyun.AliyunCommService `inject:""`
 }
 
 func NewAliyunVmService() *AliyunVmService {

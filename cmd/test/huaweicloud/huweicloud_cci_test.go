@@ -5,7 +5,7 @@ import (
 	consts "github.com/easysoft/zagent/internal/comm/const"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
-	"github.com/easysoft/zagent/internal/server/service/vendors"
+	"github.com/easysoft/zagent/internal/server/service/vendors/huaweicloud"
 	"strings"
 	"testing"
 )
@@ -13,8 +13,8 @@ import (
 func TestHuaweiCloudCci(t *testing.T) {
 	_logUtils.Init(consts.AppNameAgent)
 
-	srv := vendors.NewHuaweiCloudCommService()
-	cci := vendors.NewHuaweiCloudCciService()
+	srv := huaweicloud.NewHuaweiCloudCommService()
+	cci := huaweicloud.NewHuaweiCloudCciService()
 
 	client, _ := srv.CreateIamClient(
 		testconst.HUAWEI_CLOUD_KEY, testconst.HUAWEI_CLOUD_Secret, testconst.HUAWEI_CLOUD_REGION)

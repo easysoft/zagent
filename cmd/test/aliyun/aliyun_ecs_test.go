@@ -5,7 +5,7 @@ import (
 	testconst "github.com/easysoft/zagent/cmd/test/_const"
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/pkg/lib/log"
-	"github.com/easysoft/zagent/internal/server/service/vendors"
+	"github.com/easysoft/zagent/internal/server/service/vendors/aliyun"
 	"testing"
 	"time"
 )
@@ -13,8 +13,8 @@ import (
 func TestAliyunEcs(t *testing.T) {
 	_logUtils.Init(consts.AppNameAgent)
 
-	commSrv := vendors.NewAliyunCommService()
-	ecsSrv := vendors.NewAliyunEcsService()
+	commSrv := aliyun.NewAliyunCommService()
+	ecsSrv := aliyun.NewAliyunEcsService()
 
 	ecsUrl := fmt.Sprintf("ecs-%s.aliyuncs.com", testconst.ALIYUN_REGION)
 	client, err := commSrv.CreateEcsClient(ecsUrl, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)

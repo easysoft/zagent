@@ -5,7 +5,7 @@ import (
 	consts "github.com/easysoft/zagent/internal/comm/const"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
-	"github.com/easysoft/zagent/internal/server/service/vendors"
+	"github.com/easysoft/zagent/internal/server/service/vendors/huaweicloud"
 	"testing"
 	"time"
 )
@@ -13,7 +13,7 @@ import (
 func TestHuaweiCloudEcs(t *testing.T) {
 	_logUtils.Init(consts.AppNameAgent)
 
-	srv := vendors.NewHuaweiCloudEcsService()
+	srv := huaweicloud.NewHuaweiCloudEcsService()
 	ecsClient, err := srv.CreateEcsClient(_const.HUAWEI_CLOUD_KEY, _const.HUAWEI_CLOUD_Secret, _const.HUAWEI_CLOUD_REGION)
 	imgClient, err := srv.CreateImgClient(_const.HUAWEI_CLOUD_KEY, _const.HUAWEI_CLOUD_Secret, _const.HUAWEI_CLOUD_REGION)
 	vpcClient, err := srv.CreateVpcClient(_const.HUAWEI_CLOUD_KEY, _const.HUAWEI_CLOUD_Secret, _const.HUAWEI_CLOUD_REGION)
@@ -22,7 +22,7 @@ func TestHuaweiCloudEcs(t *testing.T) {
 		return
 	}
 
-	huaweiCloudService := vendors.NewHuaweiCloudEcsService()
+	huaweiCloudService := huaweicloud.NewHuaweiCloudEcsService()
 	id, name, err := huaweiCloudService.CreateInst(
 		"win10-x64-pro-zh_cn-"+_stringUtils.NewUuidWithSep(), "image-win10-x64-pro-zh_cn", ecsClient, imgClient, vpcClient)
 

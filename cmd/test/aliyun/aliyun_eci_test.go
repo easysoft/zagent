@@ -5,7 +5,7 @@ import (
 	testconst "github.com/easysoft/zagent/cmd/test/_const"
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/pkg/lib/log"
-	"github.com/easysoft/zagent/internal/server/service/vendors"
+	"github.com/easysoft/zagent/internal/server/service/vendors/aliyun"
 	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
 	"testing"
 )
@@ -13,8 +13,8 @@ import (
 func TestAliyunEci(t *testing.T) {
 	_logUtils.Init(consts.AppNameAgent)
 
-	commSrv := vendors.NewAliyunCommService()
-	eciSrv := vendors.NewAliyunEciService()
+	commSrv := aliyun.NewAliyunCommService()
+	eciSrv := aliyun.NewAliyunEciService()
 	eciSrv.AliyunCommService = commSrv
 
 	eciClient, _ := commSrv.CreateEciClient(serverConst.ALIYUN_ECI_URL, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
