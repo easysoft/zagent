@@ -420,10 +420,15 @@ func (m *Machine) FindSnapshotMachine() (*Machine, error) {
 }
 
 func (m *Machine) Launch(sessionId string) (progress *Progress, err error) {
+	session, err := m.virtualbox.GetSession()
+	if err != nil {
+		log.Printf("%s\n", err.Error())
+	}
+
 	request := vboxwebsrv.IMachinelaunchVMProcess{
 		This:    m.managedObjectId,
 		Name:    "headless",
-		Session: sessionId,
+		Session: session.ManagedObjectId,
 	}
 	response, err := m.virtualbox.IMachinelaunchVMProcess(&request)
 	if err != nil {
