@@ -51,6 +51,11 @@ func TestVirtualBoxLaunch(t *testing.T) {
 		log.Printf("%s\n", err.Error())
 	}
 
+	//err = machine.Unlock(session)
+	//if err != nil {
+	//	log.Printf("%s\n", err.Error())
+	//}
+
 	media, err := machine.Unregister()
 	if err != nil {
 		log.Printf("%s\n", err.Error())
