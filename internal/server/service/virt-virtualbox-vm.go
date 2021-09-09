@@ -100,12 +100,6 @@ func (s VirtualboxCloudVmService) CreateRemote(hostId, backingId, queueId uint) 
 		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
 		return
 	}
-	machineState, err := machine.GetMachineState()
-	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
-	}
-	_logUtils.Infof("machine state %s", *machineState)
 
 	session, err := virtualBox.GetSession()
 	if err != nil {
@@ -119,6 +113,18 @@ func (s VirtualboxCloudVmService) CreateRemote(hostId, backingId, queueId uint) 
 		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
 		return
 	}
+
+	adpt, err := machine.GetNetworkAdapter(0)
+	if err != nil {
+		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
+		return
+	}
+	vm.MacAddress, err = adpt.GetMACAddress()
+	if err != nil {
+		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
+		return
+	}
+	_logUtils.Infof("machine mac address %s", vm.MacAddress)
 
 	// save to db
 	result.Pass("")
