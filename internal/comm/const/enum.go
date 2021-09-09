@@ -9,8 +9,9 @@ const (
 	PlatformNative Platform = "native"
 	PlatformCloud  Platform = "cloud"
 
-	PlatformHuawei Platform = "huawei"
-	PlatformAli    Platform = "ali"
+	PlatformVirtualBox Platform = "virtualbox"
+	PlatformHuawei     Platform = "huawei"
+	PlatformAli        Platform = "ali"
 
 	PlatformPve       Platform = "pve"
 	PlatformPortainer Platform = "portainer"

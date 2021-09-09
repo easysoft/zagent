@@ -33,6 +33,10 @@ func IsAliyun(platform string) (result bool) {
 	result = strings.Index(platform, consts.PlatformAli.ToString()) > -1
 	return
 }
+func IsVirtualBox(platform string) (result bool) {
+	result = strings.Index(platform, consts.PlatformVirtualBox.ToString()) > -1
+	return
+}
 
 func IsCloud(platform string) (result bool) {
 	result = strings.Index(platform, consts.PlatformCloud.ToString()) > -1
