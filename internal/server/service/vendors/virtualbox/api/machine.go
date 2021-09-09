@@ -1,10 +1,10 @@
-package vboxapi
+package virtualboxapi
 
 import (
 	"errors"
 	"log"
 
-	"github.com/easysoft/zagent/internal/server/service/vendors/virtualbox/vboxwebsrv"
+	"github.com/easysoft/zagent/internal/server/service/vendors/virtualbox/srv"
 )
 
 type Machine struct {
@@ -14,8 +14,8 @@ type Machine struct {
 	Name            string
 }
 
-func (m *Machine) GetChipsetType() (*vboxwebsrv.ChipsetType, error) {
-	request := vboxwebsrv.IMachinegetChipsetType{This: m.managedObjectId}
+func (m *Machine) GetChipsetType() (*virtualboxsrv.ChipsetType, error) {
+	request := virtualboxsrv.IMachinegetChipsetType{This: m.managedObjectId}
 
 	response, err := m.virtualbox.IMachinegetChipsetType(&request)
 	if err != nil {
@@ -25,8 +25,8 @@ func (m *Machine) GetChipsetType() (*vboxwebsrv.ChipsetType, error) {
 	return response.Returnval, nil
 }
 
-func (m *Machine) GetMediumAttachments() ([]*vboxwebsrv.IMediumAttachment, error) {
-	request := vboxwebsrv.IMachinegetMediumAttachments{This: m.managedObjectId}
+func (m *Machine) GetMediumAttachments() ([]*virtualboxsrv.IMediumAttachment, error) {
+	request := virtualboxsrv.IMachinegetMediumAttachments{This: m.managedObjectId}
 
 	response, err := m.virtualbox.IMachinegetMediumAttachments(&request)
 	if err != nil {
@@ -37,8 +37,8 @@ func (m *Machine) GetMediumAttachments() ([]*vboxwebsrv.IMediumAttachment, error
 	return ret, nil
 }
 
-func (m *Machine) GetMediumAttachmentsOfController(cName string) ([]*vboxwebsrv.IMediumAttachment, error) {
-	request := vboxwebsrv.IMachinegetMediumAttachmentsOfController{This: m.managedObjectId, Name: cName}
+func (m *Machine) GetMediumAttachmentsOfController(cName string) ([]*virtualboxsrv.IMediumAttachment, error) {
+	request := virtualboxsrv.IMachinegetMediumAttachmentsOfController{This: m.managedObjectId, Name: cName}
 
 	response, err := m.virtualbox.IMachinegetMediumAttachmentsOfController(&request)
 	if err != nil {
@@ -49,7 +49,7 @@ func (m *Machine) GetMediumAttachmentsOfController(cName string) ([]*vboxwebsrv.
 }
 
 func (m *Machine) GetNetworkAdapter(slot uint32) (*NetworkAdapter, error) {
-	request := vboxwebsrv.IMachinegetNetworkAdapter{This: m.managedObjectId, Slot: slot}
+	request := virtualboxsrv.IMachinegetNetworkAdapter{This: m.managedObjectId, Slot: slot}
 
 	response, err := m.virtualbox.IMachinegetNetworkAdapter(&request)
 	if err != nil {
@@ -60,7 +60,7 @@ func (m *Machine) GetNetworkAdapter(slot uint32) (*NetworkAdapter, error) {
 }
 
 func (m *Machine) GetSettingsFilePath() (string, error) {
-	request := vboxwebsrv.IMachinegetSettingsFilePath{This: m.managedObjectId}
+	request := virtualboxsrv.IMachinegetSettingsFilePath{This: m.managedObjectId}
 
 	response, err := m.virtualbox.IMachinegetSettingsFilePath(&request)
 	if err != nil {
@@ -71,7 +71,7 @@ func (m *Machine) GetSettingsFilePath() (string, error) {
 }
 
 func (m *Machine) SaveSettings() error {
-	request := vboxwebsrv.IMachinesaveSettings{This: m.managedObjectId}
+	request := virtualboxsrv.IMachinesaveSettings{This: m.managedObjectId}
 
 	_, err := m.virtualbox.IMachinesaveSettings(&request)
 	if err != nil {
@@ -83,7 +83,7 @@ func (m *Machine) SaveSettings() error {
 }
 
 func (m *Machine) DiscardSettings() error {
-	request := vboxwebsrv.IMachinediscardSettings{This: m.managedObjectId}
+	request := virtualboxsrv.IMachinediscardSettings{This: m.managedObjectId}
 
 	_, err := m.virtualbox.IMachinediscardSettings(&request)
 	if err != nil {
@@ -93,7 +93,7 @@ func (m *Machine) DiscardSettings() error {
 	return nil
 }
 func (m *Machine) DeleteConfig(media []string) error {
-	request := vboxwebsrv.IMachinedeleteConfig{
+	request := virtualboxsrv.IMachinedeleteConfig{
 		This:  m.managedObjectId,
 		Media: media,
 	}
@@ -107,7 +107,7 @@ func (m *Machine) DeleteConfig(media []string) error {
 }
 
 func (m *Machine) GetStorageControllers() ([]*StorageController, error) {
-	request := vboxwebsrv.IMachinegetStorageControllers{This: m.managedObjectId}
+	request := virtualboxsrv.IMachinegetStorageControllers{This: m.managedObjectId}
 
 	response, err := m.virtualbox.IMachinegetStorageControllers(&request)
 	if err != nil {
@@ -151,7 +151,7 @@ func (m *Machine) AttachDevice(medium *Medium) error {
 	}
 	// defer session.Release()
 
-	if err := m.Lock(session, vboxwebsrv.LockTypeShared); err != nil {
+	if err := m.Lock(session, virtualboxsrv.LockTypeShared); err != nil {
 		return err
 	}
 	defer m.Unlock(session)
@@ -176,7 +176,7 @@ func (m *Machine) AttachDevice(medium *Medium) error {
 		return err
 	}
 
-	request := vboxwebsrv.IMachineattachDevice{
+	request := virtualboxsrv.IMachineattachDevice{
 		This:           sm.managedObjectId,
 		Name:           sc.Name,
 		ControllerPort: pn,
@@ -205,7 +205,7 @@ func (m *Machine) DetachDevice(medium *Medium) error {
 	}
 	// defer session.Release()
 
-	if err := m.Lock(session, vboxwebsrv.LockTypeShared); err != nil {
+	if err := m.Lock(session, virtualboxsrv.LockTypeShared); err != nil {
 		return err
 	}
 	defer m.Unlock(session)
@@ -221,7 +221,7 @@ func (m *Machine) DetachDevice(medium *Medium) error {
 		return err
 	}
 
-	var request *vboxwebsrv.IMachinedetachDevice
+	var request *virtualboxsrv.IMachinedetachDevice
 	for _, ma := range mediumAttachments {
 		am := &Medium{virtualbox: m.virtualbox, managedObjectId: ma.Medium}
 		defer am.Release()
@@ -233,7 +233,7 @@ func (m *Machine) DetachDevice(medium *Medium) error {
 		if amID != medium.ID {
 			continue
 		}
-		request = &vboxwebsrv.IMachinedetachDevice{
+		request = &virtualboxsrv.IMachinedetachDevice{
 			This:           sm.managedObjectId,
 			Name:           ma.Controller,
 			ControllerPort: ma.Port,
@@ -264,7 +264,7 @@ func (m *Machine) Unlock(session *Session) error {
 	return nil
 }
 
-func (m *Machine) Lock(session *Session, lockType vboxwebsrv.LockType) error {
+func (m *Machine) Lock(session *Session, lockType virtualboxsrv.LockType) error {
 	if err := session.LockMachine(m, lockType); err != nil {
 		return err
 	}
@@ -272,7 +272,7 @@ func (m *Machine) Lock(session *Session, lockType vboxwebsrv.LockType) error {
 }
 
 func (m *Machine) GetID() (string, error) {
-	request := vboxwebsrv.IMachinegetId{This: m.managedObjectId}
+	request := virtualboxsrv.IMachinegetId{This: m.managedObjectId}
 
 	response, err := m.virtualbox.IMachinegetId(&request)
 	if err != nil {
@@ -284,7 +284,7 @@ func (m *Machine) GetID() (string, error) {
 }
 
 func (m *Machine) GetName() (string, error) {
-	request := vboxwebsrv.IMachinegetName{This: m.managedObjectId}
+	request := virtualboxsrv.IMachinegetName{This: m.managedObjectId}
 
 	response, err := m.virtualbox.IMachinegetName(&request)
 	if err != nil {
@@ -309,8 +309,8 @@ func (m *Machine) Refresh() error {
 }
 
 func (m *Machine) Unregister() (ret []string, err error) {
-	mode := vboxwebsrv.CleanupModeDetachAllReturnHardDisksOnly
-	request := vboxwebsrv.IMachineunregister{This: m.managedObjectId,
+	mode := virtualboxsrv.CleanupModeDetachAllReturnHardDisksOnly
+	request := virtualboxsrv.IMachineunregister{This: m.managedObjectId,
 		CleanupMode: &mode}
 
 	response, err := m.virtualbox.IMachineunregister(&request)
@@ -324,8 +324,8 @@ func (m *Machine) Unregister() (ret []string, err error) {
 	return
 }
 
-func (m *Machine) GetMachineState() (ret *vboxwebsrv.MachineState, err error) {
-	request := vboxwebsrv.IVirtualBoxgetMachineStates{This: m.virtualbox.managedObjectId,
+func (m *Machine) GetMachineState() (ret *virtualboxsrv.MachineState, err error) {
+	request := virtualboxsrv.IVirtualBoxgetMachineStates{This: m.virtualbox.managedObjectId,
 		Machines: []string{m.managedObjectId}}
 
 	response, err := m.virtualbox.IVirtualBoxgetMachineStates(&request)
@@ -343,13 +343,13 @@ func (m *Machine) GetMachineState() (ret *vboxwebsrv.MachineState, err error) {
 }
 
 func (m *Machine) CloneTo(newMachineId string) (progress *Progress, machine *Machine, err error) {
-	mode := vboxwebsrv.CloneModeMachineState
-	option := vboxwebsrv.CloneOptionsLink
-	options := []*vboxwebsrv.CloneOptions{
+	mode := virtualboxsrv.CloneModeMachineState
+	option := virtualboxsrv.CloneOptionsLink
+	options := []*virtualboxsrv.CloneOptions{
 		&option,
 	}
 
-	request := vboxwebsrv.IMachinecloneTo{
+	request := virtualboxsrv.IMachinecloneTo{
 		This:    m.managedObjectId,
 		Target:  newMachineId,
 		Mode:    &mode,
@@ -369,7 +369,7 @@ func (m *Machine) CloneTo(newMachineId string) (progress *Progress, machine *Mac
 }
 
 func (m *Machine) Register() (err error) {
-	request := vboxwebsrv.IVirtualBoxregisterMachine{
+	request := virtualboxsrv.IVirtualBoxregisterMachine{
 		This:    m.virtualbox.managedObjectId,
 		Machine: m.managedObjectId,
 	}
@@ -384,7 +384,7 @@ func (m *Machine) Register() (err error) {
 }
 
 func (m *Machine) GetOsTypeId() (typeId string, err error) {
-	request := vboxwebsrv.IMachinegetOSTypeId{
+	request := virtualboxsrv.IMachinegetOSTypeId{
 		This: m.managedObjectId,
 	}
 
@@ -400,7 +400,7 @@ func (m *Machine) GetOsTypeId() (typeId string, err error) {
 }
 
 func (m *Machine) FindSnapshot() (*Machine, error) {
-	request := vboxwebsrv.IMachinefindSnapshot{This: m.managedObjectId}
+	request := virtualboxsrv.IMachinefindSnapshot{This: m.managedObjectId}
 	response, err := m.virtualbox.IMachinefindSnapshot(&request)
 	if err != nil {
 		return nil, err // TODO: Wrap the error
@@ -410,7 +410,7 @@ func (m *Machine) FindSnapshot() (*Machine, error) {
 }
 
 func (m *Machine) FindSnapshotMachine() (*Machine, error) {
-	request := vboxwebsrv.ISnapshotgetMachine{This: m.managedObjectId}
+	request := virtualboxsrv.ISnapshotgetMachine{This: m.managedObjectId}
 	response, err := m.virtualbox.ISnapshotgetMachine(&request)
 	if err != nil {
 		return nil, err // TODO: Wrap the error
@@ -425,7 +425,7 @@ func (m *Machine) Launch(sessionId string) (progress *Progress, err error) {
 		log.Printf("%s\n", err.Error())
 	}
 
-	request := vboxwebsrv.IMachinelaunchVMProcess{
+	request := virtualboxsrv.IMachinelaunchVMProcess{
 		This:    m.managedObjectId,
 		Name:    "headless",
 		Session: session.ManagedObjectId,

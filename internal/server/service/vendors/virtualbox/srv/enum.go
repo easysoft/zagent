@@ -1,4 +1,4 @@
-package vboxwebsrv
+package virtualboxsrv
 
 type SettingsVersion string
 

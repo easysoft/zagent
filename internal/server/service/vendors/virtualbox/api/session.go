@@ -1,7 +1,7 @@
-package vboxapi
+package virtualboxapi
 
 import (
-	"github.com/easysoft/zagent/internal/server/service/vendors/virtualbox/vboxwebsrv"
+	"github.com/easysoft/zagent/internal/server/service/vendors/virtualbox/srv"
 )
 
 type Session struct {
@@ -10,7 +10,7 @@ type Session struct {
 }
 
 func (s *Session) GetConsole() (*Console, error) {
-	request := vboxwebsrv.ISessiongetConsole{This: s.ManagedObjectId}
+	request := virtualboxsrv.ISessiongetConsole{This: s.ManagedObjectId}
 	response, err := s.virtualbox.ISessiongetConsole(&request)
 	if err != nil {
 		return nil, err // TODO: Wrap the error
@@ -20,7 +20,7 @@ func (s *Session) GetConsole() (*Console, error) {
 }
 
 func (s *Session) UnlockMachine() error {
-	request := vboxwebsrv.ISessionunlockMachine{This: s.ManagedObjectId}
+	request := virtualboxsrv.ISessionunlockMachine{This: s.ManagedObjectId}
 	_, err := s.virtualbox.ISessionunlockMachine(&request)
 	if err != nil {
 		return err // TODO: Wrap the error
@@ -30,8 +30,8 @@ func (s *Session) UnlockMachine() error {
 	return nil
 }
 
-func (s *Session) LockMachine(m *Machine, l vboxwebsrv.LockType) error {
-	request := vboxwebsrv.IMachinelockMachine{
+func (s *Session) LockMachine(m *Machine, l virtualboxsrv.LockType) error {
+	request := virtualboxsrv.IMachinelockMachine{
 		This:     m.managedObjectId,
 		Session:  s.ManagedObjectId,
 		LockType: &l,
@@ -46,7 +46,7 @@ func (s *Session) LockMachine(m *Machine, l vboxwebsrv.LockType) error {
 }
 
 func (s *Session) GetMachine() (*Machine, error) {
-	request := vboxwebsrv.ISessiongetMachine{This: s.ManagedObjectId}
+	request := virtualboxsrv.ISessiongetMachine{This: s.ManagedObjectId}
 	response, err := s.virtualbox.ISessiongetMachine(&request)
 	if err != nil {
 		return nil, err // TODO: Wrap the error

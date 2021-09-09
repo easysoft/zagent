@@ -1,6 +1,6 @@
-package vboxapi
+package virtualboxapi
 
-import "github.com/easysoft/zagent/internal/server/service/vendors/virtualbox/vboxwebsrv"
+import "github.com/easysoft/zagent/internal/server/service/vendors/virtualbox/srv"
 
 // Console is a VirtualBox console object
 type Console struct {
@@ -11,7 +11,7 @@ type Console struct {
 // PowerDown starts forcibly powering off the controlled VM.
 // It returns a Progress and any error encountered.
 func (c *Console) PowerDown() (*Progress, error) {
-	request := vboxwebsrv.IConsolepowerDown{This: c.managedObjectID}
+	request := virtualboxsrv.IConsolepowerDown{This: c.managedObjectID}
 
 	response, err := c.virtualbox.IConsolepowerDown(&request)
 	if err != nil {
@@ -24,7 +24,7 @@ func (c *Console) PowerDown() (*Progress, error) {
 // PowerUp starts powering on the controlled VM.
 // It returns a Progress and any error encountered.
 func (c *Console) PowerUp() (*Progress, error) {
-	request := vboxwebsrv.IConsolepowerUp{This: c.managedObjectID}
+	request := virtualboxsrv.IConsolepowerUp{This: c.managedObjectID}
 
 	response, err := c.virtualbox.IConsolepowerUp(&request)
 	if err != nil {

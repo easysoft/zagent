@@ -1,9 +1,11 @@
-package vboxapi
+package virtualboxapi
 
-import "github.com/easysoft/zagent/internal/server/service/vendors/virtualbox/vboxwebsrv"
+import (
+	"github.com/easysoft/zagent/internal/server/service/vendors/virtualbox/srv"
+)
 
 type MediumAttachment struct {
-	*vboxwebsrv.IMediumAttachment
+	*virtualboxsrv.IMediumAttachment
 	virtualbox      *VirtualBox
 	managedObjectId string
 }

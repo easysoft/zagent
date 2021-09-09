@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/easysoft/zagent/internal/server/service/vendors/virtualbox/vboxapi"
-	"github.com/easysoft/zagent/internal/server/service/vendors/virtualbox/vboxwebsrv"
+	"github.com/easysoft/zagent/internal/server/service/vendors/virtualbox/api"
+	"github.com/easysoft/zagent/internal/server/service/vendors/virtualbox/srv"
 	"log"
 	"testing"
 )
@@ -10,7 +10,7 @@ import (
 func TestVirtualBoxLaunch(t *testing.T) {
 	url := "http://192.168.0.56:18083"
 
-	virtualBox := vboxapi.NewVirtualBox("aaron", "P2ssw0rd", url, false, "")
+	virtualBox := virtualboxapi.NewVirtualBox("aaron", "P2ssw0rd", url, false, "")
 	err := virtualBox.Logon()
 	if err != nil {
 		log.Printf("Unable to log on to vboxwebsrv: %v\n", err)
@@ -32,7 +32,7 @@ func TestVirtualBoxLaunch(t *testing.T) {
 		log.Printf("%s\n", err.Error())
 	}
 
-	err = machine.Lock(session, vboxwebsrv.LockTypeShared)
+	err = machine.Lock(session, virtualboxsrv.LockTypeShared)
 	if err != nil {
 		log.Printf("%s\n", err.Error())
 	}

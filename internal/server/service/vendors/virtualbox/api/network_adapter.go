@@ -1,7 +1,7 @@
-package vboxapi
+package virtualboxapi
 
 import (
-	"github.com/easysoft/zagent/internal/server/service/vendors/virtualbox/vboxwebsrv"
+	"github.com/easysoft/zagent/internal/server/service/vendors/virtualbox/srv"
 )
 
 type NetworkAdapter struct {
@@ -10,7 +10,7 @@ type NetworkAdapter struct {
 }
 
 func (na *NetworkAdapter) GetMACAddress() (string, error) {
-	request := vboxwebsrv.INetworkAdaptergetMACAddress{This: na.managedObjectId}
+	request := virtualboxsrv.INetworkAdaptergetMACAddress{This: na.managedObjectId}
 
 	response, err := na.virtualbox.INetworkAdaptergetMACAddress(&request)
 	if err != nil {
