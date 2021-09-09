@@ -30,6 +30,9 @@ func (s *SeleniumService) DownloadDriver(build *commDomain.Build) (err error) {
 
 	url := fmt.Sprintf("%s%s/%s/%s/driver",
 		consts.DriverDownloadUrl, build.BrowserType.ToString(), _commonUtils.GetOs(), build.BrowserVersion)
+	if _commonUtils.IsWin() {
+		url += ".exe"
+	}
 
 	if !_fileUtils.FileExist(filePath) {
 		err = _fileUtils.Download(url, filePath)
