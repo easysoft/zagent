@@ -39,14 +39,14 @@ func (s VirtualboxCloudVmService) CreateRemote(hostId, backingId, queueId uint) 
 	vm.Name = s.VmCommonService.genVmName(backing, vm.ID)
 	s.VmRepo.UpdateVmName(vm)
 
-	virtualBox, err := s.CreateClient(host.Ip, host.Port, host.CloudIamUser, host.CloudIamPassword)
+	client, err := s.CreateClient(host.Ip, host.Port, host.CloudIamUser, host.CloudIamPassword)
 	if err != nil {
 		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
 		return
 	}
 
 	// get backing tmpl
-	templ, err := virtualBox.FindMachine(backing.Name)
+	templ, err := client.FindMachine(backing.Name)
 	if err != nil {
 		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
 		return
@@ -68,7 +68,7 @@ func (s VirtualboxCloudVmService) CreateRemote(hostId, backingId, queueId uint) 
 	}
 
 	// create machine
-	newMachineId, err := virtualBox.CreateMachine(vm.Name, osTypeId)
+	newMachineId, err := client.CreateMachine(vm.Name, osTypeId)
 	if err != nil {
 		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
 		return
@@ -113,13 +113,13 @@ func (s VirtualboxCloudVmService) CreateRemote(hostId, backingId, queueId uint) 
 	}
 
 	// launch machine
-	machine, err := virtualBox.FindMachine(vm.Name)
+	machine, err := client.FindMachine(vm.Name)
 	if err != nil {
 		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
 		return
 	}
 
-	session, err := virtualBox.GetSession()
+	session, err := client.GetSession()
 	if err != nil {
 		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
 		return
@@ -231,6 +231,7 @@ func (s VirtualboxCloudVmService) CreateClient(ip string, port int, account, pas
 	client *virtualboxapi.VirtualBox, err error) {
 	url := fmt.Sprintf("http://%s:%d", ip, port)
 	client = virtualboxapi.NewVirtualBox(account, password, url, false, "")
+
 	err = client.Logon()
 
 	return

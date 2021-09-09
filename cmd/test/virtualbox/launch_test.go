@@ -13,19 +13,19 @@ const (
 func TestVirtualBox(t *testing.T) {
 	url := "http://192.168.0.56:18083"
 
-	virtualBox := virtualboxapi.NewVirtualBox("aaron", "P2ssw0rd", url, false, "")
-	err := virtualBox.Logon()
+	client := virtualboxapi.NewVirtualBox("aaron", "P2ssw0rd", url, false, "")
+	err := client.Logon()
 	if err != nil {
 		log.Printf("Unable to log on to vboxwebsrv: %v\n", err)
 	}
 
-	machines, err := virtualBox.GetMachines()
+	machines, err := client.GetMachines()
 	if err != nil {
 		log.Printf("%s\n", err.Error())
 	}
 	log.Printf("%#v\n", machines)
 
-	templ, err := virtualBox.FindMachine("win10-pro-x64-zh_cn")
+	templ, err := client.FindMachine("win10-pro-x64-zh_cn")
 	if err != nil {
 		log.Printf("%s\n", err.Error())
 	}
@@ -43,7 +43,7 @@ func TestVirtualBox(t *testing.T) {
 		log.Printf("%s\n", err.Error())
 	}
 
-	newMachineId, err := virtualBox.CreateMachine(name, osTypeId)
+	newMachineId, err := client.CreateMachine(name, osTypeId)
 	if err != nil {
 		log.Printf("%s\n", err.Error())
 	}
@@ -80,7 +80,7 @@ func TestVirtualBox(t *testing.T) {
 		log.Printf("%s\n", err.Error())
 	}
 
-	machine, err := virtualBox.FindMachine(name)
+	machine, err := client.FindMachine(name)
 	if err != nil {
 		log.Printf("%s\n", err.Error())
 	}
@@ -91,7 +91,7 @@ func TestVirtualBox(t *testing.T) {
 	}
 	log.Printf("%#v\n", machineState)
 
-	session, err := virtualBox.GetSession()
+	session, err := client.GetSession()
 	if err != nil {
 		log.Printf("%s\n", err.Error())
 	}
