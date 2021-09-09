@@ -40,7 +40,7 @@ func (s FacadeService) Create(hostId, backingId, tmplId, queueId uint) (
 		if serverUitls.IsNative(platform) {
 			result = s.CreateVmKvmNative(hostId, backingId, tmplId, queueId)
 		} else if serverUitls.IsVirtualBox(platform) {
-			result = s.CreateVmAliyun(hostId, backingId, queueId)
+			result = s.CreateVmVirtualBox(hostId, backingId, queueId)
 		} else if serverUitls.IsHuaweiCloud(platform) {
 			result = s.CreateVmHuaweiCloud(hostId, backingId, queueId)
 		} else if serverUitls.IsAliyun(platform) {

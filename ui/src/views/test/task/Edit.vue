@@ -260,7 +260,7 @@ export default {
       labelColHalf2: labelColHalf2,
       wrapperColHalf: wrapperColHalf,
 
-      model: { buildType: 'unittest' },
+      model: { buildType: 'selenium' },
       envData: {},
       environment: {},
       environmentIndex: -1,
@@ -308,7 +308,7 @@ export default {
     },
     loadData () {
       if (!this.id) {
-        const a = 2
+        const a = 1
 
         if (this.model.buildType === 'selenium') {
           if (a === 1) {
@@ -316,7 +316,7 @@ export default {
               'name': 'test',
               'buildType': 'selenium',
               'browserType': 'chrome',
-              'browserVersion': '92',
+              'browserVersion': '93',
               'envVars': 'abc=123',
               'scriptUrl': 'https://gitee.com/ngtesting/ci_test_selenium.git',
               'buildCommands': 'mvn clean test -Dtestng.suite=target/test-classes/baidu-test.xml',

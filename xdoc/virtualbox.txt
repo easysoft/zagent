@@ -6,5 +6,6 @@ wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key a
 
 sudo apt-get update
 sudo apt-get install virtualbox-6.1 virtualbox-ext-pack
+VBoxManage setproperty vrdeextpack VNC
 
 qemu-img convert -f qcow2 -O vdi kvm/backing/windows/win10/pro-x64-zh_cn.qcow2 vbox/backing/windows/win10/pro-x64-zh_cn.vdi
