@@ -224,8 +224,8 @@ func (s VirtualboxCloudVmService) DestroyRemote(vmId, queueId uint) (result _dom
 func (s VirtualboxCloudVmService) CreateClient(ip string, port int, account, password string) (
 	client *virtualboxapi.VirtualBox, err error) {
 	url := fmt.Sprintf("http://%s:%d", ip, port)
-	virtualBox := virtualboxapi.NewVirtualBox(account, password, url, false, "")
-	err = virtualBox.Logon()
+	client = virtualboxapi.NewVirtualBox(account, password, url, false, "")
+	err = client.Logon()
 
 	return
 }

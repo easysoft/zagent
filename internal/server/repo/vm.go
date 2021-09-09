@@ -22,8 +22,9 @@ func (r VmRepo) Register(vm domain.Vm) (po model.Vm, statusChanged bool, err err
 		Where("mac_address=?", vm.MacAddress).First(&po).Error
 	srcStatus := po.Status
 
+	// update ip if empty
 	r.DB.Model(&model.Vm{}).
-		Where("mac_address=? AND node_ip IS NULL", vm.MacAddress).
+		Where("mac_address=? AND (node_ip IS NULL OR node_ip = '')", vm.MacAddress).
 		Updates(map[string]interface{}{"node_ip": vm.PublicIp})
 
 	// just update status by mac for exist vm
@@ -65,7 +66,7 @@ func (r VmRepo) UpdateVmName(vm model.Vm) {
 func (r VmRepo) UpdateVmCloudInst(vm model.Vm) {
 	r.DB.Model(&model.Vm{}).Where("id=?", vm.ID).
 		Updates(map[string]interface{}{
-			"could_inst_id": vm.CloudInstId,
+			"cloud_inst_id": vm.CloudInstId,
 			"node_ip":       vm.NodeIp,
 			"mac_address":   vm.MacAddress,
 		})
@@ -95,7 +96,7 @@ func (r VmRepo) UpdateStatusByNames(vms []string, status consts.VmStatus) {
 }
 
 func (r VmRepo) UpdateStatusByCloudInstId(ids []string, status consts.VmStatus) {
-	db := r.DB.Model(&model.Vm{}).Where("could_inst_id IN (?)", ids)
+	db := r.DB.Model(&model.Vm{}).Where("cloud_inst_id IN (?)", ids)
 
 	if status == consts.VmRunning {
 		db.Where("status <> ?", consts.VmReady) // not to update active vm status

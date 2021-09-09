@@ -21,7 +21,7 @@ func TestVirtualBox(t *testing.T) {
 	}
 	log.Printf("%#v\n", machines)
 
-	templ, err := virtualBox.FindMachine("win10")
+	templ, err := virtualBox.FindMachine("win10-pro-x64-zh_cn")
 	if err != nil {
 		log.Printf("%s\n", err.Error())
 	}
