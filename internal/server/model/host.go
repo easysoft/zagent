@@ -38,6 +38,7 @@ type Host struct {
 
 	Platform consts.Platform `json:"platform"`
 
+	Bridge         string `json:"bridge"`
 	CloudRegion    string `json:"cloudRegion"`
 	VpcId          string `json:"vpcId"`
 	CloudKey       string `json:"cloudKey"`

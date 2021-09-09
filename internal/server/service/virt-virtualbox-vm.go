@@ -83,6 +83,24 @@ func (s VirtualboxCloudVmService) CreateRemote(hostId, backingId, queueId uint) 
 		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
 		return
 	}
+
+	adpt, err := newMachine.GetNetworkAdapter(0)
+	if err != nil {
+		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
+		return
+	}
+	err = adpt.SetBridge(host.Bridge)
+	if err != nil {
+		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
+		return
+	}
+	vm.MacAddress, err = adpt.GetMACAddress()
+	if err != nil {
+		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
+		return
+	}
+	_logUtils.Infof("machine mac address %s", vm.MacAddress)
+
 	err = newMachine.SaveSettings()
 	if err != nil {
 		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
@@ -113,18 +131,6 @@ func (s VirtualboxCloudVmService) CreateRemote(hostId, backingId, queueId uint) 
 		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
 		return
 	}
-
-	adpt, err := machine.GetNetworkAdapter(0)
-	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
-	}
-	vm.MacAddress, err = adpt.GetMACAddress()
-	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
-	}
-	_logUtils.Infof("machine mac address %s", vm.MacAddress)
 
 	// save to db
 	result.Pass("")

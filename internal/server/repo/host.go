@@ -73,7 +73,7 @@ func (r HostRepo) QueryBusy() (hostIds []uint) {
 		`SELECT host.id host_id, host.max_vm_num max_num, host.platform platform
 					FROM biz_host host
 					WHERE host.status = '%s' 
-					AND host AND NOT host.deleted AND NOT host.disabled
+					AND NOT host.deleted AND NOT host.disabled
 					ORDER BY host.priority`,
 		consts.HostReady)).
 		Scan(&hosts)

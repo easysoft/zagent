@@ -23,3 +23,29 @@ func (na *NetworkAdapter) GetMACAddress() (string, error) {
 
 	return response.Returnval, nil
 }
+
+func (na *NetworkAdapter) SetBridge(bri string) (err error) {
+	attachmentType := virtualboxsrv.NetworkAttachmentTypeBridged
+
+	// set to bridge net
+	request1 := virtualboxsrv.INetworkAdaptersetAttachmentType{
+		This:           na.managedObjectId,
+		AttachmentType: &attachmentType,
+	}
+	_, err = na.virtualbox.INetworkAdaptersetAttachmentType(&request1)
+	if err != nil {
+		return
+	}
+
+	// set to bridge interface
+	request2 := virtualboxsrv.INetworkAdaptersetBridgedInterface{
+		This:             na.managedObjectId,
+		BridgedInterface: bri,
+	}
+	_, err = na.virtualbox.INetworkAdaptersetBridgedInterface(&request2)
+	if err != nil {
+		return
+	}
+
+	return
+}

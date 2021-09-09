@@ -6,6 +6,10 @@ import (
 	"testing"
 )
 
+const (
+	name = "test-win10-01"
+)
+
 func TestVirtualBox(t *testing.T) {
 	url := "http://192.168.0.56:18083"
 
@@ -39,7 +43,7 @@ func TestVirtualBox(t *testing.T) {
 		log.Printf("%s\n", err.Error())
 	}
 
-	newMachineId, err := virtualBox.CreateMachine("win10-01", osTypeId)
+	newMachineId, err := virtualBox.CreateMachine(name, osTypeId)
 	if err != nil {
 		log.Printf("%s\n", err.Error())
 	}
@@ -48,21 +52,35 @@ func TestVirtualBox(t *testing.T) {
 	if err != nil {
 		log.Printf("%s\n", err.Error())
 	}
-
 	err = progress.WaitForCompletion(10000)
 	if err != nil {
 		log.Printf("%s\n", err.Error())
 	}
+	adpt, err := newMachine.GetNetworkAdapter(0)
+	if err != nil {
+		log.Printf("%s\n", err.Error())
+	}
+	err = adpt.SetBridge("br0")
+	if err != nil {
+		log.Printf("%s\n", err.Error())
+	}
+	macAddress, err := adpt.GetMACAddress()
+	if err != nil {
+		log.Printf("%s\n", err.Error())
+	}
+	log.Printf("machine mac address %s", macAddress)
+
 	err = newMachine.SaveSettings()
 	if err != nil {
 		log.Printf("%s\n", err.Error())
 	}
+
 	err = newMachine.Register()
 	if err != nil {
 		log.Printf("%s\n", err.Error())
 	}
 
-	machine, err := virtualBox.FindMachine("win10-01")
+	machine, err := virtualBox.FindMachine(name)
 	if err != nil {
 		log.Printf("%s\n", err.Error())
 	}
