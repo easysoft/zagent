@@ -34,9 +34,9 @@ func main() {
 	flagSet = flag.NewFlagSet(consts.AppNameAgent, flag.ContinueOnError)
 
 	flagSet.StringVar(&runMode, "t", agentConst.Vm.ToString(), "")
-	flagSet.StringVar(&agentConf.Inst.Server, "s", "http://god902.tpddns.cn:8085", "")
+	flagSet.StringVar(&agentConf.Inst.Server, "s", "http://192.168.0.107:8085", "")
 	flagSet.StringVar(&agentConf.Inst.NodeName, "n", "", "")
-	flagSet.StringVar(&agentConf.Inst.NodeIp, "i", "", "") // 192.168.0.56
+	flagSet.StringVar(&agentConf.Inst.NodeIp, "i", "", "")
 	flagSet.IntVar(&agentConf.Inst.NodePort, "p", _const.RpcPort, "")
 	flagSet.StringVar(&agentConf.Inst.Language, "l", "zh", "")
 

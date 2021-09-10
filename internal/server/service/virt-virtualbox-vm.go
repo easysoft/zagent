@@ -165,7 +165,7 @@ func (s VirtualboxCloudVmService) DestroyRemote(vmId, queueId uint) (result _dom
 		return
 	}
 
-	machine, err := virtualBox.FindMachine("win10-01")
+	machine, err := virtualBox.FindMachine(vm.Name)
 	if err != nil {
 		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
 		return
