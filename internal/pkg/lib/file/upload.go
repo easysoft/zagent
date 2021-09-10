@@ -39,6 +39,9 @@ func Upload(url string, files []string, extraParams map[string]string) {
 	if err != nil {
 		_logUtils.Error(_i118Utils.Sprintf("fail_to_upload_files", err.Error()))
 	}
+	if resp == nil {
+		_logUtils.Error(_i118Utils.Sprintf("fail_to_upload_files", "resp is nil"))
+	}
 
 	respBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {

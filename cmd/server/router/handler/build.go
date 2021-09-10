@@ -35,7 +35,7 @@ func (c *BuildCtrl) UploadResult(ctx iris.Context) {
 	}
 
 	filePath := "N/A"
-	if len(uploadedFiles) == 0 {
+	if uploadedFiles == nil || len(uploadedFiles) == 0 {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, fmt.Sprintf("上传的文件为空, 字节%d", n), nil))
 	} else {
 		filePath = filepath.Join(dir, uploadedFiles[0].Filename)

@@ -263,7 +263,7 @@ export default {
       labelColHalf2: labelColHalf2,
       wrapperColHalf: wrapperColHalf,
 
-      model: { buildType: 'unittest' },
+      model: { buildType: 'selenium' },
       envData: {},
       environment: {},
       environmentIndex: -1,
