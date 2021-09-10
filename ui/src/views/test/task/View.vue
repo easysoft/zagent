@@ -54,8 +54,8 @@
           </template>
           <template v-slot:description>
             <div class="antd-pro-pages-profile-advanced-style-stepDescription">
-              {{taskProgressMap['start']['status']}} <br/>
-              {{taskProgressMap['start']['time'] ? $options.filters.moment(taskProgressMap['start']['time'], 'MM-DD HH:mm:ss') : '' }}
+              {{ taskProgressMap['start']['status'] }} <br/>
+              {{ taskProgressMap['start']['time'] ? $options.filters.moment(taskProgressMap['start']['time'], 'MM-DD HH:mm:ss') : '' }}
             </div>
           </template>
         </a-step>
@@ -65,8 +65,8 @@
           </template>
           <template v-slot:description>
             <div class="antd-pro-pages-profile-advanced-style-stepDescription">
-              {{taskProgressMap['res']['status']}} <br/>
-              {{taskProgressMap['res']['time'] ? $options.filters.moment(taskProgressMap['res']['time'], 'MM-DD HH:mm:ss') : '' }}
+              {{ taskProgressMap['res']['status'] }} <br/>
+              {{ taskProgressMap['res']['time'] ? $options.filters.moment(taskProgressMap['res']['time'], 'MM-DD HH:mm:ss') : '' }}
             </div>
           </template>
         </a-step>
@@ -76,8 +76,9 @@
           </template>
           <template v-slot:description>
             <div class="antd-pro-pages-profile-advanced-style-stepDescription">
-              {{taskProgressMap['exec']['status']}} <br/>
-              {{taskProgressMap['exec']['time'] ? $options.filters.moment(taskProgressMap['exec']['time'], 'MM-DD HH:mm:ss') : '' }}
+              {{ taskProgressMap['exec']['status'] }}
+              <br/>
+              {{ taskProgressMap['exec']['time'] ? $options.filters.moment(taskProgressMap['exec']['time'], 'MM-DD HH:mm:ss') : '' }}
             </div>
           </template>
         </a-step>
@@ -87,8 +88,9 @@
           </template>
           <template v-slot:description>
             <div class="antd-pro-pages-profile-advanced-style-stepDescription">
-              {{taskProgressMap['end']['status']}} <br/>
-              {{taskProgressMap['end']['time'] ? $options.filters.moment(taskProgressMap['end']['time'], 'MM-DD HH:mm:ss') : '' }}
+              {{ taskProgressMap['end']['status'] }}
+              <br/>
+              {{ taskProgressMap['end']['time'] ? $options.filters.moment(taskProgressMap['end']['time'], 'MM-DD HH:mm:ss') : '' }}
             </div>
           </template>
         </a-step>
@@ -288,7 +290,11 @@ export default {
 
           this.taskQueueTabs = []
           this.model.queues.forEach((queue, index) => {
-            const name = this.osTypes[queue.osType] + ' ' + this.osLangs[queue.osLang]
+            let name = '1'
+            if (this.osTypes[queue.osType] && this.osLangs[queue.osLang]) {
+              name = this.osTypes[queue.osType] + ' ' + this.osLangs[queue.osLang]
+            }
+
             this.taskQueueTabs.push({ key: queue.id + '', tab: name })
           })
 

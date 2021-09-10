@@ -245,7 +245,10 @@ export default {
       return this.model.buildType === 'unittest'
     },
     isDockerNative: function () {
-      return this.model.buildCommands && this.model.buildCommands.match(/docker[ ]+run/)
+      if (!this.model.buildCommands) return false
+      const arr = this.model.buildCommands.match(/docker[ ]+run/)
+      if (arr && arr.length > 0) return true
+      else return false
     }
   },
   data () {
@@ -260,7 +263,7 @@ export default {
       labelColHalf2: labelColHalf2,
       wrapperColHalf: wrapperColHalf,
 
-      model: { buildType: 'selenium' },
+      model: { buildType: 'unittest' },
       envData: {},
       environment: {},
       environmentIndex: -1,
