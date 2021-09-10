@@ -30,7 +30,11 @@ func Upload(url string, files []string, extraParams map[string]string) {
 	bodyWriter.Close()
 
 	resp, err := http.Post(url, contentType, bodyBuffer)
-	defer resp.Body.Close()
+	defer func() {
+		if resp != nil {
+			resp.Body.Close()
+		}
+	}()
 
 	if err != nil {
 		_logUtils.Error(_i118Utils.Sprintf("fail_to_upload_files", err.Error()))

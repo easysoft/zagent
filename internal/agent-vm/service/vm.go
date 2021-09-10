@@ -50,6 +50,7 @@ func (s *VmService) Check() {
 	s.TestService.Run(&job)
 	s.JobService.RemoveTask()
 	s.JobService.EndTask()
+
 }
 
 func (s *VmService) Register(isBusy bool) {

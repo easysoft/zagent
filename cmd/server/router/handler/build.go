@@ -42,10 +42,14 @@ func (c *BuildCtrl) UploadResult(ctx iris.Context) {
 	}
 
 	params := ctx.FormValues()
-	var testResult domain.TestResult
-	json.Unmarshal([]byte(params["result"][0]), &testResult)
-	var build domain.Build
-	mapstructure.Decode(testResult.Payload.(map[string]interface{}), &build)
+	build := domain.Build{}
+	arr, ok := params["result"]
+	if ok && len(arr) > 0 {
+		testResult := domain.TestResult{}
+		json.Unmarshal([]byte(arr[0]), &testResult)
+
+		mapstructure.Decode(testResult.Payload.(map[string]interface{}), &build)
+	}
 
 	build.ResultPath = filePath
 	jsn, _ := json.Marshal(build)
