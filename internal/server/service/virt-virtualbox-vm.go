@@ -84,6 +84,17 @@ func (s VirtualboxCloudVmService) CreateRemote(hostId, backingId, queueId uint) 
 		return
 	}
 
+	err = newMachine.SetCPUCount(uint32(backing.SuggestCpuCount))
+	if err != nil {
+		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
+		return
+	}
+	err = newMachine.SetMemorySize(uint32(backing.SuggestMemorySize))
+	if err != nil {
+		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
+		return
+	}
+
 	adpt, err := newMachine.GetNetworkAdapter(0)
 	if err != nil {
 		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)

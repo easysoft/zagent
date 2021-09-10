@@ -438,3 +438,24 @@ func (m *Machine) Launch(sessionId string) (progress *Progress, err error) {
 	progress = &Progress{virtualbox: m.virtualbox, managedObjectId: response.Returnval}
 	return
 }
+
+func (m *Machine) SetCPUCount(count uint32) (err error) {
+	request := virtualboxsrv.IMachinesetCPUCount{This: m.managedObjectId, CPUCount: count}
+
+	_, err = m.virtualbox.IMachinesetCPUCount(&request)
+	if err != nil {
+		return
+	}
+
+	return
+}
+func (m *Machine) SetMemorySize(memorySize uint32) (err error) {
+	request := virtualboxsrv.IMachinesetMemorySize{This: m.managedObjectId, MemorySize: memorySize}
+
+	_, err = m.virtualbox.IMachinesetMemorySize(&request)
+	if err != nil {
+		return
+	}
+
+	return
+}

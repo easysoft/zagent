@@ -21,8 +21,9 @@ type VmBacking struct {
 
 	ResolutionHeight  int  `json:"resolutionHeight"`
 	ResolutionWidth   int  `json:"resolutionWidth"`
-	SuggestDiskSize   uint `json:"suggestDiskSize"`
-	SuggestMemorySize uint `json:"suggestMemorySize"`
+	SuggestCpuCount   uint `json:"suggestCpuCount"`
+	SuggestMemorySize uint `json:"suggestMemorySize"` // MB
+	SuggestDiskSize   uint `json:"suggestDiskSize"`   // MB
 
 	SysIsoId    uint `json:"sysIsoId"`
 	DriverIsoId uint `json:"driverIsoId"`

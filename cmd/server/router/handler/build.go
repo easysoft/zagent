@@ -29,12 +29,17 @@ func (c *BuildCtrl) UploadResult(ctx iris.Context) {
 	dir := filepath.Join(_const.UploadDir, _dateUtils.DateStr(time.Now()))
 	_fileUtils.MkDirIfNeeded(dir)
 
-	uploaded, n, err := ctx.UploadFormFiles(dir, beforeFileSave)
+	uploadedFiles, n, err := ctx.UploadFormFiles(dir, beforeFileSave)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, fmt.Sprintf("操作失败, 字节%d", n), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, fmt.Sprintf("获取上传的文件错误, 字节%d", n), nil))
 	}
 
-	filePath := filepath.Join(dir, uploaded[0].Filename)
+	filePath := "N/A"
+	if len(uploadedFiles) == 0 {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, fmt.Sprintf("上传的文件为空, 字节%d", n), nil))
+	} else {
+		filePath = filepath.Join(dir, uploadedFiles[0].Filename)
+	}
 
 	params := ctx.FormValues()
 	var testResult domain.TestResult

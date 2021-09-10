@@ -56,6 +56,15 @@ func TestVirtualBox(t *testing.T) {
 	if err != nil {
 		log.Printf("%s\n", err.Error())
 	}
+	err = newMachine.SetCPUCount(2)
+	if err != nil {
+		log.Printf("%s\n", err.Error())
+	}
+	err = newMachine.SetMemorySize(4 * 1024)
+	if err != nil {
+		log.Printf("%s\n", err.Error())
+	}
+
 	adpt, err := newMachine.GetNetworkAdapter(0)
 	if err != nil {
 		log.Printf("%s\n", err.Error())
