@@ -49,17 +49,18 @@ type Client struct {
 	Debug bool
 }
 
-// NewClient constructor of the Client object Input: a: URL address to the API REST server
-// u: string with the user to connect at API REST, p: string with the password,
-// d: bool to activate or not the debug, Return: *Client: pointer at the object Client,
+// NewClient constructor of the Client object Input:
+// server: URL address to the API REST server
+// username: string with the user to connect at API REST, p: string with the password,
+// password: bool to activate or not the debug, Return: *Client: pointer at the object Client,
 // error: when the client generate some error is storage in this var.
-func NewClient(a string, u string, p string, i bool, d bool) (*Client, error) {
+func NewClient(server string, username string, password string, insecureSkipVerify bool, isDebug bool) (*Client, error) {
 	c := new(Client)
-	c.BaseURL, _ = url.Parse(a)
+	c.BaseURL, _ = url.Parse(server)
 	// log.Printf("[WSAPICLI] Fi: wsapiclient.go Fu: NewClient Obj:URL %#v\n", c.BaseURL)
-	c.User = u
-	c.Password = p
-	c.Debug = d
+	c.User = username
+	c.Password = password
+	c.Debug = isDebug
 	// Como estamos desarrollando una API que se encaga de comunicarnos con
 	// VmWare Workstation Pro API REST, y la propia API de Workstation se
 	// accede a través de un cliente web necesitamos generar un cliente
@@ -74,7 +75,7 @@ func NewClient(a string, u string, p string, i bool, d bool) (*Client, error) {
 	c.Client = &http.Client{
 		Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: i,
+				InsecureSkipVerify: insecureSkipVerify,
 			},
 		},
 	}

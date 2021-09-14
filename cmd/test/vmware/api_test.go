@@ -8,14 +8,12 @@ import (
 
 func TestNewClient(t *testing.T) {
 	srv := vmwareService.NewVMWareService()
-	err := srv.Connect("https://192.168.0.56:8697", "aaron", "P@ssw0rd")
-	if err != nil {
-		t.Errorf("%v\n", err)
-	}
+	srv.Connect("https://192.168.0.56:8697", "aaron", "P@ssw0rd")
 
-	vms, err := srv.GetVms()
-	if err != nil {
-		t.Errorf("%v\n", err)
-	}
+	vms, _ := srv.GetVms()
 	log.Printf("%#v", vms)
+
+	id := ""
+
+	srv.DestroyVm(id)
 }

@@ -42,7 +42,7 @@ func (c *Client) GetAllVMs() ([]Vm, error) {
 		vms[vm].Denomination = data[0]
 		vms[vm].Description = data[1]
 
-		responseBody, err := c.httpRequest("vms/"+value.IdVM, "GET", bytes.Buffer{})
+		responseBody, err := c.httpRequest("api/vms/"+value.IdVM, "GET", bytes.Buffer{})
 		if err != nil {
 			return nil, err
 		}
@@ -50,7 +50,7 @@ func (c *Client) GetAllVMs() ([]Vm, error) {
 		if err != nil {
 			return nil, err
 		}
-		responseBody, err = c.httpRequest("vms/"+value.IdVM+"/power", "GET", bytes.Buffer{})
+		responseBody, err = c.httpRequest("api/vms/"+value.IdVM+"/power", "GET", bytes.Buffer{})
 		if err != nil {
 			return nil, err
 		}
@@ -64,13 +64,13 @@ func (c *Client) GetAllVMs() ([]Vm, error) {
 }
 
 // CreateVM method to create a new VM in VmWare Worstation Input:
-// s: string with the ID of the origin VM, n: string with the denomination of the VM, d: string with the description of VM
-func (c *Client) CreateVM(s string, n string, d string) (*Vm, error) {
+// tmplId: string with the ID of the origin VM, name: string with the denomination of the VM, desc: string with the description of VM
+func (c *Client) CreateVM(tmplId string, name string, desc string) (*Vm, error) {
 	var vm Vm
 	requestBody := new(bytes.Buffer)
 	request, err := json.Marshal(map[string]string{
-		"name":     n,
-		"parentId": s,
+		"name":     name,
+		"parentId": tmplId,
 	})
 	if err != nil {
 		return nil, err
@@ -233,20 +233,20 @@ func (c *Client) RegisterVM(n string, p string) (*Vm, error) {
 	return &vm, err
 }
 
-// DeleteVM method to delete a VM in VmWare Worstation Input:
+// DestroyVM method to delete a VM in VmWare Worstation Input:
 // i: string with the ID of the VM to update
-func (c *Client) DeleteVM(i string) error {
-	response, err := c.httpRequest("vms/"+i, "DELETE", bytes.Buffer{})
+func (c *Client) DestroyVM(id string) error {
+	response, err := c.httpRequest("api/vms/"+id, "DELETE", bytes.Buffer{})
 	if err != nil {
-		log.Printf("[WSAPICLI][ERROR] Fi: wsapivm.go Fu: DeleteVM Obj:%#v\n", err)
+		log.Printf("[WSAPICLI][ERROR] Fi: wsapivm.go Fu: DestroyVM Obj:%#v\n", err)
 		return err
 	}
 	responseBody := new(bytes.Buffer)
 	_, err = responseBody.ReadFrom(response)
 	if err != nil {
-		log.Printf("[WSAPICLI][ERROR] Fi: wsapivm.go Fu: DeleteVM Obj:%#v, %#v\n", err, responseBody.String())
+		log.Printf("[WSAPICLI][ERROR] Fi: wsapivm.go Fu: DestroyVM Obj:%#v, %#v\n", err, responseBody.String())
 		return err
 	}
-	log.Printf("[WSAPICLI] Fi: wsapivm.go Fu: DeleteVM Obj:%#v\n", responseBody)
+	log.Printf("[WSAPICLI] Fi: wsapivm.go Fu: DestroyVM Obj:%#v\n", responseBody)
 	return nil
 }
