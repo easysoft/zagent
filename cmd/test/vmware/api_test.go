@@ -13,7 +13,7 @@ func TestNewClient(t *testing.T) {
 	vms, _ := srv.GetVms()
 	log.Printf("%#v", vms)
 
-	id := ""
-
-	srv.DestroyVm(id)
+	if len(vms) > 0 {
+		srv.DestroyVm(vms[0].IdVM)
+	}
 }
