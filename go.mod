@@ -47,6 +47,7 @@ require (
 	github.com/jameskeane/bcrypt v0.0.0-20120420032655-c3cd44c1e20f
 	github.com/jinzhu/configor v1.2.1
 	github.com/jinzhu/gorm v1.9.12
+	github.com/johlandabee/govmx v0.0.0-20200622120338-15e2c507b193
 	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect
 	github.com/kataras/iris v0.0.2
 	github.com/kataras/iris/v12 v12.2.0-alpha2
