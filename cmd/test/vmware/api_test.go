@@ -8,7 +8,7 @@ import (
 
 func TestNewClient(t *testing.T) {
 	srv := vmwareService.NewVMWareService()
-	srv.Connect("https://192.168.0.56:8697", "aaron", "P@ssw0rd")
+	srv.Connect("https://127.0.0.1:8697", "aaron", "P@ssw0rd")
 
 	vms, _ := srv.GetVms()
 	log.Printf("%#v", vms)
