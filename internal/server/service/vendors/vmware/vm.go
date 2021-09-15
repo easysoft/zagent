@@ -97,6 +97,7 @@ func (c *Client) CreateVM(tmplId string, name string, desc string) (*Vm, error) 
 	if err != nil {
 		return nil, err
 	}
+
 	// The following code we will use in the future when the VmWare fix it the method configparams
 	// request, err = json.Marshal(map[string]string{
 	// 	"name":  "annotation",

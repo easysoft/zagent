@@ -1,6 +1,9 @@
 package vmwareService
 
-import _logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+import (
+	"errors"
+	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+)
 
 type VMWareService struct {
 	client *Client
@@ -10,8 +13,24 @@ func NewVMWareService() *VMWareService {
 	return &VMWareService{}
 }
 
-func (s *VMWareService) CreateVm(id string) (err error) {
-	//err = s.client.CreateVM(id)
+func (s *VMWareService) CreateVm(tmpl, name string) (vm *Vm, err error) {
+	vms, _ := s.GetVms()
+
+	tmplId := ""
+	for _, vm := range vms {
+		if tmpl == vm.Denomination {
+			tmplId = vm.IdVM
+			break
+		}
+	}
+	if tmplId == "" {
+		msg := "vm %S not found"
+		_logUtils.Errorf(msg, name)
+		err = errors.New(msg)
+		return
+	}
+
+	vm, err = s.client.CreateVM(tmplId, name, "")
 	if err != nil {
 		_logUtils.Errorf("DestroyVM error %s", err.Error())
 	}

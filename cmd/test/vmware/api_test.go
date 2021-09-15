@@ -10,6 +10,9 @@ func TestNewClient(t *testing.T) {
 	srv := vmwareService.NewVMWareService()
 	srv.Connect("https://127.0.0.1:8697", "aaron", "P@ssw0rd")
 
+	vm, _ := srv.CreateVm("win10-pro-x64-zh_cn", "test-win10-pro-x64-zh_cn")
+	log.Printf("%#v", vm)
+
 	vms, _ := srv.GetVms()
 	log.Printf("%#v", vms)
 
