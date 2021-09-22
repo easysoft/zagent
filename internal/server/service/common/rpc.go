@@ -3,11 +3,11 @@ package commonService
 import (
 	"bytes"
 	"fmt"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	_domain "github.com/easysoft/zagent/internal/pkg/domain"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	"github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/pkg/domain"
+	"github.com/easysoft/zagent/internal/pkg/lib/log"
 	"github.com/easysoft/zagent/internal/server/model"
-	gateway "github.com/rpcx-ecosystem/rpcx-gateway"
+	"github.com/rpcx-ecosystem/rpcx-gateway"
 	"github.com/smallnest/rpcx/codec"
 	"io/ioutil"
 	"net/http"
@@ -50,15 +50,25 @@ func (s RpcService) UnitTest(build model.Build) (result _domain.RpcResp) {
 	return
 }
 
-func (s RpcService) CreateVm(hostIp string, hostPort int, req commDomain.KvmReq) (result _domain.RpcResp) {
+func (s RpcService) CreateKvm(hostIp string, hostPort int, req domain.KvmReq) (result _domain.RpcResp) {
 	obj := interface{}(req)
-	result = s.Request(hostIp, hostPort, "vm", "Create", &obj)
+	result = s.Request(hostIp, hostPort, "kvm", "Create", &obj)
+	return
+}
+func (s RpcService) DestroyKvm(hostIp string, hostPort int, req domain.KvmReq) (result _domain.RpcResp) {
+	obj := interface{}(req)
+	result = s.Request(hostIp, hostPort, "kvm", "Destroy", &obj)
 	return
 }
 
-func (s RpcService) DestroyVm(hostIp string, hostPort int, req commDomain.KvmReq) (result _domain.RpcResp) {
+func (s RpcService) CreateVmWare(hostIp string, hostPort int, req domain.VmWareReq) (result _domain.RpcResp) {
 	obj := interface{}(req)
-	result = s.Request(hostIp, hostPort, "vm", "Destroy", &obj)
+	result = s.Request(hostIp, hostPort, "vmware", "Create", &obj)
+	return
+}
+func (s RpcService) DestroyVmWare(hostIp string, hostPort int, req domain.VmWareReq) (result _domain.RpcResp) {
+	obj := interface{}(req)
+	result = s.Request(hostIp, hostPort, "vmware", "Destroy", &obj)
 	return
 }
 

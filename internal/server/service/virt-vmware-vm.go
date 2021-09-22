@@ -3,13 +3,11 @@ package serverService
 import (
 	"fmt"
 	"github.com/easysoft/zagent/internal/comm/const"
-	_domain "github.com/easysoft/zagent/internal/pkg/domain"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	"github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
+	"github.com/easysoft/zagent/internal/server/service/common"
 	"github.com/easysoft/zagent/internal/server/service/vendors/virtualbox/api"
-	"github.com/easysoft/zagent/internal/server/service/vendors/virtualbox/srv"
-	vmwareService "github.com/easysoft/zagent/internal/server/service/vendors/vmware"
 )
 
 type VmWareCloudVmService struct {
@@ -17,9 +15,10 @@ type VmWareCloudVmService struct {
 	BackingRepo *repo.BackingRepo `inject:""`
 	VmRepo      *repo.VmRepo      `inject:""`
 
-	CommonService   *CommonService   `inject:""`
-	VmCommonService *VmCommonService `inject:""`
-	HistoryService  *HistoryService  `inject:""`
+	CommonService   *CommonService            `inject:""`
+	VmCommonService *VmCommonService          `inject:""`
+	RpcService      *commonService.RpcService `inject:""`
+	HistoryService  *HistoryService           `inject:""`
 }
 
 func (s VmWareCloudVmService) CreateRemote(hostId, backingId, queueId uint) (result _domain.RpcResp) {
@@ -40,22 +39,8 @@ func (s VmWareCloudVmService) CreateRemote(hostId, backingId, queueId uint) (res
 	vm.Name = s.VmCommonService.genVmName(backing, vm.ID)
 	s.VmRepo.UpdateVmName(vm)
 
-	client := vmwareService.NewVMWareService() // 8697
-	err := client.Connect(fmt.Sprintf("https://%s:%d", host.Ip, host.Port), host.CloudIamUser, host.CloudIamPassword)
-	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
-	}
-
-	// create machine
-	vmInst, err := client.CreateVm(backing.Name, vm.Name)
-	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
-	}
-
-	vm.CloudInstId = vmInst.IdVM
-	vm.MacAddress, _ = client.GetVmNic(vm.CloudInstId)
+	req := model.GenVmWareReq(vm.Name, backing.Name, "", host.CloudIamUser, host.CloudIamPassword)
+	result = s.RpcService.CreateVmWare(host.Ip, host.Port, req)
 
 	// save to db
 	result.Pass("")
@@ -73,77 +58,8 @@ func (s VmWareCloudVmService) DestroyRemote(vmId, queueId uint) (result _domain.
 
 	status := consts.VmDestroy
 
-	virtualBox, err := s.CreateClient(host.Ip, host.Port, host.CloudIamUser, host.CloudIamPassword)
-	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
-	}
-
-	machine, err := virtualBox.FindMachine(vm.Name)
-	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
-	}
-
-	machineState, err := machine.GetMachineState()
-	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
-	}
-	_logUtils.Infof("machine state %s", *machineState)
-
-	session, err := virtualBox.GetSession()
-	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
-	}
-
-	err = machine.Lock(session, virtualboxsrv.LockTypeShared)
-	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
-	}
-
-	console, err := session.GetConsole()
-	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
-	}
-
-	progress, err := console.PowerDown()
-	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
-	}
-	err = progress.WaitForCompletion(10000)
-	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
-	}
-
-	media, err := machine.Unregister()
-	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
-	}
-
-	err = machine.DiscardSettings()
-	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
-	}
-
-	err = machine.DeleteConfig(media)
-	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
-	}
-
-	err = session.Release()
-	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
-	}
+	req := model.GenVmWareReq("", "", vm.CloudInstId, host.CloudIamUser, host.CloudIamPassword)
+	result = s.RpcService.DestroyVmWare(host.Ip, host.Port, req)
 
 	s.VmRepo.UpdateStatusByCloudInstId([]string{vm.CloudInstId}, status)
 

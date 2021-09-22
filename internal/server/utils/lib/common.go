@@ -37,6 +37,10 @@ func IsVirtualBox(platform string) (result bool) {
 	result = strings.Index(platform, consts.PlatformVirtualBox.ToString()) > -1
 	return
 }
+func IsVmWare(platform string) (result bool) {
+	result = strings.Index(platform, consts.PlatformVmWare.ToString()) > -1
+	return
+}
 
 func IsCloud(platform string) (result bool) {
 	result = strings.Index(platform, consts.PlatformCloud.ToString()) > -1

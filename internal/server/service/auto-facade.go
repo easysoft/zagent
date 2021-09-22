@@ -14,6 +14,7 @@ type FacadeService struct {
 
 	KvmNativeService         *NativeKvmService         `inject:""`
 	VirtualboxCloudVmService *VirtualboxCloudVmService `inject:""`
+	VmWareCloudVmService     *VmWareCloudVmService     `inject:""`
 
 	HuaweiCloudVmService     *HuaweiCloudVmService     `inject:""`
 	HuaweiCloudDockerService *HuaweiCloudDockerService `inject:""`
@@ -41,6 +42,8 @@ func (s FacadeService) Create(hostId, backingId, tmplId, queueId uint) (
 			result = s.CreateVmKvmNative(hostId, backingId, tmplId, queueId)
 		} else if serverUitls.IsVirtualBox(platform) {
 			result = s.CreateVmVirtualBox(hostId, backingId, queueId)
+		} else if serverUitls.IsVmWare(platform) {
+			result = s.CreateVmVmWare(hostId, backingId, queueId)
 		} else if serverUitls.IsHuaweiCloud(platform) {
 			result = s.CreateVmHuaweiCloud(hostId, backingId, queueId)
 		} else if serverUitls.IsAliyun(platform) {
@@ -63,6 +66,10 @@ func (s FacadeService) CreateVmKvmNative(hostId, backingId, tmplId, queueId uint
 
 func (s FacadeService) CreateVmVirtualBox(hostId, backingId, queueId uint) (result _domain.RpcResp) {
 	result = s.VirtualboxCloudVmService.CreateRemote(hostId, backingId, queueId)
+	return
+}
+func (s FacadeService) CreateVmVmWare(hostId, backingId, queueId uint) (result _domain.RpcResp) {
+	result = s.VmWareCloudVmService.CreateRemote(hostId, backingId, queueId)
 	return
 }
 func (s FacadeService) CreateVmHuaweiCloud(hostId, backingId, queueId uint) (result _domain.RpcResp) {
@@ -106,6 +113,8 @@ func (s FacadeService) Destroy(queue model.Queue) {
 			s.DestroyVmKvmNative(queue)
 		} else if serverUitls.IsVirtualBox(platform) {
 			s.DestroyVmVirtualBox(queue)
+		} else if serverUitls.IsVmWare(platform) {
+			s.DestroyVmVmWare(queue)
 		} else if serverUitls.IsHuaweiCloud(platform) {
 			s.DestroyVmHuaweiCloud(queue)
 		} else if serverUitls.IsAliyun(platform) {
@@ -139,6 +148,10 @@ func (s FacadeService) DestroyVmKvmNative(queue model.Queue) (result _domain.Rpc
 }
 func (s FacadeService) DestroyVmVirtualBox(queue model.Queue) (result _domain.RpcResp) {
 	s.VirtualboxCloudVmService.DestroyRemote(queue.VmId, queue.ID)
+	return
+}
+func (s FacadeService) DestroyVmVmWare(queue model.Queue) (result _domain.RpcResp) {
+	s.VmWareCloudVmService.DestroyRemote(queue.VmId, queue.ID)
 	return
 }
 func (s FacadeService) DestroyVmHuaweiCloud(queue model.Queue) (result _domain.RpcResp) {

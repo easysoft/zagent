@@ -10,6 +10,7 @@ const (
 	PlatformCloud  Platform = "cloud"
 
 	PlatformVirtualBox Platform = "virtualbox"
+	PlatformVmWare     Platform = "vmware"
 	PlatformHuawei     Platform = "huawei"
 	PlatformAli        Platform = "ali"
 

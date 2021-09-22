@@ -26,8 +26,10 @@ func (r *Router) App() {
 	srv := server.NewServer()
 
 	srv.RegisterName("arith", r.ArithCtrl, "")
-	srv.RegisterName("vm", r.VmCtrl, "")
 	srv.RegisterName("job", r.JobCtrl, "")
+
+	srv.RegisterName("kvm", r.VmCtrl, "")
+	srv.RegisterName("vmware", r.VmCtrl, "")
 
 	_logUtils.Info(_i118Utils.Sprintf("start_server", addr))
 	err := srv.Serve("tcp", addr)
