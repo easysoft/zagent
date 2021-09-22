@@ -64,6 +64,9 @@ func (s VmWareCloudVmService) DestroyRemote(vmId, queueId uint) (result _domain.
 		0, 0,
 		host.CloudIamUser, host.CloudIamPassword)
 	result = s.RpcService.DestroyVmWare(host.Ip, host.Port, req)
+	if !result.IsSuccess() {
+		status = consts.VmDestroyFail
+	}
 
 	s.VmRepo.UpdateStatusByCloudInstId([]string{vm.CloudInstId}, status)
 

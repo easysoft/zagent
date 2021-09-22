@@ -41,15 +41,15 @@ const (
 	VmLaunch     VmStatus = "launch"         // set after success to call vm creating remotely
 	VmFailCreate VmStatus = "vm_fail_create" // set after fail to call vm creating remotely
 
-	VmRunning     VmStatus = "running"         // report by agent on host
-	VmShutOff     VmStatus = "shutoff"         // report by agent on host
-	VmFailDestroy VmStatus = "vm_fail_destroy" // set after fail to call vm destroy remotely
+	VmRunning VmStatus = "running" // report by agent on host
+	VmShutOff VmStatus = "shutoff" // report by agent on host
 
 	VmBusy  VmStatus = "busy"  // report by agent in vm
 	VmReady VmStatus = "ready" // report by agent in vm
 
-	VmUnknown VmStatus = "unknown" // report by agent on host, not running, destroy and shutoff
-	VmDestroy VmStatus = "destroy" // final status
+	VmUnknown     VmStatus = "unknown"         // report by agent on host, not running, destroy and shutoff
+	VmDestroy     VmStatus = "destroy"         // final status
+	VmDestroyFail VmStatus = "vm_destroy_fail" // set after fail to call vm destroy remotely
 )
 
 func (e VmStatus) ToString() string {
@@ -63,10 +63,12 @@ const (
 	ProgressCreated BuildProgress = "created"
 
 	// res group
-	ProgressResPending  BuildProgress = "res_pending"
-	ProgressResLaunched BuildProgress = "res_launched"
-	ProgressResReady    BuildProgress = "res_ready"
-	ProgressResFailed   BuildProgress = "res_failed"
+	ProgressResPending     BuildProgress = "res_pending"
+	ProgressResLaunched    BuildProgress = "res_launched"
+	ProgressResReady       BuildProgress = "res_ready"
+	ProgressResFailed      BuildProgress = "res_failed"
+	ProgressResDestroy     BuildProgress = "res_destroy"
+	ProgressResFailDestroy BuildProgress = "res_fail_destroy"
 
 	// exec group
 	ProgressRunning BuildProgress = "running"

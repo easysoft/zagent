@@ -94,10 +94,10 @@ func (s AliyunDockerService) DestroyRemote(vmId, queueId uint) {
 		if err == nil {
 			err = s.AliyunCommService.DestroyEip(vm.CloudEipId, host.CloudRegion, vpcClient)
 		} else {
-			status = consts.VmFailDestroy
+			status = consts.VmDestroyFail
 		}
 	} else {
-		status = consts.VmFailDestroy
+		status = consts.VmDestroyFail
 	}
 
 	s.VmRepo.UpdateStatusByCloudInstId([]string{vm.CloudInstId}, status)

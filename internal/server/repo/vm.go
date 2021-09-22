@@ -85,6 +85,16 @@ func (r VmRepo) Launch(vncAddress, imagePath, backingPath string, id uint) {
 	return
 }
 
+func (r VmRepo) UpdateStatusByIds(ids []uint, status consts.VmStatus) {
+	db := r.DB.Model(&model.Vm{}).Where("id IN (?)", ids)
+
+	if status == consts.VmRunning {
+		db.Where("status <> ?", consts.VmReady) // not to update active vm status
+	}
+
+	db.Updates(map[string]interface{}{"status": status})
+}
+
 func (r VmRepo) UpdateStatusByNames(vms []string, status consts.VmStatus) {
 	db := r.DB.Model(&model.Vm{}).Where("name IN (?)", vms)
 
@@ -138,5 +148,5 @@ func (r VmRepo) Distroy(id uint) {
 	r.DB.Model(&model.Vm{}).Where("id=?", id).Update("status", consts.VmDestroy)
 }
 func (r VmRepo) FailToDistroy(id uint) {
-	r.DB.Model(&model.Vm{}).Where("id=?", id).Update("status", consts.VmFailDestroy)
+	r.DB.Model(&model.Vm{}).Where("id=?", id).Update("status", consts.VmDestroyFail)
 }

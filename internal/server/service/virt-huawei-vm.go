@@ -88,11 +88,11 @@ func (s HuaweiCloudVmService) DestroyRemote(vmId, queueId uint) (result _domain.
 
 	ecsClient, err := s.HuaweiCloudEcsService.CreateEcsClient(host.CloudKey, host.CloudSecret, host.CloudRegion)
 	if err != nil {
-		status = consts.VmFailDestroy
+		status = consts.VmDestroyFail
 	} else {
 		err = s.HuaweiCloudEcsService.RemoveInst(vm.CloudInstId, ecsClient)
 		if err != nil {
-			status = consts.VmFailDestroy
+			status = consts.VmDestroyFail
 		}
 	}
 

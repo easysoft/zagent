@@ -75,7 +75,7 @@ func (s HuaweiCloudDockerService) DestroyRemote(vmId, queueId uint) {
 	}
 
 	if err != nil {
-		status = consts.VmFailDestroy
+		status = consts.VmDestroyFail
 	}
 
 	s.VmRepo.UpdateStatusByCloudInstId([]string{vm.CloudInstId}, status)

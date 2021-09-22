@@ -86,14 +86,13 @@ func (s NativeKvmService) DestroyRemote(vmId, queueId uint) (result _domain.RpcR
 	vm := s.VmRepo.GetById(vmId)
 	host := s.HostRepo.Get(vm.HostId)
 
-	req := domain.KvmReq{VmUniqueName: vm.Name}
+	status := consts.VmDestroy
 
+	req := domain.KvmReq{VmUniqueName: vm.Name}
 	result = s.RpcService.DestroyKvm(host.Ip, host.Port, req)
-	var status consts.VmStatus
-	if result.IsSuccess() {
-		status = consts.VmDestroy
-	} else {
-		status = consts.VmFailDestroy
+
+	if !result.IsSuccess() {
+		status = consts.VmDestroyFail
 	}
 	s.VmRepo.UpdateStatusByNames([]string{vm.Name}, status)
 

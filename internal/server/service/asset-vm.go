@@ -45,6 +45,18 @@ func (s VmCommonService) SaveVmCreationResult(isSuccess bool, result string, que
 	return
 }
 
+func (s VmCommonService) SaveVmDestroyResult(isSuccess bool, result string, queueId uint, vmId uint) {
+	if isSuccess { // success to create vm
+		s.VmRepo.UpdateStatusByIds([]uint{vmId}, consts.VmDestroy)
+		s.HistoryService.Create(consts.Vm, vmId, queueId, "", consts.VmDestroy.ToString())
+	} else {
+		s.VmRepo.UpdateStatusByIds([]uint{vmId}, consts.VmDestroyFail)
+		s.HistoryService.Create(consts.Vm, vmId, queueId, "", consts.VmDestroyFail.ToString())
+	}
+
+	return
+}
+
 func (s VmCommonService) genTmplName(backing model.VmBacking) (name string) {
 	name = fmt.Sprintf("%s-%s-%s", backing.OsType, backing.OsVersion, backing.OsLang)
 

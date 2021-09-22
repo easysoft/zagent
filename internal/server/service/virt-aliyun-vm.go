@@ -127,11 +127,11 @@ func (s AliyunVmService) DestroyRemote(vmId, queueId uint) (result _domain.RpcRe
 	url := fmt.Sprintf(serverConst.ALIYUN_ECS_URL, host.CloudRegion)
 	ecsClient, err := s.AliyunCommService.CreateEcsClient(url, host.CloudKey, host.CloudSecret)
 	if err != nil {
-		status = consts.VmFailDestroy
+		status = consts.VmDestroyFail
 	} else {
 		err = s.AliyunEcsService.RemoveInst(vm.CloudInstId, ecsClient)
 		if err != nil {
-			status = consts.VmFailDestroy
+			status = consts.VmDestroyFail
 		}
 	}
 

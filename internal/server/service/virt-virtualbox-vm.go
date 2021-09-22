@@ -39,111 +39,124 @@ func (s VirtualboxCloudVmService) CreateRemote(hostId, backingId, queueId uint) 
 	vm.Name = s.VmCommonService.genVmName(backing, vm.ID)
 	s.VmRepo.UpdateVmName(vm)
 
-	client, err := s.CreateClient(host.Ip, host.Port, host.CloudIamUser, host.CloudIamPassword)
+	var err error
+	var client *virtualboxapi.VirtualBox
+	var osTypeId string
+	var newMachineId string
+	var tmpl *virtualboxapi.Machine
+	var machine *virtualboxapi.Machine
+	var newMachine *virtualboxapi.Machine
+	var snapshot *virtualboxapi.Machine
+	var snapshotMachine *virtualboxapi.Machine
+	var adpt *virtualboxapi.NetworkAdapter
+	var session *virtualboxapi.Session
+	var progress *virtualboxapi.Progress
+
+	client, err = s.CreateClient(host.Ip, host.Port, host.CloudIamUser, host.CloudIamPassword)
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 
 	// get backing tmpl
-	templ, err := client.FindMachine(backing.Name)
+	tmpl, err = client.FindMachine(backing.Name)
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
-	osTypeId, err := templ.GetOsTypeId()
+	osTypeId, err = tmpl.GetOsTypeId()
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
-	snapshot, err := templ.FindSnapshot()
+	snapshot, err = tmpl.FindSnapshot()
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
-	snapshotMachine, err := snapshot.FindSnapshotMachine()
+	snapshotMachine, err = snapshot.FindSnapshotMachine()
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 
 	// create machine
-	newMachineId, err := client.CreateMachine(vm.Name, osTypeId)
+	newMachineId, err = client.CreateMachine(vm.Name, osTypeId)
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
-	progress, newMachine, err := snapshotMachine.CloneTo(newMachineId)
+	progress, newMachine, err = snapshotMachine.CloneTo(newMachineId)
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 	err = progress.WaitForCompletion(10000)
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 
 	err = newMachine.SetCPUCount(uint32(backing.SuggestCpuCount))
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 	err = newMachine.SetMemorySize(uint32(backing.SuggestMemorySize))
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 
-	adpt, err := newMachine.GetNetworkAdapter(0)
+	adpt, err = newMachine.GetNetworkAdapter(0)
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 	err = adpt.SetBridge(host.Bridge)
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 	vm.MacAddress, err = adpt.GetMACAddress()
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 	_logUtils.Infof("machine mac address %s", vm.MacAddress)
 
 	err = newMachine.SaveSettings()
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 	err = newMachine.Register()
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 
 	// launch machine
-	machine, err := client.FindMachine(vm.Name)
+	machine, err = client.FindMachine(vm.Name)
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 
-	session, err := client.GetSession()
+	session, err = client.GetSession()
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 
 	progress, err = machine.Launch(session.ManagedObjectId)
 	err = progress.WaitForCompletion(10000)
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 
-	// save to db
+final:
 	result.Pass("")
 	s.VmRepo.UpdateVmCloudInst(vm)
 
@@ -157,83 +170,90 @@ func (s VirtualboxCloudVmService) DestroyRemote(vmId, queueId uint) (result _dom
 	vm := s.VmRepo.GetById(vmId)
 	host := s.HostRepo.Get(vm.HostId)
 
-	status := consts.VmDestroy
+	var err error
+	var virtualBox *virtualboxapi.VirtualBox
+	var machine *virtualboxapi.Machine
+	var machineState *virtualboxsrv.MachineState
+	var session *virtualboxapi.Session
+	var console *virtualboxapi.Console
+	var progress *virtualboxapi.Progress
+	var media []string
 
-	virtualBox, err := s.CreateClient(host.Ip, host.Port, host.CloudIamUser, host.CloudIamPassword)
+	virtualBox, err = s.CreateClient(host.Ip, host.Port, host.CloudIamUser, host.CloudIamPassword)
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 
-	machine, err := virtualBox.FindMachine(vm.Name)
+	machine, err = virtualBox.FindMachine(vm.Name)
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 
-	machineState, err := machine.GetMachineState()
+	machineState, err = machine.GetMachineState()
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 	_logUtils.Infof("machine state %s", *machineState)
 
-	session, err := virtualBox.GetSession()
+	session, err = virtualBox.GetSession()
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 
 	err = machine.Lock(session, virtualboxsrv.LockTypeShared)
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 
-	console, err := session.GetConsole()
+	console, err = session.GetConsole()
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 
-	progress, err := console.PowerDown()
+	progress, err = console.PowerDown()
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
+
 	err = progress.WaitForCompletion(10000)
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 
-	media, err := machine.Unregister()
+	media, err = machine.Unregister()
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 
 	err = machine.DiscardSettings()
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 
 	err = machine.DeleteConfig(media)
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 
 	err = session.Release()
 	if err != nil {
-		s.CommonService.ReturnErr(&result, err, queueId, vm.ID)
-		return
+		result.Fail(err.Error())
+		goto final
 	}
 
-	s.VmRepo.UpdateStatusByCloudInstId([]string{vm.CloudInstId}, status)
-
-	s.HistoryService.Create(consts.Vm, vmId, queueId, "", status.ToString())
+final:
+	s.VmCommonService.SaveVmDestroyResult(result.IsSuccess(), result.Msg, queueId, vmId)
 
 	return
 }

@@ -308,7 +308,7 @@ func (m *Machine) Refresh() error {
 	return nil
 }
 
-func (m *Machine) Unregister() (ret []string, err error) {
+func (m *Machine) Unregister() (media []string, err error) {
 	mode := virtualboxsrv.CleanupModeDetachAllReturnHardDisksOnly
 	request := virtualboxsrv.IMachineunregister{This: m.managedObjectId,
 		CleanupMode: &mode}
@@ -320,7 +320,7 @@ func (m *Machine) Unregister() (ret []string, err error) {
 	}
 
 	// TODO: See if we need to do anything with the response
-	ret = response.Returnval
+	media = response.Returnval
 	return
 }
 
