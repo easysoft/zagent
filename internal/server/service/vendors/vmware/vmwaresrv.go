@@ -53,6 +53,17 @@ func (s *VMWareService) GetVms() (vms []Vm, err error) {
 	return
 }
 
+func (s *VMWareService) GetVmNic(id string) (macAddress string, err error) {
+	nic, err := s.client.GetVmNic(id)
+	if err != nil {
+		_logUtils.Errorf("GetVmNic error %s", err.Error())
+	}
+
+	macAddress = nic.MacAddress
+
+	return
+}
+
 func (s *VMWareService) Connect(url, account, password string) (err error) {
 	s.client, err = NewClient(url, account, password, true, false)
 	if err != nil {

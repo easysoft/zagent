@@ -3,21 +3,9 @@ package vmwareService
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"log"
 )
-
-type Vm struct {
-	IdVM         string `json:"id"`
-	Path         string `json:"path"`
-	Denomination string `json:"displayName"`
-	Description  string `json:"annotation"`
-	// Image        string `json:"image"`
-	CPU struct {
-		Processors int `json:"processors"`
-	}
-	PowerStatus string `json:"power_state"`
-	Memory      int    `json:"memory"`
-}
 
 // GetAllVMs Method return array of Vm and a error variable if occurr some problem
 // Return: []Vm and error
@@ -232,6 +220,36 @@ func (c *Client) RegisterVM(n string, p string) (*Vm, error) {
 
 	// Falta hacer un PUT para modificar los parametros de la instancia nueva. entre ellos el procesador la memoria y la network
 	return &vm, err
+}
+
+func (c *Client) GetVmNic(id string) (nic *Nic, err error) {
+	response, err := c.httpRequest(fmt.Sprintf("api/vms/%s/nic", id), "GET", bytes.Buffer{})
+	if err != nil {
+		log.Printf("[WSAPICLI][ERROR] Fi: wsapivm.go Fu: GetNicGetVmNic Obj:%#v\n", err)
+		return
+	}
+
+	responseBody := new(bytes.Buffer)
+	_, err = responseBody.ReadFrom(response)
+	if err != nil {
+		log.Printf("[WSAPICLI][ERROR] Fi: wsapivm.go Fu: GetVmNic Obj:%#v, %#v\n", err, responseBody.String())
+		return
+	}
+
+	log.Printf("[WSAPICLI] Fi: wsapivm.go Fu: GetVmNic Obj:%#v\n", responseBody)
+
+	resp := NicResp{}
+	err = json.NewDecoder(response).Decode(&resp)
+	if err != nil {
+		log.Fatalf("[WSAPICLI][ERROR] Fi: wsapivm.go Fu: GetVmNic Message: I can't read the json structure %s", err)
+		return
+	}
+
+	if len(resp.Nics) > 0 {
+		nic = &resp.Nics[0]
+	}
+
+	return
 }
 
 // DestroyVM method to delete a VM in VmWare Worstation Input:
