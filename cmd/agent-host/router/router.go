@@ -12,8 +12,10 @@ import (
 
 type Router struct {
 	ArithCtrl *handler.ArithCtrl   `inject:""`
-	VmCtrl    *hostHandler.VmCtrl  `inject:""`
 	JobCtrl   *hostHandler.JobCtrl `inject:""`
+
+	KvmCtrl    *hostHandler.KvmCtrl    `inject:""`
+	VmWareCtrl *hostHandler.VmWareCtrl `inject:""`
 }
 
 func NewRouter() *Router {
@@ -28,8 +30,8 @@ func (r *Router) App() {
 	srv.RegisterName("arith", r.ArithCtrl, "")
 	srv.RegisterName("job", r.JobCtrl, "")
 
-	srv.RegisterName("kvm", r.VmCtrl, "")
-	srv.RegisterName("vmware", r.VmCtrl, "")
+	srv.RegisterName("kvm", r.KvmCtrl, "")
+	srv.RegisterName("vmware", r.VmWareCtrl, "")
 
 	_logUtils.Info(_i118Utils.Sprintf("start_server", addr))
 	err := srv.Serve("tcp", addr)

@@ -70,10 +70,13 @@ func GenKvmReq(po Vm) (req domain.KvmReq) {
 
 	return
 }
-func GenVmWareReq(vmName, backingName, vmId, userName, password string) (req domain.VmWareReq) {
+func GenVmWareReq(vmName, backingName, vmId string, processors, memory uint, userName, password string) (req domain.VmWareReq) {
 	req = domain.VmWareReq{
 		VmUniqueName: vmName,
 		BackingName:  backingName,
+
+		Processors: processors,
+		Memory:     memory,
 
 		UserName: userName,
 		Password: password,

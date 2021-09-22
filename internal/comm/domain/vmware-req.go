@@ -5,6 +5,9 @@ type VmWareReq struct {
 	BackingName  string `json:"backingName"`
 	VmUniqueName string `json:"vmName"`
 
+	Processors uint `json:"processors"`
+	Memory     uint `json:"memory"`
+
 	UserName string `json:"userName"`
 	Password string `json:"password"`
 
@@ -19,4 +22,9 @@ type VmWareResp struct {
 	Name       string `json:"name"`
 	Mac        string `json:"mac"`
 	VncAddress string `json:"vncAddress"`
+}
+
+type VmWareParam struct {
+	Processors int `json:"processors"`
+	Memory     int `json:"memory"`
 }

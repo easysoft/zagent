@@ -13,7 +13,7 @@ func NewVMWareService() *VMWareService {
 	return &VMWareService{}
 }
 
-func (s *VMWareService) CreateVm(tmpl, name string) (vm *Vm, err error) {
+func (s *VMWareService) CreateVm(tmpl, name string, processors, memory uint) (vm *Vm, err error) {
 	vms, _ := s.GetVms()
 
 	tmplId := ""
@@ -34,6 +34,17 @@ func (s *VMWareService) CreateVm(tmpl, name string) (vm *Vm, err error) {
 	if err != nil {
 		_logUtils.Errorf("DestroyVM error %s", err.Error())
 	}
+
+	vm, err = s.client.UpdateVM(vm.IdVM, "", "", processors, memory)
+	if err != nil {
+		_logUtils.Errorf("UpdateVM error %s", err.Error())
+	}
+
+	err = s.client.PowerOn(vm.IdVM)
+	if err != nil {
+		_logUtils.Errorf("PowerOn error %s", err.Error())
+	}
+
 	return
 }
 

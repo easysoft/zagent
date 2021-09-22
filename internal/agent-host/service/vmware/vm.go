@@ -30,7 +30,7 @@ func (s *VmWareService) CreateVm(req *domain.VmWareReq, removeSameName bool) (id
 	}
 
 	// create machine
-	vmInst, err := client.CreateVm(req.BackingName, req.VmUniqueName)
+	vmInst, err := client.CreateVm(req.BackingName, req.VmUniqueName, req.Processors, req.Memory)
 	if err != nil {
 		_logUtils.Errorf("Create vmware vm err %s", err.Error())
 		return

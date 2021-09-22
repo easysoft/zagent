@@ -9,16 +9,16 @@ import (
 	"strconv"
 )
 
-type VmCtrl struct {
+type KvmCtrl struct {
 	VmService      *hostKvmService.VmService      `inject:""`
 	LibvirtService *hostKvmService.LibvirtService `inject:""`
 }
 
-func NewVmCtrl() *VmCtrl {
-	return &VmCtrl{}
+func NewKvmCtrl() *KvmCtrl {
+	return &KvmCtrl{}
 }
 
-func (c *VmCtrl) Create(ctx context.Context, req domain.KvmReq, reply *_domain.RpcResp) error {
+func (c *KvmCtrl) Create(ctx context.Context, req domain.KvmReq, reply *_domain.RpcResp) error {
 
 	dom, vmVncPort, vmRawPath, vmBackingPath, err := c.LibvirtService.CreateVm(&req, true)
 	if err == nil {
@@ -41,7 +41,7 @@ func (c *VmCtrl) Create(ctx context.Context, req domain.KvmReq, reply *_domain.R
 	return nil
 }
 
-func (c *VmCtrl) Destroy(ctx context.Context, req domain.KvmReq, reply *_domain.RpcResp) error {
+func (c *KvmCtrl) Destroy(ctx context.Context, req domain.KvmReq, reply *_domain.RpcResp) error {
 	c.LibvirtService.DestroyVmByName(req.VmUniqueName, true)
 
 	reply.Passf("success to destroy vm %s .", req.VmUniqueName)

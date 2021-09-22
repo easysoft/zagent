@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	"log"
 )
 
@@ -23,12 +24,12 @@ func (c *Client) GetAllVMs() ([]Vm, error) {
 	}
 
 	for vm, value := range vms {
-		data, err := GetNameDescription(vms[vm].Path)
+		name, desc, err := GetNameDescription(vms[vm].Path)
 		if err != nil {
 			return nil, err
 		}
-		vms[vm].Denomination = data[0]
-		vms[vm].Description = data[1]
+		vms[vm].Denomination = name
+		vms[vm].Description = desc
 
 		responseBody, err := c.httpRequest("api/vms/"+value.IdVM, "GET", bytes.Buffer{})
 		if err != nil {
@@ -145,41 +146,45 @@ func (c *Client) ReadVM(i string) (*Vm, error) {
 	return &vm, nil
 }
 
-// UpdateVM method to update a VM in VmWare Worstation Input:
-// i: string with the ID of the VM to update, n: string with the denomination of VM
-// d: string with the description of the VM, p: int with the number of processors
-// m: int with the size of memory Output: pointer at the Vm object
-// and error variable with the error if occurr
-func (c *Client) UpdateVM(i string, n string, d string, p int, m int) (*Vm, error) {
+func (c *Client) UpdateVM(id, name, desc string, processors, memory uint) (*Vm, error) {
 	var buffer bytes.Buffer
-	// there prepare the body request
+
 	request, err := json.Marshal(map[string]int{
-		"processors": p,
-		"memory":     m,
+		"processors": int(processors),
+		"memory":     int(memory),
 	})
 	if err != nil {
 		return nil, err
 	}
 	buffer.Write(request)
+
 	log.Printf("[WSAPICLI] Fi: wsapivm.go Fu: UpdateVM Obj: Request Body %#v\n", buffer.String())
-	_, err = c.httpRequest("vms/"+i, "PUT", buffer)
+	_, err = c.httpRequest("vms/"+id, "PUT", buffer)
 	if err != nil {
 		return nil, err
 	}
-	vm, err := GetVM(c, i)
+
+	vm, err := GetVM(c, id)
 	if err != nil {
 		return nil, err
 	}
+
 	log.Printf("[WSAPICLI] Fi: wsapivm.go Fu: UpdateVM Obj: VM before %#v\n", vm)
-	err = SetNameDescription(vm.Path, n, d)
-	if err != nil {
-		return nil, err
+
+	if name != "" || desc != "" {
+		err = SetNameDescription(vm.Path, name, desc)
+		if err != nil {
+			return nil, err
+		}
+
+		vm, err = GetVM(c, id)
+		if err != nil {
+			return nil, err
+		}
+
+		log.Printf("[WSAPICLI] Fi: wsapivm.go Fu: UpdateVM Obj: VM after %#v\n", vm)
 	}
-	vm, err = GetVM(c, i)
-	if err != nil {
-		return nil, err
-	}
-	log.Printf("[WSAPICLI] Fi: wsapivm.go Fu: UpdateVM Obj: VM after %#v\n", vm)
+
 	return vm, err
 }
 
@@ -252,8 +257,35 @@ func (c *Client) GetVmNic(id string) (nic *Nic, err error) {
 	return
 }
 
-// DestroyVM method to delete a VM in VmWare Worstation Input:
-// i: string with the ID of the VM to update
+func (c *Client) SetRes(id string, processors, memory int) (err error) {
+	req := domain.VmWareParam{
+		Processors: processors,
+		Memory:     memory,
+	}
+
+	request, err := json.Marshal(req)
+	requestBody := new(bytes.Buffer)
+	requestBody.Write(request)
+
+	response, err := c.httpRequest("api/vms/"+id, "PUT", *requestBody)
+	if err != nil {
+		log.Printf("[WSAPICLI][ERROR] Fi: wsapivm.go Fu: SetPower Obj:%#v\n", err)
+		return err
+	}
+
+	responseBody := new(bytes.Buffer)
+	_, err = responseBody.ReadFrom(response)
+	if err != nil {
+		log.Printf("[WSAPICLI][ERROR] Fi: wsapivm.go Fu: SetPower Obj:%#v, %#v\n", err, responseBody.String())
+		return err
+	}
+
+	log.Printf("[WSAPICLI] Fi: wsapivm.go Fu: SetPower Obj:%#v\n", responseBody)
+	return nil
+
+	return
+}
+
 func (c *Client) DestroyVM(id string) error {
 	response, err := c.httpRequest("api/vms/"+id, "DELETE", bytes.Buffer{})
 	if err != nil {
@@ -267,5 +299,32 @@ func (c *Client) DestroyVM(id string) error {
 		return err
 	}
 	log.Printf("[WSAPICLI] Fi: wsapivm.go Fu: DestroyVM Obj:%#v\n", responseBody)
+	return nil
+}
+
+func (c *Client) PowerOn(id string) error {
+	return c.SetPower(id, On)
+}
+func (c *Client) ShutDown(id string) error {
+	return c.SetPower(id, Shutdown)
+}
+func (c *Client) SetPower(id string, status VmWareStatus) error {
+	requestBody := new(bytes.Buffer)
+	requestBody.Write([]byte(status))
+
+	response, err := c.httpRequest("api/vms/"+id+"/power", "PUT", *requestBody)
+	if err != nil {
+		log.Printf("[WSAPICLI][ERROR] Fi: wsapivm.go Fu: SetPower Obj:%#v\n", err)
+		return err
+	}
+
+	responseBody := new(bytes.Buffer)
+	_, err = responseBody.ReadFrom(response)
+	if err != nil {
+		log.Printf("[WSAPICLI][ERROR] Fi: wsapivm.go Fu: SetPower Obj:%#v, %#v\n", err, responseBody.String())
+		return err
+	}
+
+	log.Printf("[WSAPICLI] Fi: wsapivm.go Fu: SetPower Obj:%#v\n", responseBody)
 	return nil
 }

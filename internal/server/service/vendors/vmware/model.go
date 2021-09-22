@@ -1,5 +1,20 @@
 package vmwareService
 
+type VmWareStatus string
+
+const (
+	On       VmWareStatus = "on"
+	Off      VmWareStatus = "off"
+	Shutdown VmWareStatus = "shutdown"
+	Suspend  VmWareStatus = "suspend"
+	Pause    VmWareStatus = "pause"
+	Unpause  VmWareStatus = "unpause"
+)
+
+func (e VmWareStatus) ToString() string {
+	return string(e)
+}
+
 type Vm struct {
 	IdVM         string `json:"id"`
 	Path         string `json:"path"`

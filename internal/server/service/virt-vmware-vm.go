@@ -39,7 +39,9 @@ func (s VmWareCloudVmService) CreateRemote(hostId, backingId, queueId uint) (res
 	vm.Name = s.VmCommonService.genVmName(backing, vm.ID)
 	s.VmRepo.UpdateVmName(vm)
 
-	req := model.GenVmWareReq(vm.Name, backing.Name, "", host.CloudIamUser, host.CloudIamPassword)
+	req := model.GenVmWareReq(vm.Name, backing.Name, "",
+		backing.SuggestCpuCount, backing.SuggestMemorySize,
+		host.CloudIamUser, host.CloudIamPassword)
 	result = s.RpcService.CreateVmWare(host.Ip, host.Port, req)
 
 	// save to db
@@ -58,7 +60,9 @@ func (s VmWareCloudVmService) DestroyRemote(vmId, queueId uint) (result _domain.
 
 	status := consts.VmDestroy
 
-	req := model.GenVmWareReq("", "", vm.CloudInstId, host.CloudIamUser, host.CloudIamPassword)
+	req := model.GenVmWareReq("", "", vm.CloudInstId,
+		0, 0,
+		host.CloudIamUser, host.CloudIamPassword)
 	result = s.RpcService.DestroyVmWare(host.Ip, host.Port, req)
 
 	s.VmRepo.UpdateStatusByCloudInstId([]string{vm.CloudInstId}, status)
