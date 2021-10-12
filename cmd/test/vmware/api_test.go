@@ -13,10 +13,5 @@ func TestNewClient(t *testing.T) {
 	vm, _ := srv.CreateVm("win10-pro-x64-zh_cn", "test-win10-pro-x64-zh_cn", 2, 1024*4)
 	log.Printf("%#v", vm)
 
-	vms, _ := srv.GetVms()
-	log.Printf("%#v", vms)
-
-	if len(vms) > 0 {
-		srv.DestroyVm(vms[0].IdVM)
-	}
+	srv.DestroyVm(vm.IdVM)
 }
