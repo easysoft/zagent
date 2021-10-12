@@ -30,8 +30,8 @@ type Vm struct {
 }
 
 type NicResp struct {
-	Num  string `json:"num"`
-	Nics []Nic  `json:"nics"`
+	Num  int   `json:"num"`
+	Nics []Nic `json:"nics"`
 }
 
 type Nic struct {

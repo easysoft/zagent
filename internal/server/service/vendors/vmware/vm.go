@@ -245,7 +245,7 @@ func (c *Client) GetVmNic(id string) (nic *Nic, err error) {
 	log.Printf("[WSAPICLI] Fi: wsapivm.go Fu: GetVmNic Obj:%#v\n", responseBody)
 
 	resp := NicResp{}
-	err = json.NewDecoder(response).Decode(&resp)
+	err = json.NewDecoder(responseBody).Decode(&resp)
 	if err != nil {
 		log.Fatalf("[WSAPICLI][ERROR] Fi: wsapivm.go Fu: GetVmNic Message: I can't read the json structure %s", err)
 		return
