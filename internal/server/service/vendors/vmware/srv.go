@@ -73,6 +73,11 @@ func (s *VMWareService) CreateVm(tmpl, name string, processors, memory uint) (vm
 }
 
 func (s *VMWareService) DestroyVm(id string) (err error) {
+	err = s.client.PowerOff(id)
+	if err != nil {
+		_logUtils.Errorf("PowerOff error %s", err.Error())
+	}
+
 	err = s.client.DestroyVM(id)
 	if err != nil {
 		_logUtils.Errorf("DestroyVM error %s", err.Error())

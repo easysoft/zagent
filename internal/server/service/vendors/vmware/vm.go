@@ -306,6 +306,9 @@ func (c *Client) DestroyVM(id string) error {
 func (c *Client) PowerOn(id string) error {
 	return c.SetPower(id, On)
 }
+func (c *Client) PowerOff(id string) error {
+	return c.SetPower(id, Off)
+}
 func (c *Client) ShutDown(id string) error {
 	return c.SetPower(id, Shutdown)
 }
