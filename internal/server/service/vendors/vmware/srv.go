@@ -35,6 +35,11 @@ func (s *VMWareService) CreateVm(tmpl, name string, processors, memory uint) (vm
 		_logUtils.Errorf("DestroyVM error %s", err.Error())
 	}
 
+	vm, err = s.client.RegisterVM(name, vm.Path)
+	if err != nil {
+		_logUtils.Errorf("RegisterVM error %s", err.Error())
+	}
+
 	vm, err = s.client.UpdateVM(vm.IdVM, "", "", processors, memory)
 	if err != nil {
 		_logUtils.Errorf("UpdateVM error %s", err.Error())
