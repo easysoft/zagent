@@ -24,7 +24,7 @@ func (s *VMWareService) CreateVm(tmpl, name string, processors, memory uint) (vm
 		}
 	}
 	if tmplId == "" {
-		msg := "vm %S not found"
+		msg := "vm %s not found"
 		_logUtils.Errorf(msg, name)
 		err = errors.New(msg)
 		return

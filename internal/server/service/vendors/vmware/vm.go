@@ -53,7 +53,8 @@ func (c *Client) GetAllVMs() ([]Vm, error) {
 }
 
 // CreateVM method to create a new VM in VmWare Worstation Input:
-// tmplId: string with the ID of the origin VM, name: string with the denomination of the VM, desc: string with the description of VM
+// tmplId: string with the ID of the origin VM,
+//name: string with the denomination of the VM, desc: string with the description of VM
 func (c *Client) CreateVM(tmplId string, name string, desc string) (*Vm, error) {
 	var vm Vm
 	requestBody := new(bytes.Buffer)

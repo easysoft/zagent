@@ -4,8 +4,7 @@ sudo vmrest.exe -C
 openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem \
     -days 365 -nodes
 
-vmrest -c cert.pem -k key.pem -i 192.168.0.56
+vmrest -c cert.pem -k key.pem
 
 sudo ./VMware-Player-16.1.2-17966106.x86_64.bundle -u vmware-player
 sudo ./VMware-Player-15.5.7-17171714.x86_64.bundle -u vmware-player
-
