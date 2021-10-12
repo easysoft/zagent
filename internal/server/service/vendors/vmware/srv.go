@@ -69,6 +69,9 @@ func (s *VMWareService) CreateVm(tmpl, name string, processors, memory uint) (vm
 		_logUtils.Errorf("PowerOn error %s", err.Error())
 	}
 
+	nic, _ := s.client.GetVmNic(vm.IdVM)
+	vm.MacAddress = nic.MacAddress
+
 	return
 }
 

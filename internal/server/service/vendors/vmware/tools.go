@@ -64,9 +64,6 @@ func GetVM(c *Client, id string) (*Vm, error) {
 		return nil, err
 	}
 
-	nic, _ := c.GetVmNic(id)
-	vm.MacAddress = nic.MacAddress
-
 	return &vm, nil
 }
 
