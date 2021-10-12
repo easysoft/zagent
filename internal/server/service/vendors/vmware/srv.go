@@ -14,6 +14,7 @@ func NewVMWareService() *VMWareService {
 }
 
 func (s *VMWareService) CreateVm(tmpl, name string, processors, memory uint) (vm *Vm, err error) {
+	//get vm by name
 	vms, _ := s.GetVms()
 
 	tmplId := ""
@@ -35,7 +36,24 @@ func (s *VMWareService) CreateVm(tmpl, name string, processors, memory uint) (vm
 		_logUtils.Errorf("DestroyVM error %s", err.Error())
 	}
 
-	vm, err = s.client.RegisterVM(name, vm.Path)
+	// get vm path
+	vms, _ = s.GetVms()
+	path := ""
+	for _, vm := range vms {
+		if name == vm.Denomination {
+			path = vm.Path
+			break
+		}
+	}
+	if tmplId == "" {
+		msg := "vm %s not found"
+		_logUtils.Errorf(msg, name)
+		err = errors.New(msg)
+		return
+	}
+
+	// register vm
+	vm, err = s.client.RegisterVM(name, path)
 	if err != nil {
 		_logUtils.Errorf("RegisterVM error %s", err.Error())
 	}
