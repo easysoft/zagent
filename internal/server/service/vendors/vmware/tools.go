@@ -14,7 +14,7 @@ func GetVM(c *Client, id string) (*Vm, error) {
 	var vm Vm
 	// If you want see the path of the VM it's necessary getting all VMs
 	// because the API of VmWare Workstation doesn't permit see this the another way
-	response, err := c.httpRequest("vms", "GET", bytes.Buffer{})
+	response, err := c.httpRequest("api/vms", "GET", bytes.Buffer{})
 	if err != nil {
 		log.Fatalf("[WSAPICLI] Fi: wsapitools.go Fu: GetVM Message: The request at the server API failed %s", err)
 		return nil, err
@@ -38,7 +38,7 @@ func GetVM(c *Client, id string) (*Vm, error) {
 	vm.Denomination = name
 	vm.Description = desc
 
-	response, err = c.httpRequest("vms/"+id, "GET", bytes.Buffer{})
+	response, err = c.httpRequest("api/vms/"+id, "GET", bytes.Buffer{})
 	if err != nil {
 		log.Fatalf("[WSAPICLI] Fi: wsapitools.go Fu: GetVM Message: The request at the server API failed %s", err)
 		return nil, err
@@ -51,7 +51,7 @@ func GetVM(c *Client, id string) (*Vm, error) {
 		return nil, err
 	}
 
-	response, err = c.httpRequest("vms/"+id+"/power", "GET", bytes.Buffer{})
+	response, err = c.httpRequest("api/vms/"+id+"/power", "GET", bytes.Buffer{})
 	if err != nil {
 		log.Fatalf("[WSAPICLI] Fi: wsapitools.go Fu: GetVM Message: The request at the server API failed %s", err)
 		return nil, err
@@ -133,7 +133,7 @@ func SetNameDescription(path string, name string, desc string) error {
 //	log.Printf("[WSAPICLI] Fi: wsapitools.go Fu: SetParameter Obj:Request %#v\n", request)
 //	requestBody.Write(request)
 //	log.Printf("[WSAPICLI] Fi: wsapitools.go Fu: SetParameter Obj:Request Body %#v\n", requestBody.String())
-//	response, err := c.httpRequest("/vms/"+id+"/configparams", "PUT", *requestBody)
+//	response, err := c.httpRequest("api/vms/"+id+"/configparams", "PUT", *requestBody)
 //	if err != nil {
 //		return err
 //	}
