@@ -37,7 +37,7 @@ func (s *VmWareService) CreateVm(req *domain.VmWareReq, removeSameName bool) (id
 	}
 
 	id = vmInst.IdVM
-	macAddress, _ = client.GetVmNic(id)
+	macAddress = vmInst.MacAddress
 
 	return
 }

@@ -26,6 +26,7 @@ type Vm struct {
 	}
 	PowerStatus string `json:"power_state"`
 	Memory      int    `json:"memory"`
+	MacAddress  string `json:"macAddress"`
 }
 
 type NicResp struct {

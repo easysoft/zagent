@@ -58,7 +58,7 @@ func (s *VMWareService) CreateVm(tmpl, name string, processors, memory uint) (vm
 	//	_logUtils.Errorf("RegisterVM error %s", err.Error())
 	//}
 
-	// set cpu and memory
+	// set cpu and memory, then get vm details,not to delete
 	vm, err = s.client.UpdateVM(vm.IdVM, "", "", processors, memory)
 	if err != nil {
 		_logUtils.Errorf("UpdateVM error %s", err.Error())
@@ -90,17 +90,6 @@ func (s *VMWareService) GetVms() (vms []Vm, err error) {
 	if err != nil {
 		_logUtils.Errorf("GetAllVMs error %s", err.Error())
 	}
-	return
-}
-
-func (s *VMWareService) GetVmNic(id string) (macAddress string, err error) {
-	nic, err := s.client.GetVmNic(id)
-	if err != nil {
-		_logUtils.Errorf("GetVmNic error %s", err.Error())
-	}
-
-	macAddress = nic.MacAddress
-
 	return
 }
 
