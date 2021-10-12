@@ -59,6 +59,9 @@ func (s *VMWareService) CreateVm(tmpl, name string, processors, memory uint) (vm
 	//}
 
 	// set cpu and memory, then get vm details,not to delete
+	if processors%2 == 1 { // set number of cores per processor = 2 in vmware templ vm
+		processors += 1
+	}
 	vm, err = s.client.UpdateVM(vm.IdVM, "", "", processors, memory)
 	if err != nil {
 		_logUtils.Errorf("UpdateVM error %s", err.Error())
