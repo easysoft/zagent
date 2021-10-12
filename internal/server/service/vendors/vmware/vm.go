@@ -68,7 +68,7 @@ func (c *Client) CreateVM(tmplId string, name string, desc string) (*Vm, error) 
 	log.Printf("[WSAPICLI] Fi: wsapivm.go Fu: CreateVM Obj:Request %#v\n", request)
 	requestBody.Write(request)
 	log.Printf("[WSAPICLI] Fi: wsapivm.go Fu: CreateVM Obj:Request Body %#v\n", requestBody.String())
-	response, err := c.httpRequest("vms", "POST", *requestBody)
+	response, err := c.httpRequest("api/vms", "POST", *requestBody)
 	if err != nil {
 		return nil, err
 	}
@@ -100,7 +100,7 @@ func (c *Client) CreateVM(tmplId string, name string, desc string) (*Vm, error) 
 	// requestBody.Reset()
 	// requestBody.Write(request)
 	// log.Printf("[WSAPICLI] Fi: wsapivm.go Fu: CreateVM Obj:Request Body %#v\n", requestBody.String())
-	// response, err = c.httpRequest("vms/"+vm.IdVM+"/configparams", "PUT", *requestBody)
+	// response, err = c.httpRequest("api/vms/"+vm.IdVM+"/configparams", "PUT", *requestBody)
 	// if err != nil {
 	// 	return nil, err
 	// }
@@ -128,7 +128,7 @@ func (c *Client) ReadVM(i string) (*Vm, error) {
 	var vm Vm
 	// If you want see the path of the VM it's necessary getting all VMs
 	// because the API of VmWare Workstation doesn't permit see this the another way
-	response, err := c.httpRequest("vms", "GET", bytes.Buffer{})
+	response, err := c.httpRequest("api/vms", "GET", bytes.Buffer{})
 	if err != nil {
 		log.Fatalf("[WSAPICLI][ERROR] Fi: wsapivm.go Fu: ReadVM Message: The request at the server API failed %s", err)
 		return nil, err
@@ -160,7 +160,7 @@ func (c *Client) UpdateVM(id, name, desc string, processors, memory uint) (*Vm, 
 	buffer.Write(request)
 
 	log.Printf("[WSAPICLI] Fi: wsapivm.go Fu: UpdateVM Obj: Request Body %#v\n", buffer.String())
-	_, err = c.httpRequest("vms/"+id, "PUT", buffer)
+	_, err = c.httpRequest("api/vms/"+id, "PUT", buffer)
 	if err != nil {
 		return nil, err
 	}
@@ -204,7 +204,7 @@ func (c *Client) RegisterVM(n string, p string) (*Vm, error) {
 	log.Printf("[WSAPICLI] Fi: wsapivm.go Fu: RegisterVM Obj:Request %#v\n", request)
 	requestBody.Write(request)
 	log.Printf("[WSAPICLI] Fi: wsapivm.go Fu: RegisterVM Obj:Request Body %#v\n", requestBody.String())
-	response, err := c.httpRequest("vms/registration", "POST", *requestBody)
+	response, err := c.httpRequest("api/vms/registration", "POST", *requestBody)
 	if err != nil {
 		return nil, err
 	}

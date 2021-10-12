@@ -1,6 +1,6 @@
 qemu-img convert -f qcow2 CentOS_7.2_x86_64_XD.qcow2 -O vmdk Centos.vmdk
 
-sudo vmrest.exe -C
+sudo vmrest -C
 openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem \
     -days 365 -nodes
 
