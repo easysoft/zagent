@@ -8,7 +8,7 @@ sudo apt-get update
 sudo apt-get install virtualbox-6.1 virtualbox-ext-pack
 VBoxManage setproperty vrdeextpack VNC
 
-qemu-img convert -f qcow2 -O vdi kvm/backing/windows/win10/pro-x64-zh_cn.qcow2 vbox/backing/windows/win10/pro-x64-zh_cn.vdi
+qemu-img convert -f qcow2 -O vdi win10-pro-x64-zh_cn.qcow2 win10-pro-x64-zh_cn.vdi
 
 rm -rf "/home/aaron/VirtualBox VMs/test-*"
 vboxwebsrv -H 192.168.0.56
