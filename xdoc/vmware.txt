@@ -1,10 +1,11 @@
-qemu-img convert -f qcow2 CentOS_7.2_x86_64_XD.qcow2 -O vmdk Centos.vmdk
+sudo ./VMware-Player-16.1.2-17966106.x86_64.bundle -u vmware-player
 
 sudo vmrest -C
+
 openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem \
     -days 365 -nodes
 
 vmrest -c cert.pem -k key.pem
 
-sudo ./VMware-Player-16.1.2-17966106.x86_64.bundle -u vmware-player
-sudo ./VMware-Player-15.5.7-17171714.x86_64.bundle -u vmware-player
+
+qemu-img convert -f qcow2 win10-pro-x64-zh_cn.qcow2 -O vmdk win10-pro-x64-zh_cn.vmdk
