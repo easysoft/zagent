@@ -25,9 +25,9 @@ func (e Platform) ToString() string {
 type HostStatus string
 
 const (
-	HostReady   HostStatus = "ready"
-	HostBusy    HostStatus = "busy" // report by agent on host
+	HostOnline  HostStatus = "online"
 	HostOffline HostStatus = "offline"
+	HostBusy    HostStatus = "busy" // report by agent on host
 )
 
 func (e HostStatus) ToString() string {

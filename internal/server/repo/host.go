@@ -47,7 +47,7 @@ func (r HostRepo) QueryByBackings(backingIds []uint, busyHostIds []uint) (hostId
 			ORDER BY host.priority
             LIMIT 1`,
 
-		consts.HostReady,
+		consts.HostOnline,
 		strings.Join(_commonUtils.UintToStrArr(backingIds), ","),
 		strings.Join(_commonUtils.UintToStrArr(busyHostIds), ","))
 
@@ -75,7 +75,7 @@ func (r HostRepo) QueryBusy() (hostIds []uint) {
 					WHERE host.status = '%s' 
 					AND NOT host.deleted AND NOT host.disabled
 					ORDER BY host.priority`,
-		consts.HostReady)).
+		consts.HostOnline)).
 		Scan(&hosts)
 
 	for _, host := range hosts {
@@ -105,7 +105,7 @@ func (r HostRepo) QueryUnBusy(busyHostIds []uint, plf consts.Platform, isNative 
 
 	whr := r.DB.Model(&model.Host{}).
 		Where("status = ? AND platform LIKE ?",
-			consts.HostReady, "%"+plf+"%")
+			consts.HostOnline, "%"+plf+"%")
 
 	if isNative {
 		whr.Where("platform LIKE ?", "%"+consts.PlatformNative+"%")
