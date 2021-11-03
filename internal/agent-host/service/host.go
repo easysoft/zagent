@@ -57,7 +57,7 @@ func (s *HostService) Register(isBusy bool) {
 	if isBusy {
 		host.Status = consts.HostBusy
 	} else {
-		host.Status = consts.HostReady
+		host.Status = consts.HostOnline
 	}
 
 	host.Vms = s.VmService.GetVms()
