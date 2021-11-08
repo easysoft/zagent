@@ -17,12 +17,18 @@ import (
 func TestHttpClient(t *testing.T) {
 	cc := &codec.MsgpackCodec{}
 
+	//args := &_domain.ArithArgs{
+	//	A: 1,
+	//	B: 2,
+	//}
+
 	args := &_domain.ArithArgs{
 		A: 1,
 		B: 2,
 	}
 
 	data, _ := cc.Encode(args)
+	log.Infof("%s", data)
 	// request
 	url := fmt.Sprintf("http://192.168.0.121:%d/", _const.RpcPort)
 	req, err := http.NewRequest("POST", url, bytes.NewReader(data))
