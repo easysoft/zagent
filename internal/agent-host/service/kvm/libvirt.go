@@ -67,20 +67,22 @@ func (s *LibvirtService) CreateVm(req *domain.KvmReq, removeSameName bool) (dom 
 	}
 
 	dom, err = s.LibvirtConn.DomainCreateXML(vmXml, 0)
-
-	if err == nil {
-		newXml := ""
-		newXml, err = dom.GetXMLDesc(0)
-		if err != nil {
-			return
-		}
-
-		newDomCfg := &libvirtxml.Domain{}
-		err = newDomCfg.Unmarshal(newXml)
-
-		vmMacAddress = newDomCfg.Devices.Interfaces[0].MAC.Address
-		vmVncPort = newDomCfg.Devices.Graphics[0].VNC.Port
+	if err != nil {
+		_logUtils.Errorf(err.Error())
+		return
 	}
+
+	newXml := ""
+	newXml, err = dom.GetXMLDesc(0)
+	if err != nil {
+		return
+	}
+
+	newDomCfg := &libvirtxml.Domain{}
+	err = newDomCfg.Unmarshal(newXml)
+
+	vmMacAddress = newDomCfg.Devices.Interfaces[0].MAC.Address
+	vmVncPort = newDomCfg.Devices.Graphics[0].VNC.Port
 
 	return
 }
