@@ -62,7 +62,7 @@ func (s *LibvirtService) CreateVm(req *domain.KvmReq, removeSameName bool) (dom 
 
 	err = s.QemuService.createDiskFile(vmBackingPath, vmUniqueName, vmDiskSize)
 	if err != nil {
-		_logUtils.Errorf("create disk file err, %s", err.Error())
+		_logUtils.Errorf(err.Error())
 		return
 	}
 
