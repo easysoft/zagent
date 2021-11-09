@@ -6,6 +6,7 @@ import (
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/comm/domain"
+	_fileUtils "github.com/easysoft/zagent/internal/pkg/lib/file"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
 	"github.com/libvirt/libvirt-go"
@@ -131,7 +132,7 @@ func (s *LibvirtService) DestroyVmByName(name string, removeDiskImage bool) {
 	err = dom.Destroy()
 
 	if removeDiskImage && dickPath != "" {
-		s.QemuService.GetDisk(dom)
+		_fileUtils.RmDir(dickPath)
 	}
 
 	return
