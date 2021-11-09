@@ -219,7 +219,7 @@ func (s *QemuService) createDiskFile(basePath, vmName string, diskSize uint) (er
 
 	if agentConf.Inst.Host == "" { // local
 		_, err = _shellUtils.ExeShellInDir(cmd, agentConf.Inst.DirKvm)
-		if err == nil {
+		if err != nil {
 			msg := fmt.Sprintf("fail to create disk, cmd %s, err %s.", cmd, err.Error())
 			_logUtils.Errorf(msg)
 			err = errors.New(msg)
