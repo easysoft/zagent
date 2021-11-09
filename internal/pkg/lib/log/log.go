@@ -1,6 +1,7 @@
 package _logUtils
 
 import (
+	"fmt"
 	consts "github.com/easysoft/zagent/internal/comm/const"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/var"
@@ -21,12 +22,12 @@ func Init(app string) {
 	}
 
 	usr, _ := user.Current()
-	logger.Info("RunRemote as user " + usr.Username)
+	fmt.Println("RunRemote as user " + usr.Username)
 
 	_var.WorkDir = addPathSepIfNeeded(filepath.Join(usr.HomeDir, consts.AppName))
 	logDir := addPathSepIfNeeded("log")
 	MkDirIfNeeded(logDir)
-	logger.Info("Log dir is " + logDir)
+	fmt.Println("Log dir is " + logDir)
 
 	logger = logrus.New()
 	logger.Out = ioutil.Discard
