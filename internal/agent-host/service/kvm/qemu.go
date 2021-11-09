@@ -224,6 +224,15 @@ func (s *QemuService) createDiskFile(basePath, vmName string, diskSize uint) (er
 			basePath, vmRawPath, diskSize/1000)
 	}
 
+	removeCmd := fmt.Sprintf("rm -rf %s", vmRawPath)
+	_, err = _shellUtils.ExeShellInDir(removeCmd, agentConf.Inst.DirKvm)
+	if err != nil {
+		msg := fmt.Sprintf("fail to remove old disk, cmd %s, err %s.", removeCmd, err.Error())
+		_logUtils.Errorf(msg)
+		err = errors.New(msg)
+		return
+	}
+
 	if agentConf.Inst.Host == "" { // local
 		_, err = _shellUtils.ExeShellInDir(cmd, agentConf.Inst.DirKvm)
 		if err != nil {
