@@ -26,19 +26,20 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 
 	dom, vmVncPort, vmRawPath, vmBackingPath, err := c.LibvirtService.CreateVm(&req, true)
 
-	if err == nil {
-		vmName, _ := dom.GetName()
-		vm := domain.Vm{
-			Name:        vmName,
-			VncAddress:  strconv.Itoa(vmVncPort),
-			ImagePath:   vmRawPath,
-			BackingPath: vmBackingPath,
-		}
-
-		ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to create vm", vm))
-	} else {
+	if err != nil {
 		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "fail to create vm", err))
+		return
 	}
+
+	vmName, _ := dom.GetName()
+	vm := domain.Vm{
+		Name:        vmName,
+		VncAddress:  strconv.Itoa(vmVncPort),
+		ImagePath:   vmRawPath,
+		BackingPath: vmBackingPath,
+	}
+
+	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to create vm", vm))
 
 	return
 }
