@@ -2,6 +2,7 @@ package hostAgentKvmService
 
 import "C"
 import (
+	"errors"
 	"fmt"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	"github.com/easysoft/zagent/internal/comm/const"
@@ -216,10 +217,11 @@ func (s *QemuService) createDiskFile(basePath, vmName string, diskSize uint) (er
 	}
 
 	if agentConf.Inst.Host == "" { // local
-		_, err = _shellUtils.ExeShellInDir(cmd, agentConf.Inst.DirKvm)
-		if err != nil {
-			_logUtils.Errorf("fail to generate vm, cmd %s, err %s.", cmd, err.Error())
-			return
+		_, err1 := _shellUtils.ExeShellInDir(cmd, agentConf.Inst.DirKvm)
+		if err1 != nil {
+			msg := fmt.Sprintf("fail to create disk, cmd %s, err %s.", cmd, err1.Error())
+			_logUtils.Errorf(msg)
+			return errors.New(msg)
 		}
 
 	} else { // remote
