@@ -203,7 +203,7 @@ func (s *QemuService) GetBaseImagePath(vm domain.Vm) (path string) {
 	return
 }
 
-func (s *QemuService) createDiskFile(basePath, vmName string, diskSize uint) {
+func (s *QemuService) createDiskFile(basePath, vmName string, diskSize uint) (err error) {
 	vmRawPath := filepath.Join(agentConf.Inst.DirImage, vmName+".qcow2")
 
 	var cmd string
@@ -216,7 +216,7 @@ func (s *QemuService) createDiskFile(basePath, vmName string, diskSize uint) {
 	}
 
 	if agentConf.Inst.Host == "" {
-		_, err := _shellUtils.ExeShellInDir(cmd, agentConf.Inst.DirKvm)
+		_, err = _shellUtils.ExeShellInDir(cmd, agentConf.Inst.DirKvm)
 		if err != nil {
 			_logUtils.Errorf("fail to generate vm, cmd %s, err %s.", cmd, err.Error())
 			return
@@ -244,6 +244,8 @@ func (s *QemuService) createDiskFile(basePath, vmName string, diskSize uint) {
 			_logUtils.Infof(string(cmdInfo))
 		}
 	}
+
+	return
 }
 
 func (s *QemuService) setVmProps(vm *domain.Vm) {
