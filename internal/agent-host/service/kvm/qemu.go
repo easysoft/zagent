@@ -215,31 +215,32 @@ func (s *QemuService) createDiskFile(basePath, vmName string, diskSize uint) (er
 			basePath, vmRawPath, diskSize/1000)
 	}
 
-	if agentConf.Inst.Host == "" {
+	if agentConf.Inst.Host == "" { // local
 		_, err = _shellUtils.ExeShellInDir(cmd, agentConf.Inst.DirKvm)
 		if err != nil {
 			_logUtils.Errorf("fail to generate vm, cmd %s, err %s.", cmd, err.Error())
 			return
 		}
-	} else {
-		conn, err := _sshUtils.Connect(agentConf.Inst.Host, agentConf.Inst.User)
-		if err != nil {
-			_logUtils.Errorf(err.Error())
-			return
+
+	} else { // remote
+		conn, err1 := _sshUtils.Connect(agentConf.Inst.Host, agentConf.Inst.User)
+		if err1 != nil {
+			_logUtils.Errorf(err1.Error())
+			return err1
 		}
 		defer conn.Close()
 
-		session, err := conn.NewSession()
-		if err != nil {
-			_logUtils.Errorf(err.Error())
-			return
+		session, err1 := conn.NewSession()
+		if err1 != nil {
+			_logUtils.Errorf(err1.Error())
+			return err1
 		}
 		defer session.Close()
 
-		cmdInfo, err := session.CombinedOutput(cmd)
-		if err != nil {
-			_logUtils.Errorf(err.Error())
-			return
+		cmdInfo, err1 := session.CombinedOutput(cmd)
+		if err1 != nil {
+			_logUtils.Errorf(err1.Error())
+			return err1
 		} else {
 			_logUtils.Infof(string(cmdInfo))
 		}
