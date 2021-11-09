@@ -102,7 +102,7 @@ func (s *QemuService) GenVmDef(tmplXml, macAddress, vmName, backingPath string, 
 	return
 }
 
-func (s *QemuService) GenVmDefTest(src, vmName, rawPath, backingPath string, vmMemory uint) (
+func (s *QemuService) GenVmDefTest(src, vmName, rawPath, backingPath string, vmCpu, vmMemory uint) (
 	xml, macAddress string, err error) {
 
 	domCfg := &libvirtxml.Domain{}
@@ -152,6 +152,10 @@ func (s *QemuService) GenVmDefTest(src, vmName, rawPath, backingPath string, vmM
 	}
 
 	domCfg.Devices.Controllers = s.removeUnnecessaryPciCtrl(domCfg)
+
+	if vmCpu != 0 {
+		domCfg.VCPU.Value = vmCpu
+	}
 
 	if vmMemory != 0 {
 		domCfg.Memory = &libvirtxml.DomainMemory{
