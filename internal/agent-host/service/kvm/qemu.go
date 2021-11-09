@@ -14,6 +14,7 @@ import (
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
 	"github.com/libvirt/libvirt-go"
 	"github.com/libvirt/libvirt-go-xml"
+	"golang.org/x/crypto/ssh"
 	"path/filepath"
 	"strings"
 )
@@ -217,32 +218,36 @@ func (s *QemuService) createDiskFile(basePath, vmName string, diskSize uint) (er
 	}
 
 	if agentConf.Inst.Host == "" { // local
-		_, err1 := _shellUtils.ExeShellInDir(cmd, agentConf.Inst.DirKvm)
-		if err1 != nil {
-			msg := fmt.Sprintf("fail to create disk, cmd %s, err %s.", cmd, err1.Error())
+		_, err = _shellUtils.ExeShellInDir(cmd, agentConf.Inst.DirKvm)
+		if err == nil {
+			msg := fmt.Sprintf("fail to create disk, cmd %s, err %s.", cmd, err.Error())
 			_logUtils.Errorf(msg)
-			return errors.New(msg)
+			err = errors.New(msg)
+			return
 		}
 
 	} else { // remote
-		conn, err1 := _sshUtils.Connect(agentConf.Inst.Host, agentConf.Inst.User)
-		if err1 != nil {
-			_logUtils.Errorf(err1.Error())
-			return err1
+		var conn *ssh.Client
+		conn, err = _sshUtils.Connect(agentConf.Inst.Host, agentConf.Inst.User)
+		if err != nil {
+			_logUtils.Errorf(err.Error())
+			return
 		}
 		defer conn.Close()
 
-		session, err1 := conn.NewSession()
-		if err1 != nil {
-			_logUtils.Errorf(err1.Error())
-			return err1
+		var session *ssh.Session
+		session, err = conn.NewSession()
+		if err != nil {
+			_logUtils.Errorf(err.Error())
+			return
 		}
 		defer session.Close()
 
-		cmdInfo, err1 := session.CombinedOutput(cmd)
-		if err1 != nil {
-			_logUtils.Errorf(err1.Error())
-			return err1
+		var cmdInfo []byte
+		cmdInfo, err = session.CombinedOutput(cmd)
+		if err != nil {
+			_logUtils.Errorf(err.Error())
+			return
 		} else {
 			_logUtils.Infof(string(cmdInfo))
 		}
