@@ -126,10 +126,12 @@ func (s *LibvirtService) DestroyVmByName(name string, removeDiskImage bool) {
 		return
 	}
 
+	dickPath, err := s.QemuService.GetDisk(dom)
+
 	err = dom.Destroy()
 
-	if removeDiskImage {
-		s.QemuService.RemoveDisk(dom)
+	if removeDiskImage && dickPath != "" {
+		s.QemuService.GetDisk(dom)
 	}
 
 	return
