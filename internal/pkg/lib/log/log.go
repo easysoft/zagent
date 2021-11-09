@@ -6,7 +6,6 @@ import (
 	"github.com/easysoft/zagent/internal/pkg/var"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
-	"github.com/smallnest/rpcx/log"
 	"io/ioutil"
 	"os"
 	"os/user"
@@ -22,12 +21,12 @@ func Init(app string) {
 	}
 
 	usr, _ := user.Current()
-	log.Info("RunRemote as user " + usr.Username)
+	logger.Info("RunRemote as user " + usr.Username)
 
 	_var.WorkDir = addPathSepIfNeeded(filepath.Join(usr.HomeDir, consts.AppName))
 	logDir := addPathSepIfNeeded("log")
 	MkDirIfNeeded(logDir)
-	log.Info("Log dir is " + logDir)
+	logger.Info("Log dir is " + logDir)
 
 	logger = logrus.New()
 	logger.Out = ioutil.Discard

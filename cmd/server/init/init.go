@@ -26,19 +26,18 @@ import (
 )
 
 func Init(version string, printVersion, printRouter *bool) {
+	serverConf.Init()
 	_db.InitDB("server")
 
 	irisServer := NewServer(nil)
-	if irisServer == nil {
-		panic("Http 初始化失败")
-	}
 	irisServer.App.Logger().SetLevel(serverConf.Inst.LogLevel)
-
 	mapStaticRes(irisServer)
 
 	router := router.NewRouter(irisServer.App)
 	injectObj(router)
-	router.InitService.Init()
+
+	router.InitService.InitDataIfNeeded()
+
 	router.App()
 
 	if serverConf.Inst.Redis.Enable {
@@ -65,10 +64,6 @@ func Init(version string, printVersion, printRouter *bool) {
 			fmt.Println(fmt.Sprintf("请求方式 ：%s", route.Act))
 			fmt.Println()
 		}
-	}
-
-	if _commonUtils.IsPortInUse(serverConf.Inst.Port) {
-		panic(fmt.Sprintf("端口 %d 已被使用", serverConf.Inst.Port))
 	}
 
 	// start the service
@@ -130,18 +125,27 @@ func NewServer(assetFile http.FileSystem) *Server {
 }
 
 func (s *Server) Serve() error {
+	if _commonUtils.IsPortInUse(serverConf.Inst.Port) {
+		panic(fmt.Sprintf("端口 %d 已被使用", serverConf.Inst.Port))
+	}
+
 	if serverConf.Inst.Https {
-		host := fmt.Sprintf("%s:%d", serverConf.Inst.Host, 443)
-		if err := s.App.Run(iris.TLS(host, serverConf.Inst.CertPath, serverConf.Inst.CertKey)); err != nil {
+		host := fmt.Sprintf("%s:%d", serverConf.Inst.Host, serverConf.Inst.Port)
+		err := s.App.Run(iris.TLS(host, serverConf.Inst.CertPath, serverConf.Inst.CertKey))
+
+		if err != nil {
 			return err
 		}
+
 	} else {
-		if err := s.App.Run(
+		err := s.App.Run(
 			iris.Addr(fmt.Sprintf("%s:%d", serverConf.Inst.Host, serverConf.Inst.Port)),
 			iris.WithoutServerError(iris.ErrServerClosed),
 			iris.WithOptimizations,
 			iris.WithTimeFormat(time.RFC3339),
-		); err != nil {
+		)
+
+		if err != nil {
 			return err
 		}
 	}

@@ -721,7 +721,7 @@ const (
 
 	AdditionsFacilityStatusPreInit AdditionsFacilityStatus = "PreInit"
 
-	AdditionsFacilityStatusInit AdditionsFacilityStatus = "Init"
+	AdditionsFacilityStatusInit AdditionsFacilityStatus = "InitDataIfNeeded"
 
 	AdditionsFacilityStatusActive AdditionsFacilityStatus = "Active"
 

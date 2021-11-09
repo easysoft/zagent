@@ -15,7 +15,7 @@ type InitService struct {
 func NewInitService() {
 }
 
-func (s *InitService) Init() {
+func (s *InitService) InitDataIfNeeded() {
 	if !_commonUtils.IsRelease() {
 		err := _db.GetInst().DB().AutoMigrate(
 			model.Models...,

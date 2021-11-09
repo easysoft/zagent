@@ -1,11 +1,10 @@
 package hostHandler
 
 import (
-	"fmt"
 	hostKvmService "github.com/easysoft/zagent/internal/agent-host/service/kvm"
 	"github.com/easysoft/zagent/internal/comm/domain"
-	"github.com/easysoft/zagent/internal/pkg/domain"
-	"golang.org/x/net/context"
+	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
+	"github.com/kataras/iris/v12"
 	"strconv"
 )
 
@@ -18,11 +17,16 @@ func NewKvmCtrl() *KvmCtrl {
 	return &KvmCtrl{}
 }
 
-func (c *KvmCtrl) Create(ctx context.Context, req domain.KvmReq, reply *_domain.RpcResp) error {
-	dom, vmVncPort, vmRawPath, vmBackingPath, err := c.LibvirtService.CreateVm(&req, true)
-	if err == nil {
-		reply.Pass("success to create vm.")
+func (c *KvmCtrl) Create(ctx iris.Context) {
+	req := domain.KvmReq{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		return
+	}
 
+	dom, vmVncPort, vmRawPath, vmBackingPath, err := c.LibvirtService.CreateVm(&req, true)
+
+	if err == nil {
 		vmName, _ := dom.GetName()
 		vm := domain.Vm{
 			Name:        vmName,
@@ -31,50 +35,85 @@ func (c *KvmCtrl) Create(ctx context.Context, req domain.KvmReq, reply *_domain.
 			BackingPath: vmBackingPath,
 		}
 
-		reply.Payload = vm
-
+		ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to create vm", vm))
 	} else {
-		reply.Fail(fmt.Sprintf("fail to create vm, error: %s", err.Error()))
+		ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "fail to create vm", err))
 	}
 
-	return nil
+	return
 }
 
-func (c *KvmCtrl) Destroy(ctx context.Context, req domain.KvmReq, reply *_domain.RpcResp) error {
+func (c *KvmCtrl) Destroy(ctx iris.Context) {
+	req := domain.KvmReq{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		return
+	}
+
 	c.LibvirtService.DestroyVmByName(req.VmUniqueName, true)
 
-	reply.Passf("success to destroy vm %s .", req.VmUniqueName)
-	return nil
+	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to destroy vm", req.VmUniqueName))
+	return
 }
 
-func (c *KvmCtrl) Boot(ctx context.Context, req domain.KvmReq, reply *_domain.RpcResp) error {
+func (c *KvmCtrl) Boot(ctx iris.Context) {
+	req := domain.KvmReq{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		return
+	}
+
 	c.LibvirtService.BootVmByName(req.VmUniqueName)
 
-	reply.Passf("success to boot vm %s .", req.VmUniqueName)
-	return nil
+	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to boot vm", req.VmUniqueName))
+	return
 }
-func (c *KvmCtrl) Shutdown(ctx context.Context, req domain.KvmReq, reply *_domain.RpcResp) error {
+func (c *KvmCtrl) Shutdown(ctx iris.Context) {
+	req := domain.KvmReq{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		return
+	}
+
 	c.LibvirtService.ShutdownVmByName(req.VmUniqueName)
 
-	reply.Passf("success to shutdown vm %s .", req.VmUniqueName)
-	return nil
+	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to shutdown vm", req.VmUniqueName))
+	return
 }
-func (c *KvmCtrl) Reboot(ctx context.Context, req domain.KvmReq, reply *_domain.RpcResp) error {
+func (c *KvmCtrl) Reboot(ctx iris.Context) {
+	req := domain.KvmReq{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		return
+	}
+
 	c.LibvirtService.RebootVmByName(req.VmUniqueName)
 
-	reply.Passf("success to reboot vm %s .", req.VmUniqueName)
-	return nil
+	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to reboot vm", req.VmUniqueName))
+	return
 }
 
-func (c *KvmCtrl) Suspend(ctx context.Context, req domain.KvmReq, reply *_domain.RpcResp) error {
+func (c *KvmCtrl) Suspend(ctx iris.Context) {
+	req := domain.KvmReq{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		return
+	}
+
 	c.LibvirtService.SuspendVmByName(req.VmUniqueName)
 
-	reply.Passf("success to suspend vm %s .", req.VmUniqueName)
-	return nil
+	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to suspend vm", req.VmUniqueName))
+	return
 }
-func (c *KvmCtrl) Resume(ctx context.Context, req domain.KvmReq, reply *_domain.RpcResp) error {
+func (c *KvmCtrl) Resume(ctx iris.Context) {
+	req := domain.KvmReq{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		return
+	}
+
 	c.LibvirtService.ResumeVmByName(req.VmUniqueName)
 
-	reply.Passf("success to resume vm %s .", req.VmUniqueName)
-	return nil
+	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to resume vm", req.VmUniqueName))
+	return
 }

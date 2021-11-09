@@ -1,11 +1,10 @@
 package hostHandler
 
 import (
-	"fmt"
 	vmWareService "github.com/easysoft/zagent/internal/agent-host/service/vmware"
 	"github.com/easysoft/zagent/internal/comm/domain"
-	"github.com/easysoft/zagent/internal/pkg/domain"
-	"golang.org/x/net/context"
+	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
+	"github.com/kataras/iris/v12"
 )
 
 type VmWareCtrl struct {
@@ -16,31 +15,39 @@ func NewVmWareCtrl() *VmWareCtrl {
 	return &VmWareCtrl{}
 }
 
-func (c *VmWareCtrl) Create(ctx context.Context, req domain.VmWareReq, reply *_domain.RpcResp) error {
+func (c *VmWareCtrl) Create(ctx iris.Context) {
+	req := domain.VmWareReq{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		return
+	}
 
 	id, macAddress, err := c.VmWareService.CreateVm(&req, true)
 	if err == nil {
-		reply.Pass("success to create VmWare.")
-
-		VmWare := domain.VmWareResp{
+		vm := domain.VmWareResp{
 			VmId: id,
 			Name: req.VmUniqueName,
 			Mac:  macAddress,
 			//VncAddress:  strconv.Itoa(VmWareVncPort),
 		}
 
-		reply.Payload = VmWare
-
+		ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to create VmWare vm", vm))
 	} else {
-		reply.Fail(fmt.Sprintf("fail to create VmWare, error: %s", err.Error()))
+		ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "fail to create VmWare vm", err))
 	}
 
-	return nil
+	return
 }
 
-func (c *VmWareCtrl) Destroy(ctx context.Context, req domain.VmWareReq, reply *_domain.RpcResp) error {
+func (c *VmWareCtrl) Destroy(ctx iris.Context) {
+	req := domain.VmWareReq{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		return
+	}
+
 	c.VmWareService.DestroyVm(&req, true)
 
-	reply.Passf("success to destroy VmWare %s .", req.VmId)
-	return nil
+	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to destroy VmWare vm", req.VmId))
+	return
 }
