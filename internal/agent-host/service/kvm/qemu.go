@@ -26,7 +26,7 @@ func NewQemuService() *QemuService {
 	return &QemuService{}
 }
 
-func (s *QemuService) GenVmDef(tmplXml, macAddress, vmName, backingPath string, vmMemory uint) (
+func (s *QemuService) GenVmDef(tmplXml, macAddress, vmName, backingPath string, vmCpu, vmMemory uint) (
 	vmXml string, rawPath string, err error) {
 
 	rawPath = filepath.Join(agentConf.Inst.DirImage, vmName+".qcow2")
@@ -78,6 +78,10 @@ func (s *QemuService) GenVmDef(tmplXml, macAddress, vmName, backingPath string, 
 	}
 
 	domCfg.Devices.Controllers = s.removeUnnecessaryPciCtrl(domCfg)
+
+	if vmCpu != 0 {
+		domCfg.VCPU.Value = vmCpu
+	}
 
 	if vmMemory != 0 {
 		domCfg.Memory = &libvirtxml.DomainMemory{

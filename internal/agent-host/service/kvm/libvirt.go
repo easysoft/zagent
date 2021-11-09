@@ -45,6 +45,7 @@ func (s *LibvirtService) CreateVm(req *domain.KvmReq, removeSameName bool) (dom 
 	vmUniqueName := req.VmUniqueName
 	vmBackingPath = filepath.Join(agentConf.Inst.DirKvm, req.VmBackingPath)
 	vmTemplateName := req.VmTemplateName
+	vmCpu := req.VmCpu
 	vmMemorySize := req.VmMemorySize
 	vmDiskSize := req.VmDiskSize
 
@@ -54,7 +55,7 @@ func (s *LibvirtService) CreateVm(req *domain.KvmReq, removeSameName bool) (dom 
 
 	tmplXml := s.GetVmDef(vmTemplateName)
 	vmXml := ""
-	vmXml, vmRawPath, _ = s.QemuService.GenVmDef(tmplXml, vmMacAddress, vmUniqueName, vmBackingPath, vmMemorySize)
+	vmXml, vmRawPath, _ = s.QemuService.GenVmDef(tmplXml, vmMacAddress, vmUniqueName, vmBackingPath, vmCpu, vmMemorySize)
 	if err != nil {
 		_logUtils.Errorf("err gen vm xml, err %s", err.Error())
 		return
