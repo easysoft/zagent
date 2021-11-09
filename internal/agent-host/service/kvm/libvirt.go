@@ -55,13 +55,16 @@ func (s *LibvirtService) CreateVm(req *domain.KvmReq, removeSameName bool) (dom 
 	tmplXml := s.GetVmDef(vmTemplateName)
 	vmXml := ""
 	vmXml, vmRawPath, _ = s.QemuService.GenVmDef(tmplXml, vmMacAddress, vmUniqueName, vmBackingPath, vmMemorySize)
-
 	if err != nil {
 		_logUtils.Errorf("err gen vm xml, err %s", err.Error())
 		return
 	}
 
-	s.QemuService.createDiskFile(vmBackingPath, vmUniqueName, vmDiskSize)
+	err = s.QemuService.createDiskFile(vmBackingPath, vmUniqueName, vmDiskSize)
+	if err != nil {
+		_logUtils.Errorf("create disk file err, %s", err.Error())
+		return
+	}
 
 	dom, err = s.LibvirtConn.DomainCreateXML(vmXml, 0)
 
