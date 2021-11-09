@@ -65,11 +65,9 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/rifflock/lfshook v0.0.0-20180920164130-b9218ef580f5
 	github.com/robfig/cron/v3 v3.0.1
-	github.com/rpcx-ecosystem/rpcx-gateway v0.0.0-20200521025828-a39934d3752d
 	github.com/satori/go.uuid v1.2.0
 	github.com/shopspring/decimal v1.2.0 // indirect
 	github.com/sirupsen/logrus v1.7.0
-	github.com/smallnest/rpcx v0.0.0-20200512151426-9e5976a9d1d6
 	github.com/smartystreets/assertions v1.2.0 // indirect
 	github.com/snowlyg/gotransformer v0.1.0
 	github.com/tdewolff/parse/v2 v2.5.6 // indirect

@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	hostInit "github.com/easysoft/zagent/cmd/agent-host/init"
-	hostRouter "github.com/easysoft/zagent/cmd/agent-host/router"
 	"github.com/easysoft/zagent/internal/agent/conf"
 	"github.com/easysoft/zagent/internal/agent/utils/common"
 	"github.com/easysoft/zagent/internal/agent/utils/const"
@@ -60,7 +59,7 @@ func start() {
 
 	if err := flagSet.Parse(os.Args[1:]); err == nil {
 		agentConf.Inst.RunMode = agentConst.RunMode(runMode)
-		hostInit.Init(hostRouter.NewRouter())
+		hostInit.Init()
 	}
 }
 

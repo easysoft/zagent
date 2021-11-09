@@ -43,8 +43,7 @@ type Router struct {
 }
 
 func NewRouter(app *iris.Application) *Router {
-	router := &Router{}
-	router.api = app
+	router := &Router{api: app}
 
 	return router
 }

@@ -6,7 +6,6 @@ import (
 	ini "github.com/easysoft/zagent/cmd/server/init"
 	consts "github.com/easysoft/zagent/internal/comm/const"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
-	"github.com/easysoft/zagent/internal/server/conf"
 	"os"
 )
 
@@ -37,6 +36,6 @@ func main() {
 	flag.Parse()
 
 	_logUtils.Init(consts.AppNameServer)
-	serverConf.Init()
+
 	ini.Init(version, printVersion, printRouter)
 }

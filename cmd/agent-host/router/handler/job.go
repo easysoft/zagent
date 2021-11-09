@@ -3,8 +3,8 @@ package hostHandler
 import (
 	agentService "github.com/easysoft/zagent/internal/agent/service"
 	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	_domain "github.com/easysoft/zagent/internal/pkg/domain"
-	"golang.org/x/net/context"
+	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
+	"github.com/kataras/iris/v12"
 )
 
 type JobCtrl struct {
@@ -15,14 +15,22 @@ func NewJobCtrl() *JobCtrl {
 	return &JobCtrl{}
 }
 
-func (c *JobCtrl) Add(ctx context.Context, build commDomain.Build, reply *_domain.RpcResp) error {
+func (c *JobCtrl) Add(ctx iris.Context) {
+	ctx.StatusCode(iris.StatusOK)
+
+	build := commDomain.Build{}
+	if err := ctx.ReadJSON(&build); err != nil {
+		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		return
+	}
+
 	//size := c.JobService.GetTaskSize()
 	//if size == 0 {
 	c.JobService.AddTask(build)
-	reply.Pass("Pass to add job.")
 	//} else {
 	//	reply.Fail(fmt.Sprintf("already has %d jobs to be done.", size))
 	//}
 
-	return nil
+	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to add job", nil))
+	return
 }
