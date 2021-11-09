@@ -95,7 +95,6 @@ func (s *QemuService) GenVmDef(tmplXml, macAddress, vmName, backingPath string, 
 	}
 
 	domCfg.Devices.Interfaces[0].MAC.Address = macAddress
-
 	//domCfg.OS.Type.Machine = s.GenMachine()
 
 	vmXml, _ = domCfg.Marshal()
