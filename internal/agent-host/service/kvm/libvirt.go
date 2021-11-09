@@ -88,48 +88,6 @@ func (s *LibvirtService) CreateVm(req *domain.KvmReq, removeSameName bool) (dom 
 	return
 }
 
-func (s *LibvirtService) CreateVmTest(vm *domain.Vm) (
-	dom *libvirt.Domain, macAddress string, vncAddress int, err error) {
-	s.setVmProps(vm)
-
-	srcXml := s.GetVmDef(vm.Tmpl)
-
-	backingPath := ""
-	if vm.Backing != "" {
-		backingPath = filepath.Join(agentConf.Inst.DirBaking, vm.Backing)
-	}
-	backingPath += ".qcow2"
-
-	vmXml := ""
-	rawPath := filepath.Join(agentConf.Inst.DirImage, vm.Name+".qcow2")
-	vmXml, vm.MacAddress, _ = s.QemuService.GenVmDefTest(srcXml, vm.Name, rawPath, backingPath, 0)
-
-	if err != nil || vm.DiskSize == 0 {
-		_logUtils.Errorf("wrong vm disk size %d, err %s", vm.DiskSize, err.Error())
-		return
-	}
-
-	s.QemuService.createDiskFile(backingPath, vm.Name, vm.DiskSize)
-
-	dom, err = s.LibvirtConn.DomainCreateXML(vmXml, 0)
-
-	if err == nil {
-		newXml := ""
-		newXml, err = dom.GetXMLDesc(0)
-		if err != nil {
-			return
-		}
-
-		newDomCfg := &libvirtxml.Domain{}
-		err = newDomCfg.Unmarshal(newXml)
-
-		macAddress = newDomCfg.Devices.Interfaces[0].MAC.Address
-		vncAddress = newDomCfg.Devices.Graphics[0].VNC.Port
-	}
-
-	return
-}
-
 func (s *LibvirtService) ListVm() (doms []libvirt.Domain) {
 	if s.LibvirtConn == nil {
 		return
