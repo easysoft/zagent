@@ -37,7 +37,7 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 
 		ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to create vm", vm))
 	} else {
-		ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "fail to create vm", err))
+		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "fail to create vm", err))
 	}
 
 	return
