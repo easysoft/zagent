@@ -8,6 +8,7 @@ type KvmReq struct {
 	VmTemplateName string `json:"vmTemplate"`
 
 	VmUniqueName  string `json:"vmUniqueName"`
+	VmCpu         uint   `json:"vmCpu"`
 	VmMemorySize  uint   `json:"vmMemorySize"`
 	VmDiskSize    uint   `json:"vmDiskSize"`
 	VmCdromSys    string `json:"vmCdromSys"`
