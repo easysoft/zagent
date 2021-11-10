@@ -21,7 +21,7 @@ const (
 )
 
 var (
-	requestType   = ""
+	requestType   = "PATH_INFO"
 	zenTaoVersion = ""
 	sessionVar    = ""
 	sessionId     = ""
@@ -76,6 +76,9 @@ func (s *ZentaoService) Get(url string) (string, bool) {
 	if requestType == RequestTypePathInfo {
 		url = url + "?" + sessionVar + "=" + sessionId
 	} else {
+		if strings.Index(url, "?") < 0 {
+			url = url + "?"
+		}
 		url = url + "&" + sessionVar + "=" + sessionId
 	}
 
