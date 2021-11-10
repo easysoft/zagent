@@ -10,11 +10,11 @@ type Vm struct {
 	BackingId int
 	HostId    int
 
-	Name        string
+	Name        string `json:"name"`
 	Tmpl        string
 	Backing     string
-	ImagePath   string
-	BackingPath string
+	ImagePath   string `json:"imagePath"`
+	BackingPath string `json:"backingPath"`
 
 	OsCategory consts.OsCategory
 	OsType     consts.OsType
@@ -27,10 +27,10 @@ type Vm struct {
 
 	Ip         string
 	Port       int
-	MacAddress string
+	MacAddress string `json:"macAddress"`
 	RpcPort    int
 	SshPort    int
-	VncAddress string
+	VncPort    string `json:"vncPort"`
 	WorkDir    string
 
 	DefPath          string

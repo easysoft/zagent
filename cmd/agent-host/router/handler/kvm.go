@@ -34,7 +34,7 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 	vmName, _ := dom.GetName()
 	vm := domain.Vm{
 		Name:        vmName,
-		VncAddress:  strconv.Itoa(vmVncPort),
+		VncPort:     strconv.Itoa(vmVncPort),
 		ImagePath:   vmRawPath,
 		BackingPath: vmBackingPath,
 	}

@@ -160,7 +160,7 @@ func (s VirtualboxCloudVmService) CreateRemote(hostId, backingId, queueId uint) 
 
 final:
 	s.VmRepo.UpdateVmCloudInst(vm)
-	//vm.VncAddress, _ = huaweiCloudService.QueryVnc(vm.CloudInstId, ecsClient)
+	//vm.VncPort, _ = huaweiCloudService.QueryVnc(vm.CloudInstId, ecsClient)
 	s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, vm.VncAddress, "", "")
 
 	return
