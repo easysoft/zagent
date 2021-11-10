@@ -6,6 +6,7 @@ replace google.golang.org/grpc => google.golang.org/grpc v1.29.0
 
 require (
 	github.com/Joker/hpp v1.0.0 // indirect
+	github.com/ajg/form v1.5.1 // indirect
 	github.com/alibabacloud-go/darabonba-openapi v0.1.5
 	github.com/alibabacloud-go/eci-20180808/v2 v2.0.2
 	github.com/alibabacloud-go/ecs-20140526/v2 v2.0.2
@@ -15,6 +16,7 @@ require (
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.69
 	github.com/aliyun/aliyun-oss-go-sdk v2.1.10+incompatible
 	github.com/azumads/faker v0.0.0-20150921074035-6cae71ddb107
+	github.com/bitly/go-simplejson v0.5.0 // indirect
 	github.com/casbin/casbin/v2 v2.31.5
 	github.com/containerd/containerd v1.5.2 // indirect
 	github.com/denisenkom/go-mssqldb v0.9.0 // indirect
