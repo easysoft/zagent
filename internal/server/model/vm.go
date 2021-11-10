@@ -97,7 +97,7 @@ func VmFromDomain(v domain.Vm) (po Vm) {
 		MacAddress: v.MacAddress,
 		RpcPort:    v.RpcPort,
 		SshPort:    v.SshPort,
-		VncAddress: v.VncAddress,
+		VncAddress: v.VncPort,
 		WorkDir:    v.WorkDir,
 	}
 
