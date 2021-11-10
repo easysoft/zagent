@@ -25,8 +25,8 @@ type Vm struct {
 	DestroyAt         time.Time
 	FirstDetectedTime time.Time
 
-	PublicIp   string
-	PublicPort int
+	Ip         string
+	Port       int
 	MacAddress string
 	RpcPort    int
 	SshPort    int

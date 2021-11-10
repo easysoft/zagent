@@ -25,7 +25,7 @@ func (r VmRepo) Register(vm domain.Vm) (po model.Vm, statusChanged bool, err err
 	// update ip if empty
 	r.DB.Model(&model.Vm{}).
 		Where("mac_address=? AND (node_ip IS NULL OR node_ip = '')", vm.MacAddress).
-		Updates(map[string]interface{}{"node_ip": vm.PublicIp})
+		Updates(map[string]interface{}{"node_ip": vm.Ip})
 
 	// just update status by mac for exist vm
 	r.DB.Model(&model.Vm{}).
@@ -34,7 +34,7 @@ func (r VmRepo) Register(vm domain.Vm) (po model.Vm, statusChanged bool, err err
 			map[string]interface{}{
 				"status":             vm.Status,
 				"work_dir":           vm.WorkDir,
-				"node_port":          vm.PublicPort,
+				"node_port":          vm.Port,
 				"last_register_time": time.Now()})
 
 	err = r.DB.Model(&model.Vm{}).
