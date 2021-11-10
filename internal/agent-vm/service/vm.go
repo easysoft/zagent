@@ -4,6 +4,7 @@ import (
 	"github.com/easysoft/zagent/internal/agent/conf"
 	agentService "github.com/easysoft/zagent/internal/agent/service"
 	testingService "github.com/easysoft/zagent/internal/agent/service/testing"
+	agentZentaoService "github.com/easysoft/zagent/internal/agent/service/zentao"
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/comm/domain"
 	"github.com/easysoft/zagent/internal/pkg/lib/http"
@@ -19,6 +20,8 @@ type VmService struct {
 	VmService   *VmService                 `inject:""`
 	JobService  *agentService.JobService   `inject:""`
 	TestService *testingService.RunService `inject:""`
+
+	ZentaoService *agentZentaoService.ZentaoService `inject:""`
 }
 
 func NewVmService() *VmService {
@@ -65,6 +68,8 @@ func (s *VmService) Register(isBusy bool) {
 	} else {
 		vm.Status = consts.VmReady
 	}
+
+	s.ZentaoService.GetConfig(agentConf.Inst.Server)
 
 	url := _httpUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/vm/register")
 	resp, ok := _httpUtils.Post(url, vm, nil)

@@ -72,6 +72,7 @@ require (
 	github.com/snowlyg/gotransformer v0.1.0
 	github.com/tdewolff/parse/v2 v2.5.6 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
+	github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4 // indirect
 	github.com/yudai/pp v2.0.1+incompatible // indirect
 	golang.org/x/crypto v0.0.0-20210616213533-5ff15b29337e
 	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110
