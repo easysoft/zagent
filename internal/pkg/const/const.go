@@ -5,7 +5,6 @@ import "os"
 const (
 	PthSep = string(os.PathSeparator)
 
-	RpcPort           = 8085
 	UploadDir         = "down" + PthSep + "upload"
 	UploadFileMaxSize = 1000 << 20
 
