@@ -135,6 +135,9 @@ func (s *ZentaoService) Post(url string, params interface{}, useFormFormat bool)
 	if requestType == RequestTypePathInfo {
 		url = url + "?" + sessionVar + "=" + sessionId
 	} else {
+		if strings.Index(url, "?") < 0 {
+			url = url + "?"
+		}
 		url = url + "&" + sessionVar + "=" + sessionId
 	}
 	url = url + "&XDEBUG_SESSION_START=PHPSTORM"
