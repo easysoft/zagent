@@ -2,6 +2,7 @@ package agentZentaoService
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/ajg/form"
 	"github.com/bitly/go-simplejson"
 	_i118Utils "github.com/easysoft/zagent/internal/pkg/lib/i118"
@@ -213,6 +214,18 @@ func (s *ZentaoService) replacePostData(str string) string {
 		str = strings.Replace(str, "=", "]=", -1)
 	}
 	return str
+}
+
+func (s *ZentaoService) GenUrl(server string, path string) string {
+	server = s.UpdateUrl(server)
+	url := fmt.Sprintf("%s%s", server, path)
+	return url
+}
+func (s *ZentaoService) UpdateUrl(url string) string {
+	if strings.LastIndex(url, "/") < len(url)-1 {
+		url += "/"
+	}
+	return url
 }
 
 func replacePostData(str string) string {

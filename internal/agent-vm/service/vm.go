@@ -7,7 +7,6 @@ import (
 	agentZentaoService "github.com/easysoft/zagent/internal/agent/service/zentao"
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/comm/domain"
-	"github.com/easysoft/zagent/internal/pkg/lib/http"
 	"github.com/easysoft/zagent/internal/pkg/lib/i118"
 	"github.com/easysoft/zagent/internal/pkg/lib/log"
 	"time"
@@ -71,8 +70,8 @@ func (s *VmService) Register(isBusy bool) {
 
 	s.ZentaoService.GetConfig(agentConf.Inst.Server)
 
-	url := _httpUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/vm/register")
-	resp, ok := _httpUtils.Post(url, vm, nil)
+	url := s.ZentaoService.GenUrl(agentConf.Inst.Server, "api.php/v1/vm/register")
+	resp, ok := s.ZentaoService.Post(url, vm, false)
 
 	if ok {
 		_logUtils.Info(_i118Utils.I118Prt.Sprintf("success_to_register", agentConf.Inst.Server))
