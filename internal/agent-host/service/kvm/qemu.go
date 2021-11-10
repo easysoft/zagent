@@ -64,7 +64,7 @@ func (s *QemuService) GenVmDef(tmplXml, macAddress, vmName, backingPath string, 
 				AutoPort: "yes",
 				Port:     -1,
 				Listen:   "0.0.0.0",
-				Passwd:   "P2ssw0rd",
+				//Passwd:   "P2ssw0rd",
 				Listeners: []libvirtxml.DomainGraphicListener{
 					{
 						Address: &libvirtxml.DomainGraphicListenerAddress{
