@@ -19,7 +19,7 @@ type HostService struct {
 	JobService  *agentService.JobService   `inject:""`
 	TestService *testingService.RunService `inject:""`
 
-	ZentaoService agentZentaoService.ZentaoService `inject:""`
+	ZentaoService *agentZentaoService.ZentaoService `inject:""`
 }
 
 func NewHostService() *HostService {
