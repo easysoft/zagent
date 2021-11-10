@@ -65,6 +65,8 @@ func (s *HostService) Register(isBusy bool) {
 	host.Vms = s.VmService.GetVms()
 	s.VmService.UpdateVmMapAndDestroyTimeout(host.Vms)
 
+	s.ZentaoService.GetConfig(agentConf.Inst.Server)
+
 	url := s.ZentaoService.GenUrl(agentConf.Inst.Server, "api.php/v1/host/register")
 	resp, ok := s.ZentaoService.Post(url, host, true)
 
