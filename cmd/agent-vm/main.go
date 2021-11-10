@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	vmInit "github.com/easysoft/zagent/cmd/agent-vm/init"
-	vmRouter "github.com/easysoft/zagent/cmd/agent-vm/router"
 	"github.com/easysoft/zagent/internal/agent/conf"
 	"github.com/easysoft/zagent/internal/agent/utils/common"
 	"github.com/easysoft/zagent/internal/agent/utils/const"
@@ -61,7 +60,7 @@ func start() {
 
 	if err := flagSet.Parse(os.Args[1:]); err == nil {
 		agentConf.Inst.RunMode = agentConst.RunMode(runMode)
-		vmInit.Init(vmRouter.NewRouter())
+		vmInit.Init()
 	}
 }
 
