@@ -63,7 +63,7 @@ func (s *HostService) Register(isBusy bool) {
 	host.Vms = s.VmService.GetVms()
 	s.VmService.UpdateVmMapAndDestroyTimeout(host.Vms)
 
-	url := _httpUtils.GenUrl(agentConf.Inst.Server, "client/host/register")
+	url := _httpUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/host/register")
 	resp, ok := _httpUtils.Post(url, host, nil)
 
 	if ok {

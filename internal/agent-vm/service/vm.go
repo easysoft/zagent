@@ -56,8 +56,8 @@ func (s *VmService) Check() {
 func (s *VmService) Register(isBusy bool) {
 	vm := domain.Vm{
 		MacAddress: agentConf.Inst.MacAddress,
-		Name:       agentConf.Inst.NodeName, WorkDir: agentConf.Inst.WorkDir,
-		PublicIp: agentConf.Inst.NodeIp, PublicPort: agentConf.Inst.NodePort,
+		Ip:         agentConf.Inst.NodeIp, Port: agentConf.Inst.NodePort,
+		Name: agentConf.Inst.NodeName, WorkDir: agentConf.Inst.WorkDir,
 	}
 
 	if isBusy {
@@ -66,7 +66,7 @@ func (s *VmService) Register(isBusy bool) {
 		vm.Status = consts.VmReady
 	}
 
-	url := _httpUtils.GenUrl(agentConf.Inst.Server, "client/vm/register")
+	url := _httpUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/vm/register")
 	resp, ok := _httpUtils.Post(url, vm, nil)
 
 	if ok {

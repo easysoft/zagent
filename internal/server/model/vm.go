@@ -92,8 +92,8 @@ func VmFromDomain(v domain.Vm) (po Vm) {
 		Status:    v.Status,
 		DestroyAt: &v.DestroyAt,
 
-		NodeIp:     v.PublicIp,
-		NodePort:   v.PublicPort,
+		NodeIp:     v.Ip,
+		NodePort:   v.Port,
 		MacAddress: v.MacAddress,
 		RpcPort:    v.RpcPort,
 		SshPort:    v.SshPort,
