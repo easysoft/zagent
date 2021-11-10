@@ -5,9 +5,9 @@ import (
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	agentService "github.com/easysoft/zagent/internal/agent/service"
 	testingService "github.com/easysoft/zagent/internal/agent/service/testing"
+	agentZentaoService "github.com/easysoft/zagent/internal/agent/service/zentao"
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/comm/domain"
-	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
 	_i118Utils "github.com/easysoft/zagent/internal/pkg/lib/i118"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	"strings"
@@ -18,6 +18,8 @@ type HostService struct {
 
 	JobService  *agentService.JobService   `inject:""`
 	TestService *testingService.RunService `inject:""`
+
+	ZentaoService agentZentaoService.ZentaoService `inject:""`
 }
 
 func NewHostService() *HostService {
@@ -63,8 +65,8 @@ func (s *HostService) Register(isBusy bool) {
 	host.Vms = s.VmService.GetVms()
 	s.VmService.UpdateVmMapAndDestroyTimeout(host.Vms)
 
-	url := _httpUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/host/register")
-	resp, ok := _httpUtils.Post(url, host, nil)
+	url := s.ZentaoService.GenUrl(agentConf.Inst.Server, "api.php/v1/host/register")
+	resp, ok := s.ZentaoService.Post(url, host, false)
 
 	if ok {
 		_logUtils.Info(_i118Utils.I118Prt.Sprintf("success_to_register", agentConf.Inst.Server))
