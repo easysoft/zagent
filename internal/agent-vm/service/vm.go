@@ -71,7 +71,7 @@ func (s *VmService) Register(isBusy bool) {
 	s.ZentaoService.GetConfig(agentConf.Inst.Server)
 
 	url := s.ZentaoService.GenUrl(agentConf.Inst.Server, "api.php/v1/vm/register")
-	resp, ok := s.ZentaoService.Post(url, vm, false)
+	resp, ok := s.ZentaoService.Post(url, vm, true)
 
 	if ok {
 		_logUtils.Info(_i118Utils.I118Prt.Sprintf("success_to_register", agentConf.Inst.Server))
