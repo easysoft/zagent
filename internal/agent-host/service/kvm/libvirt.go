@@ -167,7 +167,7 @@ func (s *LibvirtService) ShutdownVmByName(name string) {
 		return
 	}
 
-	err = dom.ShutdownFlags(libvirt.DOMAIN_SHUTDOWN_GUEST_AGENT)
+	err = dom.ShutdownFlags(libvirt.DOMAIN_SHUTDOWN_ACPI_POWER_BTN)
 	return
 }
 
