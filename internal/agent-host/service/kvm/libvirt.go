@@ -152,15 +152,6 @@ func (s *LibvirtService) BootVmByName(name string) {
 	err = dom.Reboot(libvirt.DOMAIN_REBOOT_DEFAULT)
 	return
 }
-func (s *LibvirtService) ShutdownVmByName(name string) {
-	dom, err := s.GetVm(name)
-	if err != nil {
-		return
-	}
-
-	err = dom.ShutdownFlags(libvirt.DOMAIN_SHUTDOWN_DEFAULT)
-	return
-}
 func (s *LibvirtService) RebootVmByName(name string) {
 	dom, err := s.GetVm(name)
 	if err != nil {
@@ -168,6 +159,15 @@ func (s *LibvirtService) RebootVmByName(name string) {
 	}
 
 	err = dom.Reboot(libvirt.DOMAIN_REBOOT_DEFAULT)
+	return
+}
+func (s *LibvirtService) ShutdownVmByName(name string) {
+	dom, err := s.GetVm(name)
+	if err != nil {
+		return
+	}
+
+	err = dom.ShutdownFlags(libvirt.DOMAIN_SHUTDOWN_GUEST_AGENT)
 	return
 }
 
