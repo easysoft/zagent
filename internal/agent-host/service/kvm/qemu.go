@@ -55,7 +55,7 @@ func (s *QemuService) GenVmDef(tmplXml, macAddress, vmName, backingPath string, 
 		},
 	}
 
-	//<graphics type="vnc" port="-1" autoport="yes" listen="0.0.0.0" passwd="P2ssw0rd">
+	//<graphics type="vnc" port="-1" autoport="yes" listen="0.0.0.0" passwd="pass">
 	//<listen type="address" address="0.0.0.0"/>
 	//</graphics>
 	domCfg.Devices.Graphics = []libvirtxml.DomainGraphic{
@@ -64,7 +64,7 @@ func (s *QemuService) GenVmDef(tmplXml, macAddress, vmName, backingPath string, 
 				AutoPort: "yes",
 				Port:     -1,
 				Listen:   "0.0.0.0",
-				//Passwd:   "P2ssw0rd",
+				Passwd:   "pass",
 				Listeners: []libvirtxml.DomainGraphicListener{
 					{
 						Address: &libvirtxml.DomainGraphicListenerAddress{
@@ -129,7 +129,7 @@ func (s *QemuService) GenVmDefTest(src, vmName, rawPath, backingPath string, vmC
 		},
 	}
 
-	//<graphics type="vnc" port="-1" autoport="yes" listen="0.0.0.0" passwd="P2ssw0rd">
+	//<graphics type="vnc" port="-1" autoport="yes" listen="0.0.0.0" passwd="pass">
 	//<listen type="address" address="0.0.0.0"/>
 	//</graphics>
 	domCfg.Devices.Graphics = []libvirtxml.DomainGraphic{
@@ -138,7 +138,7 @@ func (s *QemuService) GenVmDefTest(src, vmName, rawPath, backingPath string, vmC
 				AutoPort: "yes",
 				Port:     -1,
 				Listen:   "0.0.0.0",
-				Passwd:   "P2ssw0rd",
+				Passwd:   "pass",
 				Listeners: []libvirtxml.DomainGraphicListener{
 					{
 						Address: &libvirtxml.DomainGraphicListenerAddress{
