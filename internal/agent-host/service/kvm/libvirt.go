@@ -73,7 +73,7 @@ func (s *LibvirtService) CreateVm(req *domain.KvmReq, removeSameName bool) (dom 
 		return
 	}
 
-	dom, err = s.LibvirtConn.DomainCreateXML(vmXml, 0)
+	dom, err = s.LibvirtConn.DomainCreateXML(vmXml, libvirt.DOMAIN_START_FORCE_BOOT)
 	if err != nil {
 		_logUtils.Errorf(err.Error())
 		return
@@ -158,7 +158,7 @@ func (s *LibvirtService) ShutdownVmByName(name string) {
 		return
 	}
 
-	err = dom.Shutdown()
+	err = dom.ShutdownFlags(libvirt.DOMAIN_SHUTDOWN_DEFAULT)
 	return
 }
 func (s *LibvirtService) RebootVmByName(name string) {
