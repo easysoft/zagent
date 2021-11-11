@@ -2,6 +2,7 @@ package hostAgentKvmService
 
 import "C"
 import (
+	"encoding/json"
 	"fmt"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	"github.com/easysoft/zagent/internal/comm/const"
@@ -43,7 +44,8 @@ func NewLibvirtService() *LibvirtService {
 func (s *LibvirtService) CreateVm(req *domain.KvmReq, removeSameName bool) (dom *libvirt.Domain,
 	vmVncPort int, vmRawPath, vmBackingPath string, err error) {
 
-	_logUtils.Infof("%v", req)
+	reqMsg, err := json.Marshal(req)
+	_logUtils.Infof("%s", reqMsg)
 
 	vmMacAddress := req.VmMacAddress
 	vmUniqueName := req.VmUniqueName
