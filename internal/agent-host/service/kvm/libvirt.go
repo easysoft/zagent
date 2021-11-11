@@ -73,7 +73,7 @@ func (s *LibvirtService) CreateVm(req *domain.KvmReq, removeSameName bool) (dom 
 		return
 	}
 
-	dom, err = s.LibvirtConn.DomainCreateXML(vmXml, 8)
+	dom, err = s.LibvirtConn.DomainCreateXML(vmXml, libvirt.DOMAIN_NONE)
 	if err != nil {
 		_logUtils.Errorf(err.Error())
 		return
