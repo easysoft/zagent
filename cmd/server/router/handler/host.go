@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/easysoft/zagent/internal/comm/domain"
+	_const "github.com/easysoft/zagent/internal/pkg/const"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
 	serverService "github.com/easysoft/zagent/internal/server/service"
 	"github.com/kataras/iris/v12"
@@ -18,16 +19,18 @@ func NewHostCtrl() *HostCtrl {
 }
 
 func (c *HostCtrl) Register(ctx iris.Context) {
-	ctx.StatusCode(iris.StatusOK)
-
 	model := domain.HostNode{}
 	if err := ctx.ReadJSON(&model); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
-	rpcResp := c.AssertService.RegisterHost(model)
+	success := c.AssertService.RegisterHost(model)
+	code := _const.ResultFail
+	if success {
+		code = _const.ResultSuccess
+	}
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(int64(rpcResp.Code), "操作成功", rpcResp))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(code, "操作成功", ""))
 	return
 }

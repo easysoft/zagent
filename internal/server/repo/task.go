@@ -17,11 +17,11 @@ func NewTaskRepo() *TaskRepo {
 	return &TaskRepo{}
 }
 
-func (r *TaskRepo) Query(keywords, status string, pageNo int, pageSize int) (pos []model.Task, total int64) {
+func (r *TaskRepo) Query(keywords, disabled string, pageNo int, pageSize int) (pos []model.Task, total int64) {
 	query := r.DB.Model(&model.Task{}).Select("*").Order("id ASC")
-	if status == "true" {
+	if disabled == "true" {
 		query = query.Where("NOT disabled")
-	} else if status == "false" {
+	} else if disabled == "false" {
 		query = query.Where("disabled")
 	}
 

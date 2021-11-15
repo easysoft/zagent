@@ -65,6 +65,7 @@ func (r *Router) App() {
 		{
 			v1.PartyFunc("/client", func(client iris.Party) {
 				client.PartyFunc("/task", func(party iris.Party) {
+					party.Post("/list", r.TaskCtrl.List).Name = "列出任务接口"
 					party.Post("/create", r.TaskCtrl.Create).Name = "创建任务接口"
 				})
 
