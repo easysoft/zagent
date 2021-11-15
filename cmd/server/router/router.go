@@ -64,8 +64,8 @@ func (r *Router) App() {
 		v1 := app.Party("/v1")
 		{
 			v1.PartyFunc("/client", func(client iris.Party) {
-				client.PartyFunc("/tasks", func(party iris.Party) {
-					party.Post("/", r.TaskCtrl.Create).Name = "创建任务接口"
+				client.PartyFunc("/task", func(party iris.Party) {
+					party.Post("/create", r.TaskCtrl.Create).Name = "创建任务接口"
 				})
 
 				client.PartyFunc("/host", func(party iris.Party) {

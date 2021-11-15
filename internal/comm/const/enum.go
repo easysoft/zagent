@@ -100,10 +100,10 @@ func (e BuildStatus) ToString() string {
 type BuildType string
 
 const (
+	ZtfTest       BuildType = "ztf"
 	SeleniumTest  BuildType = "selenium"
 	AppiumTest    BuildType = "appium"
 	UnitTest      BuildType = "unittest"
-	ZtfTest       BuildType = "ztf"
 	InterfaceTest BuildType = "interface"
 )
 

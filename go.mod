@@ -7,6 +7,7 @@ replace google.golang.org/grpc => google.golang.org/grpc v1.29.0
 require (
 	github.com/Joker/hpp v1.0.0 // indirect
 	github.com/ajg/form v1.5.1 // indirect
+	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alibabacloud-go/darabonba-openapi v0.1.5
 	github.com/alibabacloud-go/eci-20180808/v2 v2.0.2
 	github.com/alibabacloud-go/ecs-20140526/v2 v2.0.2
@@ -15,6 +16,7 @@ require (
 	github.com/alibabacloud-go/vpc-20160428/v2 v2.0.0
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.69
 	github.com/aliyun/aliyun-oss-go-sdk v2.1.10+incompatible
+	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/azumads/faker v0.0.0-20150921074035-6cae71ddb107
 	github.com/bitly/go-simplejson v0.5.0 // indirect
 	github.com/casbin/casbin/v2 v2.31.5
@@ -33,10 +35,11 @@ require (
 	github.com/facebookgo/subset v0.0.0-20200203212716-c811ad88dec4 // indirect
 	github.com/fatih/color v1.13.0
 	github.com/go-git/go-git/v5 v5.2.0
+	github.com/go-openapi/spec v0.20.4 // indirect
 	github.com/go-playground/locales v0.13.0
 	github.com/go-playground/universal-translator v0.17.0
 	github.com/go-playground/validator/v10 v10.6.1
-	github.com/gofrs/uuid v3.3.0+incompatible
+	github.com/gofrs/uuid v4.1.0+incompatible
 	github.com/goinggo/mapstructure v0.0.0-20140717182941-194205d9b4a9 // indirect
 	github.com/gomodule/redigo v1.8.4
 	github.com/gopherjs/gopherjs v0.0.0-20200217142428-fce0ec30dd00 // indirect
@@ -46,24 +49,27 @@ require (
 	github.com/iris-contrib/go.uuid v2.0.0+incompatible
 	github.com/iris-contrib/middleware/cors v0.0.0-20201115103636-07e8bced147f
 	github.com/iris-contrib/middleware/jwt v0.0.0-20210110101738-6d0a4d799b5d
+	github.com/iris-contrib/swagger v0.0.0-20210110101208-2670b336b278 // indirect
 	github.com/jameskeane/bcrypt v0.0.0-20120420032655-c3cd44c1e20f
 	github.com/jinzhu/configor v1.2.1
+	github.com/jinzhu/copier v0.3.2 // indirect
 	github.com/jinzhu/gorm v1.9.12
 	github.com/johlandabee/govmx v0.0.0-20200622120338-15e2c507b193
 	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect
 	github.com/kataras/iris v0.0.2
-	github.com/kataras/iris/v12 v12.2.0-alpha2
+	github.com/kataras/iris/v12 v12.2.0-alpha4
 	github.com/kataras/neffos v0.0.18
+	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/lib/pq v1.8.0 // indirect
 	github.com/libvirt/libvirt-go v7.4.0+incompatible
 	github.com/libvirt/libvirt-go-xml v7.4.0+incompatible
 	github.com/manveru/gobdd v0.0.0-20131210092515-f1a17fdd710b // indirect
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible // indirect
 	github.com/mholt/archiver/v3 v3.5.0
+	github.com/microcosm-cc/bluemonday v1.0.16 // indirect
 	github.com/mitchellh/mapstructure v1.4.1
 	github.com/mna/redisc v1.2.1
 	github.com/nats-io/nats-server/v2 v2.1.9 // indirect
-	github.com/nxadm/tail v1.4.5 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/rifflock/lfshook v0.0.0-20180920164130-b9218ef580f5
 	github.com/robfig/cron/v3 v3.0.1
@@ -72,15 +78,22 @@ require (
 	github.com/sirupsen/logrus v1.7.0
 	github.com/smartystreets/assertions v1.2.0 // indirect
 	github.com/snowlyg/gotransformer v0.1.0
-	github.com/tdewolff/parse/v2 v2.5.6 // indirect
+	github.com/swaggo/swag v1.7.4 // indirect
+	github.com/tdewolff/parse/v2 v2.5.22 // indirect
+	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4 // indirect
 	github.com/yudai/pp v2.0.1+incompatible // indirect
-	golang.org/x/crypto v0.0.0-20210616213533-5ff15b29337e
-	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110
-	golang.org/x/text v0.3.5
+	golang.org/x/crypto v0.0.0-20211108221036-ceb1ce70b4fa
+	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2
+	golang.org/x/sys v0.0.0-20211113001501-0c823b97ae02 // indirect
+	golang.org/x/text v0.3.7
+	golang.org/x/tools v0.1.7 // indirect
+	google.golang.org/genproto v0.0.0-20201110150050-8816d57aaa9a // indirect
+	google.golang.org/grpc v1.33.2 // indirect
+	gopkg.in/ini.v1 v1.64.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0
-	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
+	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 	gorm.io/driver/mysql v1.0.3
 	gorm.io/driver/postgres v1.1.0
 	gorm.io/driver/sqlite v1.1.4

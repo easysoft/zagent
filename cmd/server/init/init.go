@@ -23,6 +23,10 @@ import (
 	"time"
 
 	"github.com/kataras/iris/v12/context"
+
+	_ "github.com/easysoft/zagent/res/server/docs"
+	"github.com/iris-contrib/swagger"
+	"github.com/iris-contrib/swagger/swaggerFiles"
 )
 
 func Init(version string, printVersion, printRouter *bool) {
@@ -39,6 +43,18 @@ func Init(version string, printVersion, printRouter *bool) {
 	router.InitService.InitDataIfNeeded()
 
 	router.App()
+
+	config := swagger.Config{
+		URL:          "http://localhost:8085/swagger/doc.json",
+		DeepLinking:  true,
+		DocExpansion: "list",
+		DomID:        "#swagger-ui",
+		Prefix:       "/swagger",
+	}
+	swaggerUI := swagger.Handler(swaggerFiles.Handler, config)
+
+	irisServer.App.Get("/swagger", swaggerUI)
+	irisServer.App.Get("/swagger/{any:path}", swaggerUI)
 
 	if serverConf.Inst.Redis.Enable {
 		redisUtils.InitRedisCluster(serverConf.GetRedisUris(), serverConf.Inst.Redis.Pwd)
