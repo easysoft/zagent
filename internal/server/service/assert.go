@@ -1,10 +1,8 @@
 package serverService
 
 import (
-	"fmt"
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/comm/domain"
-	"github.com/easysoft/zagent/internal/pkg/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 	commonService "github.com/easysoft/zagent/internal/server/service/common"
@@ -23,24 +21,22 @@ func NewAssertService() *AssertService {
 	return &AssertService{}
 }
 
-func (s AssertService) RegisterHost(host domain.HostNode) (result _domain.RpcResp) {
+func (s AssertService) RegisterHost(host domain.HostNode) (result bool) {
 	po := model.HostFromDomain(host)
 	hostPo, err := s.HostRepo.Register(po)
-	if err != nil {
-		result.Fail(fmt.Sprintf("fail to register host %s ", host.Ip))
+	if err == nil {
+		result = true
 	}
 
 	s.updateVmsStatus(host, hostPo.ID)
 
-	result.Pass("")
-
 	return
 }
 
-func (s AssertService) RegisterVm(vmObj domain.Vm) (result _domain.RpcResp) {
+func (s AssertService) RegisterVm(vmObj domain.Vm) (result bool) {
 	vm, statusChanged, err := s.VmRepo.Register(vmObj)
-	if err != nil {
-		result.Fail(fmt.Sprintf("fail to register host %s ", vm.NodeIp))
+	if err == nil {
+		result = true
 	}
 
 	if statusChanged {
@@ -53,8 +49,6 @@ func (s AssertService) RegisterVm(vmObj domain.Vm) (result _domain.RpcResp) {
 		s.HistoryService.Create(consts.Vm, vm.ID, queue.ID, "", vm.Status.ToString())
 		s.WebSocketService.UpdateTask(queue.TaskId, "vm ready")
 	}
-
-	result.Pass("")
 
 	return
 }

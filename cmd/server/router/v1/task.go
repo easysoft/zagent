@@ -6,22 +6,24 @@ import (
 	"github.com/jinzhu/copier"
 )
 
-type Task struct {
-	BuildType consts.BuildType `json:"buildType" enums:"ztf,selenium,appium,unittest,interface"`
+type TaskReq struct {
+	ID uint `json:"id" extensions:"!x-omitempty"`
+
+	BuildType consts.BuildType `json:"buildType" example:"consts.BuildType"`
 	Priority  int              `json:"priority"`
 	GroupId   uint             `json:"groupId" swaggerignore:"true"`
 
 	IsDockerNative bool `json:"isDockerNative"`
 
-	Serials      string        `json:"serials"`                                // for appium test
-	Environments []Environment `json:"environments" gorm:"foreignKey:task_id"` // for selenium test
+	Serials      string        `json:"serials"`      // for appium test
+	Environments []Environment `json:"environments"` // for selenium test
 
 	ScriptUrl   string `json:"scriptUrl"`
 	ScmAddress  string `json:"scmAddress"`
 	ScmAccount  string `json:"scmAccount"`
 	ScmPassword string `json:"scmPassword"`
 
-	BrowserType    consts.BrowserType `json:"browserType" enums:"chrome,firefox,edge,ie"`
+	BrowserType    consts.BrowserType `json:"browserType" example:"consts.BrowserType"`
 	BrowserVersion string             `json:"browserVersion"`
 
 	AppUrl          string `json:"appUrl"`
@@ -31,7 +33,7 @@ type Task struct {
 	KeepResultFiles bool   `json:"keepResultFiles"`
 }
 
-func (src *Task) ToModel() (po model.Task, err error) {
+func (src *TaskReq) ToModel() (po model.Task, err error) {
 	copier.Copy(&po, &src)
 
 	return

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	_const "github.com/easysoft/zagent/internal/pkg/const"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/service"
@@ -20,10 +21,10 @@ func NewEnvironmentCtrl() *EnvironmentCtrl {
 func (c *EnvironmentCtrl) GetData(ctx iris.Context) {
 	model := model.Environment{}
 	if err := ctx.ReadJSON(&model); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
 	data := c.EnvironmentService.GetMap(model)
-	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "请求成功", data))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "请求成功", data))
 }

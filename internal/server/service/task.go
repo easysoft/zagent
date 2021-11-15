@@ -21,8 +21,8 @@ func NewTaskService() *TaskService {
 	return &TaskService{}
 }
 
-func (s *TaskService) List(keywords, status string, pageNo int, pageSize int) (pos []model.Task, total int64) {
-	pos, total = s.TaskRepo.Query(keywords, status, pageNo, pageSize)
+func (s *TaskService) List(keywords, disabled string, pageNo int, pageSize int) (pos []model.Task, total int64) {
+	pos, total = s.TaskRepo.Query(keywords, disabled, pageNo, pageSize)
 	return
 }
 

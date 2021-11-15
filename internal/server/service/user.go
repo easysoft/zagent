@@ -30,14 +30,13 @@ func NewUserService() *UserService {
 }
 
 // CheckLogin check login user
-func (s *UserService) CheckLogin(ctx iris.Context, u *model.User, password string) (*model.Token, int64, string) {
-
+func (s *UserService) CheckLogin(ctx iris.Context, u *model.User, password string) (*model.Token, bool, string) {
 	if u.ID == 0 {
-		return nil, 400, "用户不存在"
+		return nil, false, "用户不存在"
 	} else {
 		uid := strconv.FormatUint(uint64(u.ID), 10)
 		if serverConf.Inst.Redis.Enable && s.TokenRepo.IsUserTokenOver(uid) {
-			return nil, 400, "已达到同时登录设备上限"
+			return nil, false, "已达到同时登录设备上限"
 		}
 		if ok := bcrypt.Match(password, u.Password); ok {
 			token := jwt.NewTokenWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -60,18 +59,18 @@ func (s *UserService) CheckLogin(ctx iris.Context, u *model.User, password strin
 				defer conn.Close()
 
 				if err := s.TokenRepo.CacheToRedis(conn, cred, tokenStr); err != nil {
-					return nil, 400, err.Error()
+					return nil, false, err.Error()
 				}
 				if err := s.TokenRepo.SyncUserTokenCache(conn, cred, tokenStr); err != nil {
-					return nil, 400, err.Error()
+					return nil, false, err.Error()
 				}
 			} else {
 				jwt2.SaveCredentials(ctx, &cred)
 			}
 
-			return &model.Token{Token: tokenStr}, 200, "登录成功"
+			return &model.Token{Token: tokenStr}, true, "登录成功"
 		} else {
-			return nil, 400, "用户名或密码错误"
+			return nil, false, "用户名或密码错误"
 		}
 	}
 }
