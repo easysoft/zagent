@@ -9,3 +9,4 @@
 /res/server/res.go
 /down/upload/*
 /cmd/test/_const/const.go
+/res/*/docs/
