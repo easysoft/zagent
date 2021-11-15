@@ -53,19 +53,12 @@ func (c *TaskCtrl) List(ctx iris.Context) {
 		projects, pageNo, pageSize, total))
 }
 
-func (c *TaskCtrl) ListForSelect(ctx iris.Context) {
-	projects, _ := c.TaskService.List("", "", 0, 0)
-
-	data := map[string]interface{}{}
-	data["projects"] = projects
-
-	projectId := jwt.Get(ctx, "projectId")
-	data["projects"] = projects
-	data["projectId"] = projectId
-
-	_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "请求成功", data))
-}
-
+// Get
+// @summary 获取测试任务
+// @Produce json
+// @Param id path int true "Task Id"
+// @Success 200 {object} _httpUtils.Response{data=model.Task} "code = success? 1 : 0"
+// @Router /api/v1/client/task/{id} [get]
 func (c *TaskCtrl) Get(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
@@ -119,6 +112,13 @@ func (c *TaskCtrl) Create(ctx iris.Context) {
 	return
 }
 
+// Update
+// @summary 更新测试任务
+// @Accept json
+// @Produce json
+// @Param task body v1.TaskReq true "Task Object"
+// @Success 200 {object} _httpUtils.Response{data=model.Task} "code = success? 1 : 0"
+// @Router /api/v1/client/task/create [put]
 func (c *TaskCtrl) Update(ctx iris.Context) {
 	model := model.Task{}
 	if err := ctx.ReadJSON(&model); err != nil {
@@ -135,17 +135,13 @@ func (c *TaskCtrl) Update(ctx iris.Context) {
 	_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "操作成功", model))
 }
 
-func (c *TaskCtrl) Disable(ctx iris.Context) {
-	id, err := ctx.Params().GetInt("id")
-	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
-		return
-	}
-
-	c.TaskService.Disable(uint(id))
-	_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "操作成功", ""))
-}
-
+// Delete
+// @summary 删除测试任务
+// @Accept json
+// @Produce json
+// @Param id path int true "Task Id"
+// @Success 200 {object} _httpUtils.Response "code = success? 1 : 0"
+// @Router /api/v1/client/task/{id} [delete]
 func (c *TaskCtrl) Delete(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
