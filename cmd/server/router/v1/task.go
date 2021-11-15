@@ -33,6 +33,11 @@ type TaskReq struct {
 	KeepResultFiles bool   `json:"keepResultFiles"`
 }
 
+type TaskResp struct {
+	Task           model.Task     `json:"data"`
+	BuildHistories []BuildHistory `json:"buildHistories"`
+}
+
 func (src *TaskReq) ToModel() (po model.Task, err error) {
 	copier.Copy(&po, &src)
 

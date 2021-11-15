@@ -15,11 +15,11 @@ var (
 	Inst = Config{}
 )
 
-func Init() {
+func Init(app string) {
 	if Inst.Language == "" {
 		Inst.Language = "zh"
 	}
-	_i118Utils.InitI118(Inst.Language, consts.AppNameAgent)
+	_i118Utils.InitI118(Inst.Language, app)
 
 	Inst.Server = _httpUtils.UpdateUrl(Inst.Server)
 

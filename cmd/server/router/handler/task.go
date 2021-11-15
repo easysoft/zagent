@@ -57,7 +57,7 @@ func (c *TaskCtrl) List(ctx iris.Context) {
 // @summary 获取测试任务
 // @Produce json
 // @Param id path int true "Task Id"
-// @Success 200 {object} _httpUtils.Response{data=model.Task} "code = success? 1 : 0"
+// @Success 200 {object} _httpUtils.Response{data=v1.TaskResp} "code = success? 1 : 0"
 // @Router /api/v1/client/task/{id} [get]
 func (c *TaskCtrl) Get(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
@@ -69,8 +69,8 @@ func (c *TaskCtrl) Get(ctx iris.Context) {
 	task := c.TaskService.GetDetail(uint(id))
 	buildHistories := c.HistoryService.GetBuildHistoriesByTask(task.ID)
 
-	mp := map[string]interface{}{"task": task, "buildHistories": buildHistories}
-	_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "操作成功", mp))
+	result := v1.TaskResp{Task: task, BuildHistories: buildHistories}
+	_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "操作成功", result))
 	return
 }
 

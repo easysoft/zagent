@@ -36,13 +36,10 @@ func (r *Router) App() {
 			})
 			v1.PartyFunc("/kvm", func(client iris.Party) {
 				client.Post("/create", r.KvmCtrl.Create).Name = "创建虚机"
-				client.Post("/destroy", r.KvmCtrl.Destroy).Name = "摧毁虚机"
-				client.Post("/boot", r.KvmCtrl.Boot).Name = "启动虚机"
-				client.Post("/shutdown", r.KvmCtrl.Shutdown).Name = "关闭虚机"
-				client.Post("/reboot", r.KvmCtrl.Reboot).Name = "重启虚机"
-				client.Post("/suspend", r.KvmCtrl.Suspend).Name = "暂停虚机"
-				client.Post("/resume", r.KvmCtrl.Resume).Name = "恢复虚机"
-
+				client.Post("/{name:string}/destroy", r.KvmCtrl.Destroy).Name = "摧毁虚机"
+				client.Post("/{name:string}/reboot", r.KvmCtrl.Reboot).Name = "重启虚机"
+				client.Post("/{name:string}/suspend", r.KvmCtrl.Suspend).Name = "暂停虚机"
+				client.Post("/{name:string}/resume", r.KvmCtrl.Resume).Name = "恢复虚机"
 			})
 			v1.PartyFunc("/vmware", func(client iris.Party) {
 				client.Post("/create", r.VmWareCtrl.Create).Name = "创建虚机"

@@ -5,6 +5,10 @@ const (
 	AppNameAgent  = "agent"
 	AppNameServer = "serve"
 
+	AppNameAgentHost = "agent-host"
+
+	AppNameAgentVm = "agent-vm"
+
 	AgentCheckInterval = 15 // sec
 	WebCheckInterval   = 60 // sec
 

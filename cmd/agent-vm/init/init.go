@@ -5,18 +5,23 @@ import (
 	vmCron "github.com/easysoft/zagent/cmd/agent-vm/cron"
 	vmRouter "github.com/easysoft/zagent/cmd/agent-vm/router"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
+	consts "github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/pkg/db"
 	_commonUtils "github.com/easysoft/zagent/internal/pkg/lib/common"
 	serverConf "github.com/easysoft/zagent/internal/server/conf"
 	"github.com/facebookgo/inject"
+	"github.com/iris-contrib/swagger"
+	"github.com/iris-contrib/swagger/swaggerFiles"
 	"github.com/kataras/iris/v12"
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"time"
+
+	_ "github.com/easysoft/zagent/res/agent-vm/docs"
 )
 
 func Init() {
-	agentConf.Init()
+	agentConf.Init(consts.AppNameAgentVm)
 	_db.InitDB("agent")
 
 	irisServer := NewServer(nil)
@@ -26,6 +31,18 @@ func Init() {
 	injectObj(router)
 
 	router.App()
+
+	// swagger api docs
+	config := swagger.Config{
+		URL:          "http://localhost:8086/swagger/doc.json",
+		DeepLinking:  true,
+		DocExpansion: "list",
+		DomID:        "#swagger-ui",
+		Prefix:       "/swagger",
+	}
+	swaggerUI := swagger.Handler(swaggerFiles.Handler, config)
+	irisServer.App.Get("/swagger", swaggerUI)
+	irisServer.App.Get("/swagger/{any:path}", swaggerUI)
 
 	iris.RegisterOnInterrupt(func() {
 		defer _db.GetInst().Close()

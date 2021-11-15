@@ -25,3 +25,5 @@ sudo systemctl disable zagent.service
 
 swag init -d cmd/server -o res/server/docs
 swag init --parseDependency --parseInternal --parseDepth 3 -d cmd/server -o res/server/docs
+swag init --parseDependency --parseInternal --parseDepth 3 -d cmd/agent-host -o res/agent-host/docs
+swag init --parseDependency --parseInternal --parseDepth 3 -d cmd/agent-vm -o res/agent-vm/docs
