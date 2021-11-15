@@ -1,16 +1,9 @@
 package commonService
 
 import (
-	"bytes"
-	"fmt"
 	"github.com/easysoft/zagent/internal/comm/domain"
 	"github.com/easysoft/zagent/internal/pkg/domain"
-	"github.com/easysoft/zagent/internal/pkg/lib/log"
 	"github.com/easysoft/zagent/internal/server/model"
-	"github.com/rpcx-ecosystem/rpcx-gateway"
-	"github.com/smallnest/rpcx/codec"
-	"io/ioutil"
-	"net/http"
 )
 
 type RpcService struct {
@@ -75,52 +68,52 @@ func (s RpcService) DestroyVmWare(hostIp string, hostPort int, req domain.VmWare
 func (s RpcService) Request(ip string, port int, apiPath string, method string, param *interface{}) (
 	rpcResult _domain.RpcResp) {
 
-	cc := &codec.MsgpackCodec{}
-
-	data, _ := cc.Encode(param)
-	url := fmt.Sprintf("http://%s:%d/", ip, port)
-	req, err := http.NewRequest("POST", url, bytes.NewReader(data))
-	if err != nil {
-		msg := fmt.Sprintf("Fail to create request: %s", err.Error())
-		_logUtils.Errorf(msg)
-		rpcResult.Fail(msg)
-		return
-	}
-
-	// 设置header
-	h := req.Header
-	h.Set(gateway.XServicePath, apiPath)
-	h.Set(gateway.XServiceMethod, method)
-	h.Set(gateway.XMessageID, "10000")
-	h.Set(gateway.XMessageType, "0")
-	h.Set(gateway.XSerializeType, "3")
-
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		msg := fmt.Sprintf("fail to call, err: %s", err.Error())
-		_logUtils.Errorf(msg)
-		rpcResult.Fail(msg)
-		return
-	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		msg := fmt.Sprintf("fail to read response, err: %s", err.Error())
-		_logUtils.Errorf(msg)
-		rpcResult.Fail(msg)
-
-	}
-
-	err = cc.Decode(body, &rpcResult)
-	if err != nil {
-		msg := fmt.Sprintf("fail to decode reply, err: %s", err.Error())
-		_logUtils.Errorf(msg)
-		rpcResult.Fail(msg)
-	}
-
-	msg := fmt.Sprintf("agent return %d-%s.", rpcResult.Code, rpcResult.Msg)
-	_logUtils.Info(msg)
+	//cc := &codec.MsgpackCodec{}
+	//
+	//data, _ := cc.Encode(param)
+	//url := fmt.Sprintf("http://%s:%d/", ip, port)
+	//req, err := http.NewRequest("POST", url, bytes.NewReader(data))
+	//if err != nil {
+	//	msg := fmt.Sprintf("Fail to create request: %s", err.Error())
+	//	_logUtils.Errorf(msg)
+	//	rpcResult.Fail(msg)
+	//	return
+	//}
+	//
+	//// 设置header
+	//h := req.Header
+	//h.Set(gateway.XServicePath, apiPath)
+	//h.Set(gateway.XServiceMethod, method)
+	//h.Set(gateway.XMessageID, "10000")
+	//h.Set(gateway.XMessageType, "0")
+	//h.Set(gateway.XSerializeType, "3")
+	//
+	//resp, err := http.DefaultClient.Do(req)
+	//if err != nil {
+	//	msg := fmt.Sprintf("fail to call, err: %s", err.Error())
+	//	_logUtils.Errorf(msg)
+	//	rpcResult.Fail(msg)
+	//	return
+	//}
+	//defer resp.Body.Close()
+	//
+	//body, err := ioutil.ReadAll(resp.Body)
+	//if err != nil {
+	//	msg := fmt.Sprintf("fail to read response, err: %s", err.Error())
+	//	_logUtils.Errorf(msg)
+	//	rpcResult.Fail(msg)
+	//
+	//}
+	//
+	//err = cc.Decode(body, &rpcResult)
+	//if err != nil {
+	//	msg := fmt.Sprintf("fail to decode reply, err: %s", err.Error())
+	//	_logUtils.Errorf(msg)
+	//	rpcResult.Fail(msg)
+	//}
+	//
+	//msg := fmt.Sprintf("agent return %d-%s.", rpcResult.Code, rpcResult.Msg)
+	//_logUtils.Info(msg)
 
 	return
 }

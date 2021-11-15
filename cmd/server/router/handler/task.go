@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	v1 "github.com/easysoft/zagent/cmd/server/router/v1"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
@@ -69,19 +70,28 @@ func (c *TaskCtrl) Get(ctx iris.Context) {
 	return
 }
 
+// Create
+// @summary 创建测试任务
+// @Description
+// @Accept json
+// @Produce json
+// @Param task body v1.Task true "task object"
+// Success 200 {object} _httpUtils.Response
+// Failure 500 {object} _httpUtils.Response
+// @Router /api/v1/client/task/create [post]
 func (c *TaskCtrl) Create(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
 
-	model := model.Task{}
-	if err := ctx.ReadJSON(&model); err != nil {
+	req := v1.Task{}
+	if err := ctx.ReadJSON(&req); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
 
-	jsn, _ := json.Marshal(model)
+	jsn, _ := json.Marshal(req)
 	_logUtils.Infof(string(jsn))
 
-	if c.Validate(model, ctx) {
+	if c.Validate(req, ctx) {
 		return
 	}
 
@@ -91,13 +101,14 @@ func (c *TaskCtrl) Create(ctx iris.Context) {
 		userId = _stringUtils.ParseUint(cred.UserId)
 	}
 
-	err := c.TaskService.Save(&model, userId)
+	po, _ := req.ToModel()
+	err := c.TaskService.Save(&po, userId)
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "操作失败", nil))
 		return
 	}
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "操作成功", model))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "操作成功", po))
 	return
 }
 
