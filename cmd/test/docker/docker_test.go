@@ -13,7 +13,7 @@ func TestDocker(t *testing.T) {
 
 	agentConf.Inst.Host = "192.168.kvm6"
 	agentConf.Inst.User = "aaron"
-	agentConf.Init()
+	agentConf.Init(consts.AppNameAgentHost)
 
 	service := hostKvmService.NewDockerService()
 

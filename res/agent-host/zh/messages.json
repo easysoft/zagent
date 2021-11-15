@@ -1,0 +1,61 @@
+{
+  "language": "zh",
+  "messages": [
+    {
+      "id": "usage",
+      "translation": "使用指南："
+    },
+    {
+      "id": "success_to_register",
+      "translation": "注册成功%s。"
+    },
+    {
+      "id": "fail_to_register",
+      "translation": "注册失败%s，响应%v。"
+    },
+    {
+      "id": "start_server",
+      "translation": "启动服务器%s 。。。"
+    },
+    {
+      "id": "fail_to_start_server",
+      "translation": "启动服务器失败%s，错误%s。"
+    },
+    {
+      "id": "fail_to_init_db",
+      "translation": "初始化DB失败%s，错误%s。"
+    },
+    {
+      "id": "fail_to_zip_test_result",
+      "translation": "压缩测试结果失败，目标'%s'，目录%s，文件'%s'，错误%#v。"
+    },
+    {
+      "id": "fail_to_upload_files",
+      "translation": "上传文件失败，错误%s。"
+    },
+    {
+      "id": "fail_to_parse_upload_response",
+      "translation": "解析上传文件响应失败，错误%s。"
+    },
+    {
+      "id": "upload_status",
+      "translation": "上传状态%s，响应%s。"
+    },
+    {
+      "id": "file_downloaded",
+      "translation": "文件下载成功%s。"
+    },
+    {
+      "id": "file_download_saved",
+      "translation": "下载的文件%s保存为%s。"
+    },
+    {
+      "id": "fail_to_exec_command",
+      "translation": "执行命令失败`%s`，文件夹`%s`，错误`%#v`。"
+    },
+    {
+      "id": "wrong_response_format",
+      "translation": "错误的响应格式'%s'。"
+    }
+  ]
+}

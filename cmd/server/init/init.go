@@ -44,6 +44,7 @@ func Init(version string, printVersion, printRouter *bool) {
 
 	router.App()
 
+	// swagger api docs
 	config := swagger.Config{
 		URL:          "http://localhost:8085/swagger/doc.json",
 		DeepLinking:  true,
@@ -52,7 +53,6 @@ func Init(version string, printVersion, printRouter *bool) {
 		Prefix:       "/swagger",
 	}
 	swaggerUI := swagger.Handler(swaggerFiles.Handler, config)
-
 	irisServer.App.Get("/swagger", swaggerUI)
 	irisServer.App.Get("/swagger/{any:path}", swaggerUI)
 

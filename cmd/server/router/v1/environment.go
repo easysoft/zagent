@@ -7,7 +7,4 @@ type Environment struct {
 	OsType     consts.OsType     `json:"osType"`
 	OsVersion  string            `json:"osVersion"`
 	OsLang     consts.OsLang     `json:"osLang"`
-
-	ImageName string `json:"imageName"`
-	ImageSrc  string `json:"imageSrc"`
 }

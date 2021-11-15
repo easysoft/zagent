@@ -20,6 +20,11 @@ var (
 	runMode string
 )
 
+// @title ZAgent虚拟机API文档
+// @version 1.0
+// @contact.name API Support
+// @contact.url https://github.com/easysoft/zagent/issues
+// @contact.email 462626@qq.com
 func main() {
 	channel := make(chan os.Signal)
 	signal.Notify(channel, os.Interrupt, syscall.SIGTERM)

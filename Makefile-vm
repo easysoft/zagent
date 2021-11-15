@@ -20,7 +20,7 @@ mac: prepare_res compile_mac copy_files package
 
 prepare_res:
 	@echo 'start prepare res'
-	@go-bindata -o=res/agent/res.go -pkg=agentRes res/agent/...
+	@go-bindata -o=res/agent-vm/res.go -pkg=agentRes res/agent-vm/...
 	@rm -rf ${BIN_DIR}
 
 compile_all: compile_win64 compile_win32 compile_linux compile_mac

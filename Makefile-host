@@ -14,7 +14,7 @@ linux: prepare_res compile_linux copy_files package
 
 prepare_res:
 	@echo 'start prepare res'
-	@go-bindata -o=res/agent/res.go -pkg=agentRes res/agent/...
+	@go-bindata -o=res/agent-host/res.go -pkg=agentRes res/agent-host/...
 	@rm -rf ${BIN_DIR}
 
 compile_all: compile_linux

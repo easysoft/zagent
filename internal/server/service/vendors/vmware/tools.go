@@ -74,7 +74,7 @@ func GetNameDescription(path string) (name, desc string, err error) {
 		return
 	}
 
-	log.Printf("[WSAPICLI] Fi: wsapitools.go Fu: GetNameDescription Obj: Data File %#v\n", string(data))
+	log.Printf("[WSAPICLI] Fi: wsapitools.go Fu: GetNameDescription Obj: Task File %#v\n", string(data))
 
 	vm := new(vmx.VirtualMachine)
 	err = vmx.Unmarshal(data, vm)
@@ -111,7 +111,7 @@ func SetNameDescription(path string, name string, desc string) error {
 	vm.DisplayName = name
 	vm.Annotation = desc
 	data, err = vmx.Marshal(vm)
-	log.Printf("[WSAPICLI] Fi: wsapitools.go Fu: SetNameDescription Obj: Data File %#v\n", string(data))
+	log.Printf("[WSAPICLI] Fi: wsapitools.go Fu: SetNameDescription Obj: Task File %#v\n", string(data))
 	err = ioutil.WriteFile(path, data, 0644)
 	if err != nil {
 		log.Fatalf("[WSAPICLI] Fi: wsapitools.go Fu: SetNameDescription Message: Failed writing in file %s, please make sure the config file exists", err)

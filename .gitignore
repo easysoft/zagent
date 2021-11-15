@@ -2,7 +2,7 @@
 *.log
 /zagent.db
 /bin/
-/res/agent/res.go
+/res/agent-vm/res.go
 /log/
 /cmd/test/log/
 /*.db

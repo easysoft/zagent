@@ -12,7 +12,7 @@ func TestLibVirt(t *testing.T) {
 
 	agentConf.Inst.Host = "192.168.0.56"
 	agentConf.Inst.User = "aaron"
-	agentConf.Init()
+	agentConf.Init(consts.AppNameAgentHost)
 
 	//service := hostKvmService.NewLibvirtService()
 
