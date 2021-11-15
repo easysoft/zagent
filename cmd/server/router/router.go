@@ -65,8 +65,10 @@ func (r *Router) App() {
 		{
 			v1.PartyFunc("/client", func(client iris.Party) {
 				client.PartyFunc("/task", func(party iris.Party) {
-					party.Post("/list", r.TaskCtrl.List).Name = "列出任务接口"
-					party.Post("/create", r.TaskCtrl.Create).Name = "创建任务接口"
+					party.Post("/list", r.TaskCtrl.List).Name = "列出任务"
+					party.Post("/create", r.TaskCtrl.Create).Name = "创建任务"
+					party.Put("/{id:uint}", r.TaskCtrl.Update).Name = "更新任务"
+					party.Delete("/{id:uint}", r.TaskCtrl.Delete).Name = "删除任务"
 				})
 
 				client.PartyFunc("/host", func(party iris.Party) {
