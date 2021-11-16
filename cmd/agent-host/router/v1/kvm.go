@@ -22,11 +22,10 @@ type KvmReq struct {
 	StartAfterCreated bool `json:"startAfterCreated"`
 }
 
-type KvmResponse struct {
-	Code       int    `json:"code"`
-	Msg        int    `json:"msg"`
-	Name       string `json:"name"`
-	VncAddress string `json:"vncAddress"`
-	Path       string `json:"path"`
-	Mac        string `json:"mac"`
+type KvmResp struct {
+	Name        string `json:"name"`
+	MacAddress  string `json:"macAddress"`
+	VncPort     string `json:"vncPort"`
+	ImagePath   string `json:"imagePath"`
+	BackingPath string `json:"backingPath"`
 }

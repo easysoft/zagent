@@ -6,8 +6,10 @@ const (
 	AppNameServer = "serve"
 
 	AppNameAgentHost = "agent-host"
+	AppNameAgentVm   = "agent-vm"
 
-	AppNameAgentVm = "agent-vm"
+	ServerPort = 8085
+	AgentPort  = 8086
 
 	AgentCheckInterval = 15 // sec
 	WebCheckInterval   = 60 // sec

@@ -1,9 +1,9 @@
 package handler
 
 import (
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	_const "github.com/easysoft/zagent/internal/pkg/const"
-	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
+	"github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/pkg/const"
+	"github.com/easysoft/zagent/internal/pkg/lib/http"
 	"github.com/easysoft/zagent/internal/server/service"
 	"github.com/kataras/iris/v12"
 )
@@ -19,7 +19,7 @@ func NewVmCtrl() *VmCtrl {
 }
 
 func (c *VmCtrl) Register(ctx iris.Context) {
-	model := commDomain.Vm{}
+	model := domain.Vm{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
 		return

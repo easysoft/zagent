@@ -1,9 +1,9 @@
 package vmHandler
 
 import (
-	agentService "github.com/easysoft/zagent/internal/agent/service"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
+	"github.com/easysoft/zagent/internal/agent/service"
+	"github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/pkg/lib/http"
 	"github.com/kataras/iris/v12"
 )
 
@@ -15,10 +15,15 @@ func NewJobCtrl() *JobCtrl {
 	return &JobCtrl{}
 }
 
+// Add
+// @summary 创建任务
+// @Accept json
+// @Produce json
+// @Param task body domain.Build true "Build Request Object"
+// @Success 200 {object} _httpUtils.Response{} "code = success? 1 : 0"
+// @Router /api/v1/vmware/create [post]
 func (c *JobCtrl) Add(ctx iris.Context) {
-	ctx.StatusCode(iris.StatusOK)
-
-	build := commDomain.Build{}
+	build := domain.Build{}
 	if err := ctx.ReadJSON(&build); err != nil {
 		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return

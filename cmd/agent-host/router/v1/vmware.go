@@ -1,12 +1,12 @@
-package domain
+package v1
 
 type VmWareReq struct {
-	VmId         string `json:"vmId"` // for destroy
-	BackingName  string `json:"backingName"`
-	VmUniqueName string `json:"vmName"`
+	VmId          string `json:"vmId"` // for destroy
+	VmUniqueName  string `json:"vmName"`
+	VmBackingName string `json:"VmBackingName"`
 
-	Processors uint `json:"processors"`
-	Memory     uint `json:"memory"`
+	VmProcessors uint `json:"vmProcessors"`
+	VmMemory     uint `json:"vmMemory"`
 
 	UserName string `json:"userName"`
 	Password string `json:"password"`
