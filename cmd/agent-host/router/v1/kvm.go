@@ -14,10 +14,10 @@ type KvmReq struct {
 	VmCdromSys    string `json:"vmCdromSys"`
 	VmCdromDriver string `json:"vmCdromDriver"`
 
-	OsCategory consts.OsCategory `json:"osCategory"`
-	OsType     consts.OsType     `json:"osType"`
+	OsCategory consts.OsCategory `json:"osCategory" example:"windows"` // Enums consts.OsCategory
+	OsType     consts.OsType     `json:"osType" example:"win10"`       // Enums consts.OsType
 	OsVersion  string            `json:"osVersion"`
-	OsLang     consts.OsLang     `json:"osLang"`
+	OsLang     consts.OsLang     `json:"osLang" example:"zh_cn"` // Enums consts.OsLang
 
 	StartAfterCreated bool `json:"startAfterCreated"`
 }
