@@ -2,6 +2,7 @@ package v1
 
 import (
 	"github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/jinzhu/copier"
 )
@@ -9,7 +10,7 @@ import (
 type TaskReq struct {
 	ID uint `json:"id" extensions:"!x-omitempty"`
 
-	BuildType consts.BuildType `json:"buildType" example:"consts.BuildType"`
+	BuildType consts.BuildType `json:"buildType" example:"selenium"` // Enums consts.BuildType
 	Priority  int              `json:"priority"`
 	GroupId   uint             `json:"groupId" swaggerignore:"true"`
 
@@ -23,7 +24,7 @@ type TaskReq struct {
 	ScmAccount  string `json:"scmAccount"`
 	ScmPassword string `json:"scmPassword"`
 
-	BrowserType    consts.BrowserType `json:"browserType" example:"consts.BrowserType"`
+	BrowserType    consts.BrowserType `json:"browserType" example:"chrome"` // Enums consts.BrowserType
 	BrowserVersion string             `json:"browserVersion"`
 
 	AppUrl          string `json:"appUrl"`
@@ -34,8 +35,8 @@ type TaskReq struct {
 }
 
 type TaskResp struct {
-	Task           model.Task     `json:"data"`
-	BuildHistories []BuildHistory `json:"buildHistories"`
+	Task           model.Task            `json:"data"`
+	BuildHistories []domain.BuildHistory `json:"buildHistories"`
 }
 
 func (src *TaskReq) ToModel() (po model.Task, err error) {
