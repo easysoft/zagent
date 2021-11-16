@@ -12,11 +12,11 @@ type Queue struct {
 	Serial   string `json:"serial"`
 	VmId     uint   `json:"vmId"`
 
-	BuildType      consts.BuildType   `json:"buildType"`
-	OsCategory     consts.OsCategory  `json:"osCategory"`
-	OsType         consts.OsType      `json:"osType"`
-	OsLang         consts.OsLang      `json:"osLang"`
-	BrowserType    consts.BrowserType `json:"browserType"`
+	BuildType      consts.BuildType   `json:"buildType" example:"selenium"` // Enums consts.BuildType
+	OsCategory     consts.OsCategory  `json:"osCategory" example:"windows"` // Enums consts.OsCategory
+	OsType         consts.OsType      `json:"osType" example:"win10"`       // Enums consts.OsType
+	OsLang         consts.OsLang      `json:"osLang" example:"zh_cn"`       // Enums consts.OsLang
+	BrowserType    consts.BrowserType `json:"browserType example:"chrome"`  // Enums consts.BrowserType
 	BrowserVersion string             `json:"browserVersion"`
 	DockerImage    string             `json:"dockerImage"`
 
@@ -31,8 +31,8 @@ type Queue struct {
 	ResultFiles     string `json:"resultFiles"`
 	KeepResultFiles bool   `json:"keepResultFiles"`
 
-	Progress consts.BuildProgress `json:"progress"`
-	Status   consts.BuildStatus   `json:"status"`
+	Progress consts.BuildProgress `json:"progress" example:"created"` // Enums consts.BuildProgress
+	Status   consts.BuildStatus   `json:"status" example:"pass"`      // Enums consts.BuildStatus
 
 	Retry int `json:"retry" gorm:"default:0"`
 

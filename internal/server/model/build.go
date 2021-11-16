@@ -12,7 +12,7 @@ type Build struct {
 	QueueId uint `json:"queueId"`
 	VmId    uint `json:"vmId"`
 
-	BuildType consts.BuildType `json:"buildType"`
+	BuildType consts.BuildType `json:"buildType" example:"selenium"` // Enums consts.BuildType
 
 	Serial   string `json:"serial"`
 	Priority int    `json:"priority"`
@@ -20,7 +20,7 @@ type Build struct {
 	NodePort int    `json:"nodePort"`
 
 	AppiumPort     int                `json:"appiumPort"`
-	BrowserType    consts.BrowserType `json:"browserType"`
+	BrowserType    consts.BrowserType `json:"browserType example:"chrome"` // Enums consts.BrowserType
 	BrowserVersion string             `json:"browserVersion"`
 
 	ScriptUrl   string `json:"scriptUrl"`
@@ -40,8 +40,8 @@ type Build struct {
 	ResultPath string `json:"resultPath"`
 	ResultMsg  string `json:"resultMsg"`
 
-	Progress consts.BuildProgress `json:"progress"`
-	Status   consts.BuildStatus   `json:"status"`
+	Progress consts.BuildProgress `json:"progress" example:"created"` // Enums consts.BuildProgress
+	Status   consts.BuildStatus   `json:"status" example:"pass"`      // Enums consts.BuildStatus
 
 	Histories []History `json:"histories" gorm:"polymorphic:Owner;polymorphicValue:build"`
 }

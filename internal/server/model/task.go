@@ -11,7 +11,7 @@ type Task struct {
 	Name string `json:"name"`
 	Desc string `json:"desc"`
 
-	BuildType      consts.BuildType `json:"buildType"`
+	BuildType      consts.BuildType `json:"buildType" example:"selenium"` // Enums consts.BuildType
 	IsDockerNative bool             `json:"isDockerNative"`
 	Priority       int              `json:"priority"`
 	Serials        string           `json:"serials"`                                // for appium test
@@ -22,7 +22,7 @@ type Task struct {
 	ScmAccount  string `json:"scmAccount"`
 	ScmPassword string `json:"scmPassword"`
 
-	BrowserType    consts.BrowserType `json:"browserType"`
+	BrowserType    consts.BrowserType `json:"browserType example:"chrome"` // Enums consts.BrowserType
 	BrowserVersion string             `json:"browserVersion"`
 
 	AppUrl          string `json:"appUrl"`
@@ -31,8 +31,8 @@ type Task struct {
 	ResultFiles     string `json:"resultFiles"`
 	KeepResultFiles bool   `json:"keepResultFiles"`
 
-	Progress consts.BuildProgress `json:"progress"`
-	Status   consts.BuildStatus   `json:"status"`
+	Progress consts.BuildProgress `json:"progress" example:"created"` // Enums consts.BuildProgress
+	Status   consts.BuildStatus   `json:"status" example:"pass"`      // Enums consts.BuildStatus
 
 	StartTime   *time.Time `json:"startTime"`
 	EndTime     *time.Time `json:"endTime"`
@@ -42,9 +42,8 @@ type Task struct {
 	UserId   uint   `json:"userId"`
 	GroupId  uint   `json:"groupId"`
 
-	Queues []Queue `json:"queues" gorm:"-"`
-
-	Histories []History `json:"histories" gorm:"polymorphic:Owner;polymorphicValue:task"`
+	Queues    []Queue   `json:"queues" gorm:"-" swaggerignore:"true"`
+	Histories []History `json:"histories" gorm:"polymorphic:Owner;polymorphicValue:task" swaggerignore:"true"`
 }
 
 func NewTask() Task {
