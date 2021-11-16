@@ -2,11 +2,11 @@
 *.log
 /zagent.db
 /bin/
-/res/agent-vm/res.go
+
 /log/
 /cmd/test/log/
 /*.db
-/res/server/res.go
 /down/upload/*
 /cmd/test/_const/const.go
 /res/*/docs/
+/res/*/res.go
