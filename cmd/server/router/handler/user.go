@@ -1,10 +1,10 @@
 package handler
 
 import (
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	_const "github.com/easysoft/zagent/internal/pkg/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/lib/convertor"
-	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
+	"github.com/easysoft/zagent/internal/pkg/lib/http"
 	"github.com/easysoft/zagent/internal/server/biz/jwt"
 	"github.com/easysoft/zagent/internal/server/biz/transformer"
 	"github.com/easysoft/zagent/internal/server/biz/validate"
@@ -49,8 +49,8 @@ func (c *UserCtrl) GetProfile(ctx iris.Context) {
 	}
 
 	idInt, _ := strconv.Atoi(cred.UserId)
-	s := &commDomain.Search{
-		Fields: []*commDomain.Filed{
+	s := &domain.Search{
+		Fields: []*domain.Filed{
 			{
 				Key:       "id",
 				Condition: "=",

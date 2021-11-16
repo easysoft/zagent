@@ -3,7 +3,6 @@ package hostHandler
 import (
 	v1 "github.com/easysoft/zagent/cmd/agent-host/router/v1"
 	hostKvmService "github.com/easysoft/zagent/internal/agent-host/service/kvm"
-	"github.com/easysoft/zagent/internal/comm/domain"
 	_const "github.com/easysoft/zagent/internal/pkg/const"
 	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
 	"github.com/kataras/iris/v12"
@@ -24,7 +23,7 @@ func NewKvmCtrl() *KvmCtrl {
 // @Accept json
 // @Produce json
 // @Param task body v1.KvmReq true "Kvm Request Object"
-// @Success 200 {object} _httpUtils.Response{data=domain.Vm} "code = success? 1 : 0"
+// @Success 200 {object} _httpUtils.Response{data=v1.KvmResp} "code = success? 1 : 0"
 // @Router /api/v1/kvm/create [post]
 func (c *KvmCtrl) Create(ctx iris.Context) {
 	req := v1.KvmReq{}
@@ -41,8 +40,9 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 	}
 
 	vmName, _ := dom.GetName()
-	vm := domain.Vm{
+	vm := v1.KvmResp{
 		Name:        vmName,
+		MacAddress:  req.VmMacAddress,
 		VncPort:     strconv.Itoa(vmVncPort),
 		ImagePath:   vmRawPath,
 		BackingPath: vmBackingPath,

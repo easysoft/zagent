@@ -2,18 +2,18 @@ package net
 
 import (
 	"encoding/json"
-	consts "github.com/easysoft/zagent/internal/comm/const"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	_fileUtils "github.com/easysoft/zagent/internal/pkg/lib/file"
-	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	"github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/pkg/lib/file"
+	"github.com/easysoft/zagent/internal/pkg/lib/http"
+	"github.com/easysoft/zagent/internal/pkg/lib/log"
 	"testing"
 )
 
 func TestUpload(t *testing.T) {
 	_logUtils.Init(consts.AppNameAgent)
-	result := commDomain.TestResult{Name: "Result Name"}
-	build := commDomain.Build{ID: 100, Name: "Result Name"}
+	result := domain.TestResult{Name: "Result Name"}
+	build := domain.Build{ID: 100, Name: "Result Name"}
 
 	zipFile := "/Users/aaron/testResult.zip"
 

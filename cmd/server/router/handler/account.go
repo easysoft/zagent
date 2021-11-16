@@ -1,10 +1,10 @@
 package handler
 
 import (
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	_const "github.com/easysoft/zagent/internal/pkg/const"
-	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
-	bizConst "github.com/easysoft/zagent/internal/server/biz/const"
+	"github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zagent/internal/pkg/const"
+	"github.com/easysoft/zagent/internal/pkg/lib/http"
+	"github.com/easysoft/zagent/internal/server/biz/const"
 	jwt2 "github.com/easysoft/zagent/internal/server/biz/jwt"
 	"github.com/easysoft/zagent/internal/server/biz/redis"
 	"github.com/easysoft/zagent/internal/server/biz/validate"
@@ -64,8 +64,8 @@ func (c *AccountCtrl) UserLogin(ctx iris.Context) {
 
 	ctx.Application().Logger().Infof("%s 登录系统", req.Username)
 
-	search := &commDomain.Search{
-		Fields: []*commDomain.Filed{
+	search := &domain.Search{
+		Fields: []*domain.Filed{
 			{
 				Key:       "username",
 				Condition: "=",

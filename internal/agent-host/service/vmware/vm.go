@@ -2,6 +2,7 @@ package vmWareService
 
 import (
 	"fmt"
+	v1 "github.com/easysoft/zagent/cmd/agent-host/router/v1"
 	"github.com/easysoft/zagent/internal/comm/domain"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	vmwareService "github.com/easysoft/zagent/internal/server/service/vendors/vmware"
@@ -21,7 +22,7 @@ func NewVmWareService() *VmWareService {
 	return &s
 }
 
-func (s *VmWareService) CreateVm(req *domain.VmWareReq, removeSameName bool) (id, macAddress string, err error) {
+func (s *VmWareService) CreateVm(req *v1.VmWareReq, removeSameName bool) (id, macAddress string, err error) {
 	client := vmwareService.NewVMWareService() // 8697
 	err = client.Connect(fmt.Sprintf("https://127.0.0.1:8697"), req.UserName, req.Password)
 	if err != nil {
@@ -30,7 +31,7 @@ func (s *VmWareService) CreateVm(req *domain.VmWareReq, removeSameName bool) (id
 	}
 
 	// create machine
-	vmInst, err := client.CreateVm(req.BackingName, req.VmUniqueName, req.Processors, req.Memory)
+	vmInst, err := client.CreateVm(req.VmBackingName, req.VmUniqueName, req.VmProcessors, req.VmMemory)
 	if err != nil {
 		_logUtils.Errorf("Create vmware vm err %s", err.Error())
 		return
@@ -42,7 +43,7 @@ func (s *VmWareService) CreateVm(req *domain.VmWareReq, removeSameName bool) (id
 	return
 }
 
-func (s *VmWareService) DestroyVm(req *domain.VmWareReq, removeDiskImage bool) (err error) {
+func (s *VmWareService) DestroyVm(req *v1.VmWareReq, removeDiskImage bool) (err error) {
 	client := vmwareService.NewVMWareService()
 	err = client.Connect(fmt.Sprintf("https://127.0.0.1:8697"), req.UserName, req.Password)
 	if err != nil {

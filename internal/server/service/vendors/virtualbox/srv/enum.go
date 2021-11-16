@@ -551,7 +551,7 @@ const (
 
 	VirtualSystemDescriptionTypeCPU VirtualSystemDescriptionType = "CPU"
 
-	VirtualSystemDescriptionTypeMemory VirtualSystemDescriptionType = "Memory"
+	VirtualSystemDescriptionTypeMemory VirtualSystemDescriptionType = "VmMemory"
 
 	VirtualSystemDescriptionTypeHardDiskControllerIDE VirtualSystemDescriptionType = "HardDiskControllerIDE"
 

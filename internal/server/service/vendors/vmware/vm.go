@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/easysoft/zagent/internal/comm/domain"
+	v1 "github.com/easysoft/zagent/cmd/agent-host/router/v1"
 	"log"
 )
 
@@ -259,7 +259,7 @@ func (c *Client) GetVmNic(id string) (nic *Nic, err error) {
 }
 
 func (c *Client) SetRes(id string, processors, memory int) (err error) {
-	req := domain.VmWareParam{
+	req := v1.VmWareParam{
 		Processors: processors,
 		Memory:     memory,
 	}
