@@ -6,6 +6,7 @@ import (
 	"github.com/easysoft/zagent/cmd/server/router/handler"
 	"github.com/easysoft/zagent/internal/pkg/db"
 	_commonUtils "github.com/easysoft/zagent/internal/pkg/lib/common"
+	swaggerUtils "github.com/easysoft/zagent/internal/pkg/lib/swagger"
 	bizCasbin "github.com/easysoft/zagent/internal/server/biz/casbin"
 	"github.com/easysoft/zagent/internal/server/biz/jwt"
 	"github.com/easysoft/zagent/internal/server/biz/redis"
@@ -25,8 +26,6 @@ import (
 	"github.com/kataras/iris/v12/context"
 
 	_ "github.com/easysoft/zagent/res/server/docs"
-	"github.com/iris-contrib/swagger"
-	"github.com/iris-contrib/swagger/swaggerFiles"
 )
 
 func Init(version string, printVersion, printRouter *bool) {
@@ -44,17 +43,7 @@ func Init(version string, printVersion, printRouter *bool) {
 
 	router.App()
 
-	// swagger api docs
-	config := swagger.Config{
-		URL:          "http://localhost:8085/swagger/doc.json",
-		DeepLinking:  true,
-		DocExpansion: "list",
-		DomID:        "#swagger-ui",
-		Prefix:       "/swagger",
-	}
-	swaggerUI := swagger.Handler(swaggerFiles.Handler, config)
-	irisServer.App.Get("/swagger", swaggerUI)
-	irisServer.App.Get("/swagger/{any:path}", swaggerUI)
+	swaggerUtils.InitSwaggerDocs(8085, irisServer.App)
 
 	if serverConf.Inst.Redis.Enable {
 		redisUtils.InitRedisCluster(serverConf.GetRedisUris(), serverConf.Inst.Redis.Pwd)

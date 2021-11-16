@@ -1,6 +1,7 @@
 package serverService
 
 import (
+	v1 "github.com/easysoft/zagent/cmd/agent-host/router/v1"
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/comm/domain"
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
@@ -88,7 +89,7 @@ func (s NativeKvmService) DestroyRemote(vmId, queueId uint) (result _domain.RpcR
 
 	status := consts.VmDestroy
 
-	req := domain.KvmReq{VmUniqueName: vm.Name}
+	req := v1.KvmReq{VmUniqueName: vm.Name}
 	result = s.RpcService.DestroyKvm(host.Ip, host.Port, req)
 
 	if !result.IsSuccess() {

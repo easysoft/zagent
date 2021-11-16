@@ -1,6 +1,7 @@
 package model
 
 import (
+	v1 "github.com/easysoft/zagent/cmd/agent-host/router/v1"
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/comm/domain"
 	"time"
@@ -22,12 +23,12 @@ type Vm struct {
 	BackingId   uint   `json:"backingId"`
 	BackingPath string `json:"backingPath"`
 
-	OsCategory consts.OsCategory `json:"osCategory"`
-	OsType     consts.OsType     `json:"osType"`
+	OsCategory consts.OsCategory `json:"osCategory" example:"windows"` // Enums consts.OsCategory
+	OsType     consts.OsType     `json:"osType" example:"win10"`       // Enums consts.OsType
 	OsVersion  string            `json:"osVersion"`
-	OsLang     consts.OsLang     `json:"osLang"`
+	OsLang     consts.OsLang     `json:"osLang" example:"zh_cn"` // Enums consts.OsLang
 
-	Status    consts.VmStatus `json:"status"`
+	Status    consts.VmStatus `json:"status" example:"ready"` // Enums consts.VmStatus
 	DestroyAt *time.Time      `json:"destroyAt"`
 
 	FirstDetectedTime *time.Time `json:"firstDetectedTime"`
@@ -55,8 +56,8 @@ type Vm struct {
 	CloudEipId  string `json:"cloudEipId"`
 }
 
-func GenKvmReq(po Vm) (req domain.KvmReq) {
-	req = domain.KvmReq{
+func GenKvmReq(po Vm) (req v1.KvmReq) {
+	req = v1.KvmReq{
 		VmMacAddress: po.MacAddress, VmUniqueName: po.Name,
 		VmBackingPath: po.BackingPath, VmTemplateName: po.TmplName,
 
@@ -70,13 +71,14 @@ func GenKvmReq(po Vm) (req domain.KvmReq) {
 
 	return
 }
-func GenVmWareReq(vmName, backingName, vmId string, processors, memory uint, userName, password string) (req domain.VmWareReq) {
-	req = domain.VmWareReq{
-		VmUniqueName: vmName,
-		BackingName:  backingName,
 
-		Processors: processors,
-		Memory:     memory,
+func GenVmWareReq(vmName, backingName, vmId string, processors, memory uint, userName, password string) (req v1.VmWareReq) {
+	req = v1.VmWareReq{
+		VmUniqueName:  vmName,
+		VmBackingName: backingName,
+
+		VmProcessors: processors,
+		VmMemory:     memory,
 
 		UserName: userName,
 		Password: password,
