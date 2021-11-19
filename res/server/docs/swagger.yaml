@@ -224,7 +224,7 @@ definitions:
         items:
           $ref: '#/definitions/domain.BuildHistory'
         type: array
-      data:
+      task:
         $ref: '#/definitions/model.Task'
     type: object
 info:

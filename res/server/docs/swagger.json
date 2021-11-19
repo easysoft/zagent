@@ -544,7 +544,7 @@
                         "$ref": "#/definitions/domain.BuildHistory"
                     }
                 },
-                "data": {
+                "task": {
                     "$ref": "#/definitions/model.Task"
                 }
             }
