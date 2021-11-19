@@ -8,7 +8,6 @@ import (
 	consts "github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/pkg/db"
 	_commonUtils "github.com/easysoft/zagent/internal/pkg/lib/common"
-	swaggerUtils "github.com/easysoft/zagent/internal/pkg/lib/swagger"
 	serverConf "github.com/easysoft/zagent/internal/server/conf"
 	"github.com/facebookgo/inject"
 	"github.com/kataras/iris/v12"
@@ -30,8 +29,6 @@ func Init() {
 	injectObj(router)
 
 	router.App()
-
-	swaggerUtils.InitSwaggerDocs(8086, irisServer.App)
 
 	iris.RegisterOnInterrupt(func() {
 		defer _db.GetInst().Close()

@@ -6,7 +6,6 @@ import (
 	"github.com/easysoft/zagent/cmd/server/router/handler"
 	"github.com/easysoft/zagent/internal/pkg/db"
 	_commonUtils "github.com/easysoft/zagent/internal/pkg/lib/common"
-	swaggerUtils "github.com/easysoft/zagent/internal/pkg/lib/swagger"
 	bizCasbin "github.com/easysoft/zagent/internal/server/biz/casbin"
 	"github.com/easysoft/zagent/internal/server/biz/jwt"
 	"github.com/easysoft/zagent/internal/server/biz/redis"
@@ -42,8 +41,6 @@ func Init(version string, printVersion, printRouter *bool) {
 	router.InitService.InitDataIfNeeded()
 
 	router.App()
-
-	swaggerUtils.InitSwaggerDocs(8085, irisServer.App)
 
 	if serverConf.Inst.Redis.Enable {
 		redisUtils.InitRedisCluster(serverConf.GetRedisUris(), serverConf.Inst.Redis.Pwd)
