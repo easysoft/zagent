@@ -60,21 +60,35 @@
                 "produces": [
                     "application/json"
                 ],
-                "summary": "摧毁KVM虚拟机",
+                "summary": "摧毁VmWare虚拟机",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Kvm Name",
-                        "name": "name",
-                        "in": "path",
-                        "required": true
+                        "description": "VmWare Request Object",
+                        "name": "task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.VmWareReq"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "code = success? 1 : 0",
                         "schema": {
-                            "$ref": "#/definitions/_httpUtils.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_httpUtils.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
