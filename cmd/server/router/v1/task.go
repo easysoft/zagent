@@ -35,7 +35,7 @@ type TaskReq struct {
 }
 
 type TaskResp struct {
-	Task           model.Task            `json:"data"`
+	Task           model.Task            `json:"task"`
 	BuildHistories []domain.BuildHistory `json:"buildHistories"`
 }
 
