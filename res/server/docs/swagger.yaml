@@ -65,10 +65,13 @@ definitions:
       imageSrc:
         type: string
       osCategory:
+        example: windows
         type: string
       osLang:
+        example: zh_cn
         type: string
       osType:
+        example: win10
         type: string
       osVersion:
         type: string
@@ -159,10 +162,13 @@ definitions:
   v1.Environment:
     properties:
       osCategory:
+        example: windows
         type: string
       osLang:
+        example: zh_cn
         type: string
       osType:
+        example: win10
         type: string
       osVersion:
         type: string

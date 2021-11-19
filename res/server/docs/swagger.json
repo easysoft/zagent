@@ -314,13 +314,16 @@
                     "type": "string"
                 },
                 "osCategory": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "windows"
                 },
                 "osLang": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "zh_cn"
                 },
                 "osType": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "win10"
                 },
                 "osVersion": {
                     "type": "string"
@@ -451,13 +454,16 @@
             "type": "object",
             "properties": {
                 "osCategory": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "windows"
                 },
                 "osLang": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "zh_cn"
                 },
                 "osType": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "win10"
                 },
                 "osVersion": {
                     "type": "string"
