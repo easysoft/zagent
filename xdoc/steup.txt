@@ -23,10 +23,9 @@ sudo systemctl restart zagent.service
 sudo systemctl enable zagent.service
 sudo systemctl disable zagent.service
 
-swag init -d cmd/server -o res/server/docs
-swag init --parseDependency --parseInternal --parseDepth 3 -d cmd/server -o res/server/docs
-swag init --parseDependency --parseInternal --parseDepth 3 -d cmd/agent-host -o res/agent-host/docs
-swag init --parseDependency --parseInternal --parseDepth 3 -d cmd/agent-vm -o res/agent-vm/docs
-
-docker build --rm -t registry.cn-hangzhou.aliyuncs.com/com-deeptest/zagent-api:latest .
-docker run -itd --name zagent-api registry.cn-hangzhou.aliyuncs.com/com-deeptest/zagent-api:latest
+rm -rf res/server/docs
+swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/server -o res/server/docs
+rm -rf res/agent-host/docs
+swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/agent-host -o res/agent-host/docs
+rm -rf res/agent-vm/docs
+swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/agent-vm -o res/agent-vm/docs

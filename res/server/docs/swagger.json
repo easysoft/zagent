@@ -1,56 +1,10 @@
 {
     "swagger": "2.0",
     "info": {
-        "title": "ZAgent服务器API文档",
-        "contact": {
-            "name": "API Support",
-            "url": "https://github.com/easysoft/zagent/issues",
-            "email": "462626@qq.com"
-        },
-        "version": "1.0"
+        "contact": {}
     },
     "paths": {
         "/api/v1/client/task/create": {
-            "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "更新测试任务",
-                "parameters": [
-                    {
-                        "description": "Task Object",
-                        "name": "task",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/v1.TaskReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "code = success? 1 : 0",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/_httpUtils.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/model.Task"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            },
             "post": {
                 "consumes": [
                     "application/json"
@@ -183,6 +137,46 @@
                                     "properties": {
                                         "data": {
                                             "$ref": "#/definitions/v1.TaskResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "更新测试任务",
+                "parameters": [
+                    {
+                        "description": "Task Object",
+                        "name": "task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.TaskReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success? 1 : 0",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_httpUtils.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/model.Task"
                                         }
                                     }
                                 }
@@ -345,9 +339,10 @@
                 "appUrl": {
                     "type": "string"
                 },
-                "browserType example:": {
+                "browserType": {
                     "description": "Enums consts.BrowserType",
-                    "type": "string"
+                    "type": "string",
+                    "example": "chrome"
                 },
                 "browserVersion": {
                     "type": "string"

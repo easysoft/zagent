@@ -18,57 +18,13 @@ var doc = `{
     "info": {
         "description": "{{.Description}}",
         "title": "{{.Title}}",
-        "contact": {
-            "name": "API Support",
-            "url": "https://github.com/easysoft/zagent/issues",
-            "email": "462626@qq.com"
-        },
+        "contact": {},
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
         "/api/v1/client/task/create": {
-            "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "更新测试任务",
-                "parameters": [
-                    {
-                        "description": "Task Object",
-                        "name": "task",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/v1.TaskReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "code = success? 1 : 0",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/_httpUtils.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/model.Task"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            },
             "post": {
                 "consumes": [
                     "application/json"
@@ -201,6 +157,46 @@ var doc = `{
                                     "properties": {
                                         "data": {
                                             "$ref": "#/definitions/v1.TaskResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "更新测试任务",
+                "parameters": [
+                    {
+                        "description": "Task Object",
+                        "name": "task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.TaskReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success? 1 : 0",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_httpUtils.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/model.Task"
                                         }
                                     }
                                 }
@@ -363,9 +359,10 @@ var doc = `{
                 "appUrl": {
                     "type": "string"
                 },
-                "browserType example:": {
+                "browserType": {
                     "description": "Enums consts.BrowserType",
-                    "type": "string"
+                    "type": "string",
+                    "example": "chrome"
                 },
                 "browserVersion": {
                     "type": "string"
@@ -580,11 +577,11 @@ type swaggerInfo struct {
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
-	Version:     "1.0",
+	Version:     "",
 	Host:        "",
 	BasePath:    "",
 	Schemes:     []string{},
-	Title:       "ZAgent服务器API文档",
+	Title:       "",
 	Description: "",
 }
 

@@ -22,7 +22,7 @@ type Task struct {
 	ScmAccount  string `json:"scmAccount"`
 	ScmPassword string `json:"scmPassword"`
 
-	BrowserType    consts.BrowserType `json:"browserType example:"chrome"` // Enums consts.BrowserType
+	BrowserType    consts.BrowserType `json:"browserType" example:"chrome"` // Enums consts.BrowserType
 	BrowserVersion string             `json:"browserVersion"`
 
 	AppUrl          string `json:"appUrl"`
