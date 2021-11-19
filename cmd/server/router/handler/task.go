@@ -118,7 +118,7 @@ func (c *TaskCtrl) Create(ctx iris.Context) {
 // @Produce json
 // @Param task body v1.TaskReq true "Task Object"
 // @Success 200 {object} _httpUtils.Response{data=model.Task} "code = success? 1 : 0"
-// @Router /api/v1/client/task/create [put]
+// @Router /api/v1/client/task/{id} [put]
 func (c *TaskCtrl) Update(ctx iris.Context) {
 	model := model.Task{}
 	if err := ctx.ReadJSON(&model); err != nil {
