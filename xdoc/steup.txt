@@ -29,3 +29,10 @@ rm -rf res/agent-host/docs
 swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/agent-host -o res/agent-host/docs
 rm -rf res/agent-vm/docs
 swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/agent-vm -o res/agent-vm/docs
+
+swagger serve /Users/aaron/rd/project/zentao/go/zagent/res/server/docs/swagger.json
+
+ps -a | grep swag | xargs kill -9 2>/dev/null
+nohup swag serve --no-ui -p 50001 res/server/docs/swagger.json > server.log 2>&1 &
+nohup swag serve --no-ui -p 50002 res/agent-host/docs/swagger.json > host.log 2>&1 &
+nohup swag serve --no-ui -p 50003 res/agent-vm/docs/swagger.json > vm.log 2>&1 &

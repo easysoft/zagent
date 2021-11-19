@@ -27,7 +27,353 @@ var doc = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {}
+    "paths": {
+        "/api/v1/vmware/create": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "创建任务",
+                "parameters": [
+                    {
+                        "description": "Build Request Object",
+                        "name": "task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.Build"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success? 1 : 0",
+                        "schema": {
+                            "$ref": "#/definitions/_httpUtils.Response"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "_httpUtils.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "object"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Build": {
+            "type": "object",
+            "properties": {
+                "appPath": {
+                    "type": "string"
+                },
+                "appUrl": {
+                    "type": "string"
+                },
+                "appiumPort": {
+                    "type": "integer"
+                },
+                "browserType": {
+                    "type": "string"
+                },
+                "browserVersion": {
+                    "type": "string"
+                },
+                "buildCommands": {
+                    "type": "string"
+                },
+                "buildType": {
+                    "type": "string"
+                },
+                "completeTime": {
+                    "type": "string"
+                },
+                "desc": {
+                    "type": "string"
+                },
+                "deviceIp": {
+                    "type": "string"
+                },
+                "envVars": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "keepResultFiles": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "nodeIp": {
+                    "type": "string"
+                },
+                "nodePort": {
+                    "type": "integer"
+                },
+                "osCateGory": {
+                    "type": "string"
+                },
+                "osLang": {
+                    "type": "string"
+                },
+                "osType": {
+                    "type": "string"
+                },
+                "osVersion": {
+                    "type": "string"
+                },
+                "priority": {
+                    "type": "integer"
+                },
+                "progress": {
+                    "type": "string"
+                },
+                "projectDir": {
+                    "type": "string"
+                },
+                "queueId": {
+                    "type": "integer"
+                },
+                "resultFiles": {
+                    "type": "string"
+                },
+                "resultMsg": {
+                    "type": "string"
+                },
+                "resultPath": {
+                    "type": "string"
+                },
+                "scmAccount": {
+                    "type": "string"
+                },
+                "scmAddress": {
+                    "type": "string"
+                },
+                "scmPassword": {
+                    "type": "string"
+                },
+                "scriptUrl": {
+                    "type": "string"
+                },
+                "seleniumDriverPath": {
+                    "type": "string"
+                },
+                "serial": {
+                    "type": "string"
+                },
+                "startTime": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "testScenario": {
+                    "description": "interface test",
+                    "$ref": "#/definitions/domain.TestScenario"
+                },
+                "testSet": {
+                    "$ref": "#/definitions/domain.TestSet"
+                },
+                "version": {
+                    "type": "number"
+                },
+                "vmId": {
+                    "type": "integer"
+                },
+                "workDir": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Node": {
+            "type": "object",
+            "properties": {
+                "desc": {
+                    "type": "string"
+                },
+                "ip": {
+                    "type": "string"
+                },
+                "lastRegisterDate": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "osPlatform": {
+                    "type": "string"
+                },
+                "osType": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                },
+                "sshPort": {
+                    "type": "integer"
+                },
+                "sysLang": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "number"
+                },
+                "vncAddress": {
+                    "type": "string"
+                },
+                "workDir": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.TestProcessor": {
+            "type": "object",
+            "properties": {
+                "children": {
+                    "description": "can be interface, Processor.",
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "comments": {
+                    "type": "string"
+                },
+                "dataStore": {
+                    "description": "store test data loaded by DataLoopProcessor",
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "default": {
+                    "type": "string"
+                },
+                "endIndex": {
+                    "type": "integer"
+                },
+                "expr": {
+                    "type": "string"
+                },
+                "isOnce": {
+                    "type": "boolean"
+                },
+                "isRand": {
+                    "type": "boolean"
+                },
+                "loop": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "parentId": {
+                    "type": "integer"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "results": {
+                    "description": "results",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "source": {
+                    "type": "string"
+                },
+                "src": {
+                    "type": "string"
+                },
+                "startIndex": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "varName": {
+                    "type": "string"
+                },
+                "varNamePostfix": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.TestScenario": {
+            "type": "object",
+            "properties": {
+                "desc": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "processor": {
+                    "$ref": "#/definitions/domain.TestProcessor"
+                },
+                "version": {
+                    "type": "number"
+                }
+            }
+        },
+        "domain.TestSet": {
+            "type": "object",
+            "properties": {
+                "agents": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.Node"
+                    }
+                },
+                "desc": {
+                    "type": "string"
+                },
+                "duration": {
+                    "description": "sec, if set, loopCount will be ignore",
+                    "type": "integer"
+                },
+                "errorAction": {
+                    "type": "string"
+                },
+                "forever": {
+                    "type": "boolean"
+                },
+                "loopCount": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "numberOfThreads": {
+                    "type": "integer"
+                },
+                "processor": {
+                    "$ref": "#/definitions/domain.TestProcessor"
+                },
+                "rampUpPeriod": {
+                    "description": "sec",
+                    "type": "integer"
+                },
+                "version": {
+                    "type": "number"
+                }
+            }
+        }
+    }
 }`
 
 type swaggerInfo struct {
