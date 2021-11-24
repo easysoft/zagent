@@ -20,7 +20,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/v1.HostReq"
+                            "$ref": "#/definitions/v1.HostRegisterReq"
                         }
                     }
                 ],
@@ -241,6 +241,36 @@
                     }
                 }
             }
+        },
+        "/api/v1/client/vm/register": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "向服务器注册虚拟机",
+                "parameters": [
+                    {
+                        "description": "Vm Object",
+                        "name": "task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.VmRegisterReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success? 1 : 0",
+                        "schema": {
+                            "$ref": "#/definitions/_httpUtils.Response"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -315,100 +345,6 @@
                     "type": "string"
                 },
                 "vncAddress": {
-                    "type": "string"
-                }
-            }
-        },
-        "domain.Vm": {
-            "type": "object",
-            "properties": {
-                "backing": {
-                    "type": "string"
-                },
-                "backingId": {
-                    "type": "integer"
-                },
-                "backingPath": {
-                    "type": "string"
-                },
-                "cdromDriver": {
-                    "type": "string"
-                },
-                "cdromSys": {
-                    "type": "string"
-                },
-                "defPath": {
-                    "type": "string"
-                },
-                "destroyAt": {
-                    "type": "string"
-                },
-                "diskSize": {
-                    "description": "M",
-                    "type": "integer"
-                },
-                "firstDetectedTime": {
-                    "type": "string"
-                },
-                "hostId": {
-                    "type": "integer"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "imagePath": {
-                    "type": "string"
-                },
-                "ip": {
-                    "type": "string"
-                },
-                "macAddress": {
-                    "type": "string"
-                },
-                "memorySize": {
-                    "description": "M",
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "osCategory": {
-                    "type": "string"
-                },
-                "osLang": {
-                    "type": "string"
-                },
-                "osType": {
-                    "type": "string"
-                },
-                "osVersion": {
-                    "type": "string"
-                },
-                "port": {
-                    "type": "integer"
-                },
-                "resolutionHeight": {
-                    "type": "integer"
-                },
-                "resolutionWidth": {
-                    "type": "integer"
-                },
-                "rpcPort": {
-                    "type": "integer"
-                },
-                "sshPort": {
-                    "type": "integer"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "tmpl": {
-                    "type": "string"
-                },
-                "vncPort": {
-                    "type": "string"
-                },
-                "workDir": {
                     "type": "string"
                 }
             }
@@ -594,16 +530,18 @@
                 }
             }
         },
-        "v1.HostReq": {
+        "v1.HostRegisterReq": {
             "type": "object",
             "properties": {
                 "status": {
-                    "type": "string"
+                    "description": "Enums consts.HostStatus",
+                    "type": "string",
+                    "example": "online"
                 },
                 "vms": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/domain.Vm"
+                        "$ref": "#/definitions/v1.VmInHostReq"
                     }
                 }
             }
@@ -684,6 +622,40 @@
                 },
                 "task": {
                     "$ref": "#/definitions/model.Task"
+                }
+            }
+        },
+        "v1.VmInHostReq": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "description": "Enums consts.VmStatus",
+                    "type": "string",
+                    "example": "running"
+                }
+            }
+        },
+        "v1.VmRegisterReq": {
+            "type": "object",
+            "properties": {
+                "ip": {
+                    "type": "string"
+                },
+                "macAddress": {
+                    "type": "string",
+                    "example": "1C:1C:1C:24:F4:BF"
+                },
+                "port": {
+                    "type": "integer",
+                    "example": 8086
+                },
+                "status": {
+                    "description": "Enums consts.VmStatus",
+                    "type": "string",
+                    "example": "ready"
+                },
+                "workDir": {
+                    "type": "string"
                 }
             }
         }
