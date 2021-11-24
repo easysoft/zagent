@@ -1,9 +1,9 @@
 package serverService
 
 import (
+	v1 "github.com/easysoft/zagent/cmd/server/router/v1"
 	"github.com/easysoft/zagent/internal/comm/const"
 	"github.com/easysoft/zagent/internal/comm/domain"
-	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/easysoft/zagent/internal/server/repo"
 	commonService "github.com/easysoft/zagent/internal/server/service/common"
 )
@@ -21,8 +21,8 @@ func NewAssertService() *AssertService {
 	return &AssertService{}
 }
 
-func (s AssertService) RegisterHost(host domain.HostNode) (result bool) {
-	po := model.HostFromDomain(host)
+func (s AssertService) RegisterHost(host v1.HostReq) (result bool) {
+	po := host.ToModel()
 	hostPo, err := s.HostRepo.Register(po)
 	if err == nil {
 		result = true
@@ -53,7 +53,7 @@ func (s AssertService) RegisterVm(vmObj domain.Vm) (result bool) {
 	return
 }
 
-func (s AssertService) updateVmsStatus(host domain.HostNode, hostId uint) {
+func (s AssertService) updateVmsStatus(host v1.HostReq, hostId uint) {
 	runningVms, shutOffVms, unknownVms, vmNames := s.getVmsByStatus(host)
 
 	// only 3 kind of status from host register
@@ -77,7 +77,7 @@ func (s AssertService) updateVmsStatus(host domain.HostNode, hostId uint) {
 	return
 }
 
-func (s AssertService) getVmsByStatus(host domain.HostNode) (
+func (s AssertService) getVmsByStatus(host v1.HostReq) (
 	runningVms, shutOffVms, unknownVms, vmNames []string) {
 	vms := host.Vms
 

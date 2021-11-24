@@ -4,6 +4,36 @@
         "contact": {}
     },
     "paths": {
+        "/api/v1/client/host/register": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "向服务器注册宿主机",
+                "parameters": [
+                    {
+                        "description": "Host Object",
+                        "name": "task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.HostReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success? 1 : 0",
+                        "schema": {
+                            "$ref": "#/definitions/_httpUtils.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/client/task/create": {
             "post": {
                 "consumes": [
@@ -289,6 +319,100 @@
                 }
             }
         },
+        "domain.Vm": {
+            "type": "object",
+            "properties": {
+                "backing": {
+                    "type": "string"
+                },
+                "backingId": {
+                    "type": "integer"
+                },
+                "backingPath": {
+                    "type": "string"
+                },
+                "cdromDriver": {
+                    "type": "string"
+                },
+                "cdromSys": {
+                    "type": "string"
+                },
+                "defPath": {
+                    "type": "string"
+                },
+                "destroyAt": {
+                    "type": "string"
+                },
+                "diskSize": {
+                    "description": "M",
+                    "type": "integer"
+                },
+                "firstDetectedTime": {
+                    "type": "string"
+                },
+                "hostId": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "imagePath": {
+                    "type": "string"
+                },
+                "ip": {
+                    "type": "string"
+                },
+                "macAddress": {
+                    "type": "string"
+                },
+                "memorySize": {
+                    "description": "M",
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "osCategory": {
+                    "type": "string"
+                },
+                "osLang": {
+                    "type": "string"
+                },
+                "osType": {
+                    "type": "string"
+                },
+                "osVersion": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                },
+                "resolutionHeight": {
+                    "type": "integer"
+                },
+                "resolutionWidth": {
+                    "type": "integer"
+                },
+                "rpcPort": {
+                    "type": "integer"
+                },
+                "sshPort": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "tmpl": {
+                    "type": "string"
+                },
+                "vncPort": {
+                    "type": "string"
+                },
+                "workDir": {
+                    "type": "string"
+                }
+            }
+        },
         "model.Environment": {
             "type": "object",
             "properties": {
@@ -467,6 +591,20 @@
                 },
                 "osVersion": {
                     "type": "string"
+                }
+            }
+        },
+        "v1.HostReq": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                },
+                "vms": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.Vm"
+                    }
                 }
             }
         },
