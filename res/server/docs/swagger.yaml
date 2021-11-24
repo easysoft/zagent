@@ -48,69 +48,6 @@ definitions:
       vncAddress:
         type: string
     type: object
-  domain.Vm:
-    properties:
-      backing:
-        type: string
-      backingId:
-        type: integer
-      backingPath:
-        type: string
-      cdromDriver:
-        type: string
-      cdromSys:
-        type: string
-      defPath:
-        type: string
-      destroyAt:
-        type: string
-      diskSize:
-        description: M
-        type: integer
-      firstDetectedTime:
-        type: string
-      hostId:
-        type: integer
-      id:
-        type: integer
-      imagePath:
-        type: string
-      ip:
-        type: string
-      macAddress:
-        type: string
-      memorySize:
-        description: M
-        type: integer
-      name:
-        type: string
-      osCategory:
-        type: string
-      osLang:
-        type: string
-      osType:
-        type: string
-      osVersion:
-        type: string
-      port:
-        type: integer
-      resolutionHeight:
-        type: integer
-      resolutionWidth:
-        type: integer
-      rpcPort:
-        type: integer
-      sshPort:
-        type: integer
-      status:
-        type: string
-      tmpl:
-        type: string
-      vncPort:
-        type: string
-      workDir:
-        type: string
-    type: object
   model.Environment:
     properties:
       createdAt:
@@ -236,13 +173,15 @@ definitions:
       osVersion:
         type: string
     type: object
-  v1.HostReq:
+  v1.HostRegisterReq:
     properties:
       status:
+        description: Enums consts.HostStatus
+        example: online
         type: string
       vms:
         items:
-          $ref: '#/definitions/domain.Vm'
+          $ref: '#/definitions/v1.VmInHostReq'
         type: array
     type: object
   v1.TaskReq:
@@ -299,6 +238,30 @@ definitions:
       task:
         $ref: '#/definitions/model.Task'
     type: object
+  v1.VmInHostReq:
+    properties:
+      name:
+        description: Enums consts.VmStatus
+        example: running
+        type: string
+    type: object
+  v1.VmRegisterReq:
+    properties:
+      ip:
+        type: string
+      macAddress:
+        example: 1C:1C:1C:24:F4:BF
+        type: string
+      port:
+        example: 8086
+        type: integer
+      status:
+        description: Enums consts.VmStatus
+        example: ready
+        type: string
+      workDir:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
@@ -312,7 +275,7 @@ paths:
         name: task
         required: true
         schema:
-          $ref: '#/definitions/v1.HostReq'
+          $ref: '#/definitions/v1.HostRegisterReq'
       produces:
       - application/json
       responses:
@@ -444,4 +407,23 @@ paths:
                   type: array
               type: object
       summary: 列出测试任务
+  /api/v1/client/vm/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Vm Object
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/v1.VmRegisterReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'code = success? 1 : 0'
+          schema:
+            $ref: '#/definitions/_httpUtils.Response'
+      summary: 向服务器注册虚拟机
 swagger: "2.0"
