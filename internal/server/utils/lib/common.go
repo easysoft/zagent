@@ -26,19 +26,19 @@ func IsNative(platform string) (result bool) {
 	return
 }
 func IsHuaweiCloud(platform string) (result bool) {
-	result = strings.Index(platform, consts.PlatformHuawei.ToString()) > -1
+	result = strings.Index(platform, consts.HostVendorHuaweiCloud.ToString()) > -1
 	return
 }
 func IsAliyun(platform string) (result bool) {
-	result = strings.Index(platform, consts.PlatformAli.ToString()) > -1
+	result = strings.Index(platform, consts.HostVendorAliyun.ToString()) > -1
 	return
 }
 func IsVirtualBox(platform string) (result bool) {
-	result = strings.Index(platform, consts.PlatformVirtualBox.ToString()) > -1
+	result = strings.Index(platform, consts.HostVendorVirtualBox.ToString()) > -1
 	return
 }
 func IsVmWare(platform string) (result bool) {
-	result = strings.Index(platform, consts.PlatformVmWare.ToString()) > -1
+	result = strings.Index(platform, consts.HostVendorVmWare.ToString()) > -1
 	return
 }
 

@@ -11,19 +11,6 @@ type HostNode struct {
 	Vms    []Vm
 }
 
-type VmNode struct {
-	Node
-	VmStatus      consts.VmStatus      `json:"vmStatus" yaml:"vmStatus"`
-	ServiceStatus consts.ServiceStatus `json:"serviceStatus" yaml:"serviceStatus"`
-	taskCount     int
-}
-
-type DeviceNode struct {
-	Node
-	ServiceStatus consts.ServiceStatus `json:"serviceStatus" yaml:"serviceStatus"`
-	taskCount     int
-}
-
 type Node struct {
 	Version float64 `json:"version" yaml:"version"`
 	Name    string  `json:"name" yaml:"name"`

@@ -3,7 +3,6 @@ package model
 import (
 	v1 "github.com/easysoft/zagent/cmd/agent-host/router/v1"
 	"github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/comm/domain"
 	"time"
 )
 
@@ -84,23 +83,6 @@ func GenVmWareReq(vmName, backingName, vmId string, processors, memory uint, use
 		Password: password,
 
 		VmId: vmId,
-	}
-
-	return
-}
-
-func VmFromDomain(v domain.Vm) (po Vm) {
-	po = Vm{
-		Status:    v.Status,
-		DestroyAt: &v.DestroyAt,
-
-		NodeIp:     v.Ip,
-		NodePort:   v.Port,
-		MacAddress: v.MacAddress,
-		RpcPort:    v.RpcPort,
-		SshPort:    v.SshPort,
-		VncAddress: v.VncPort,
-		WorkDir:    v.WorkDir,
 	}
 
 	return

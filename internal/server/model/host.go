@@ -2,7 +2,6 @@ package model
 
 import (
 	"github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/comm/domain"
 	"time"
 )
 
@@ -36,7 +35,8 @@ type Host struct {
 
 	Priority int `json:"priority"`
 
-	Platform consts.Platform `json:"platform"`
+	Capabilities consts.HostCapability `json:"capabilities"`
+	Vendor       consts.HostCapability `json:"vendor"`
 
 	Bridge         string `json:"bridge"`
 	CloudRegion    string `json:"cloudRegion"`
@@ -54,32 +54,6 @@ type Host struct {
 func NewHost() Host {
 	host := Host{}
 	return host
-}
-
-func HostFromDomain(h domain.HostNode) (po Host) {
-	po = Host{
-		Name:   h.Name,
-		OsType: h.OsType,
-
-		Ip:      h.Ip,
-		Port:    h.Port,
-		WorkDir: h.WorkDir,
-
-		SshPort:    h.SshPort,
-		VncAddress: h.VncAddress,
-		Status:     h.Status,
-	}
-
-	if po.Name == "" {
-		po.Name = po.Ip
-	}
-
-	for _, v := range h.Vms {
-		vm := VmFromDomain(v)
-		po.Vms = append(po.Vms, vm)
-	}
-
-	return
 }
 
 func (Host) TableName() string {

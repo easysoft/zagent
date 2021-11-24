@@ -28,7 +28,7 @@ func (s HostService) GetValidForQueueByVm(queue model.Queue) (hostId, backingId,
 	busyHostIds := s.getBusyHosts()
 	hostId, backingId = s.HostRepo.QueryByBackings(backingIds, busyHostIds)
 
-	platform := s.HostRepo.Get(hostId).Platform.ToString()
+	platform := s.HostRepo.Get(hostId).Capabilities.ToString()
 
 	if serverUitls.IsCloud(platform) {
 		tmplId = 1 // not use tmpl for cloud

@@ -34,25 +34,26 @@ func NewRunService() *FacadeService {
 // Create create machine
 func (s FacadeService) Create(hostId, backingId, tmplId, queueId uint) (
 	result _domain.RpcResp) {
+	host := s.HostRepo.Get(hostId)
+	capabilities := host.Capabilities.ToString()
+	vendor := host.Vendor.ToString()
 
-	platform := s.HostRepo.Get(hostId).Platform.ToString()
-
-	if serverUitls.IsVm(platform) {
-		if serverUitls.IsNative(platform) {
+	if serverUitls.IsVm(capabilities) {
+		if serverUitls.IsNative(vendor) {
 			result = s.CreateVmKvmNative(hostId, backingId, tmplId, queueId)
-		} else if serverUitls.IsVirtualBox(platform) {
+		} else if serverUitls.IsVirtualBox(vendor) {
 			result = s.CreateVmVirtualBox(hostId, backingId, queueId)
-		} else if serverUitls.IsVmWare(platform) {
+		} else if serverUitls.IsVmWare(vendor) {
 			result = s.CreateVmVmWare(hostId, backingId, queueId)
-		} else if serverUitls.IsHuaweiCloud(platform) {
+		} else if serverUitls.IsHuaweiCloud(vendor) {
 			result = s.CreateVmHuaweiCloud(hostId, backingId, queueId)
-		} else if serverUitls.IsAliyun(platform) {
+		} else if serverUitls.IsAliyun(vendor) {
 			result = s.CreateVmAliyun(hostId, backingId, queueId)
 		}
-	} else if serverUitls.IsDocker(platform) {
-		if serverUitls.IsHuaweiCloud(platform) {
+	} else if serverUitls.IsDocker(capabilities) {
+		if serverUitls.IsHuaweiCloud(vendor) {
 			result = s.CreateDockerHuaweiCloud(hostId, queueId)
-		} else if serverUitls.IsAliyun(platform) {
+		} else if serverUitls.IsAliyun(vendor) {
 			result = s.CreateDockerAliyun(hostId, queueId)
 		}
 	}
@@ -106,7 +107,7 @@ func (s FacadeService) RunTest(queue model.Queue, host model.Host) (result _doma
 // Destroy destory machine
 func (s FacadeService) Destroy(queue model.Queue) {
 	vm := s.VmRepo.GetById(queue.VmId)
-	platform := s.HostRepo.Get(vm.HostId).Platform.ToString()
+	platform := s.HostRepo.Get(vm.HostId).Capabilities.ToString()
 
 	if serverUitls.IsVm(platform) {
 		if serverUitls.IsNative(platform) {

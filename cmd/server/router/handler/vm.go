@@ -18,6 +18,13 @@ func NewVmCtrl() *VmCtrl {
 	return &VmCtrl{}
 }
 
+// Register
+// @summary 向服务器注册虚拟机
+// @Accept json
+// @Produce json
+// @Param task body domain.Vm true "Vm Object"
+// @Success 200 {object} _httpUtils.Response "code = success? 1 : 0"
+// @Router /api/v1/client/host/register [post]
 func (c *VmCtrl) Register(ctx iris.Context) {
 	model := domain.Vm{}
 	if err := ctx.ReadJSON(&model); err != nil {
