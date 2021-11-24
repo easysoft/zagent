@@ -22,17 +22,17 @@ func NewHostCtrl() *HostCtrl {
 // @summary 向服务器注册宿主机
 // @Accept json
 // @Produce json
-// @Param task body v1.HostReq true "Host Object"
+// @Param task body v1.HostRegisterReq true "Host Object"
 // @Success 200 {object} _httpUtils.Response "code = success? 1 : 0"
 // @Router /api/v1/client/host/register [post]
 func (c *HostCtrl) Register(ctx iris.Context) {
-	model := v1.HostReq{}
-	if err := ctx.ReadJSON(&model); err != nil {
+	req := v1.HostRegisterReq{}
+	if err := ctx.ReadJSON(&req); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
-	success := c.AssertService.RegisterHost(model)
+	success := c.AssertService.RegisterHost(req)
 	code := _const.ResultFail
 	if success {
 		code = _const.ResultSuccess

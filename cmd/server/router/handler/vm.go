@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/easysoft/zagent/internal/comm/domain"
+	v1 "github.com/easysoft/zagent/cmd/server/router/v1"
 	"github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/lib/http"
 	"github.com/easysoft/zagent/internal/server/service"
@@ -22,17 +22,17 @@ func NewVmCtrl() *VmCtrl {
 // @summary 向服务器注册虚拟机
 // @Accept json
 // @Produce json
-// @Param task body domain.Vm true "Vm Object"
+// @Param task body v1.VmRegisterReq true "Vm Object"
 // @Success 200 {object} _httpUtils.Response "code = success? 1 : 0"
-// @Router /api/v1/client/host/register [post]
+// @Router /api/v1/client/vm/register [post]
 func (c *VmCtrl) Register(ctx iris.Context) {
-	model := domain.Vm{}
-	if err := ctx.ReadJSON(&model); err != nil {
+	req := v1.VmRegisterReq{}
+	if err := ctx.ReadJSON(&req); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
-	success := c.AssertService.RegisterVm(model)
+	success := c.AssertService.RegisterVm(req)
 	code := _const.ResultFail
 	if success {
 		code = _const.ResultSuccess

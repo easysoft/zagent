@@ -2,17 +2,22 @@ package v1
 
 import (
 	"github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/comm/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"github.com/jinzhu/copier"
 )
 
-type HostReq struct {
-	Status consts.HostStatus `json:"status" yaml:"status"`
-	Vms    []domain.Vm
+type HostRegisterReq struct {
+	Status consts.HostStatus `json:"status" example:"online"` // Enums consts.HostStatus
+
+	Vms []VmInHostReq `json:"vms"`
 }
 
-func (src *HostReq) ToModel() (po model.Host) {
+type VmInHostReq struct {
+	Name   string          `json:"name"`
+	Status consts.VmStatus `json:"name" example:"running"` // Enums consts.VmStatus
+}
+
+func (src *HostRegisterReq) ToModel() (po model.Host) {
 	copier.Copy(&po, &src)
 
 	if po.Name == "" {
