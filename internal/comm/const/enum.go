@@ -1,24 +1,32 @@
 package consts
 
-type Platform string
+type HostCapability string
 
 const (
-	PlatformVm     Platform = "vm"
-	PlatformDocker Platform = "docker"
+	PlatformVm     HostCapability = "vm"
+	PlatformDocker HostCapability = "docker"
 
-	PlatformNative Platform = "native"
-	PlatformCloud  Platform = "cloud"
-
-	PlatformVirtualBox Platform = "virtualbox"
-	PlatformVmWare     Platform = "vmware"
-	PlatformHuawei     Platform = "huawei"
-	PlatformAli        Platform = "ali"
-
-	PlatformPve       Platform = "pve"
-	PlatformPortainer Platform = "portainer"
+	PlatformNative HostCapability = "native"
+	PlatformCloud  HostCapability = "cloud"
 )
 
-func (e Platform) ToString() string {
+func (e HostCapability) ToString() string {
+	return string(e)
+}
+
+type HostVendor string
+
+const (
+	HostVendorVirtualBox  HostVendor = "virtualbox"
+	HostVendorVmWare      HostVendor = "vmware"
+	HostVendorHuaweiCloud HostVendor = "huaweicloud"
+	HostVendorAliyun      HostVendor = "aliyun"
+
+	HostVendorPve       HostVendor = "pve"
+	HostVendorPortainer HostVendor = "portainer"
+)
+
+func (e HostVendor) ToString() string {
 	return string(e)
 }
 
@@ -183,6 +191,7 @@ type OsLang string
 const (
 	EN_US OsLang = "en_us"
 	ZH_CN OsLang = "zh_cn"
+	ZH_TW OsLang = "zh_tw"
 )
 
 func (e OsLang) ToString() string {

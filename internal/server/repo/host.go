@@ -100,7 +100,7 @@ func (r HostRepo) QueryBusy() (hostIds []uint) {
 	return
 }
 
-func (r HostRepo) QueryUnBusy(busyHostIds []uint, plf consts.Platform, isNative bool) (hostId uint) {
+func (r HostRepo) QueryUnBusy(busyHostIds []uint, plf consts.HostCapability, isNative bool) (hostId uint) {
 	list := make([]model.Host, 0)
 
 	whr := r.DB.Model(&model.Host{}).
@@ -131,5 +131,5 @@ func (r HostRepo) QueryUnBusy(busyHostIds []uint, plf consts.Platform, isNative 
 type HostResult struct {
 	HostId   uint
 	MaxNum   int
-	Platform consts.Platform
+	Platform consts.HostCapability
 }
