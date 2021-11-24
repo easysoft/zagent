@@ -14,7 +14,7 @@ type HostRegisterReq struct {
 
 type VmInHostReq struct {
 	Name   string          `json:"name"`
-	Status consts.VmStatus `json:"name" example:"running"` // Enums consts.VmStatus
+	Status consts.VmStatus `json:"status" example:"running"` // Enums consts.VmStatus
 }
 
 func (src *HostRegisterReq) ToModel() (po model.Host) {
