@@ -1,8 +1,8 @@
 package repo
 
 import (
+	v1 "github.com/easysoft/zagent/cmd/server/router/v1"
 	"github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/comm/domain"
 	"github.com/easysoft/zagent/internal/server/model"
 	"gorm.io/gorm"
 	"time"
@@ -17,7 +17,7 @@ func NewVmRepo() *VmRepo {
 	return &VmRepo{}
 }
 
-func (r VmRepo) Register(vm domain.Vm) (po model.Vm, statusChanged bool, err error) {
+func (r VmRepo) Register(vm v1.VmRegisterReq) (po model.Vm, statusChanged bool, err error) {
 	err = r.DB.Model(&model.Vm{}).
 		Where("mac_address=?", vm.MacAddress).First(&po).Error
 	srcStatus := po.Status

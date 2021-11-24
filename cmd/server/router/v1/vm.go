@@ -1,0 +1,22 @@
+package v1
+
+import (
+	consts "github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zagent/internal/server/model"
+	"github.com/jinzhu/copier"
+)
+
+type VmRegisterReq struct {
+	Status consts.VmStatus `json:"status" example:"ready"` // Enums consts.VmStatus
+
+	MacAddress string `json:"macAddress" example:"1C:1C:1C:24:F4:BF"`
+	Ip         string `json:"ip"`
+	WorkDir    string `json:"workDir"`
+	Port       int    `json:"port" example:"8086"`
+}
+
+func (src *VmRegisterReq) ToModel() (po model.Vm) {
+	copier.Copy(&po, &src)
+
+	return
+}

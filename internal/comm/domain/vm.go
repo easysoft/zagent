@@ -6,38 +6,38 @@ import (
 )
 
 type Vm struct {
-	ID        int
-	BackingId int
-	HostId    int
+	ID        int `json:"id"`
+	BackingId int `json:"backingId"`
+	HostId    int `json:"hostId"`
 
 	Name        string `json:"name"`
-	Tmpl        string
-	Backing     string
+	Tmpl        string `json:"Tmpl"`
+	Backing     string `json:"backing"`
 	ImagePath   string `json:"imagePath"`
 	BackingPath string `json:"backingPath"`
 
-	OsCategory consts.OsCategory
-	OsType     consts.OsType
-	OsVersion  string
-	OsLang     consts.OsLang
+	OsCategory consts.OsCategory `json:"osCategory"`
+	OsType     consts.OsType     `json:"osType"`
+	OsVersion  string            `json:"osVersion"`
+	OsLang     consts.OsLang     `json:"osLang"`
 
-	Status            consts.VmStatus
-	DestroyAt         time.Time
-	FirstDetectedTime time.Time
+	Status            consts.VmStatus `json:"status"`
+	DestroyAt         time.Time       `json:"destroyAt"`
+	FirstDetectedTime time.Time       `json:"firstDetectedTime"`
 
-	Ip         string
-	Port       int
+	Ip         string `json:"ip"`
+	Port       int    `json:"port"`
 	MacAddress string `json:"macAddress"`
-	RpcPort    int
-	SshPort    int
+	RpcPort    int    `json:"rpcPort"`
+	SshPort    int    `json:"sshPort"`
 	VncPort    string `json:"vncPort"`
-	WorkDir    string
+	WorkDir    string `json:"workDir"`
 
-	DefPath          string
-	DiskSize         uint // M
-	MemorySize       uint // M
-	CdromSys         string
-	CdromDriver      string
-	ResolutionHeight int
-	ResolutionWidth  int
+	DefPath          string `json:"defPath"`
+	DiskSize         uint   `json:"diskSize"`   // M
+	MemorySize       uint   `json:"memorySize"` // M
+	CdromSys         string `json:"cdromSys"`
+	CdromDriver      string `json:"cdromDriver"`
+	ResolutionHeight int    `json:"resolutionHeight"`
+	ResolutionWidth  int    `json:"resolutionWidth"`
 }
