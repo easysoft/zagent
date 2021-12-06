@@ -15,6 +15,11 @@ var (
 	printRouter  = flag.Bool("r", false, "打印路由列表")
 )
 
+// @title ZAgent服务器API文档
+// @version 1.0
+// @contact.name API Support
+// @contact.url https://github.com/easysoft/zagent/issues
+// @contact.email 462626@qq.com
 func main() {
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "usage: %s [options] [command]\n", os.Args[0])
