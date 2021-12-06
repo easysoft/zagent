@@ -42,6 +42,7 @@ func Init(app string) {
 		Inst.DirIso = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderIso))
 		Inst.DirBaking = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderBacking))
 		Inst.DirImage = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderImage))
+		Inst.DirToken = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, agentConst.FolderToken))
 
 		_fileUtils.MkDirIfNeeded(Inst.DirIso)
 		_fileUtils.MkDirIfNeeded(Inst.DirBaking)
@@ -69,6 +70,7 @@ type Config struct {
 	DirIso    string
 	DirBaking string
 	DirImage  string
+	DirToken  string
 
 	DB DBConfig
 }

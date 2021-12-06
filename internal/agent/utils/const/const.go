@@ -30,4 +30,5 @@ var (
 	FolderIso     = "iso"
 	FolderBacking = "backing"
 	FolderImage   = "image"
+	FolderToken   = "token"
 )
