@@ -16,6 +16,7 @@ type Router struct {
 
 	KvmCtrl    *hostHandler.KvmCtrl    `inject:""`
 	VmWareCtrl *hostHandler.VmWareCtrl `inject:""`
+	VncCtrl    *hostHandler.VncCtrl    `inject:""`
 }
 
 func NewRouter(app *iris.Application) *Router {
@@ -44,6 +45,9 @@ func (r *Router) App() {
 			v1.PartyFunc("/vmware", func(client iris.Party) {
 				client.Post("/create", r.VmWareCtrl.Create).Name = "创建虚机"
 				client.Post("/destroy", r.VmWareCtrl.Destroy).Name = "摧毁虚机"
+			})
+			v1.PartyFunc("/vnc", func(client iris.Party) {
+				client.Get("/getToken", r.VncCtrl.GetToken).Name = "获取VNC的Token"
 			})
 		}
 	}

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	hostCron "github.com/easysoft/zagent/cmd/agent-host/cron"
 	hostRouter "github.com/easysoft/zagent/cmd/agent-host/router"
+	hostAgentService "github.com/easysoft/zagent/internal/agent-host/service"
 	hostKvmService "github.com/easysoft/zagent/internal/agent-host/service/kvm"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	consts "github.com/easysoft/zagent/internal/comm/const"
@@ -49,6 +50,9 @@ func injectObj(router *hostRouter.Router) {
 	err := g.Provide(
 		// db
 		&inject.Object{Value: _db.GetInst().DB()},
+
+		// setup
+		&inject.Object{Value: hostAgentService.NewSetupService()},
 
 		// cron
 		&inject.Object{Value: hostCron.NewAgentCron()},
