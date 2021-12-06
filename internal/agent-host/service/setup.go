@@ -5,6 +5,7 @@ import (
 	v1 "github.com/easysoft/zagent/cmd/agent-host/router/v1"
 	agentConf "github.com/easysoft/zagent/internal/agent/conf"
 	_fileUtils "github.com/easysoft/zagent/internal/pkg/lib/file"
+	_shellUtils "github.com/easysoft/zagent/internal/pkg/lib/shell"
 	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
 	"path/filepath"
 	"strconv"
@@ -18,9 +19,24 @@ type SetupService struct {
 
 func NewSetupService() *SetupService {
 	srv := SetupService{}
+
 	srv.GenWebsockifyTokens()
+	srv.LaunchWebsockifyService()
 
 	return &srv
+}
+
+func (s *SetupService) LaunchWebsockifyService() (ret v1.VncTokenResp) {
+	exePath := filepath.Join(agentConf.Inst.DirKvm, "websockify/run")
+	logPath := filepath.Join(agentConf.Inst.DirKvm, "websockify/nohup.log")
+
+	cmd := fmt.Sprintf("nohup %s --token-plugin TokenFile --token-source %s 6080 > %s 2>&1 &",
+		exePath, agentConf.Inst.DirToken, logPath)
+
+	_shellUtils.KillProcess("websockify")
+	_shellUtils.ExeShell(cmd)
+
+	return
 }
 
 func (s *SetupService) GetToken(port string) (ret v1.VncTokenResp) {
