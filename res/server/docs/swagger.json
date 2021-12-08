@@ -1,7 +1,13 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "title": "ZAgent服务器API文档",
+        "contact": {
+            "name": "API Support",
+            "url": "https://github.com/easysoft/zagent/issues",
+            "email": "462626@qq.com"
+        },
+        "version": "1.0"
     },
     "paths": {
         "/api/v1/client/host/register": {
