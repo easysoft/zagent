@@ -16,7 +16,7 @@ func NewVncCtrl() *VncCtrl {
 
 // GetToken
 // @summary 根据VNC Port获取Token
-// @Accept string
+// @Accept json
 // @Produce json
 // @Param port query string true "Vnc Port"
 // @Success 200 {object} _httpUtils.Response{iris.Map} "code = success? 1 : 0"
