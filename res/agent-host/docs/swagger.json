@@ -1,0 +1,667 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "ZAgent宿主机API文档",
+        "contact": {
+            "name": "API Support",
+            "url": "https://github.com/easysoft/zagent/issues",
+            "email": "462626@qq.com"
+        },
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/v1/kvm/create": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "创建KVM虚拟机",
+                "parameters": [
+                    {
+                        "description": "Kvm Request Object",
+                        "name": "task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.KvmReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success? 1 : 0",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_httpUtils.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/v1.KvmResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/kvm/{name}/destroy": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "摧毁KVM虚拟机",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Kvm Name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success? 1 : 0",
+                        "schema": {
+                            "$ref": "#/definitions/_httpUtils.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/kvm/{name}/reboot": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "重启KVM虚拟机",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Kvm Name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success? 1 : 0",
+                        "schema": {
+                            "$ref": "#/definitions/_httpUtils.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/kvm/{name}/resume": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "恢复KVM虚拟机",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Kvm Name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success? 1 : 0",
+                        "schema": {
+                            "$ref": "#/definitions/_httpUtils.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/kvm/{name}/suspend": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "暂停KVM虚拟机",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Kvm Name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success? 1 : 0",
+                        "schema": {
+                            "$ref": "#/definitions/_httpUtils.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/vmware/create": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "创建任务",
+                "parameters": [
+                    {
+                        "description": "Build Request Object",
+                        "name": "task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.Build"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success? 1 : 0",
+                        "schema": {
+                            "$ref": "#/definitions/_httpUtils.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/vnc/getToken": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "根据VNC Port获取Token",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Vnc Port",
+                        "name": "port",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success? 1 : 0",
+                        "schema": {
+                            "$ref": "#/definitions/_httpUtils.Response"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "_httpUtils.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "object"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Build": {
+            "type": "object",
+            "properties": {
+                "appPath": {
+                    "type": "string"
+                },
+                "appUrl": {
+                    "type": "string"
+                },
+                "appiumPort": {
+                    "type": "integer"
+                },
+                "browserType": {
+                    "type": "string"
+                },
+                "browserVersion": {
+                    "type": "string"
+                },
+                "buildCommands": {
+                    "type": "string"
+                },
+                "buildType": {
+                    "type": "string"
+                },
+                "completeTime": {
+                    "type": "string"
+                },
+                "desc": {
+                    "type": "string"
+                },
+                "deviceIp": {
+                    "type": "string"
+                },
+                "envVars": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "keepResultFiles": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "nodeIp": {
+                    "type": "string"
+                },
+                "nodePort": {
+                    "type": "integer"
+                },
+                "osCateGory": {
+                    "type": "string"
+                },
+                "osLang": {
+                    "type": "string"
+                },
+                "osType": {
+                    "type": "string"
+                },
+                "osVersion": {
+                    "type": "string"
+                },
+                "priority": {
+                    "type": "integer"
+                },
+                "progress": {
+                    "type": "string"
+                },
+                "projectDir": {
+                    "type": "string"
+                },
+                "queueId": {
+                    "type": "integer"
+                },
+                "resultFiles": {
+                    "type": "string"
+                },
+                "resultMsg": {
+                    "type": "string"
+                },
+                "resultPath": {
+                    "type": "string"
+                },
+                "scmAccount": {
+                    "type": "string"
+                },
+                "scmAddress": {
+                    "type": "string"
+                },
+                "scmPassword": {
+                    "type": "string"
+                },
+                "scriptUrl": {
+                    "type": "string"
+                },
+                "seleniumDriverPath": {
+                    "type": "string"
+                },
+                "serial": {
+                    "type": "string"
+                },
+                "startTime": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "testScenario": {
+                    "description": "interface test",
+                    "$ref": "#/definitions/domain.TestScenario"
+                },
+                "testSet": {
+                    "$ref": "#/definitions/domain.TestSet"
+                },
+                "version": {
+                    "type": "number"
+                },
+                "vmId": {
+                    "type": "integer"
+                },
+                "workDir": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Node": {
+            "type": "object",
+            "properties": {
+                "desc": {
+                    "type": "string"
+                },
+                "ip": {
+                    "type": "string"
+                },
+                "lastRegisterDate": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "osPlatform": {
+                    "type": "string"
+                },
+                "osType": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                },
+                "sshPort": {
+                    "type": "integer"
+                },
+                "sysLang": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "number"
+                },
+                "vncAddress": {
+                    "type": "string"
+                },
+                "workDir": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.TestProcessor": {
+            "type": "object",
+            "properties": {
+                "children": {
+                    "description": "can be interface, Processor.",
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "comments": {
+                    "type": "string"
+                },
+                "dataStore": {
+                    "description": "store test data loaded by DataLoopProcessor",
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "default": {
+                    "type": "string"
+                },
+                "endIndex": {
+                    "type": "integer"
+                },
+                "expr": {
+                    "type": "string"
+                },
+                "isOnce": {
+                    "type": "boolean"
+                },
+                "isRand": {
+                    "type": "boolean"
+                },
+                "loop": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "parentId": {
+                    "type": "integer"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "results": {
+                    "description": "results",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "source": {
+                    "type": "string"
+                },
+                "src": {
+                    "type": "string"
+                },
+                "startIndex": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "varName": {
+                    "type": "string"
+                },
+                "varNamePostfix": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.TestScenario": {
+            "type": "object",
+            "properties": {
+                "desc": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "processor": {
+                    "$ref": "#/definitions/domain.TestProcessor"
+                },
+                "version": {
+                    "type": "number"
+                }
+            }
+        },
+        "domain.TestSet": {
+            "type": "object",
+            "properties": {
+                "agents": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.Node"
+                    }
+                },
+                "desc": {
+                    "type": "string"
+                },
+                "duration": {
+                    "description": "sec, if set, loopCount will be ignore",
+                    "type": "integer"
+                },
+                "errorAction": {
+                    "type": "string"
+                },
+                "forever": {
+                    "type": "boolean"
+                },
+                "loopCount": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "numberOfThreads": {
+                    "type": "integer"
+                },
+                "processor": {
+                    "$ref": "#/definitions/domain.TestProcessor"
+                },
+                "rampUpPeriod": {
+                    "description": "sec",
+                    "type": "integer"
+                },
+                "version": {
+                    "type": "number"
+                }
+            }
+        },
+        "v1.KvmReq": {
+            "type": "object",
+            "properties": {
+                "osCategory": {
+                    "description": "Enums consts.OsCategory",
+                    "type": "string",
+                    "example": "windows"
+                },
+                "osLang": {
+                    "description": "Enums consts.OsLang",
+                    "type": "string",
+                    "example": "zh_cn"
+                },
+                "osType": {
+                    "description": "Enums consts.OsType",
+                    "type": "string",
+                    "example": "win10"
+                },
+                "osVersion": {
+                    "type": "string"
+                },
+                "startAfterCreated": {
+                    "type": "boolean"
+                },
+                "vmBacking": {
+                    "type": "string"
+                },
+                "vmCdromDriver": {
+                    "type": "string"
+                },
+                "vmCdromSys": {
+                    "type": "string"
+                },
+                "vmCpu": {
+                    "type": "integer"
+                },
+                "vmDiskSize": {
+                    "type": "integer"
+                },
+                "vmMacAddress": {
+                    "type": "string"
+                },
+                "vmMemorySize": {
+                    "type": "integer"
+                },
+                "vmTemplate": {
+                    "type": "string"
+                },
+                "vmUniqueName": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.KvmResp": {
+            "type": "object",
+            "properties": {
+                "backingPath": {
+                    "type": "string"
+                },
+                "imagePath": {
+                    "type": "string"
+                },
+                "macAddress": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "vncPort": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.VmWareReq": {
+            "type": "object",
+            "properties": {
+                "VmBackingName": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "startAfterCreated": {
+                    "type": "boolean"
+                },
+                "userName": {
+                    "type": "string"
+                },
+                "vmId": {
+                    "description": "for destroy",
+                    "type": "string"
+                },
+                "vmMemory": {
+                    "type": "integer"
+                },
+                "vmName": {
+                    "type": "string"
+                },
+                "vmProcessors": {
+                    "type": "integer"
+                }
+            }
+        },
+        "v1.VmWareResp": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "mac": {
+                    "type": "string"
+                },
+                "msg": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "vmId": {
+                    "type": "string"
+                },
+                "vncAddress": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
