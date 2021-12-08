@@ -23,6 +23,8 @@ sudo systemctl restart zagent.service
 sudo systemctl enable zagent.service
 sudo systemctl disable zagent.service
 
+
+# https://github.com/swaggo/swag
 rm -rf res/server/docs
 swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/server -o res/server/docs
 rm -rf res/agent-host/docs
@@ -32,7 +34,8 @@ swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/agent-vm -o re
 
 nohup swagger serve -p 50001 --no-open /Users/aaron/rd/project/zentao/go/zagent/res/server/docs/swagger.json > server.log 2>&1 &
 
-ps -ef | grep swag | grep -v grep | awk '{print $2}' | xargs kill -9
-nohup swag serve --no-open -p 50001 res/server/docs/swagger.json > server.log 2>&1 &
-nohup swag serve --no-open -p 50002 res/agent-host/docs/swagger.json > host.log 2>&1 &
-nohup swag serve --no-open -p 50003 res/agent-vm/docs/swagger.json > vm.log 2>&1 &
+# https://github.com/go-swagger/go-swagger
+ps -ef | grep swagger | grep -v grep | awk '{print $2}' | xargs kill -9
+nohup swagger serve --no-open -p 50001 res/server/docs/swagger.json > server.log 2>&1 &
+nohup swagger serve --no-open -p 50002 res/agent-host/docs/swagger.json > host.log 2>&1 &
+nohup swagger serve --no-open -p 50003 res/agent-vm/docs/swagger.json > vm.log 2>&1 &
