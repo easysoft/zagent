@@ -1,10 +1,10 @@
 package docker
 
 import (
-	hostKvmService "github.com/easysoft/zagent/internal/agent-host/service/kvm"
-	agentConf "github.com/easysoft/zagent/internal/agent/conf"
-	consts "github.com/easysoft/zagent/internal/comm/const"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	hostKvmService "github.com/easysoft/zv/internal/agent-host/service/kvm"
+	agentConf "github.com/easysoft/zv/internal/agent/conf"
+	consts "github.com/easysoft/zv/internal/comm/const"
+	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
 	"testing"
 )
 

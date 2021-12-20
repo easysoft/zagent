@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"github.com/easysoft/zagent/internal/agent/service"
-	"github.com/easysoft/zagent/internal/agent/service/interface"
-	"github.com/easysoft/zagent/internal/comm/domain"
-	"github.com/easysoft/zagent/internal/pkg/domain"
+	"github.com/easysoft/zv/internal/agent/service"
+	"github.com/easysoft/zv/internal/agent/service/interface"
+	"github.com/easysoft/zv/internal/comm/domain"
+	"github.com/easysoft/zv/internal/pkg/domain"
 	"golang.org/x/net/context"
 )
 

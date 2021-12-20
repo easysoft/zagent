@@ -1,8 +1,8 @@
 package hostAgentKvmService
 
 import (
-	"github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/comm/domain"
 	"github.com/libvirt/libvirt-go"
 	"strings"
 	"time"

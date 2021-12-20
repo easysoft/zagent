@@ -2,10 +2,10 @@ package agentInterfaceService
 
 import (
 	"fmt"
-	interfaceUtils "github.com/easysoft/zagent/internal/agent/utils/interface"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	_const "github.com/easysoft/zagent/internal/pkg/const"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	interfaceUtils "github.com/easysoft/zv/internal/agent/utils/interface"
+	commDomain "github.com/easysoft/zv/internal/comm/domain"
+	_const "github.com/easysoft/zv/internal/pkg/const"
+	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
 )
 
 type InterfaceReqService struct {

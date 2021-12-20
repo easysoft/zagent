@@ -1,11 +1,11 @@
 package serverService
 
 import (
-	"github.com/easysoft/zagent/internal/comm/const"
-	_domain "github.com/easysoft/zagent/internal/pkg/domain"
-	"github.com/easysoft/zagent/internal/server/model"
-	"github.com/easysoft/zagent/internal/server/repo"
-	"github.com/easysoft/zagent/internal/server/service/vendors/huaweicloud"
+	"github.com/easysoft/zv/internal/comm/const"
+	_domain "github.com/easysoft/zv/internal/pkg/domain"
+	"github.com/easysoft/zv/internal/server/model"
+	"github.com/easysoft/zv/internal/server/repo"
+	"github.com/easysoft/zv/internal/server/service/vendors/huaweicloud"
 	"time"
 )
 

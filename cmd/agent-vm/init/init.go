@@ -2,25 +2,25 @@ package vmInit
 
 import (
 	"fmt"
-	vmCron "github.com/easysoft/zagent/cmd/agent-vm/cron"
-	vmRouter "github.com/easysoft/zagent/cmd/agent-vm/router"
-	agentConf "github.com/easysoft/zagent/internal/agent/conf"
-	consts "github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/pkg/db"
-	_commonUtils "github.com/easysoft/zagent/internal/pkg/lib/common"
-	serverConf "github.com/easysoft/zagent/internal/server/conf"
+	vmCron "github.com/easysoft/zv/cmd/agent-vm/cron"
+	vmRouter "github.com/easysoft/zv/cmd/agent-vm/router"
+	agentConf "github.com/easysoft/zv/internal/agent/conf"
+	consts "github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/pkg/db"
+	_commonUtils "github.com/easysoft/zv/internal/pkg/lib/common"
+	serverConf "github.com/easysoft/zv/internal/server/conf"
 	"github.com/facebookgo/inject"
 	"github.com/kataras/iris/v12"
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"time"
 
-	_ "github.com/easysoft/zagent/res/agent-vm/docs"
+	_ "github.com/easysoft/zv/res/agent-vm/docs"
 )
 
 func Init() {
 	agentConf.Init(consts.AppNameAgentVm)
-	_db.InitDB("agent")
+	_db.InitDB("zv-agent")
 
 	irisServer := NewServer(nil)
 	irisServer.App.Logger().SetLevel(serverConf.Inst.LogLevel)

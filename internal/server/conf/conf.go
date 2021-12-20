@@ -2,10 +2,10 @@ package serverConf
 
 import (
 	"fmt"
-	"github.com/easysoft/zagent/internal/pkg/lib/common"
-	"github.com/easysoft/zagent/internal/pkg/lib/file"
-	"github.com/easysoft/zagent/internal/pkg/lib/log"
-	"github.com/easysoft/zagent/res/server"
+	"github.com/easysoft/zv/internal/pkg/lib/common"
+	"github.com/easysoft/zv/internal/pkg/lib/file"
+	"github.com/easysoft/zv/internal/pkg/lib/log"
+	"github.com/easysoft/zv/res/server"
 	"github.com/jinzhu/configor"
 	logger "github.com/sirupsen/logrus"
 	"path/filepath"

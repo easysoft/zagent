@@ -1,10 +1,10 @@
 package serverService
 
 import (
-	v1 "github.com/easysoft/zagent/cmd/server/router/v1"
-	"github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/server/repo"
-	commonService "github.com/easysoft/zagent/internal/server/service/common"
+	v1 "github.com/easysoft/zv/cmd/server/router/v1"
+	"github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/server/repo"
+	commonService "github.com/easysoft/zv/internal/server/service/common"
 )
 
 type AssertService struct {

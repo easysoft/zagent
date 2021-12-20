@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zv/internal/comm/const"
 )
 
 type TestSet struct {

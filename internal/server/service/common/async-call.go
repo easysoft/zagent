@@ -2,7 +2,7 @@ package commonService
 
 import (
 	"context"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
 	"time"
 )
 

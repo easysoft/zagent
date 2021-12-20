@@ -1,7 +1,7 @@
 package consts
 
 const (
-	AppName       = "zagent"
+	AppName       = "zv"
 	AppNameAgent  = "agent"
 	AppNameServer = "serve"
 

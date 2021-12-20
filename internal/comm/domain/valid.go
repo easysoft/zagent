@@ -1,6 +1,6 @@
 package domain
 
-import _const "github.com/easysoft/zagent/internal/pkg/const"
+import _const "github.com/easysoft/zv/internal/pkg/const"
 
 type ValidRequest struct {
 	Method _const.ValidMethod `json:"method"`

@@ -1,9 +1,9 @@
 package repo
 
 import (
-	"github.com/easysoft/zagent/internal/comm/const"
-	serverConf "github.com/easysoft/zagent/internal/server/conf"
-	"github.com/easysoft/zagent/internal/server/model"
+	"github.com/easysoft/zv/internal/comm/const"
+	serverConf "github.com/easysoft/zv/internal/server/conf"
+	"github.com/easysoft/zv/internal/server/model"
 	"gorm.io/gorm"
 	"time"
 )

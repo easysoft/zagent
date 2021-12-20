@@ -2,9 +2,9 @@ package initService
 
 import (
 	"fmt"
-	"github.com/easysoft/zagent/internal/pkg/db"
-	_commonUtils "github.com/easysoft/zagent/internal/pkg/lib/common"
-	"github.com/easysoft/zagent/internal/server/model"
+	"github.com/easysoft/zv/internal/pkg/db"
+	_commonUtils "github.com/easysoft/zv/internal/pkg/lib/common"
+	"github.com/easysoft/zv/internal/server/model"
 	"github.com/fatih/color"
 )
 

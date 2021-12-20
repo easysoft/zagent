@@ -2,11 +2,11 @@ package net
 
 import (
 	"encoding/json"
-	"github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/comm/domain"
-	"github.com/easysoft/zagent/internal/pkg/lib/file"
-	"github.com/easysoft/zagent/internal/pkg/lib/http"
-	"github.com/easysoft/zagent/internal/pkg/lib/log"
+	"github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/comm/domain"
+	"github.com/easysoft/zv/internal/pkg/lib/file"
+	"github.com/easysoft/zv/internal/pkg/lib/http"
+	"github.com/easysoft/zv/internal/pkg/lib/log"
 	"testing"
 )
 

@@ -3,9 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	ini "github.com/easysoft/zagent/cmd/server/init"
-	"github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/pkg/lib/log"
+	ini "github.com/easysoft/zv/cmd/server/init"
+	"github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/pkg/lib/log"
 	"os"
 )
 
@@ -18,7 +18,7 @@ var (
 // @title ZAgent服务器API文档
 // @version 1.0
 // @contact.name API Support
-// @contact.url https://github.com/easysoft/zagent/issues
+// @contact.url https://github.com/easysoft/zv/issues
 // @contact.email 462626@qq.com
 func main() {
 	flag.Usage = func() {

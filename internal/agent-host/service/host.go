@@ -1,15 +1,15 @@
 package hostAgentService
 
 import (
-	hostKvmService "github.com/easysoft/zagent/internal/agent-host/service/kvm"
-	agentConf "github.com/easysoft/zagent/internal/agent/conf"
-	agentService "github.com/easysoft/zagent/internal/agent/service"
-	testingService "github.com/easysoft/zagent/internal/agent/service/testing"
-	agentZentaoService "github.com/easysoft/zagent/internal/agent/service/zentao"
-	"github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/comm/domain"
-	_i118Utils "github.com/easysoft/zagent/internal/pkg/lib/i118"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	hostKvmService "github.com/easysoft/zv/internal/agent-host/service/kvm"
+	agentConf "github.com/easysoft/zv/internal/agent/conf"
+	agentService "github.com/easysoft/zv/internal/agent/service"
+	testingService "github.com/easysoft/zv/internal/agent/service/testing"
+	agentZentaoService "github.com/easysoft/zv/internal/agent/service/zentao"
+	"github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/comm/domain"
+	_i118Utils "github.com/easysoft/zv/internal/pkg/lib/i118"
+	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
 	"strings"
 )
 

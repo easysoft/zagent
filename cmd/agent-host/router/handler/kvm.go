@@ -1,10 +1,10 @@
 package hostHandler
 
 import (
-	v1 "github.com/easysoft/zagent/cmd/agent-host/router/v1"
-	hostKvmService "github.com/easysoft/zagent/internal/agent-host/service/kvm"
-	_const "github.com/easysoft/zagent/internal/pkg/const"
-	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
+	v1 "github.com/easysoft/zv/cmd/agent-host/router/v1"
+	hostKvmService "github.com/easysoft/zv/internal/agent-host/service/kvm"
+	_const "github.com/easysoft/zv/internal/pkg/const"
+	_httpUtils "github.com/easysoft/zv/internal/pkg/lib/http"
 	"github.com/kataras/iris/v12"
 	"strconv"
 )

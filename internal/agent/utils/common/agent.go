@@ -1,8 +1,8 @@
 package agentUtils
 
 import (
-	agentConf "github.com/easysoft/zagent/internal/agent/conf"
-	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
+	agentConf "github.com/easysoft/zv/internal/agent/conf"
+	agentConst "github.com/easysoft/zv/internal/agent/utils/const"
 )
 
 func IsDeviceAgent() bool {

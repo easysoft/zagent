@@ -2,8 +2,8 @@ package commonService
 
 import (
 	"fmt"
-	bizCasbin "github.com/easysoft/zagent/internal/server/biz/casbin"
-	"github.com/easysoft/zagent/internal/server/repo"
+	bizCasbin "github.com/easysoft/zv/internal/server/biz/casbin"
+	"github.com/easysoft/zv/internal/server/repo"
 	"github.com/fatih/color"
 	"strconv"
 )

@@ -1,6 +1,6 @@
 package virtualboxapi
 
-import "github.com/easysoft/zagent/internal/server/service/vendors/virtualbox/srv"
+import "github.com/easysoft/zv/internal/server/service/vendors/virtualbox/srv"
 
 // Console is a VirtualBox console object
 type Console struct {

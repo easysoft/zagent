@@ -1,6 +1,6 @@
 package v1
 
-import "github.com/easysoft/zagent/internal/comm/const"
+import "github.com/easysoft/zv/internal/comm/const"
 
 type KvmReq struct {
 	VmMacAddress   string `json:"vmMacAddress"`

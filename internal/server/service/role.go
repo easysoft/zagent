@@ -2,12 +2,12 @@ package serverService
 
 import (
 	"fmt"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	bizCasbin "github.com/easysoft/zagent/internal/server/biz/casbin"
-	"github.com/easysoft/zagent/internal/server/biz/transformer"
-	"github.com/easysoft/zagent/internal/server/model"
-	"github.com/easysoft/zagent/internal/server/repo"
-	commonService "github.com/easysoft/zagent/internal/server/service/common"
+	commDomain "github.com/easysoft/zv/internal/comm/domain"
+	bizCasbin "github.com/easysoft/zv/internal/server/biz/casbin"
+	"github.com/easysoft/zv/internal/server/biz/transformer"
+	"github.com/easysoft/zv/internal/server/model"
+	"github.com/easysoft/zv/internal/server/repo"
+	commonService "github.com/easysoft/zv/internal/server/service/common"
 	"github.com/fatih/color"
 	gf "github.com/snowlyg/gotransformer"
 	"strconv"
