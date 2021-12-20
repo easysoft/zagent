@@ -1,10 +1,10 @@
 package handler
 
 import (
-	_const "github.com/easysoft/zagent/internal/pkg/const"
-	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
-	"github.com/easysoft/zagent/internal/server/model"
-	"github.com/easysoft/zagent/internal/server/service"
+	_const "github.com/easysoft/zv/internal/pkg/const"
+	_httpUtils "github.com/easysoft/zv/internal/pkg/lib/http"
+	"github.com/easysoft/zv/internal/server/model"
+	"github.com/easysoft/zv/internal/server/service"
 	"github.com/kataras/iris/v12"
 )
 

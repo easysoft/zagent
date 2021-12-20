@@ -1,6 +1,6 @@
 package model
 
-import "github.com/easysoft/zagent/internal/comm/const"
+import "github.com/easysoft/zv/internal/comm/const"
 
 type Browser struct {
 	BaseModel

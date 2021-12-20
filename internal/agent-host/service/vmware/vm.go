@@ -2,10 +2,10 @@ package vmWareService
 
 import (
 	"fmt"
-	v1 "github.com/easysoft/zagent/cmd/agent-host/router/v1"
-	"github.com/easysoft/zagent/internal/comm/domain"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
-	vmwareService "github.com/easysoft/zagent/internal/server/service/vendors/vmware"
+	v1 "github.com/easysoft/zv/cmd/agent-host/router/v1"
+	"github.com/easysoft/zv/internal/comm/domain"
+	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
+	vmwareService "github.com/easysoft/zv/internal/server/service/vendors/vmware"
 	"time"
 )
 

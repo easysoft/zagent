@@ -2,13 +2,13 @@ package serverService
 
 import (
 	"fmt"
-	"github.com/easysoft/zagent/internal/comm/const"
-	_domain "github.com/easysoft/zagent/internal/pkg/domain"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
-	"github.com/easysoft/zagent/internal/server/model"
-	"github.com/easysoft/zagent/internal/server/repo"
-	"github.com/easysoft/zagent/internal/server/service/vendors/virtualbox/api"
-	"github.com/easysoft/zagent/internal/server/service/vendors/virtualbox/srv"
+	"github.com/easysoft/zv/internal/comm/const"
+	_domain "github.com/easysoft/zv/internal/pkg/domain"
+	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
+	"github.com/easysoft/zv/internal/server/model"
+	"github.com/easysoft/zv/internal/server/repo"
+	"github.com/easysoft/zv/internal/server/service/vendors/virtualbox/api"
+	"github.com/easysoft/zv/internal/server/service/vendors/virtualbox/srv"
 )
 
 type VirtualboxCloudVmService struct {

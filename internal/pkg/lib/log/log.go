@@ -2,9 +2,9 @@ package _logUtils
 
 import (
 	"fmt"
-	consts "github.com/easysoft/zagent/internal/comm/const"
-	_const "github.com/easysoft/zagent/internal/pkg/const"
-	"github.com/easysoft/zagent/internal/pkg/var"
+	consts "github.com/easysoft/zv/internal/comm/const"
+	_const "github.com/easysoft/zv/internal/pkg/const"
+	"github.com/easysoft/zv/internal/pkg/var"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"

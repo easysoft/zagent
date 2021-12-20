@@ -2,8 +2,8 @@ package handler
 
 import (
 	"fmt"
-	agentService "github.com/easysoft/zagent/internal/agent/service"
-	_domain "github.com/easysoft/zagent/internal/pkg/domain"
+	agentService "github.com/easysoft/zv/internal/agent/service"
+	_domain "github.com/easysoft/zv/internal/pkg/domain"
 	"golang.org/x/net/context"
 )
 

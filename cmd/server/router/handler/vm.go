@@ -1,10 +1,10 @@
 package handler
 
 import (
-	v1 "github.com/easysoft/zagent/cmd/server/router/v1"
-	"github.com/easysoft/zagent/internal/pkg/const"
-	"github.com/easysoft/zagent/internal/pkg/lib/http"
-	"github.com/easysoft/zagent/internal/server/service"
+	v1 "github.com/easysoft/zv/cmd/server/router/v1"
+	"github.com/easysoft/zv/internal/pkg/const"
+	"github.com/easysoft/zv/internal/pkg/lib/http"
+	"github.com/easysoft/zv/internal/server/service"
 	"github.com/kataras/iris/v12"
 )
 

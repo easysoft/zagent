@@ -1,9 +1,9 @@
 package repo
 
 import (
-	"github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/comm/domain"
-	_intUtils "github.com/easysoft/zagent/internal/pkg/lib/int"
+	"github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/comm/domain"
+	_intUtils "github.com/easysoft/zv/internal/pkg/lib/int"
 )
 
 type CommonRepo struct {

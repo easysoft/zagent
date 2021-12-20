@@ -1,11 +1,11 @@
 package serverService
 
 import (
-	consts "github.com/easysoft/zagent/internal/comm/const"
-	_domain "github.com/easysoft/zagent/internal/pkg/domain"
-	"github.com/easysoft/zagent/internal/server/model"
-	"github.com/easysoft/zagent/internal/server/repo"
-	commonService "github.com/easysoft/zagent/internal/server/service/common"
+	consts "github.com/easysoft/zv/internal/comm/const"
+	_domain "github.com/easysoft/zv/internal/pkg/domain"
+	"github.com/easysoft/zv/internal/server/model"
+	"github.com/easysoft/zv/internal/server/repo"
+	commonService "github.com/easysoft/zv/internal/server/service/common"
 )
 
 type UnitService struct {

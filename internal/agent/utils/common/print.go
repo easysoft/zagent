@@ -2,11 +2,11 @@ package agentUtils
 
 import (
 	"fmt"
-	consts "github.com/easysoft/zagent/internal/comm/const"
-	_commonUtils "github.com/easysoft/zagent/internal/pkg/lib/common"
-	_i118Utils "github.com/easysoft/zagent/internal/pkg/lib/i118"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
-	agentRes "github.com/easysoft/zagent/res/agent-vm"
+	consts "github.com/easysoft/zv/internal/comm/const"
+	_commonUtils "github.com/easysoft/zv/internal/pkg/lib/common"
+	_i118Utils "github.com/easysoft/zv/internal/pkg/lib/i118"
+	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
+	agentRes "github.com/easysoft/zv/res/agent-vm"
 	"github.com/fatih/color"
 	"io/ioutil"
 	"path/filepath"

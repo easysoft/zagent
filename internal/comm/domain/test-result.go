@@ -2,7 +2,7 @@ package domain
 
 import (
 	"fmt"
-	_const "github.com/easysoft/zagent/internal/pkg/const"
+	_const "github.com/easysoft/zv/internal/pkg/const"
 	"time"
 )
 

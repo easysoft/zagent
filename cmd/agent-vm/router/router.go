@@ -1,9 +1,9 @@
 package vmRouter
 
 import (
-	vmHandler "github.com/easysoft/zagent/cmd/agent-vm/router/handler"
-	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
-	serverConf "github.com/easysoft/zagent/internal/server/conf"
+	vmHandler "github.com/easysoft/zv/cmd/agent-vm/router/handler"
+	_httpUtils "github.com/easysoft/zv/internal/pkg/lib/http"
+	serverConf "github.com/easysoft/zv/internal/server/conf"
 	"github.com/kataras/iris/v12"
 )
 

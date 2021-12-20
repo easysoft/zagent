@@ -2,12 +2,12 @@ package serverService
 
 import (
 	"fmt"
-	"github.com/easysoft/zagent/internal/comm/const"
-	_domain "github.com/easysoft/zagent/internal/pkg/domain"
-	"github.com/easysoft/zagent/internal/server/model"
-	"github.com/easysoft/zagent/internal/server/repo"
-	"github.com/easysoft/zagent/internal/server/service/vendors/aliyun"
-	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
+	"github.com/easysoft/zv/internal/comm/const"
+	_domain "github.com/easysoft/zv/internal/pkg/domain"
+	"github.com/easysoft/zv/internal/server/model"
+	"github.com/easysoft/zv/internal/server/repo"
+	"github.com/easysoft/zv/internal/server/service/vendors/aliyun"
+	serverConst "github.com/easysoft/zv/internal/server/utils/const"
 	"time"
 )
 

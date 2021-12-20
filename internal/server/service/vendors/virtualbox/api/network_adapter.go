@@ -1,8 +1,8 @@
 package virtualboxapi
 
 import (
-	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
-	"github.com/easysoft/zagent/internal/server/service/vendors/virtualbox/srv"
+	_stringUtils "github.com/easysoft/zv/internal/pkg/lib/string"
+	"github.com/easysoft/zv/internal/server/service/vendors/virtualbox/srv"
 	"strings"
 )
 

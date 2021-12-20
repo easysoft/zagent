@@ -2,12 +2,12 @@ package agentInterfaceService
 
 import (
 	"encoding/json"
-	agentConf "github.com/easysoft/zagent/internal/agent/conf"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	_fileUtils "github.com/easysoft/zagent/internal/pkg/lib/file"
-	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
-	_i118Utils "github.com/easysoft/zagent/internal/pkg/lib/i118"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	agentConf "github.com/easysoft/zv/internal/agent/conf"
+	commDomain "github.com/easysoft/zv/internal/comm/domain"
+	_fileUtils "github.com/easysoft/zv/internal/pkg/lib/file"
+	_httpUtils "github.com/easysoft/zv/internal/pkg/lib/http"
+	_i118Utils "github.com/easysoft/zv/internal/pkg/lib/i118"
+	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
 	"github.com/mitchellh/mapstructure"
 	"strings"
 )

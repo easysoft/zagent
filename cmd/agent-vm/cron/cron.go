@@ -2,11 +2,11 @@ package vmCron
 
 import (
 	"fmt"
-	vmAgentService "github.com/easysoft/zagent/internal/agent-vm/service"
-	consts "github.com/easysoft/zagent/internal/comm/const"
-	_cronUtils "github.com/easysoft/zagent/internal/pkg/lib/cron"
-	_dateUtils "github.com/easysoft/zagent/internal/pkg/lib/date"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	vmAgentService "github.com/easysoft/zv/internal/agent-vm/service"
+	consts "github.com/easysoft/zv/internal/comm/const"
+	_cronUtils "github.com/easysoft/zv/internal/pkg/lib/cron"
+	_dateUtils "github.com/easysoft/zv/internal/pkg/lib/date"
+	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
 	"github.com/kataras/iris/v12"
 	"sync"
 	"time"

@@ -1,6 +1,6 @@
 /.idea/
 *.log
-/zagent.db
+/zv.db
 /bin/
 
 /log/

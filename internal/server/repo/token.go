@@ -2,8 +2,8 @@ package repo
 
 import (
 	"fmt"
-	bizConst "github.com/easysoft/zagent/internal/server/biz/const"
-	"github.com/easysoft/zagent/internal/server/biz/redis"
+	bizConst "github.com/easysoft/zv/internal/server/biz/const"
+	"github.com/easysoft/zv/internal/server/biz/redis"
 	"github.com/gomodule/redigo/redis"
 	"gorm.io/gorm"
 	"strings"

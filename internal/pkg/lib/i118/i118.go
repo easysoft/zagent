@@ -3,7 +3,7 @@ package _i118Utils
 import (
 	"encoding/json"
 	"fmt"
-	_resUtils "github.com/easysoft/zagent/internal/pkg/lib/res"
+	_resUtils "github.com/easysoft/zv/internal/pkg/lib/res"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 	"io/ioutil"

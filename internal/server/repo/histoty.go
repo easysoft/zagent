@@ -1,11 +1,11 @@
 package repo
 
 import (
-	consts "github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/comm/domain"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
-	"github.com/easysoft/zagent/internal/server/model"
-	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
+	consts "github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/comm/domain"
+	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
+	"github.com/easysoft/zv/internal/server/model"
+	serverConst "github.com/easysoft/zv/internal/server/utils/const"
 	"gorm.io/gorm"
 )
 

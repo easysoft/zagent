@@ -2,18 +2,18 @@ package init
 
 import (
 	"fmt"
-	"github.com/easysoft/zagent/cmd/server/router"
-	"github.com/easysoft/zagent/cmd/server/router/handler"
-	"github.com/easysoft/zagent/internal/pkg/db"
-	_commonUtils "github.com/easysoft/zagent/internal/pkg/lib/common"
-	bizCasbin "github.com/easysoft/zagent/internal/server/biz/casbin"
-	"github.com/easysoft/zagent/internal/server/biz/jwt"
-	"github.com/easysoft/zagent/internal/server/biz/redis"
-	"github.com/easysoft/zagent/internal/server/conf"
-	serverCron "github.com/easysoft/zagent/internal/server/cron"
-	"github.com/easysoft/zagent/internal/server/model"
-	initService "github.com/easysoft/zagent/internal/server/service/init"
-	serverRes "github.com/easysoft/zagent/res/server"
+	"github.com/easysoft/zv/cmd/server/router"
+	"github.com/easysoft/zv/cmd/server/router/handler"
+	"github.com/easysoft/zv/internal/pkg/db"
+	_commonUtils "github.com/easysoft/zv/internal/pkg/lib/common"
+	bizCasbin "github.com/easysoft/zv/internal/server/biz/casbin"
+	"github.com/easysoft/zv/internal/server/biz/jwt"
+	"github.com/easysoft/zv/internal/server/biz/redis"
+	"github.com/easysoft/zv/internal/server/conf"
+	serverCron "github.com/easysoft/zv/internal/server/cron"
+	"github.com/easysoft/zv/internal/server/model"
+	initService "github.com/easysoft/zv/internal/server/service/init"
+	serverRes "github.com/easysoft/zv/res/server"
 	assetfs "github.com/elazarl/go-bindata-assetfs"
 	"github.com/facebookgo/inject"
 	"github.com/kataras/iris/v12"
@@ -24,7 +24,7 @@ import (
 
 	"github.com/kataras/iris/v12/context"
 
-	_ "github.com/easysoft/zagent/res/server/docs"
+	_ "github.com/easysoft/zv/res/server/docs"
 )
 
 func Init(version string, printVersion, printRouter *bool) {

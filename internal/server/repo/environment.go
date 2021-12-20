@@ -1,7 +1,7 @@
 package repo
 
 import (
-	"github.com/easysoft/zagent/internal/server/model"
+	"github.com/easysoft/zv/internal/server/model"
 	"gorm.io/gorm"
 )
 

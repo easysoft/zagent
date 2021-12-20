@@ -1,9 +1,9 @@
 package repo
 
 import (
-	"github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/comm/domain"
-	"github.com/easysoft/zagent/internal/server/model"
+	"github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/comm/domain"
+	"github.com/easysoft/zv/internal/server/model"
 	"gorm.io/gorm"
 )
 

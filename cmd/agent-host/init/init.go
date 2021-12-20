@@ -2,27 +2,27 @@ package hostInit
 
 import (
 	"fmt"
-	hostCron "github.com/easysoft/zagent/cmd/agent-host/cron"
-	hostRouter "github.com/easysoft/zagent/cmd/agent-host/router"
-	hostAgentService "github.com/easysoft/zagent/internal/agent-host/service"
-	hostKvmService "github.com/easysoft/zagent/internal/agent-host/service/kvm"
-	agentConf "github.com/easysoft/zagent/internal/agent/conf"
-	consts "github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/pkg/db"
-	_commonUtils "github.com/easysoft/zagent/internal/pkg/lib/common"
-	serverConf "github.com/easysoft/zagent/internal/server/conf"
+	hostCron "github.com/easysoft/zv/cmd/agent-host/cron"
+	hostRouter "github.com/easysoft/zv/cmd/agent-host/router"
+	hostAgentService "github.com/easysoft/zv/internal/agent-host/service"
+	hostKvmService "github.com/easysoft/zv/internal/agent-host/service/kvm"
+	agentConf "github.com/easysoft/zv/internal/agent/conf"
+	consts "github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/pkg/db"
+	_commonUtils "github.com/easysoft/zv/internal/pkg/lib/common"
+	serverConf "github.com/easysoft/zv/internal/server/conf"
 	"github.com/facebookgo/inject"
 	"github.com/kataras/iris/v12"
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"time"
 
-	_ "github.com/easysoft/zagent/res/agent-host/docs"
+	_ "github.com/easysoft/zv/res/agent-host/docs"
 )
 
 func Init() {
 	agentConf.Init(consts.AppNameAgentHost)
-	_db.InitDB("agent")
+	_db.InitDB("zv-agent")
 
 	irisServer := NewServer(nil)
 	irisServer.App.Logger().SetLevel(serverConf.Inst.LogLevel)

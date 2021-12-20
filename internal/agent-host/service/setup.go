@@ -2,11 +2,11 @@ package hostAgentService
 
 import (
 	"fmt"
-	v1 "github.com/easysoft/zagent/cmd/agent-host/router/v1"
-	agentConf "github.com/easysoft/zagent/internal/agent/conf"
-	_fileUtils "github.com/easysoft/zagent/internal/pkg/lib/file"
-	_shellUtils "github.com/easysoft/zagent/internal/pkg/lib/shell"
-	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
+	v1 "github.com/easysoft/zv/cmd/agent-host/router/v1"
+	agentConf "github.com/easysoft/zv/internal/agent/conf"
+	_fileUtils "github.com/easysoft/zv/internal/pkg/lib/file"
+	_shellUtils "github.com/easysoft/zv/internal/pkg/lib/shell"
+	_stringUtils "github.com/easysoft/zv/internal/pkg/lib/string"
 	"path/filepath"
 	"strconv"
 	"strings"

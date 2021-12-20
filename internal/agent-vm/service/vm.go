@@ -1,14 +1,14 @@
 package vmAgentService
 
 import (
-	"github.com/easysoft/zagent/internal/agent/conf"
-	agentService "github.com/easysoft/zagent/internal/agent/service"
-	testingService "github.com/easysoft/zagent/internal/agent/service/testing"
-	agentZentaoService "github.com/easysoft/zagent/internal/agent/service/zentao"
-	"github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/comm/domain"
-	"github.com/easysoft/zagent/internal/pkg/lib/i118"
-	"github.com/easysoft/zagent/internal/pkg/lib/log"
+	"github.com/easysoft/zv/internal/agent/conf"
+	agentService "github.com/easysoft/zv/internal/agent/service"
+	testingService "github.com/easysoft/zv/internal/agent/service/testing"
+	agentZentaoService "github.com/easysoft/zv/internal/agent/service/zentao"
+	"github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/comm/domain"
+	"github.com/easysoft/zv/internal/pkg/lib/i118"
+	"github.com/easysoft/zv/internal/pkg/lib/log"
 	"time"
 )
 

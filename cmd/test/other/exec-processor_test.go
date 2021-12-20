@@ -2,10 +2,10 @@ package other
 
 import (
 	"fmt"
-	"github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/comm/domain"
-	"github.com/easysoft/zagent/internal/pkg/const"
-	"github.com/easysoft/zagent/internal/pkg/lib/rpc"
+	"github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/comm/domain"
+	"github.com/easysoft/zv/internal/pkg/const"
+	"github.com/easysoft/zv/internal/pkg/lib/rpc"
 	"log"
 	"testing"
 )
