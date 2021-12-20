@@ -22,7 +22,6 @@ import (
 
 func Init() {
 	agentConf.Init(consts.AppNameAgentHost)
-	_db.InitDB("zv-agent")
 
 	irisServer := NewServer(nil)
 	irisServer.App.Logger().SetLevel(serverConf.Inst.LogLevel)
@@ -48,9 +47,6 @@ func injectObj(router *hostRouter.Router) {
 	g.Logger = logrus.StandardLogger()
 
 	err := g.Provide(
-		// db
-		&inject.Object{Value: _db.GetInst().DB()},
-
 		// setup
 		&inject.Object{Value: hostAgentService.NewSetupService()},
 
