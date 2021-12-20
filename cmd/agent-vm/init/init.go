@@ -15,7 +15,7 @@ import (
 	"net/http"
 	"time"
 
-	_ "github.com/easysoft/zv/res/agent-vm/docs"
+	_ "github.com/easysoft/zv/res/vm/docs"
 )
 
 func Init() {

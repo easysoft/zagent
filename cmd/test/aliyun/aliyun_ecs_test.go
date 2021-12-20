@@ -11,7 +11,7 @@ import (
 )
 
 func TestAliyunEcs(t *testing.T) {
-	_logUtils.Init(consts.AppNameAgent)
+	_logUtils.Init(consts.AppNameAgentHost)
 
 	commSrv := aliyun.NewAliyunCommService()
 	ecsSrv := aliyun.NewAliyunEcsService()

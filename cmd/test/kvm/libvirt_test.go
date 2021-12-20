@@ -8,7 +8,7 @@ import (
 )
 
 func TestLibVirt(t *testing.T) {
-	_logUtils.Init(consts.AppNameAgent)
+	_logUtils.Init(consts.AppNameAgentHost)
 
 	agentConf.Inst.Host = "192.168.0.56"
 	agentConf.Inst.User = "aaron"
