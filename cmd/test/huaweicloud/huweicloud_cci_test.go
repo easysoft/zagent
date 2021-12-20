@@ -11,7 +11,7 @@ import (
 )
 
 func TestHuaweiCloudCci(t *testing.T) {
-	_logUtils.Init(consts.AppNameAgent)
+	_logUtils.Init(consts.AppNameAgentHost)
 
 	srv := huaweicloud.NewHuaweiCloudCommService()
 	cci := huaweicloud.NewHuaweiCloudCciService()

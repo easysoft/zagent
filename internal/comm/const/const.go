@@ -1,12 +1,10 @@
 package consts
 
 const (
-	AppName       = "zv"
-	AppNameAgent  = "agent"
-	AppNameServer = "serve"
-
-	AppNameAgentHost = "agent-host"
-	AppNameAgentVm   = "agent-vm"
+	AppName          = "zv"
+	AppNameServer    = "server"
+	AppNameAgentHost = "host"
+	AppNameAgentVm   = "vm"
 
 	ServerPort = 8085
 	AgentPort  = 8086

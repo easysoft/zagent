@@ -6,7 +6,7 @@ import (
 	_commonUtils "github.com/easysoft/zv/internal/pkg/lib/common"
 	_i118Utils "github.com/easysoft/zv/internal/pkg/lib/i118"
 	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
-	agentRes "github.com/easysoft/zv/res/agent-vm"
+	agentRes "github.com/easysoft/zv/res/vm"
 	"github.com/fatih/color"
 	"io/ioutil"
 	"path/filepath"
