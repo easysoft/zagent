@@ -10,7 +10,7 @@ import (
 )
 
 func TestOss(t *testing.T) {
-	_logUtils.Init(consts.AppNameAgent)
+	_logUtils.Init(consts.AppNameAgentHost)
 
 	client, err := oss.New("oss-cn-hangzhou.aliyuncs.com", testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
 	if err != nil {

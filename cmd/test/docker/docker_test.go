@@ -9,7 +9,7 @@ import (
 )
 
 func TestDocker(t *testing.T) {
-	_logUtils.Init(consts.AppNameAgent)
+	_logUtils.Init(consts.AppNameAgentHost)
 
 	agentConf.Inst.Host = "192.168.kvm6"
 	agentConf.Inst.User = "aaron"

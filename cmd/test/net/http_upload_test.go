@@ -11,7 +11,7 @@ import (
 )
 
 func TestUpload(t *testing.T) {
-	_logUtils.Init(consts.AppNameAgent)
+	_logUtils.Init(consts.AppNameAgentHost)
 	result := domain.TestResult{Name: "Result Name"}
 	build := domain.Build{ID: 100, Name: "Result Name"}
 

@@ -34,7 +34,7 @@ func main() {
 		os.Exit(0)
 	}()
 
-	flagSet = flag.NewFlagSet(consts.AppNameAgent, flag.ContinueOnError)
+	flagSet = flag.NewFlagSet(consts.AppNameAgentHost, flag.ContinueOnError)
 
 	flagSet.StringVar(&runMode, "t", agentConst.Host.ToString(), "")
 	flagSet.StringVar(&agentConf.Inst.Server, "s", "http://127.0.0.1:8085", "")
@@ -60,7 +60,7 @@ func main() {
 }
 
 func start() {
-	_logUtils.Init(consts.AppNameAgent)
+	_logUtils.Init(consts.AppNameAgentHost)
 
 	if err := flagSet.Parse(os.Args[1:]); err == nil {
 		agentConf.Inst.RunMode = agentConst.RunMode(runMode)

@@ -9,7 +9,7 @@ import (
 )
 
 func TestHuaweiCloudQuery(t *testing.T) {
-	_logUtils.Init(consts.AppNameAgent)
+	_logUtils.Init(consts.AppNameAgentHost)
 
 	srv := huaweicloud.NewHuaweiCloudEcsService()
 	ecsClient, err := srv.CreateEcsClient(_const.HUAWEI_CLOUD_KEY, _const.HUAWEI_CLOUD_Secret, _const.HUAWEI_CLOUD_REGION)
