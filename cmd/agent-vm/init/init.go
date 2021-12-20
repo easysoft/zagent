@@ -20,7 +20,6 @@ import (
 
 func Init() {
 	agentConf.Init(consts.AppNameAgentVm)
-	_db.InitDB("zv-agent")
 
 	irisServer := NewServer(nil)
 	irisServer.App.Logger().SetLevel(serverConf.Inst.LogLevel)
@@ -46,8 +45,6 @@ func injectObj(router *vmRouter.Router) {
 	g.Logger = logrus.StandardLogger()
 
 	err := g.Provide(
-		// db
-		&inject.Object{Value: _db.GetInst().DB()},
 		// cron
 		&inject.Object{Value: vmCron.NewAgentCron()},
 
