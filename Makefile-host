@@ -14,14 +14,14 @@ linux: prepare_res compile_linux copy_files package
 
 prepare_res:
 	@echo 'start prepare res'
-	@go-bindata -o=res/agent-host/res.go -pkg=agentRes res/agent-host/...
+	@go-bindata -o=res/host/res.go -pkg=agentRes res/host/...
 	@rm -rf ${BIN_DIR}
 
 compile_all: compile_linux
 
 compile_linux:
 	@echo 'start compile linux'
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ${BIN_LINUX}zv-host cmd/host/main.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ${BIN_LINUX}zv-host cmd/agent-host/main.go
 
 copy_files:
 	@echo 'start copy files'
