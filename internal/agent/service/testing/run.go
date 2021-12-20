@@ -1,10 +1,10 @@
 package agentTestingService
 
 import (
-	consts "github.com/easysoft/zagent/internal/comm/const"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	_commonUtils "github.com/easysoft/zagent/internal/pkg/lib/common"
-	_shellUtils "github.com/easysoft/zagent/internal/pkg/lib/shell"
+	consts "github.com/easysoft/zv/internal/comm/const"
+	commDomain "github.com/easysoft/zv/internal/comm/domain"
+	_commonUtils "github.com/easysoft/zv/internal/pkg/lib/common"
+	_shellUtils "github.com/easysoft/zv/internal/pkg/lib/shell"
 )
 
 type RunService struct {

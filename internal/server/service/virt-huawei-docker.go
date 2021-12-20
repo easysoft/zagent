@@ -1,12 +1,12 @@
 package serverService
 
 import (
-	consts "github.com/easysoft/zagent/internal/comm/const"
-	_domain "github.com/easysoft/zagent/internal/pkg/domain"
-	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
-	"github.com/easysoft/zagent/internal/server/model"
-	"github.com/easysoft/zagent/internal/server/repo"
-	"github.com/easysoft/zagent/internal/server/service/vendors/huaweicloud"
+	consts "github.com/easysoft/zv/internal/comm/const"
+	_domain "github.com/easysoft/zv/internal/pkg/domain"
+	_stringUtils "github.com/easysoft/zv/internal/pkg/lib/string"
+	"github.com/easysoft/zv/internal/server/model"
+	"github.com/easysoft/zv/internal/server/repo"
+	"github.com/easysoft/zv/internal/server/service/vendors/huaweicloud"
 	"strings"
 )
 

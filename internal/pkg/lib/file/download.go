@@ -2,8 +2,8 @@ package _fileUtils
 
 import (
 	"fmt"
-	_i118Utils "github.com/easysoft/zagent/internal/pkg/lib/i118"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	_i118Utils "github.com/easysoft/zv/internal/pkg/lib/i118"
+	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
 	"io/ioutil"
 	"net/http"
 	"path/filepath"

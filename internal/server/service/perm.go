@@ -1,10 +1,10 @@
 package serverService
 
 import (
-	"github.com/easysoft/zagent/internal/comm/domain"
-	"github.com/easysoft/zagent/internal/server/biz/transformer"
-	"github.com/easysoft/zagent/internal/server/model"
-	"github.com/easysoft/zagent/internal/server/repo"
+	"github.com/easysoft/zv/internal/comm/domain"
+	"github.com/easysoft/zv/internal/server/biz/transformer"
+	"github.com/easysoft/zv/internal/server/model"
+	"github.com/easysoft/zv/internal/server/repo"
 )
 
 type PermService struct {

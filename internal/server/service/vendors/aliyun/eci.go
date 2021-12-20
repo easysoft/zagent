@@ -3,7 +3,7 @@ package aliyun
 import (
 	eci "github.com/alibabacloud-go/eci-20180808/v2/client"
 	"github.com/alibabacloud-go/tea/tea"
-	"github.com/easysoft/zagent/internal/comm/domain"
+	"github.com/easysoft/zv/internal/comm/domain"
 	"strings"
 )
 

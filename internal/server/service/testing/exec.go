@@ -1,11 +1,11 @@
 package testing
 
 import (
-	"github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/server/model"
-	"github.com/easysoft/zagent/internal/server/repo"
-	serverService "github.com/easysoft/zagent/internal/server/service"
-	commonService "github.com/easysoft/zagent/internal/server/service/common"
+	"github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/server/model"
+	"github.com/easysoft/zv/internal/server/repo"
+	serverService "github.com/easysoft/zv/internal/server/service"
+	commonService "github.com/easysoft/zv/internal/server/service/common"
 )
 
 type ExecService struct {

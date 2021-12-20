@@ -3,7 +3,7 @@ package virtualboxapi
 import (
 	"errors"
 
-	"github.com/easysoft/zagent/internal/server/service/vendors/virtualbox/srv"
+	"github.com/easysoft/zv/internal/server/service/vendors/virtualbox/srv"
 )
 
 type StorageController struct {

@@ -3,7 +3,7 @@ package huaweicloud
 import (
 	"encoding/json"
 	"github.com/alibabacloud-go/tea/tea"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
 	"github.com/huaweicloud/huaweicloud-sdk-go-v3/core/auth/basic"
 	iam "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/iam/v3"
 	iamModel "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/iam/v3/model"

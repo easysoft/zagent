@@ -1,8 +1,8 @@
 package repo
 
 import (
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	"github.com/easysoft/zagent/internal/server/model"
+	commDomain "github.com/easysoft/zv/internal/comm/domain"
+	"github.com/easysoft/zv/internal/server/model"
 	"gorm.io/gorm"
 )
 

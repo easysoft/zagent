@@ -1,12 +1,12 @@
 package agentConf
 
 import (
-	agentConst "github.com/easysoft/zagent/internal/agent/utils/const"
-	consts "github.com/easysoft/zagent/internal/comm/const"
-	_commonUtils "github.com/easysoft/zagent/internal/pkg/lib/common"
-	_fileUtils "github.com/easysoft/zagent/internal/pkg/lib/file"
-	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
-	_i118Utils "github.com/easysoft/zagent/internal/pkg/lib/i118"
+	agentConst "github.com/easysoft/zv/internal/agent/utils/const"
+	consts "github.com/easysoft/zv/internal/comm/const"
+	_commonUtils "github.com/easysoft/zv/internal/pkg/lib/common"
+	_fileUtils "github.com/easysoft/zv/internal/pkg/lib/file"
+	_httpUtils "github.com/easysoft/zv/internal/pkg/lib/http"
+	_i118Utils "github.com/easysoft/zv/internal/pkg/lib/i118"
 	"os/user"
 	"path/filepath"
 )

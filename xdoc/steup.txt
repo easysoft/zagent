@@ -14,17 +14,17 @@ qshell qupload2 --src-dir=/Users/aaron/work/zentao/qiniu/ --bucket=download --th
                      --skip-path-prefixes=ztf,zd,zmanager --rescan-local --overwrite --check-hash
 
 
-sudo vi /etc/systemd/system/zagent.service
+sudo vi /etc/systemd/system/zv.service
 
 sudo systemctl daemon-reload
-sudo systemctl start zagent.service
-sudo systemctl stop zagent.service
-sudo systemctl restart zagent.service
-sudo systemctl enable zagent.service
-sudo systemctl disable zagent.service
+sudo systemctl start zv.service
+sudo systemctl stop zv.service
+sudo systemctl restart zv.service
+sudo systemctl enable zv.service
+sudo systemctl disable zv.service
 
 
-# https://github.com/swaggo/swag
+# 本地执行并上传 https://github.com/swaggo/swag
 rm -rf res/server/docs
 swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/server -o res/server/docs
 rm -rf res/agent-host/docs
@@ -32,9 +32,9 @@ swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/agent-host -o 
 rm -rf res/agent-vm/docs
 swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/agent-vm -o res/agent-vm/docs
 
-nohup swagger serve -p 50001 --no-open /Users/aaron/rd/project/zentao/go/zagent/res/server/docs/swagger.json > server.log 2>&1 &
+nohup swagger serve -p 50001 --no-open /Users/aaron/rd/project/zentao/go/zv/res/server/docs/swagger.json > server.log 2>&1 &
 
-# https://github.com/go-swagger/go-swagger
+# 服务器上执行 https://github.com/go-swagger/go-swagger
 ps -ef | grep swagger | grep -v grep | awk '{print $2}' | xargs kill -9
 nohup swagger serve --no-open -p 50001 res/server/docs/swagger.json > server.log 2>&1 &
 nohup swagger serve --no-open -p 50002 res/agent-host/docs/swagger.json > host.log 2>&1 &

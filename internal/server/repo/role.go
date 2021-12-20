@@ -2,8 +2,8 @@ package repo
 
 import (
 	"fmt"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	"github.com/easysoft/zagent/internal/server/model"
+	commDomain "github.com/easysoft/zv/internal/comm/domain"
+	"github.com/easysoft/zv/internal/server/model"
 	"github.com/fatih/color"
 	"gorm.io/gorm"
 )

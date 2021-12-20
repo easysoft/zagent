@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/easysoft/zagent/internal/comm/const"
+	"github.com/easysoft/zv/internal/comm/const"
 )
 
 type History struct {

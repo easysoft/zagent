@@ -2,16 +2,16 @@ package handler
 
 import (
 	"encoding/json"
-	v1 "github.com/easysoft/zagent/cmd/server/router/v1"
-	_const "github.com/easysoft/zagent/internal/pkg/const"
-	_httpUtils "github.com/easysoft/zagent/internal/pkg/lib/http"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
-	_stringUtils "github.com/easysoft/zagent/internal/pkg/lib/string"
-	"github.com/easysoft/zagent/internal/server/biz/jwt"
-	"github.com/easysoft/zagent/internal/server/model"
-	"github.com/easysoft/zagent/internal/server/service"
-	commonService "github.com/easysoft/zagent/internal/server/service/common"
-	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
+	v1 "github.com/easysoft/zv/cmd/server/router/v1"
+	_const "github.com/easysoft/zv/internal/pkg/const"
+	_httpUtils "github.com/easysoft/zv/internal/pkg/lib/http"
+	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
+	_stringUtils "github.com/easysoft/zv/internal/pkg/lib/string"
+	"github.com/easysoft/zv/internal/server/biz/jwt"
+	"github.com/easysoft/zv/internal/server/model"
+	"github.com/easysoft/zv/internal/server/service"
+	commonService "github.com/easysoft/zv/internal/server/service/common"
+	serverConst "github.com/easysoft/zv/internal/server/utils/const"
 	"github.com/kataras/iris/v12"
 )
 

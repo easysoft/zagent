@@ -1,15 +1,15 @@
 VERSION=1.0.0
-PROJECT=zagent-vm
+PROJECT=zv-vm
 PACKAGE=${PROJECT}-${VERSION}
-BINARY=zagent-vm
+BINARY=zv-vm
 BIN_DIR=bin
 BIN_ZIP_DIR=${BIN_DIR}/zip/${PROJECT}/${VERSION}/
 BIN_ZIP_RELAT=../../../zip/${PROJECT}/${VERSION}/
 BIN_OUT=${BIN_DIR}/${PROJECT}/${VERSION}/
-BIN_WIN64=${BIN_OUT}win64/zagent-vm/
-BIN_WIN32=${BIN_OUT}win32/zagent-vm/
-BIN_LINUX=${BIN_OUT}linux/zagent-vm/
-BIN_MAC=${BIN_OUT}mac/zagent-vm/
+BIN_WIN64=${BIN_OUT}win64/zv-vm/
+BIN_WIN32=${BIN_OUT}win32/zv-vm/
+BIN_LINUX=${BIN_OUT}linux/zv-vm/
+BIN_MAC=${BIN_OUT}mac/zv-vm/
 
 default: prepare_res compile_all copy_files package
 
@@ -27,19 +27,19 @@ compile_all: compile_win64 compile_win32 compile_linux compile_mac
 
 compile_win64:
 	@echo 'start compile win64'
-	@CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ${BIN_WIN64}zagent-vm.exe cmd/vm/main.go
+	@CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ${BIN_WIN64}zv-vm.exe cmd/vm/main.go
 
 compile_win32:
 	@echo 'start compile win32'
-	@CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o ${BIN_WIN32}zagent-vm.exe cmd/vm/main.go
+	@CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o ${BIN_WIN32}zv-vm.exe cmd/vm/main.go
 
 compile_linux:
 	@echo 'start compile linux'
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ${BIN_LINUX}zagent-vm cmd/vm/main.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ${BIN_LINUX}zv-vm cmd/vm/main.go
 
 compile_mac:
 	@echo 'start compile mac'
-	@CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ${BIN_MAC}zagent-vm cmd/vm/main.go
+	@CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ${BIN_MAC}zv-vm cmd/vm/main.go
 
 copy_files:
 	@echo 'start copy files'

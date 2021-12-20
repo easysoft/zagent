@@ -19,7 +19,7 @@ db:
   adapter: sqlite3
   host: localhost
   port: 3306
-  name: server
+  name: zv-server
   user: root
   password: P2ssw0rd
 

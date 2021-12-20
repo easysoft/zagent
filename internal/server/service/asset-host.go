@@ -1,10 +1,10 @@
 package serverService
 
 import (
-	consts "github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/server/model"
-	"github.com/easysoft/zagent/internal/server/repo"
-	serverUitls "github.com/easysoft/zagent/internal/server/utils/lib"
+	consts "github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/server/model"
+	"github.com/easysoft/zv/internal/server/repo"
+	serverUitls "github.com/easysoft/zv/internal/server/utils/lib"
 )
 
 type HostService struct {

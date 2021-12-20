@@ -3,8 +3,8 @@ package repo
 import (
 	"errors"
 	"fmt"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	"github.com/easysoft/zagent/internal/pkg/db"
+	commDomain "github.com/easysoft/zv/internal/comm/domain"
+	"github.com/easysoft/zv/internal/pkg/db"
 	"github.com/fatih/color"
 	"gorm.io/gorm"
 	"strings"

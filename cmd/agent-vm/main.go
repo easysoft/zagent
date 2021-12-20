@@ -2,12 +2,12 @@ package main
 
 import (
 	"flag"
-	vmInit "github.com/easysoft/zagent/cmd/agent-vm/init"
-	"github.com/easysoft/zagent/internal/agent/conf"
-	"github.com/easysoft/zagent/internal/agent/utils/common"
-	"github.com/easysoft/zagent/internal/agent/utils/const"
-	consts "github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/pkg/lib/log"
+	vmInit "github.com/easysoft/zv/cmd/agent-vm/init"
+	"github.com/easysoft/zv/internal/agent/conf"
+	"github.com/easysoft/zv/internal/agent/utils/common"
+	"github.com/easysoft/zv/internal/agent/utils/const"
+	consts "github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/pkg/lib/log"
 	"github.com/fatih/color"
 	"os"
 	"os/signal"
@@ -23,7 +23,7 @@ var (
 // @title ZAgent虚拟机API文档
 // @version 1.0
 // @contact.name API Support
-// @contact.url https://github.com/easysoft/zagent/issues
+// @contact.url https://github.com/easysoft/zv/issues
 // @contact.email 462626@qq.com
 func main() {
 	channel := make(chan os.Signal)

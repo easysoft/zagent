@@ -2,8 +2,8 @@ package agentConst
 
 import (
 	"fmt"
-	consts "github.com/easysoft/zagent/internal/comm/const"
-	_const "github.com/easysoft/zagent/internal/pkg/const"
+	consts "github.com/easysoft/zv/internal/comm/const"
+	_const "github.com/easysoft/zv/internal/pkg/const"
 	"path/filepath"
 )
 

@@ -2,7 +2,7 @@ package huaweicloud
 
 import (
 	"github.com/alibabacloud-go/tea/tea"
-	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
+	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
 	"github.com/huaweicloud/huaweicloud-sdk-go-v3/core/auth/basic"
 	imgRegion "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/ims/v2/region"
 	vpc "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/vpc/v2"

@@ -3,11 +3,11 @@ package bizCasbin
 import (
 	"fmt"
 	"github.com/casbin/casbin/v2"
-	"github.com/easysoft/zagent/internal/pkg/db"
-	"github.com/easysoft/zagent/internal/pkg/lib/common"
-	"github.com/easysoft/zagent/internal/pkg/lib/file"
-	"github.com/easysoft/zagent/internal/pkg/lib/log"
-	"github.com/easysoft/zagent/res/server"
+	"github.com/easysoft/zv/internal/pkg/db"
+	"github.com/easysoft/zv/internal/pkg/lib/common"
+	"github.com/easysoft/zv/internal/pkg/lib/file"
+	"github.com/easysoft/zv/internal/pkg/lib/log"
+	"github.com/easysoft/zv/res/server"
 	"github.com/sirupsen/logrus"
 	"path/filepath"
 )

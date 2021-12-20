@@ -1,8 +1,8 @@
 package agentService
 
 import (
-	consts "github.com/easysoft/zagent/internal/comm/const"
-	"github.com/easysoft/zagent/internal/comm/domain"
+	consts "github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/comm/domain"
 	"sync"
 	"time"
 )

@@ -2,10 +2,10 @@ package _db
 
 import (
 	"fmt"
-	agentConf "github.com/easysoft/zagent/internal/agent/conf"
-	"github.com/easysoft/zagent/internal/pkg/lib/file"
-	"github.com/easysoft/zagent/internal/pkg/lib/log"
-	serverConf "github.com/easysoft/zagent/internal/server/conf"
+	agentConf "github.com/easysoft/zv/internal/agent/conf"
+	"github.com/easysoft/zv/internal/pkg/lib/file"
+	"github.com/easysoft/zv/internal/pkg/lib/log"
+	serverConf "github.com/easysoft/zv/internal/server/conf"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"

@@ -1,5 +1,5 @@
 [Unit]
-Description=zagent service
+Description=zv service
 After=sshd.service
 
 [Service]
@@ -11,7 +11,7 @@ Environment="GOPATH=/usr/local/go"
 Environment="GO111MODULE=on"
 Environment="GOPROXY=https://goproxy.io,direct"
 Type=forking
-ExecStart=/home/aaron/dev/script/zagent.sh
+ExecStart=/home/aaron/dev/script/zv.sh
 ExecStop=ps -ef | grep 't vm'|  grep -v grep | awk '{print $2}' | xargs kill -9
 
 [Install]

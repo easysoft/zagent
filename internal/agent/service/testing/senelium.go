@@ -2,11 +2,11 @@ package agentTestingService
 
 import (
 	"fmt"
-	agentConf "github.com/easysoft/zagent/internal/agent/conf"
-	consts "github.com/easysoft/zagent/internal/comm/const"
-	commDomain "github.com/easysoft/zagent/internal/comm/domain"
-	_commonUtils "github.com/easysoft/zagent/internal/pkg/lib/common"
-	_fileUtils "github.com/easysoft/zagent/internal/pkg/lib/file"
+	agentConf "github.com/easysoft/zv/internal/agent/conf"
+	consts "github.com/easysoft/zv/internal/comm/const"
+	commDomain "github.com/easysoft/zv/internal/comm/domain"
+	_commonUtils "github.com/easysoft/zv/internal/pkg/lib/common"
+	_fileUtils "github.com/easysoft/zv/internal/pkg/lib/file"
 	"path/filepath"
 )
 
