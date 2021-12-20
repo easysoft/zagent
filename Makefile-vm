@@ -20,14 +20,14 @@ mac: prepare_res compile_mac copy_files package
 
 prepare_res:
 	@echo 'start prepare res'
-	@go-bindata -o=res/agent-vm/res.go -pkg=agentRes res/agent-vm/...
+	@go-bindata -o=res/vm/res.go -pkg=agentRes res/vm/...
 	@rm -rf ${BIN_DIR}
 
 compile_all: compile_win64 compile_win32 compile_linux compile_mac
 
 compile_win64:
 	@echo 'start compile win64'
-	@CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ${BIN_WIN64}zv-vm.exe cmd/vm/main.go
+	@CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ${BIN_WIN64}zv-vm.exe cmd/agent-vm/main.go
 
 compile_win32:
 	@echo 'start compile win32'
