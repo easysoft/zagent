@@ -16,12 +16,12 @@ var (
 	usageFile = filepath.Join("res", "doc", "usage.txt")
 )
 
-func PrintUsage() {
+func PrintUsage(agentName string) {
 	_logUtils.PrintColor(_i118Utils.Sprintf("usage"), color.FgCyan)
 
 	usage := ReadResData(usageFile)
 
-	app := consts.AppNameAgent
+	app := consts.AppName + "-" + agentName
 	if _commonUtils.IsWin() {
 		app += ".exe"
 	}

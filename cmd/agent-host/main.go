@@ -52,7 +52,7 @@ func main() {
 
 	switch action {
 	case "help", "-h":
-		agentUtils.PrintUsage()
+		agentUtils.PrintUsage(consts.AppNameAgentHost)
 
 	default:
 		start()
