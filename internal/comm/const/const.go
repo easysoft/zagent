@@ -3,6 +3,7 @@ package consts
 const (
 	AppName          = "zv"
 	AppNameServer    = "server"
+	AppNameAgent     = "agent"
 	AppNameAgentHost = "host"
 	AppNameAgentVm   = "vm"
 
