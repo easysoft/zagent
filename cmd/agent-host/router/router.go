@@ -14,9 +14,10 @@ type Router struct {
 	ArithCtrl *handler.ArithCtrl   `inject:""`
 	JobCtrl   *hostHandler.JobCtrl `inject:""`
 
-	KvmCtrl    *hostHandler.KvmCtrl    `inject:""`
-	VmWareCtrl *hostHandler.VmWareCtrl `inject:""`
-	VncCtrl    *hostHandler.VncCtrl    `inject:""`
+	KvmCtrl       *hostHandler.KvmCtrl       `inject:""`
+	VmWareCtrl    *hostHandler.VmWareCtrl    `inject:""`
+	VncCtrl       *hostHandler.VncCtrl       `inject:""`
+	MultiPassCtrl *hostHandler.MultiPassCtrl `inject:""`
 }
 
 func NewRouter(app *iris.Application) *Router {
@@ -48,6 +49,9 @@ func (r *Router) App() {
 			})
 			v1.PartyFunc("/vnc", func(client iris.Party) {
 				client.Get("/getToken", r.VncCtrl.GetToken).Name = "获取VNC的Token"
+			})
+			v1.PartyFunc("/multipass", func(client iris.Party) {
+				client.Post("/list", r.MultiPassCtrl.List)
 			})
 		}
 	}
