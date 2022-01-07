@@ -52,6 +52,11 @@ func (r *Router) App() {
 			})
 			v1.PartyFunc("/multipass", func(client iris.Party) {
 				client.Post("/list", r.MultiPassCtrl.List)
+				client.Post("/create", r.MultiPassCtrl.Create).Name = "创建虚机"
+				client.Post("/{name:string}/reboot", r.MultiPassCtrl.Reboot).Name = "重启虚机"
+				client.Post("/{name:string}/destroy", r.MultiPassCtrl.Destroy).Name = "摧毁虚机"
+				client.Post("/{name:string}/suspend", r.MultiPassCtrl.Suspend).Name = "暂停虚机"
+				client.Post("/{name:string}/resume", r.MultiPassCtrl.Resume).Name = "恢复虚机"
 			})
 		}
 	}
