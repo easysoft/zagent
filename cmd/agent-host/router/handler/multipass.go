@@ -159,3 +159,22 @@ func (c *MultiPassCtrl) Resume(ctx iris.Context) {
 	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to resume vm", name))
 	return
 }
+
+func (c *MultiPassCtrl) GetToken(ctx iris.Context) {
+	port := ctx.URLParam("port")
+
+	if port == "" {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "no port param", nil))
+		return
+	}
+
+	ret := c.MultiPassService.GetToken(port)
+	if ret.Token == "" {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "token not found", nil))
+		return
+	}
+
+	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success", ret))
+
+	return
+}
