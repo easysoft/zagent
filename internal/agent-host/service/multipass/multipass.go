@@ -2,15 +2,22 @@ package multiPassService
 
 import (
 	"fmt"
+	v1 "github.com/easysoft/zv/cmd/agent-host/router/v1"
 	agentConf "github.com/easysoft/zv/internal/agent/conf"
 	"github.com/easysoft/zv/internal/comm/domain"
+	_fileUtils "github.com/easysoft/zv/internal/pkg/lib/file"
 	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zv/internal/pkg/lib/shell"
+	_stringUtils "github.com/easysoft/zv/internal/pkg/lib/string"
 	"path/filepath"
+	"strconv"
 	"strings"
+	"sync"
 )
 
 const (
+	mpTokenPrefix = "mp"
+
 	cmdMpls         = "multipass ls"
 	cmdMpInfo       = "multipass info %s"
 	cmdMpStart      = "multipass start %s"
@@ -26,6 +33,7 @@ const (
 var cmdMpLaunch = "multipass launch "
 
 type MultiPassService struct {
+	syncMap sync.Map
 }
 
 func (s *MultiPassService) ListVm() (doms []domain.MultiPass, err error) {
@@ -87,6 +95,7 @@ func (s *MultiPassService) CreateVm(name, cpus, disk, mem, filePath string) (dom
 		_logUtils.Errorf(err.Error())
 		return
 	}
+
 	return
 }
 
@@ -123,5 +132,45 @@ func (s *MultiPassService) ResumeVmByName(name string) (dom domain.MultiPass, er
 		_logUtils.Errorf(err.Error())
 		return
 	}
+	return
+}
+
+func (s *MultiPassService) GenWebsockifyTokens() {
+	vms, _ := s.ListVm()
+	port := 5901
+	for _, v := range vms {
+		if v.State != "Running" {
+			continue
+		}
+		portStr := strconv.Itoa(port)
+
+		// uuid: 192.168.1.215:5901
+		content := fmt.Sprintf("%s: %s:%s", _stringUtils.NewUuid(), agentConf.Inst.NodeIp, portStr)
+
+		pth := filepath.Join(agentConf.Inst.DirToken, mpTokenPrefix+portStr+".txt")
+		_fileUtils.WriteFile(pth, content)
+
+		arr := strings.Split(content, ":")
+		result := v1.VncTokenResp{
+			Token: arr[0],
+			Ip:    v.IPv4,
+			Port:  arr[2],
+		}
+		s.syncMap.Store(mpTokenPrefix+portStr, result)
+
+		port++
+	}
+}
+
+func (s *MultiPassService) GetToken(port string) (ret v1.VncTokenResp) {
+	s.GenWebsockifyTokens()
+	obj, ok := s.syncMap.Load(mpTokenPrefix + port)
+
+	if !ok {
+		return
+	}
+
+	ret = obj.(v1.VncTokenResp)
+
 	return
 }
