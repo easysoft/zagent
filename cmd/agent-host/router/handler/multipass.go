@@ -24,15 +24,9 @@ func NewMultiPassCtrl() *MultiPassCtrl {
 // @Success 200 {object} _httpUtils.Response{data=v1.MultiPassResp} "code = success? 1 : 0"
 // @Router /api/v1/MultiPass/list [post]
 func (c *MultiPassCtrl) List(ctx iris.Context) {
-	req := v1.MultiPassReq{}
-	if err := ctx.ReadJSON(&req); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
-		return
-	}
-
-	domains, err := c.MultiPassService.ListVm()
+	domains, err := c.MultiPassService.GetVms()
 	if err != nil {
-		ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "fail to get MultiPass", err))
+		ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "fail to get MultiPass vm", err))
 		return
 	}
 	var mps []v1.MultiPassResp
@@ -46,7 +40,7 @@ func (c *MultiPassCtrl) List(ctx iris.Context) {
 		mps = append(mps, mp)
 	}
 
-	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to get MultiPass", mps))
+	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to get MultiPass vm", mps))
 
 	return
 }
@@ -64,8 +58,7 @@ func (c *MultiPassCtrl) Create(ctx iris.Context) {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
-
-	domains, err := c.MultiPassService.CreateVm(req.Name, req.Cpus, req.Disk, req.Memory, req.FilePath)
+	domains, err := c.MultiPassService.CreateVm(req.VmUniqueName, req.Cpus, req.Disk, req.VmMemory, req.FilePath)
 	if err != nil {
 		ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "fail to create MultiPass vm", err))
 		return

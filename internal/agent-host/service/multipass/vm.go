@@ -21,8 +21,8 @@ func NewVmService() *VmService {
 	return &s
 }
 
-func (s *VmService) GetVms() (vms []domain.Vm) {
-	domains, _ := s.MultiPassService.ListVm()
+func (s *VmService) GetVmsInfos() (vms []domain.Vm) {
+	domains, _ := s.MultiPassService.GetVms()
 
 	for _, dom := range domains {
 		vm := domain.Vm{}

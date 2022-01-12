@@ -51,7 +51,7 @@ func (r *Router) App() {
 				client.Get("/getToken", r.VncCtrl.GetToken).Name = "获取VNC的Token"
 			})
 			v1.PartyFunc("/multipass", func(client iris.Party) {
-				client.Post("/list", r.MultiPassCtrl.List)
+				client.Get("/list", r.MultiPassCtrl.List)
 				client.Post("/create", r.MultiPassCtrl.Create).Name = "创建虚机"
 				client.Post("/{name:string}/reboot", r.MultiPassCtrl.Reboot).Name = "重启虚机"
 				client.Post("/{name:string}/destroy", r.MultiPassCtrl.Destroy).Name = "摧毁虚机"

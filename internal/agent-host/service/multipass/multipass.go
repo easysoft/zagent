@@ -1,6 +1,7 @@
 package multiPassService
 
 import (
+	"errors"
 	"fmt"
 	v1 "github.com/easysoft/zv/cmd/agent-host/router/v1"
 	agentConf "github.com/easysoft/zv/internal/agent/conf"
@@ -18,16 +19,15 @@ import (
 const (
 	mpTokenPrefix = "mp"
 
-	cmdMpls         = "multipass ls"
-	cmdMpInfo       = "multipass info %s"
-	cmdMpStart      = "multipass start %s"
-	cmdMpStop       = "multipass stop %s"
-	cmdMpReboot     = "multipass restart %s"
-	cmdMpDelete     = "multipass delete %s"
-	cmdMpPurge      = "multipass purge"
-	cmdMpStopAll    = "multipass stop --all"
-	cmdMpUseLibvirt = "sudo multipass set local.driver=libvirt"
-	cmdMpUseLXD     = "sudo multipass set local.driver=lxd"
+	cmdMpls      = "multipass ls"
+	cmdMpInfo    = "multipass info %s"
+	cmdMpStart   = "multipass start %s"
+	cmdMpStop    = "multipass stop %s"
+	cmdMpSuspend = "multipass suspend %s"
+	cmdMpReboot  = "multipass restart %s"
+	cmdMpDelete  = "multipass delete %s"
+	cmdMpPurge   = "multipass purge"
+	cmdMpStopAll = "multipass stop --all"
 )
 
 var cmdMpLaunch = "multipass launch "
@@ -36,7 +36,7 @@ type MultiPassService struct {
 	syncMap sync.Map
 }
 
-func (s *MultiPassService) ListVm() (doms []domain.MultiPass, err error) {
+func (s *MultiPassService) GetVms() (doms []domain.MultiPass, err error) {
 	outRets, err := _shellUtils.ExeShellWithOutput(cmdMpls)
 	if err != nil {
 		_logUtils.Errorf(err.Error())
@@ -50,7 +50,10 @@ func (s *MultiPassService) ListVm() (doms []domain.MultiPass, err error) {
 		dom.Name = rets[0]
 		dom.State = rets[1]
 		dom.IPv4 = rets[2]
-		dom.Image = rets[3] + rets[4]
+		for i := 3; i < len(rets); i++ {
+			dom.Image += rets[i]
+		}
+
 		doms = append(doms, dom)
 	}
 	return
@@ -58,24 +61,43 @@ func (s *MultiPassService) ListVm() (doms []domain.MultiPass, err error) {
 
 func (s *MultiPassService) VmInfo(name string) (dom domain.MultiPass) {
 	outRets, err := _shellUtils.ExeShellWithOutput(fmt.Sprintf(cmdMpInfo, name))
-	if err != nil {
+	if strings.Contains(outRets[0], "info failed:") || err != nil {
 		_logUtils.Errorf(err.Error())
 		return
 	}
-	rets := strings.Fields(outRets[0])
+
+	vmInfoMap := parseOutput(outRets[:len(outRets)-1])
 	dom = domain.MultiPass{
-		Name:  rets[0],
-		State: rets[1],
-		IPv4:  rets[2],
+		Name:  vmInfoMap["Name"],
+		State: vmInfoMap["State"],
+		IPv4:  vmInfoMap["IPv4"],
 	}
 
 	return
 }
 
+func parseOutput(lines []string) (vmInfoMap map[string]string) {
+	vmInfoMap = make(map[string]string, len(lines))
+
+	for _, v := range lines {
+		rets := strings.Fields(v)
+		vmInfoMap[rets[0]] = rets[1]
+	}
+	return
+}
+
 func (s *MultiPassService) CreateVm(name, cpus, disk, mem, filePath string) (dom domain.MultiPass, err error) {
 	if name != "" {
+		vm := s.VmInfo(name)
+		if vm.Name == "" {
+			msg := "vm %s not found"
+			_logUtils.Errorf(msg, name)
+			err = errors.New(msg)
+			return
+		}
 		cmdMpLaunch = cmdMpLaunch + fmt.Sprintf("-n %s ", name)
 	}
+
 	if cpus != "" {
 		cmdMpLaunch = cmdMpLaunch + fmt.Sprintf("-c %s ", cpus)
 	}
@@ -100,8 +122,8 @@ func (s *MultiPassService) CreateVm(name, cpus, disk, mem, filePath string) (dom
 }
 
 func (s *MultiPassService) RebootVmByName(name string) (dom domain.MultiPass, err error) {
-	outRets, err := _shellUtils.ExeShellWithOutput(fmt.Sprintf(cmdMpReboot, name))
-	if strings.Contains(outRets[0], name) == true || err != nil {
+	_, err = _shellUtils.ExeShellWithOutput(fmt.Sprintf(cmdMpReboot, name))
+	if s.VmInfo(name).State != "Running" && err != nil {
 		_logUtils.Errorf(err.Error())
 		return
 	}
@@ -109,8 +131,8 @@ func (s *MultiPassService) RebootVmByName(name string) (dom domain.MultiPass, er
 }
 
 func (s *MultiPassService) DestroyVm(name string) (dom domain.MultiPass, err error) {
-	outRets, err := _shellUtils.ExeShellWithOutput(fmt.Sprintf(cmdMpDelete, name))
-	if strings.Contains(outRets[0], name) == true || err != nil {
+	_, err = _shellUtils.ExeShellWithOutput(fmt.Sprintf(cmdMpDelete+"&&"+cmdMpPurge, name))
+	if s.VmInfo(name).Name == "" && err != nil {
 		_logUtils.Errorf(err.Error())
 		return
 	}
@@ -118,8 +140,8 @@ func (s *MultiPassService) DestroyVm(name string) (dom domain.MultiPass, err err
 }
 
 func (s *MultiPassService) SuspendVmByName(name string) (dom domain.MultiPass, err error) {
-	outRets, err := _shellUtils.ExeShellWithOutput(fmt.Sprintf(cmdMpStop, name))
-	if strings.Contains(outRets[0], name) == true || err != nil {
+	_, err = _shellUtils.ExeShellWithOutput(fmt.Sprintf(cmdMpSuspend, name))
+	if s.VmInfo(name).State != "Suspended" && err != nil {
 		_logUtils.Errorf(err.Error())
 		return
 	}
@@ -127,8 +149,8 @@ func (s *MultiPassService) SuspendVmByName(name string) (dom domain.MultiPass, e
 }
 
 func (s *MultiPassService) ResumeVmByName(name string) (dom domain.MultiPass, err error) {
-	outRets, err := _shellUtils.ExeShellWithOutput(fmt.Sprintf(cmdMpStart, name))
-	if strings.Contains(outRets[0], name) == true || err != nil {
+	_, err = _shellUtils.ExeShellWithOutput(fmt.Sprintf(cmdMpStart, name))
+	if s.VmInfo(name).State != "Running" && err != nil {
 		_logUtils.Errorf(err.Error())
 		return
 	}
@@ -136,7 +158,7 @@ func (s *MultiPassService) ResumeVmByName(name string) (dom domain.MultiPass, er
 }
 
 func (s *MultiPassService) GenWebsockifyTokens() {
-	vms, _ := s.ListVm()
+	vms, _ := s.GetVms()
 	port := 5901
 	for _, v := range vms {
 		if v.State != "Running" {
