@@ -1,22 +1,18 @@
 package v1
 
 type MultiPassReq struct {
-	VmId string `json:"vmId"` // for destroy
-
 	VmUniqueName string `json:"vmName"`
-	VmMemory     string `json:"vmMemory"`
-	Cpus         string `json:"cpus"`
-	Disk         string `json:"disk"`
-	FilePath     string `json:"vmRauPath"`
+	VmMemory     uint   `json:"vmMemory"`
+	Cpus         uint   `json:"cpus"`
+	Disk         uint   `json:"disk"`
+	ImgFrom      string `json:"imgFrom"`
+	FilePath     string `json:"filePath"`
 
 	UserName string `json:"userName"`
 	Password string `json:"password"`
 }
 
 type MultiPassResp struct {
-	Code int `json:"code"`
-	Msg  int `json:"msg"`
-
 	Name    string `json:"name"`
 	Cpus    string `json:"cpus"`
 	Memory  string `json:"memory"`
