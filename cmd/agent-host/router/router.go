@@ -42,16 +42,13 @@ func (r *Router) App() {
 				client.Post("/{name:string}/reboot", r.KvmCtrl.Reboot).Name = "重启虚机"
 				client.Post("/{name:string}/suspend", r.KvmCtrl.Suspend).Name = "暂停虚机"
 				client.Post("/{name:string}/resume", r.KvmCtrl.Resume).Name = "恢复虚机"
+				client.Get("/getToken", r.VncCtrl.GetToken).Name = "获取VNC的Token"
 			})
 			v1.PartyFunc("/vmware", func(client iris.Party) {
 				client.Post("/create", r.VmWareCtrl.Create).Name = "创建虚机"
 				client.Post("/destroy", r.VmWareCtrl.Destroy).Name = "摧毁虚机"
 			})
-			v1.PartyFunc("/vnc", func(client iris.Party) {
-				client.Get("/getToken", r.VncCtrl.GetToken).Name = "获取VNC的Token"
-			})
 			v1.PartyFunc("/multipass", func(client iris.Party) {
-				client.Get("/list", r.MultiPassCtrl.List)
 				client.Post("/create", r.MultiPassCtrl.Create).Name = "创建虚机"
 				client.Post("/{name:string}/reboot", r.MultiPassCtrl.Reboot).Name = "重启虚机"
 				client.Post("/{name:string}/destroy", r.MultiPassCtrl.Destroy).Name = "摧毁虚机"
