@@ -6,7 +6,6 @@ import (
 	_const "github.com/easysoft/zv/internal/pkg/const"
 	_httpUtils "github.com/easysoft/zv/internal/pkg/lib/http"
 	"github.com/kataras/iris/v12"
-	"strings"
 )
 
 type MultiPassCtrl struct {
@@ -25,7 +24,7 @@ func NewMultiPassCtrl() *MultiPassCtrl {
 // @Success 200 {object} _httpUtils.Response{data=v1.MultiPassResp} "code = success? 1 : 0"
 // @Router /api/v1/MultiPass/list [post]
 func (c *MultiPassCtrl) List(ctx iris.Context) {
-	domains, err := c.MultiPassService.GetVms()
+	domains, err := c.MultiPassService.GetVmList()
 	if domains == nil || err != nil {
 		ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "fail to find MultiPass vm", err))
 		return
@@ -59,7 +58,7 @@ func (c *MultiPassCtrl) Create(ctx iris.Context) {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
-	domains, err := c.MultiPassService.CreateVm(req.VmUniqueName, req.FilePath, strings.ToLower(req.ImgFrom), req.Cpus, req.Disk, req.VmMemory)
+	domains, err := c.MultiPassService.CreateVm(&req, false)
 	if err != nil {
 		ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "fail to create MultiPass vm", err))
 		return

@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	mpTokenPrefix = "mp"
+	mpTokenPrefix = "multipass-"
 
 	cmdMpls      = "multipass ls"
 	cmdMpInfo    = "multipass info %s"
@@ -36,7 +36,14 @@ type MultiPassService struct {
 	syncMap sync.Map
 }
 
-func (s *MultiPassService) CreateVm(name, filePath, imgFrom string, cpus, disk, mem uint) (dom domain.MultiPass, err error) {
+func (s *MultiPassService) CreateVm(req *v1.MultiPassReq, removeSameName bool) (dom domain.MultiPass, err error) {
+	name := req.VmUniqueName
+	cpus := req.Cpus
+	disk := req.Disk
+	mem := req.VmMemory
+	filePath := req.FilePath
+	imgFrom := req.ImgFrom
+
 	if name != "" {
 		vm := s.GetVmInfo(name)
 		if vm.Name != "" {
@@ -73,36 +80,64 @@ func (s *MultiPassService) CreateVm(name, filePath, imgFrom string, cpus, disk, 
 }
 
 func (s *MultiPassService) RebootVmByName(name string) (dom domain.MultiPass, err error) {
-	_, err = _shellUtils.ExeShellWithOutput(fmt.Sprintf(cmdMpReboot, name))
+	vm := s.GetVmInfo(name)
+	if vm.Name == "" {
+		msg := "vm %s not found"
+		_logUtils.Errorf(msg, name)
+		err = errors.New(msg)
+		return
+	}
+	_shellUtils.ExeShellWithOutput(fmt.Sprintf(cmdMpReboot, name))
 	if s.GetVmInfo(name).State != "Running" && err != nil {
-		_logUtils.Errorf(err.Error())
+		_logUtils.Errorf("RebootVM error %s", err.Error())
 		return
 	}
 	return
 }
 
 func (s *MultiPassService) DestroyVm(name string) (dom domain.MultiPass, err error) {
+	if s.GetVmInfo(name).Name == "" {
+		msg := "vm %s not found"
+		_logUtils.Errorf(msg, name)
+		err = errors.New(msg)
+		return
+	}
+
 	_, err = _shellUtils.ExeShellWithOutput(fmt.Sprintf(cmdMpDelete+"&&"+cmdMpPurge, name))
 	if s.GetVmInfo(name).Name == "" && err != nil {
-		_logUtils.Errorf(err.Error())
+		_logUtils.Errorf("DestroyVM error %s", err.Error())
 		return
 	}
 	return
 }
 
 func (s *MultiPassService) SuspendVmByName(name string) (dom domain.MultiPass, err error) {
+	if s.GetVmInfo(name).Name == "" {
+		msg := "vm %s not found"
+		_logUtils.Errorf(msg, name)
+		err = errors.New(msg)
+		return
+	}
+
 	_, err = _shellUtils.ExeShellWithOutput(fmt.Sprintf(cmdMpSuspend, name))
 	if s.GetVmInfo(name).State != "Suspended" && err != nil {
-		_logUtils.Errorf(err.Error())
+		_logUtils.Errorf("SuspendVM error %s", err.Error())
 		return
 	}
 	return
 }
 
 func (s *MultiPassService) ResumeVmByName(name string) (dom domain.MultiPass, err error) {
+	if s.GetVmInfo(name).Name == "" {
+		msg := "vm %s not found"
+		_logUtils.Errorf(msg, name)
+		err = errors.New(msg)
+		return
+	}
+
 	_, err = _shellUtils.ExeShellWithOutput(fmt.Sprintf(cmdMpStart, name))
 	if s.GetVmInfo(name).State != "Running" && err != nil {
-		_logUtils.Errorf(err.Error())
+		_logUtils.Errorf("ResumeVM error %s", err.Error())
 		return
 	}
 	return
