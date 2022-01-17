@@ -41,14 +41,14 @@ func (s *MultiPassService) CreateVm(req *v1.MultiPassReq, removeSameName bool) (
 	cpus := req.Cpus
 	disk := req.Disk
 	mem := req.VmMemory
-	filePath := req.FilePath
+	filePath := req.ImagePath
 	imgFrom := req.ImgFrom
 
 	if name != "" {
 		vm := s.GetVmInfo(name)
 		if vm.Name != "" {
-			msg := "vm %s has existed"
-			_logUtils.Errorf(msg, name)
+			msg := fmt.Sprintf("vm %s has existed", name)
+			_logUtils.Errorf(msg)
 			err = errors.New(msg)
 			return
 		}
@@ -82,8 +82,8 @@ func (s *MultiPassService) CreateVm(req *v1.MultiPassReq, removeSameName bool) (
 func (s *MultiPassService) RebootVmByName(name string) (dom domain.MultiPass, err error) {
 	vm := s.GetVmInfo(name)
 	if vm.Name == "" {
-		msg := "vm %s not found"
-		_logUtils.Errorf(msg, name)
+		msg := fmt.Sprintf("vm %s not found", name)
+		_logUtils.Errorf(msg)
 		err = errors.New(msg)
 		return
 	}
@@ -97,7 +97,7 @@ func (s *MultiPassService) RebootVmByName(name string) (dom domain.MultiPass, er
 
 func (s *MultiPassService) DestroyVm(name string) (dom domain.MultiPass, err error) {
 	if s.GetVmInfo(name).Name == "" {
-		msg := "vm %s not found"
+		msg := fmt.Sprintf("vm %s not found", name)
 		_logUtils.Errorf(msg, name)
 		err = errors.New(msg)
 		return
@@ -113,8 +113,8 @@ func (s *MultiPassService) DestroyVm(name string) (dom domain.MultiPass, err err
 
 func (s *MultiPassService) SuspendVmByName(name string) (dom domain.MultiPass, err error) {
 	if s.GetVmInfo(name).Name == "" {
-		msg := "vm %s not found"
-		_logUtils.Errorf(msg, name)
+		msg := fmt.Sprintf("vm %s not found", name)
+		_logUtils.Errorf(msg)
 		err = errors.New(msg)
 		return
 	}
@@ -129,8 +129,8 @@ func (s *MultiPassService) SuspendVmByName(name string) (dom domain.MultiPass, e
 
 func (s *MultiPassService) ResumeVmByName(name string) (dom domain.MultiPass, err error) {
 	if s.GetVmInfo(name).Name == "" {
-		msg := "vm %s not found"
-		_logUtils.Errorf(msg, name)
+		msg := fmt.Sprintf("vm %s not found", name)
+		_logUtils.Errorf(msg)
 		err = errors.New(msg)
 		return
 	}
@@ -192,10 +192,11 @@ func (s *MultiPassService) GetVmInfo(name string) (dom domain.MultiPass) {
 		State:       vmInfoMap["State"],
 		IPv4:        vmInfoMap["IPv4"],
 		Release:     vmInfoMap["Release"],
-		Load:        vmInfoMap["load"],
-		DiskUsage:   vmInfoMap["diskUsage"],
-		MemoryUsage: vmInfoMap["memoryUsage"],
-		Mounts:      vmInfoMap["mounts"],
+		Load:        vmInfoMap["Load"],
+		DiskUsage:   vmInfoMap["Diskusage"],
+		MemoryUsage: vmInfoMap["Memoryusage"],
+		Mounts:      vmInfoMap["Mounts"],
+		ImageHash:   vmInfoMap["Imagehash"],
 	}
 
 	return
@@ -205,8 +206,10 @@ func parseOutput(lines []string) (vmInfoMap map[string]string) {
 	vmInfoMap = make(map[string]string, len(lines))
 
 	for _, v := range lines {
-		rets := strings.Fields(v)
-		vmInfoMap[rets[0]] = rets[1]
+		rets := strings.Replace(v, " ", "", -1)
+		rets = strings.Replace(rets, "\n", "", -1)
+		ret := strings.Split(rets, ":")
+		vmInfoMap[ret[0]] = ret[1]
 	}
 	return
 }
@@ -221,7 +224,7 @@ func (s *MultiPassService) GenWebsockifyTokens() { // create tokenFile
 		portStr := strconv.Itoa(port)
 
 		// uuid: vmIp:5901
-		content := fmt.Sprintf("%s: %s:%s", _stringUtils.NewUuid(), agentConf.Inst.NodeIp, portStr)
+		content := fmt.Sprintf("%s: %s:%s", _stringUtils.NewUuid(), v.IPv4, portStr)
 
 		pth := filepath.Join(agentConf.Inst.DirToken, mpTokenPrefix+portStr+".txt")
 		_fileUtils.WriteFile(pth, content)
@@ -233,7 +236,5 @@ func (s *MultiPassService) GenWebsockifyTokens() { // create tokenFile
 			Port:  arr[2],
 		}
 		s.syncMap.Store(mpTokenPrefix+portStr, result)
-
-		port++
 	}
 }
