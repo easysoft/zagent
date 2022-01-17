@@ -6,7 +6,7 @@ type MultiPassReq struct {
 	Cpus         uint   `json:"cpus"`
 	Disk         uint   `json:"disk"`
 	ImgFrom      string `json:"imgFrom"`
-	FilePath     string `json:"filePath"`
+	ImagePath    string `json:"imgPath"`
 
 	UserName string `json:"userName"`
 	Password string `json:"password"`
