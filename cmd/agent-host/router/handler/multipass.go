@@ -60,7 +60,7 @@ func (c *MultiPassCtrl) Create(ctx iris.Context) {
 	}
 	domains, err := c.MultiPassService.CreateVm(&req, false)
 	if err != nil {
-		ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "fail to create MultiPass vm", err))
+		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "fail to create vm", err))
 		return
 	}
 
@@ -70,26 +70,6 @@ func (c *MultiPassCtrl) Create(ctx iris.Context) {
 
 	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to create MultiPass vm", vm))
 
-	return
-}
-
-// Reboot
-// @summary 重启MultiPass虚拟机
-// @Accept json
-// @Produce json
-// @Param name path string true "MultiPass Name"
-// @Success 200 {object} _httpUtils.Response{} "code = success? 1 : 0"
-// @Router /api/v1/MultiPass/{name}/reboot [post]
-func (c *MultiPassCtrl) Reboot(ctx iris.Context) {
-	name := ctx.Params().GetString("name")
-	if name == "" {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, "vm name is empty", nil))
-		return
-	}
-
-	c.MultiPassService.RebootVmByName(name)
-
-	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to reboot vm", name))
 	return
 }
 
@@ -110,6 +90,26 @@ func (c *MultiPassCtrl) Destroy(ctx iris.Context) {
 	c.MultiPassService.DestroyVm(name)
 
 	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to destroy MultiPass vm", name))
+	return
+}
+
+// Reboot
+// @summary 重启MultiPass虚拟机
+// @Accept json
+// @Produce json
+// @Param name path string true "MultiPass Name"
+// @Success 200 {object} _httpUtils.Response{} "code = success? 1 : 0"
+// @Router /api/v1/MultiPass/{name}/reboot [post]
+func (c *MultiPassCtrl) Reboot(ctx iris.Context) {
+	name := ctx.Params().GetString("name")
+	if name == "" {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, "vm name is empty", nil))
+		return
+	}
+
+	c.MultiPassService.RebootVmByName(name)
+
+	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to reboot vm", name))
 	return
 }
 
