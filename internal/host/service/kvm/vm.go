@@ -1,4 +1,4 @@
-package hostAgentKvmService
+package hostAgentDockerService
 
 import (
 	"github.com/easysoft/zv/internal/comm/const"

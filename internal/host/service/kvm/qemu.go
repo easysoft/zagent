@@ -1,4 +1,4 @@
-package hostAgentKvmService
+package hostAgentDockerService
 
 import "C"
 import (
