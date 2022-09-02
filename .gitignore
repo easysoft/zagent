@@ -10,3 +10,4 @@
 /cmd/test/_const/const.go
 /res/*/docs/*.go
 /res/*/res.go
+/cmd/test/_const/const_secret.go
