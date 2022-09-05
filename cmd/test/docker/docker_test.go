@@ -3,7 +3,7 @@ package docker
 import (
 	agentConf "github.com/easysoft/zv/internal/agent/conf"
 	consts "github.com/easysoft/zv/internal/comm/const"
-	hostKvmService "github.com/easysoft/zv/internal/host/service/kvm"
+	hostDockerService "github.com/easysoft/zv/internal/host/service/docker"
 	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
 	"testing"
 )
@@ -15,7 +15,7 @@ func TestDocker(t *testing.T) {
 	agentConf.Inst.User = "aaron"
 	agentConf.Init(consts.AppNameAgentHost)
 
-	service := hostKvmService.NewDockerService()
+	service := hostDockerService.NewDockerService()
 
 	imageName := "easysoft/zentao:15.0.2"
 
@@ -53,6 +53,9 @@ func TestDocker(t *testing.T) {
 	if err != nil {
 		_logUtils.Infof("remove container, err %s", err.Error())
 	}
+
+	// TODO: remove ports in service
+
 	_logUtils.Infof("remove container %s", container.ID)
 
 }

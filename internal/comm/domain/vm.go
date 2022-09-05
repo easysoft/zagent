@@ -30,7 +30,7 @@ type Vm struct {
 	MacAddress string `json:"macAddress"`
 	RpcPort    int    `json:"rpcPort"`
 	SshPort    int    `json:"sshPort"`
-	VncPort    string `json:"vncPort"`
+	VncPort    int    `json:"vncPort"`
 	WorkDir    string `json:"workDir"`
 
 	DefPath          string `json:"defPath"`

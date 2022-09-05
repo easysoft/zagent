@@ -63,7 +63,7 @@ func (s HuaweiCloudVmService) CreateRemote(hostId, backingId, queueId uint) (res
 		_, result.Msg, vm.NodeIp, vm.MacAddress, err = huaweiCloudService.QueryInst(vm.CloudInstId, ecsClient)
 		if err != nil {
 			result.Fail(err.Error())
-			s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, vm.VncAddress, "", "")
+			s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, vm.VncPort, "", "")
 			return
 		}
 
@@ -74,8 +74,8 @@ func (s HuaweiCloudVmService) CreateRemote(hostId, backingId, queueId uint) (res
 
 	s.VmRepo.UpdateVmCloudInst(vm)
 
-	vm.VncAddress, _ = huaweiCloudService.QueryVnc(vm.CloudInstId, ecsClient)
-	s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, vm.VncAddress, "", "")
+	vm.VncPort, _ = huaweiCloudService.QueryVnc(vm.CloudInstId, ecsClient)
+	s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, vm.VncPort, "", "")
 
 	return
 }

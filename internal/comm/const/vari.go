@@ -1,5 +1,0 @@
-package consts
-
-var (
-
-)

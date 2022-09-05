@@ -43,62 +43,6 @@ func NewLibvirtService() *LibvirtService {
 	return s
 }
 
-func (s *LibvirtService) ListTmpl() (ret []v1.KvmRespTempl, err error) {
-	if s.LibvirtConn == nil {
-		return
-	}
-
-	domains, err := s.LibvirtConn.ListAllDomains(0)
-	if err != nil {
-		_logUtils.Errorf(err.Error())
-		return
-	}
-
-	for _, domain := range domains {
-		name, _ := domain.GetName()
-		if strings.Index(name, "tmpl-") > -1 {
-			newXml := ""
-			newXml, err = domain.GetXMLDesc(0)
-			if err != nil {
-				continue
-			}
-
-			domainCfg := &libvirtxml.Domain{}
-			err = domainCfg.Unmarshal(newXml)
-
-			tmpl := v1.KvmRespTempl{
-				Name: domainCfg.Name,
-				Type: domainCfg.Type,
-				UUID: domainCfg.UUID,
-
-				CpuCoreNum:  domainCfg.VCPU.Value,
-				MemoryValue: domainCfg.Memory.Value,
-				MemoryUnit:  domainCfg.Memory.Unit,
-
-				OsArch:     domainCfg.OS.Type.Arch,
-				MacAddress: domainCfg.Devices.Interfaces[0].MAC.Address,
-			}
-
-			if len(domainCfg.Devices.Interfaces) > 0 {
-				tmpl.VncPost = domainCfg.Devices.Graphics[0].VNC.Port
-			}
-
-			mainDiskIndex := s.QemuService.GetMainDiskIndex(domainCfg)
-			tmpl.DiskFile = domainCfg.Devices.Disks[mainDiskIndex].Source.File.File
-
-			backingStore := domainCfg.Devices.Disks[mainDiskIndex].BackingStore
-			if backingStore != nil && backingStore.Source.File != nil {
-				tmpl.BackingFile = backingStore.Source.File.File
-				tmpl.BackingFormat = backingStore.Format.Type
-			}
-
-			ret = append(ret, tmpl)
-		}
-	}
-
-	return
-}
-
 func (s *LibvirtService) CreateVm(req *v1.KvmReq, removeSameName bool) (dom *libvirt.Domain,
 	vmVncPort int, vmRawPath, vmBackingPath string, err error) {
 
@@ -349,6 +293,62 @@ func (s *LibvirtService) ResumeVmByName(name string) (err error) {
 
 func (s *LibvirtService) UndefineVm(dom *libvirt.Domain) (err error) {
 	err = dom.Undefine()
+
+	return
+}
+
+func (s *LibvirtService) ListTmpl() (ret []v1.KvmRespTempl, err error) {
+	if s.LibvirtConn == nil {
+		return
+	}
+
+	domains, err := s.LibvirtConn.ListAllDomains(0)
+	if err != nil {
+		_logUtils.Errorf(err.Error())
+		return
+	}
+
+	for _, domain := range domains {
+		name, _ := domain.GetName()
+		if strings.Index(name, "tmpl-") > -1 {
+			newXml := ""
+			newXml, err = domain.GetXMLDesc(0)
+			if err != nil {
+				continue
+			}
+
+			domainCfg := &libvirtxml.Domain{}
+			err = domainCfg.Unmarshal(newXml)
+
+			tmpl := v1.KvmRespTempl{
+				Name: domainCfg.Name,
+				Type: domainCfg.Type,
+				UUID: domainCfg.UUID,
+
+				CpuCoreNum:  domainCfg.VCPU.Value,
+				MemoryValue: domainCfg.Memory.Value,
+				MemoryUnit:  domainCfg.Memory.Unit,
+
+				OsArch:     domainCfg.OS.Type.Arch,
+				MacAddress: domainCfg.Devices.Interfaces[0].MAC.Address,
+			}
+
+			if len(domainCfg.Devices.Interfaces) > 0 {
+				tmpl.VncPost = domainCfg.Devices.Graphics[0].VNC.Port
+			}
+
+			mainDiskIndex := s.QemuService.GetMainDiskIndex(domainCfg)
+			tmpl.DiskFile = domainCfg.Devices.Disks[mainDiskIndex].Source.File.File
+
+			backingStore := domainCfg.Devices.Disks[mainDiskIndex].BackingStore
+			if backingStore != nil && backingStore.Source.File != nil {
+				tmpl.BackingFile = backingStore.Source.File.File
+				tmpl.BackingFormat = backingStore.Format.Type
+			}
+
+			ret = append(ret, tmpl)
+		}
+	}
 
 	return
 }

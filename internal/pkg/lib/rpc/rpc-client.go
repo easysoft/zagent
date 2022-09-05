@@ -4,7 +4,7 @@ import (
 	"bytes"
 	_domain "github.com/easysoft/zv/internal/pkg/domain"
 	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
-	gateway "github.com/rpcx-ecosystem/rpcx-gateway"
+	gateway "github.com/rpcxio/rpcx-gateway"
 	"github.com/smallnest/rpcx/codec"
 	"github.com/smallnest/rpcx/log"
 	"io/ioutil"

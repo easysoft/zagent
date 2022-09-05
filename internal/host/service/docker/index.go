@@ -1,4 +1,4 @@
-package kvmService
+package dockerService
 
 import "C"
 import (
@@ -31,12 +31,10 @@ var (
 )
 
 type DockerService struct {
-	existPortMap map[int]bool
 }
 
 func NewDockerService() *DockerService {
 	s := &DockerService{}
-	s.existPortMap = map[int]bool{}
 	s.Connect()
 
 	return s
@@ -90,8 +88,8 @@ func (s *DockerService) GetContainerInfo(containerId string) (ret commDomain.Con
 }
 
 func (s *DockerService) CreateContainer(name string, cmd []string) (resp container.ContainerCreateCreatedBody, err error) {
-	httpPort := _commonUtils.GetValidPort(58000, 58099, &s.existPortMap)
-	sshPort := _commonUtils.GetValidPort(52200, 52299, &s.existPortMap)
+	httpPort := _commonUtils.GetHttpPort()
+	sshPort := _commonUtils.GetSshPort()
 
 	resp, err = DockerClient.ContainerCreate(DockerCtx,
 		&container.Config{

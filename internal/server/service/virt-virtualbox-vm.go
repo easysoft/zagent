@@ -3,7 +3,6 @@ package serverService
 import (
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
 	"github.com/easysoft/zv/internal/comm/const"
-	"github.com/easysoft/zv/internal/comm/domain"
 	_domain "github.com/easysoft/zv/internal/pkg/domain"
 	"github.com/easysoft/zv/internal/server/model"
 	"github.com/easysoft/zv/internal/server/repo"
@@ -43,7 +42,7 @@ func (s VirtualboxCloudVmService) CreateRemote(hostId, backingId, queueId uint) 
 	req := model.GenVirtualBoxReq(vm, backing, host)
 	result = s.RpcService.CreateVirtualBox(host.Ip, host.Port, req)
 
-	vmInResp := domain.Vm{}
+	vmInResp := v1.VirtualBoxResp{}
 	if result.IsSuccess() { // success to create vm
 		mp := result.Payload.(map[string]interface{})
 		mapstructure.Decode(mp, &vmInResp)
@@ -59,7 +58,7 @@ func (s VirtualboxCloudVmService) DestroyRemote(vmId, queueId uint) (result _dom
 
 	status := consts.VmDestroy
 
-	req := v1.VirtualBoxReq{VmUniqueName: vm.Name}
+	req := v1.VirtualBoxReq{VmUniqueName: vm.Name, VncPort: vm.VncPort}
 	result = s.RpcService.DestroyVirtualBox(host.Ip, host.Port, req)
 
 	if !result.IsSuccess() {

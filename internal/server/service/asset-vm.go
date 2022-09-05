@@ -26,9 +26,9 @@ type VmCommonService struct {
 }
 
 func (s VmCommonService) SaveVmCreationResult(isSuccess bool, result string, queueId uint, vmId uint,
-	vncAddress, imagePath, backingPath string) {
+	vncPort int, imagePath, backingPath string) {
 	if isSuccess { // success to create vm
-		s.VmRepo.Launch(vncAddress, imagePath, backingPath, vmId) // update vm status, mac address
+		s.VmRepo.Launch(vncPort, imagePath, backingPath, vmId) // update vm status, mac address
 		s.HistoryService.Create(consts.Vm, vmId, queueId, "", consts.VmLaunch.ToString())
 
 		s.QueueRepo.ResLaunched(queueId)

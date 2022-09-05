@@ -7,6 +7,7 @@ type VirtualBoxReq struct {
 	Bridge       string `json:"bridge"`
 	VmCpu        uint   `json:"vmCpu"`
 	VmMemorySize uint   `json:"vmMemorySize"`
+	VncPort      int    `json:"vncPort"`
 
 	CloudIamUser     string `json:"cloudIamUser"`
 	CloudIamPassword string `json:"cloudIamPassword"`
@@ -15,7 +16,7 @@ type VirtualBoxReq struct {
 type VirtualBoxResp struct {
 	Name        string `json:"name"`
 	MacAddress  string `json:"macAddress"`
-	VncPort     string `json:"vncPort"`
+	VncPort     int    `json:"vncPort"`
 	ImagePath   string `json:"imagePath"`
 	BackingPath string `json:"backingPath"`
 }
