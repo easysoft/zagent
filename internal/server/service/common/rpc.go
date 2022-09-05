@@ -54,6 +54,17 @@ func (s RpcService) DestroyKvm(hostIp string, hostPort int, req v1.KvmReq) (resu
 	return
 }
 
+func (s RpcService) CreateVirtualBox(hostIp string, hostPort int, req v1.VirtualBoxReq) (result _domain.RpcResp) {
+	obj := interface{}(req)
+	result = s.Request(hostIp, hostPort, "virtualbox", "Create", &obj)
+	return
+}
+func (s RpcService) DestroyVirtualBox(hostIp string, hostPort int, req v1.VirtualBoxReq) (result _domain.RpcResp) {
+	obj := interface{}(req)
+	result = s.Request(hostIp, hostPort, "virtualbox", "Destroy", &obj)
+	return
+}
+
 func (s RpcService) CreateVmWare(hostIp string, hostPort int, req v1.VmWareReq) (result _domain.RpcResp) {
 	obj := interface{}(req)
 	result = s.Request(hostIp, hostPort, "vmware", "Create", &obj)

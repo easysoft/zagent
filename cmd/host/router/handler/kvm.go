@@ -53,7 +53,7 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 	dom, vmVncPort, vmRawPath, vmBackingPath, err := c.LibvirtService.CreateVm(&req, true)
 
 	if err != nil {
-		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "fail to create vm", err))
+		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "fail to create kvm vm", err))
 		return
 	}
 

@@ -1,14 +1,14 @@
 package serverService
 
 import (
-	"fmt"
+	v1 "github.com/easysoft/zv/cmd/host/router/v1"
 	"github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/comm/domain"
 	_domain "github.com/easysoft/zv/internal/pkg/domain"
-	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
 	"github.com/easysoft/zv/internal/server/model"
 	"github.com/easysoft/zv/internal/server/repo"
-	"github.com/easysoft/zv/internal/server/service/vendors/virtualbox/api"
-	"github.com/easysoft/zv/internal/server/service/vendors/virtualbox/srv"
+	commonService "github.com/easysoft/zv/internal/server/service/common"
+	"github.com/mitchellh/mapstructure"
 )
 
 type VirtualboxCloudVmService struct {
@@ -16,9 +16,10 @@ type VirtualboxCloudVmService struct {
 	BackingRepo *repo.BackingRepo `inject:""`
 	VmRepo      *repo.VmRepo      `inject:""`
 
-	CommonService   *CommonService   `inject:""`
-	VmCommonService *VmCommonService `inject:""`
-	HistoryService  *HistoryService  `inject:""`
+	CommonService   *CommonService            `inject:""`
+	VmCommonService *VmCommonService          `inject:""`
+	HistoryService  *HistoryService           `inject:""`
+	RpcService      *commonService.RpcService `inject:""`
 }
 
 func (s VirtualboxCloudVmService) CreateRemote(hostId, backingId, queueId uint) (result _domain.RpcResp) {
@@ -39,130 +40,16 @@ func (s VirtualboxCloudVmService) CreateRemote(hostId, backingId, queueId uint) 
 	vm.Name = s.VmCommonService.genVmName(backing, vm.ID)
 	s.VmRepo.UpdateVmName(vm)
 
-	var err error
-	var client *virtualboxapi.VirtualBox
-	var osTypeId string
-	var newMachineId string
-	var tmpl *virtualboxapi.Machine
-	var machine *virtualboxapi.Machine
-	var newMachine *virtualboxapi.Machine
-	var snapshot *virtualboxapi.Machine
-	var snapshotMachine *virtualboxapi.Machine
-	var adpt *virtualboxapi.NetworkAdapter
-	var session *virtualboxapi.Session
-	var progress *virtualboxapi.Progress
+	req := model.GenVirtualBoxReq(vm, backing, host)
+	result = s.RpcService.CreateVirtualBox(host.Ip, host.Port, req)
 
-	client, err = s.CreateClient(host.Ip, host.Port, host.CloudIamUser, host.CloudIamPassword)
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
+	vmInResp := domain.Vm{}
+	if result.IsSuccess() { // success to create vm
+		mp := result.Payload.(map[string]interface{})
+		mapstructure.Decode(mp, &vmInResp)
 	}
-
-	// get backing tmpl
-	tmpl, err = client.FindMachine(backing.Name)
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-	osTypeId, err = tmpl.GetOsTypeId()
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-	snapshot, err = tmpl.FindSnapshot()
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-	snapshotMachine, err = snapshot.FindSnapshotMachine()
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-
-	// create machine
-	newMachineId, err = client.CreateMachine(vm.Name, osTypeId)
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-	progress, newMachine, err = snapshotMachine.CloneTo(newMachineId)
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-	err = progress.WaitForCompletion(10000)
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-
-	err = newMachine.SetCPUCount(uint32(backing.SuggestCpuCount))
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-	err = newMachine.SetMemorySize(uint32(backing.SuggestMemorySize))
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-
-	adpt, err = newMachine.GetNetworkAdapter(0)
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-	err = adpt.SetBridge(host.Bridge)
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-	vm.MacAddress, err = adpt.GetMACAddress()
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-	_logUtils.Infof("machine mac address %s", vm.MacAddress)
-
-	err = newMachine.SaveSettings()
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-	err = newMachine.Register()
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-
-	// launch machine
-	machine, err = client.FindMachine(vm.Name)
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-
-	session, err = client.GetSession()
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-
-	progress, err = machine.Launch(session.ManagedObjectId)
-	err = progress.WaitForCompletion(10000)
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-
-	result.Pass("")
-
-final:
-	s.VmRepo.UpdateVmCloudInst(vm)
-	//vm.VncPort, _ = huaweiCloudService.QueryVnc(vm.CloudInstId, ecsClient)
-	s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, vm.VncAddress, "", "")
-
+	s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID,
+		vmInResp.VncPort, vmInResp.ImagePath, vmInResp.BackingPath)
 	return
 }
 
@@ -170,100 +57,17 @@ func (s VirtualboxCloudVmService) DestroyRemote(vmId, queueId uint) (result _dom
 	vm := s.VmRepo.GetById(vmId)
 	host := s.HostRepo.Get(vm.HostId)
 
-	var err error
-	var virtualBox *virtualboxapi.VirtualBox
-	var machine *virtualboxapi.Machine
-	var machineState *virtualboxsrv.MachineState
-	var session *virtualboxapi.Session
-	var console *virtualboxapi.Console
-	var progress *virtualboxapi.Progress
-	var media []string
+	status := consts.VmDestroy
 
-	virtualBox, err = s.CreateClient(host.Ip, host.Port, host.CloudIamUser, host.CloudIamPassword)
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
+	req := v1.VirtualBoxReq{VmUniqueName: vm.Name}
+	result = s.RpcService.DestroyVirtualBox(host.Ip, host.Port, req)
+
+	if !result.IsSuccess() {
+		status = consts.VmDestroyFail
 	}
+	s.VmRepo.UpdateStatusByNames([]string{vm.Name}, status)
 
-	machine, err = virtualBox.FindMachine(vm.Name)
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-
-	machineState, err = machine.GetMachineState()
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-	_logUtils.Infof("machine state %s", *machineState)
-
-	session, err = virtualBox.GetSession()
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-
-	err = machine.Lock(session, virtualboxsrv.LockTypeShared)
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-
-	console, err = session.GetConsole()
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-
-	progress, err = console.PowerDown()
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-
-	err = progress.WaitForCompletion(10000)
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-
-	media, err = machine.Unregister()
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-
-	err = machine.DiscardSettings()
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-
-	err = machine.DeleteConfig(media)
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-
-	err = session.Release()
-	if err != nil {
-		result.Fail(err.Error())
-		goto final
-	}
-
-final:
-	s.VmCommonService.SaveVmDestroyResult(result.IsSuccess(), result.Msg, queueId, vmId)
-
-	return
-}
-
-func (s VirtualboxCloudVmService) CreateClient(ip string, port int, account, password string) (
-	client *virtualboxapi.VirtualBox, err error) {
-	url := fmt.Sprintf("http://%s:%d", ip, port)
-	client = virtualboxapi.NewVirtualBox(account, password, url, false, "")
-
-	err = client.Logon()
+	s.HistoryService.Create(consts.Vm, vmId, queueId, "", status.ToString())
 
 	return
 }

@@ -21,6 +21,8 @@ type Vm struct {
 
 	BackingId   uint   `json:"backingId"`
 	BackingPath string `json:"backingPath"`
+	BackingName string `json:"backingName"`
+	Bridge      string `json:"backingName"`
 
 	OsCategory consts.OsCategory `json:"osCategory" example:"windows"` // Enums consts.OsCategory
 	OsType     consts.OsType     `json:"osType" example:"win10"`       // Enums consts.OsType
@@ -67,6 +69,23 @@ func GenKvmReq(po Vm) (req v1.KvmReq) {
 
 		VmDiskSize: po.DiskSize, VmMemorySize: po.MemorySize,
 		//VmCdromSys: po.CdromSys, VmCdromDriver: po.CdromDriver
+	}
+
+	return
+}
+
+func GenVirtualBoxReq(vm Vm, backing VmBacking, host Host) (req v1.VirtualBoxReq) {
+	req = v1.VirtualBoxReq{
+		VmUniqueName: vm.Name,
+		BackingName:  vm.BackingName,
+
+		VmCpu:        backing.SuggestCpuCount,
+		VmMemorySize: backing.SuggestMemorySize,
+
+		CloudIamUser:     host.CloudIamUser,
+		CloudIamPassword: host.CloudIamPassword,
+
+		Bridge: host.Bridge,
 	}
 
 	return
