@@ -158,7 +158,7 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RpcResp,
 	return
 }
 
-func (s VirtualBoxService) ListTmpl(req v1.VirtualBoxReq) (result _domain.RpcResp, err error) {
+func (s VirtualBoxService) ListTmpl(req v1.VirtualBoxReq, prefix string) (result _domain.RpcResp, err error) {
 	virtualBox, err := s.CreateClient(ip, port, req.CloudIamUser, req.CloudIamPassword)
 	if err != nil {
 		result.Fail(err.Error())
@@ -173,7 +173,7 @@ func (s VirtualBoxService) ListTmpl(req v1.VirtualBoxReq) (result _domain.RpcRes
 
 	list := make([]virtualboxapi.Machine, 0)
 	for _, item := range machines {
-		if strings.Index(item.Name, "tmpl") > -1 {
+		if prefix == "" || strings.Index(item.Name, prefix) > -1 {
 			list = append(list, *item)
 		}
 	}

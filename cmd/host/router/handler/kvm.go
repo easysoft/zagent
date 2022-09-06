@@ -24,14 +24,14 @@ func NewKvmCtrl() *KvmCtrl {
 // @Success 200 {object} _httpUtils.Response{data=[]v1.KvmRespTempl} "code = success? 1 : 0"
 // @Router /api/v1/kvm/listTempl [get]
 func (c *KvmCtrl) ListTmpl(ctx iris.Context) {
-	domainCfgs, err := c.LibvirtService.ListTmpl()
+	templs, err := c.LibvirtService.ListTmpl()
 
 	if err != nil {
 		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "fail to list vm tmpl", err))
 		return
 	}
 
-	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to list vm tmpl", domainCfgs))
+	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to list vm tmpl", templs))
 
 	return
 }

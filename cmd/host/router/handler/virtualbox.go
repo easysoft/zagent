@@ -40,6 +40,31 @@ func (c *VirtualBoxCtrl) Create(ctx iris.Context) {
 	return
 }
 
+// ListTmpl
+// @summary 获取VirtualBox虚拟机模板信息
+// @Produce json
+// @Success 200 {object} _httpUtils.Response{data=[]v1.KvmRespTempl} "code = success? 1 : 0"
+// @Router /api/v1/virtualbox/listTempl [get]
+func (c *VirtualBoxCtrl) ListTmpl(ctx iris.Context) {
+	prefix := ctx.Params().GetString("prefix")
+	req := v1.VirtualBoxReq{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		return
+	}
+
+	templs, err := c.VirtualBoxService.ListTmpl(req, prefix)
+
+	if err != nil {
+		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "fail to list vm tmpl", err))
+		return
+	}
+
+	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to list vm tmpl", templs))
+
+	return
+}
+
 // Destroy
 // @summary 摧毁VirtualBox虚拟机
 // @Accept json
