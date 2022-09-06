@@ -1,6 +1,8 @@
 package virtualboxapi
 
-import "github.com/easysoft/zv/internal/server/service/vendors/virtualbox/srv"
+import (
+	virtualboxsrv "github.com/easysoft/zv/internal/pkg/vendors/virtualbox/srv"
+)
 
 // Console is a VirtualBox console object
 type Console struct {

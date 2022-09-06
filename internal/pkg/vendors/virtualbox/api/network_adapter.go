@@ -2,7 +2,7 @@ package virtualboxapi
 
 import (
 	_stringUtils "github.com/easysoft/zv/internal/pkg/lib/string"
-	"github.com/easysoft/zv/internal/server/service/vendors/virtualbox/srv"
+	virtualboxsrv "github.com/easysoft/zv/internal/pkg/vendors/virtualbox/srv"
 	"strings"
 )
 

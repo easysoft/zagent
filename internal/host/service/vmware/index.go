@@ -5,7 +5,7 @@ import (
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
 	"github.com/easysoft/zv/internal/comm/domain"
 	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
-	vmwareService "github.com/easysoft/zv/internal/server/service/vendors/vmware"
+	vmwareService "github.com/easysoft/zv/internal/pkg/vendors/vmware"
 	"time"
 )
 

@@ -8,8 +8,9 @@ import (
 	_commonUtils "github.com/easysoft/zv/internal/pkg/lib/common"
 	"github.com/easysoft/zv/internal/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zv/internal/pkg/lib/shell"
-	"github.com/easysoft/zv/internal/server/service/vendors/virtualbox/api"
-	"github.com/easysoft/zv/internal/server/service/vendors/virtualbox/srv"
+	"github.com/easysoft/zv/internal/pkg/vendors/virtualbox/api"
+	"github.com/easysoft/zv/internal/pkg/vendors/virtualbox/srv"
+	"strings"
 )
 
 const (
@@ -157,8 +158,33 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RpcResp,
 	return
 }
 
-func (s VirtualBoxService) Destroy(req v1.VirtualBoxReq) (result _domain.RpcResp) {
-	var err error
+func (s VirtualBoxService) ListTmpl(req v1.VirtualBoxReq) (result _domain.RpcResp, err error) {
+	virtualBox, err := s.CreateClient(ip, port, req.CloudIamUser, req.CloudIamPassword)
+	if err != nil {
+		result.Fail(err.Error())
+		return
+	}
+
+	machines, err := virtualBox.GetMachines()
+	if err != nil {
+		result.Fail(err.Error())
+		return
+	}
+
+	list := make([]virtualboxapi.Machine, 0)
+	for _, item := range machines {
+		if strings.Index(item.Name, "tmpl") > -1 {
+			list = append(list, *item)
+		}
+	}
+
+	result.Pass("")
+	result.Payload = list
+
+	return
+}
+
+func (s VirtualBoxService) Destroy(req v1.VirtualBoxReq) (result _domain.RpcResp, err error) {
 	var virtualBox *virtualboxapi.VirtualBox
 	var machine *virtualboxapi.Machine
 	var machineState *virtualboxsrv.MachineState

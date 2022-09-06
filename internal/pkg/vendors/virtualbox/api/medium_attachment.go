@@ -1,7 +1,7 @@
 package virtualboxapi
 
 import (
-	"github.com/easysoft/zv/internal/server/service/vendors/virtualbox/srv"
+	virtualboxsrv "github.com/easysoft/zv/internal/pkg/vendors/virtualbox/srv"
 )
 
 type MediumAttachment struct {

@@ -2,9 +2,8 @@ package virtualboxapi
 
 import (
 	"errors"
+	virtualboxsrv "github.com/easysoft/zv/internal/pkg/vendors/virtualbox/srv"
 	"log"
-
-	"github.com/easysoft/zv/internal/server/service/vendors/virtualbox/srv"
 )
 
 type Machine struct {
