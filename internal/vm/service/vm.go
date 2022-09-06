@@ -70,8 +70,6 @@ func (s *VmService) Register(isBusy bool) {
 		vm.Status = consts.VmReady
 	}
 
-	s.ZentaoService.GetConfig(agentConf.Inst.Server)
-
 	var url string
 	if strings.Index(agentConf.Inst.Server, ":8085") > -1 {
 		uri := "client/vm/register"
@@ -79,6 +77,7 @@ func (s *VmService) Register(isBusy bool) {
 	} else {
 		uri := "api.php/v1/vm/register"
 		url = s.ZentaoService.GenUrl(agentConf.Inst.Server, uri)
+		s.ZentaoService.GetConfig(agentConf.Inst.Server)
 	}
 
 	resp, ok := s.ZentaoService.Post(url, vm, true)
