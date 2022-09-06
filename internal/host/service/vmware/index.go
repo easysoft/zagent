@@ -4,8 +4,8 @@ import (
 	"fmt"
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
 	"github.com/easysoft/zv/internal/comm/domain"
-	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
 	vmwareService "github.com/easysoft/zv/internal/pkg/vendors/vmware"
+	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"time"
 )
 

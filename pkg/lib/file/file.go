@@ -2,8 +2,8 @@ package _fileUtils
 
 import (
 	"fmt"
-	_const "github.com/easysoft/zv/internal/pkg/const"
-	_commonUtils "github.com/easysoft/zv/internal/pkg/lib/common"
+	_const "github.com/easysoft/zv/pkg/const"
+	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
 	"io"
 	"io/ioutil"
 	"os"

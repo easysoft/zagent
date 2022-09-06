@@ -7,9 +7,9 @@ import (
 	agentZentaoService "github.com/easysoft/zv/internal/agent/service/zentao"
 	"github.com/easysoft/zv/internal/comm/const"
 	"github.com/easysoft/zv/internal/comm/domain"
-	_httpUtils "github.com/easysoft/zv/internal/pkg/lib/http"
-	"github.com/easysoft/zv/internal/pkg/lib/i118"
-	"github.com/easysoft/zv/internal/pkg/lib/log"
+	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
+	_i118Utils "github.com/easysoft/zv/pkg/lib/i118"
+	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"strings"
 	"time"
 )

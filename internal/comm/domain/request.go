@@ -1,6 +1,6 @@
 package domain
 
-import _const "github.com/easysoft/zv/internal/pkg/const"
+import _const "github.com/easysoft/zv/pkg/const"
 
 type Request struct {
 	Method _const.HttpMethod `json:"method" yaml:"method"`

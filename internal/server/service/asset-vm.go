@@ -4,10 +4,10 @@ import (
 	"crypto/rand"
 	"fmt"
 	consts "github.com/easysoft/zv/internal/comm/const"
-	_domain "github.com/easysoft/zv/internal/pkg/domain"
 	"github.com/easysoft/zv/internal/server/model"
 	"github.com/easysoft/zv/internal/server/repo"
 	"github.com/easysoft/zv/internal/server/service/common"
+	_domain "github.com/easysoft/zv/pkg/domain"
 )
 
 type VmService interface {

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	commDomain "github.com/easysoft/zv/internal/comm/domain"
-	"github.com/easysoft/zv/internal/pkg/db"
+	_db "github.com/easysoft/zv/pkg/db"
 	"github.com/fatih/color"
 	"gorm.io/gorm"
 	"strings"

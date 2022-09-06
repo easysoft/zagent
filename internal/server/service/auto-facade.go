@@ -2,10 +2,10 @@ package serverService
 
 import (
 	consts "github.com/easysoft/zv/internal/comm/const"
-	_domain "github.com/easysoft/zv/internal/pkg/domain"
 	"github.com/easysoft/zv/internal/server/model"
 	"github.com/easysoft/zv/internal/server/repo"
 	serverUitls "github.com/easysoft/zv/internal/server/utils/lib"
+	_domain "github.com/easysoft/zv/pkg/domain"
 )
 
 type FacadeService struct {

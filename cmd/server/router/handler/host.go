@@ -2,9 +2,9 @@ package handler
 
 import (
 	v1 "github.com/easysoft/zv/cmd/server/router/v1"
-	_const "github.com/easysoft/zv/internal/pkg/const"
-	_httpUtils "github.com/easysoft/zv/internal/pkg/lib/http"
 	serverService "github.com/easysoft/zv/internal/server/service"
+	_const "github.com/easysoft/zv/pkg/const"
+	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	"github.com/kataras/iris/v12"
 )
 

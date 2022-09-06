@@ -7,7 +7,7 @@ import (
 	"github.com/alibabacloud-go/tea/tea"
 	vpc "github.com/alibabacloud-go/vpc-20160428/v2/client"
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/ens"
-	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
+	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"strings"
 )
 

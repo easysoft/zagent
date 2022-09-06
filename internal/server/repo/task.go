@@ -2,8 +2,8 @@ package repo
 
 import (
 	"github.com/easysoft/zv/internal/comm/const"
-	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
 	"github.com/easysoft/zv/internal/server/model"
+	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"gorm.io/gorm"
 	"time"
 )

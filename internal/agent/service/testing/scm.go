@@ -2,9 +2,9 @@ package agentTestingService
 
 import (
 	commDomain "github.com/easysoft/zv/internal/comm/domain"
-	_const "github.com/easysoft/zv/internal/pkg/const"
-	_fileUtils "github.com/easysoft/zv/internal/pkg/lib/file"
-	_gitUtils "github.com/easysoft/zv/internal/pkg/lib/git"
+	_const "github.com/easysoft/zv/pkg/const"
+	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
+	_gitUtils "github.com/easysoft/zv/pkg/lib/git"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/transport/http"
 	"github.com/mholt/archiver/v3"

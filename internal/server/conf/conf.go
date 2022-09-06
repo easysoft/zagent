@@ -2,10 +2,10 @@ package serverConf
 
 import (
 	"fmt"
-	"github.com/easysoft/zv/internal/pkg/lib/common"
-	"github.com/easysoft/zv/internal/pkg/lib/file"
-	_i118Utils "github.com/easysoft/zv/internal/pkg/lib/i118"
-	"github.com/easysoft/zv/internal/pkg/lib/log"
+	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
+	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
+	_i118Utils "github.com/easysoft/zv/pkg/lib/i118"
+	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"github.com/easysoft/zv/res/server"
 	"github.com/jinzhu/configor"
 	logger "github.com/sirupsen/logrus"

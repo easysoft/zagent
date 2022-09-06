@@ -4,8 +4,8 @@ import (
 	"fmt"
 	interfaceUtils "github.com/easysoft/zv/internal/agent/utils/interface"
 	commDomain "github.com/easysoft/zv/internal/comm/domain"
-	_const "github.com/easysoft/zv/internal/pkg/const"
-	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
+	_const "github.com/easysoft/zv/pkg/const"
+	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 )
 
 type InterfaceReqService struct {

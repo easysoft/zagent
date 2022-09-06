@@ -4,7 +4,7 @@ import (
 	"github.com/easysoft/zv/internal/agent/service"
 	"github.com/easysoft/zv/internal/agent/service/interface"
 	"github.com/easysoft/zv/internal/comm/domain"
-	"github.com/easysoft/zv/internal/pkg/domain"
+	_domain "github.com/easysoft/zv/pkg/domain"
 	"golang.org/x/net/context"
 )
 

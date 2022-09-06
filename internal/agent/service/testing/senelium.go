@@ -5,8 +5,8 @@ import (
 	agentConf "github.com/easysoft/zv/internal/agent/conf"
 	consts "github.com/easysoft/zv/internal/comm/const"
 	commDomain "github.com/easysoft/zv/internal/comm/domain"
-	_commonUtils "github.com/easysoft/zv/internal/pkg/lib/common"
-	_fileUtils "github.com/easysoft/zv/internal/pkg/lib/file"
+	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
+	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
 	"path/filepath"
 )
 

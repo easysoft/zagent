@@ -3,8 +3,8 @@ package _logUtils
 import (
 	"fmt"
 	consts "github.com/easysoft/zv/internal/comm/const"
-	_const "github.com/easysoft/zv/internal/pkg/const"
-	"github.com/easysoft/zv/internal/pkg/var"
+	_const "github.com/easysoft/zv/pkg/const"
+	_var "github.com/easysoft/zv/pkg/var"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"

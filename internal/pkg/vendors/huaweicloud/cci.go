@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/easysoft/zv/internal/comm/domain"
-	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
 	serverConst "github.com/easysoft/zv/internal/server/utils/const"
+	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 )
 
 type HuaweiCloudCciService struct {

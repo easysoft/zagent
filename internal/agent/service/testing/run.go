@@ -3,8 +3,8 @@ package agentTestingService
 import (
 	consts "github.com/easysoft/zv/internal/comm/const"
 	commDomain "github.com/easysoft/zv/internal/comm/domain"
-	_commonUtils "github.com/easysoft/zv/internal/pkg/lib/common"
-	_shellUtils "github.com/easysoft/zv/internal/pkg/lib/shell"
+	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
+	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
 )
 
 type RunService struct {

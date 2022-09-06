@@ -3,7 +3,7 @@ package repo
 import (
 	"github.com/easysoft/zv/internal/comm/const"
 	"github.com/easysoft/zv/internal/comm/domain"
-	_intUtils "github.com/easysoft/zv/internal/pkg/lib/int"
+	_intUtils "github.com/easysoft/zv/pkg/lib/int"
 )
 
 type CommonRepo struct {

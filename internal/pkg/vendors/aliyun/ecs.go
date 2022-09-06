@@ -5,9 +5,9 @@ import (
 	"fmt"
 	ecs "github.com/alibabacloud-go/ecs-20140526/v2/client"
 	"github.com/alibabacloud-go/tea/tea"
-	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
-	_stringUtils "github.com/easysoft/zv/internal/pkg/lib/string"
 	serverConst "github.com/easysoft/zv/internal/server/utils/const"
+	_logUtils "github.com/easysoft/zv/pkg/lib/log"
+	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
 )
 
 type AliyunEcsService struct {

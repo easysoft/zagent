@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	consts "github.com/easysoft/zv/internal/comm/const"
-	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
+	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"github.com/fatih/color"
 	"io/ioutil"
 	"net/http"

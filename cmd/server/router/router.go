@@ -3,12 +3,12 @@ package router
 import (
 	"fmt"
 	"github.com/easysoft/zv/cmd/server/router/handler"
-	_httpUtils "github.com/easysoft/zv/internal/pkg/lib/http"
 	bizCasbin "github.com/easysoft/zv/internal/server/biz/casbin"
 	"github.com/easysoft/zv/internal/server/biz/jwt"
 	serverConf "github.com/easysoft/zv/internal/server/conf"
 	"github.com/easysoft/zv/internal/server/repo"
 	initService "github.com/easysoft/zv/internal/server/service/init"
+	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	gorillaWs "github.com/gorilla/websocket"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"

@@ -1,10 +1,10 @@
 package handler
 
 import (
-	_const "github.com/easysoft/zv/internal/pkg/const"
-	_fileUtils "github.com/easysoft/zv/internal/pkg/lib/file"
-	_httpUtils "github.com/easysoft/zv/internal/pkg/lib/http"
 	"github.com/easysoft/zv/internal/server/biz/validate"
+	_const "github.com/easysoft/zv/pkg/const"
+	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
+	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofrs/uuid"
 	"github.com/kataras/iris/v12"

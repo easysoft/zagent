@@ -4,12 +4,12 @@ import "C"
 import (
 	"fmt"
 	"github.com/easysoft/zv/cmd/host/router/v1"
-	"github.com/easysoft/zv/internal/pkg/domain"
-	_commonUtils "github.com/easysoft/zv/internal/pkg/lib/common"
-	"github.com/easysoft/zv/internal/pkg/lib/log"
-	_shellUtils "github.com/easysoft/zv/internal/pkg/lib/shell"
 	"github.com/easysoft/zv/internal/pkg/vendors/virtualbox/api"
 	"github.com/easysoft/zv/internal/pkg/vendors/virtualbox/srv"
+	_domain "github.com/easysoft/zv/pkg/domain"
+	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
+	_logUtils "github.com/easysoft/zv/pkg/lib/log"
+	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
 	"strings"
 )
 

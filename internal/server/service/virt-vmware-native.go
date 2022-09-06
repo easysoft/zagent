@@ -3,11 +3,11 @@ package serverService
 import (
 	"fmt"
 	"github.com/easysoft/zv/internal/comm/const"
-	"github.com/easysoft/zv/internal/pkg/domain"
 	virtualboxapi "github.com/easysoft/zv/internal/pkg/vendors/virtualbox/api"
 	"github.com/easysoft/zv/internal/server/model"
 	"github.com/easysoft/zv/internal/server/repo"
 	"github.com/easysoft/zv/internal/server/service/common"
+	_domain "github.com/easysoft/zv/pkg/domain"
 )
 
 type VmWareCloudVmService struct {

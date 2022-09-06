@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
-	"github.com/easysoft/zv/internal/pkg/domain"
-	_httpUtils "github.com/easysoft/zv/internal/pkg/lib/http"
 	"github.com/easysoft/zv/internal/server/model"
+	_domain "github.com/easysoft/zv/pkg/domain"
+	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 )
 
 type RemoteService struct {

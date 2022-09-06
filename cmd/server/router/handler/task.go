@@ -3,15 +3,15 @@ package handler
 import (
 	"encoding/json"
 	v1 "github.com/easysoft/zv/cmd/server/router/v1"
-	_const "github.com/easysoft/zv/internal/pkg/const"
-	_httpUtils "github.com/easysoft/zv/internal/pkg/lib/http"
-	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
-	_stringUtils "github.com/easysoft/zv/internal/pkg/lib/string"
 	"github.com/easysoft/zv/internal/server/biz/jwt"
 	"github.com/easysoft/zv/internal/server/model"
 	"github.com/easysoft/zv/internal/server/service"
 	commonService "github.com/easysoft/zv/internal/server/service/common"
 	serverConst "github.com/easysoft/zv/internal/server/utils/const"
+	_const "github.com/easysoft/zv/pkg/const"
+	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
+	_logUtils "github.com/easysoft/zv/pkg/lib/log"
+	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
 	"github.com/kataras/iris/v12"
 )
 

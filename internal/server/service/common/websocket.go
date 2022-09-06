@@ -2,8 +2,8 @@ package commonService
 
 import (
 	"encoding/json"
-	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
 	serverConst "github.com/easysoft/zv/internal/server/utils/const"
+	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/kataras/neffos"
 )

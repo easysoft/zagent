@@ -3,7 +3,7 @@ package agentConst
 import (
 	"fmt"
 	consts "github.com/easysoft/zv/internal/comm/const"
-	_const "github.com/easysoft/zv/internal/pkg/const"
+	_const "github.com/easysoft/zv/pkg/const"
 	"path/filepath"
 )
 
