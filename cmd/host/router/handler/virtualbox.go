@@ -73,14 +73,14 @@ func (c *VirtualBoxCtrl) ListTmpl(ctx iris.Context) {
 		return
 	}
 
-	templs, err := c.VirtualBoxService.ListTmpl(req, prefix)
+	result, err := c.VirtualBoxService.ListTmpl(req, prefix)
 
 	if err != nil {
 		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "fail to list vm tmpl", err))
 		return
 	}
 
-	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to list vm tmpl", templs))
+	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to list vm tmpl", result))
 
 	return
 }
