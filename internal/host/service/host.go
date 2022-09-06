@@ -8,6 +8,7 @@ import (
 	"github.com/easysoft/zv/internal/comm/const"
 	"github.com/easysoft/zv/internal/comm/domain"
 	hostKvmService "github.com/easysoft/zv/internal/host/service/kvm"
+	_httpUtils "github.com/easysoft/zv/internal/pkg/lib/http"
 	_i118Utils "github.com/easysoft/zv/internal/pkg/lib/i118"
 	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
 	"strings"
@@ -65,16 +66,32 @@ func (s *HostService) Register(isBusy bool) {
 	host.Vms = s.VmService.GetVms()
 	s.VmService.UpdateVmMapAndDestroyTimeout(host.Vms)
 
-	s.ZentaoService.GetConfig(agentConf.Inst.Server)
+	var ok bool
+	var resp string
 
-	url := s.ZentaoService.GenUrl(agentConf.Inst.Server, "api.php/v1/host/register")
-	resp, ok := s.ZentaoService.Post(url, host, true)
+	resp, ok = s.registerToZentao(host, false)
 
 	if ok {
 		_logUtils.Info(_i118Utils.I118Prt.Sprintf("success_to_register", agentConf.Inst.Server))
 	} else {
 		_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_register", agentConf.Inst.Server, resp))
 	}
+}
+
+func (s *HostService) registerToZentao(host interface{}, isZentao bool) (resp string, ok bool) {
+	var url string
+	if isZentao {
+		uri := "api.php/v1/host/register"
+		url = s.ZentaoService.GenUrl(agentConf.Inst.Server, uri)
+		s.ZentaoService.GetConfig(agentConf.Inst.Server)
+	} else {
+		uri := "client/host/register"
+		url = _httpUtils.GenUrl(agentConf.Inst.Server, uri)
+	}
+
+	resp, ok = s.ZentaoService.Post(url, host, true)
+
+	return
 }
 
 func (s *HostService) PassEnvsToContainerIfNeeded(build *domain.Build) {
