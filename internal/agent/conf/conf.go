@@ -21,7 +21,7 @@ func Init(app string) {
 	}
 	_i118Utils.InitI118(Inst.Language, app)
 
-	Inst.Server = _httpUtils.UpdateUrl(Inst.Server)
+	Inst.Server = _httpUtils.AddUrlPostFixIfNeeded(Inst.Server)
 
 	ip, macObj := _commonUtils.GetIp()
 	Inst.MacAddress = macObj.String()

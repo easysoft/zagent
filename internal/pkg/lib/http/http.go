@@ -122,6 +122,13 @@ func IsSuccessCode(code int) (success bool) {
 	return code >= 200 && code <= 299
 }
 
+func GenUrl(server string, path string) string {
+	server = AddUrlPostFixIfNeeded(server)
+	url := fmt.Sprintf("%sapi/v1/%s", server, path)
+	url = AddUrlPostFixIfNeeded(url)
+	return url
+}
+
 func GenUrlWithParams(pth string, params map[string]interface{}, baseUrl string) (url string) {
 	uri := pth
 
@@ -138,6 +145,14 @@ func GenUrlWithParams(pth string, params map[string]interface{}, baseUrl string)
 	}
 
 	url = baseUrl + uri
+	url = AddUrlPostFixIfNeeded(url)
 
 	return
+}
+
+func AddUrlPostFixIfNeeded(url string) string {
+	if strings.LastIndex(url, "/") < len(url)-1 {
+		url += "/"
+	}
+	return url
 }
