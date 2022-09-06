@@ -7,8 +7,10 @@ import (
 	agentZentaoService "github.com/easysoft/zv/internal/agent/service/zentao"
 	"github.com/easysoft/zv/internal/comm/const"
 	"github.com/easysoft/zv/internal/comm/domain"
+	_httpUtils "github.com/easysoft/zv/internal/pkg/lib/http"
 	"github.com/easysoft/zv/internal/pkg/lib/i118"
 	"github.com/easysoft/zv/internal/pkg/lib/log"
+	"strings"
 	"time"
 )
 
@@ -70,7 +72,15 @@ func (s *VmService) Register(isBusy bool) {
 
 	s.ZentaoService.GetConfig(agentConf.Inst.Server)
 
-	url := s.ZentaoService.GenUrl(agentConf.Inst.Server, "api.php/v1/vm/register")
+	var url string
+	if strings.Index(agentConf.Inst.Server, ":8085") > -1 {
+		uri := "client/vm/register"
+		url = _httpUtils.GenUrl(agentConf.Inst.Server, uri)
+	} else {
+		uri := "api.php/v1/vm/register"
+		url = s.ZentaoService.GenUrl(agentConf.Inst.Server, uri)
+	}
+
 	resp, ok := s.ZentaoService.Post(url, vm, true)
 
 	if ok {
