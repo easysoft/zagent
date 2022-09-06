@@ -49,7 +49,7 @@ func (s VmWareCloudVmService) CreateRemote(hostId, backingId, queueId uint) (res
 	s.VmRepo.UpdateVmCloudInst(vm)
 
 	//vm.VncPort, _ = huaweiCloudService.QueryVnc(vm.CloudInstId, ecsClient)
-	s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, vm.VncPort, "", "")
+	s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, vm.VncPort, vm.VncUrl, "", "")
 
 	return
 }

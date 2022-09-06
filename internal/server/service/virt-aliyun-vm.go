@@ -50,21 +50,21 @@ func (s AliyunVmService) CreateRemote(hostId, backingId, queueId uint) (result _
 
 	if err != nil {
 		result.Fail(err.Error())
-		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "CreateEcsClient fail %s"+err.Error(), queueId, vm.ID, "", "", "")
+		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "CreateEcsClient fail %s"+err.Error(), queueId, vm.ID, 0, "", "", "")
 		return
 	}
 
 	switchId, _, err := s.AliyunCommService.GetSwitch(host.VpcId, host.CloudRegion, vpcClient)
 	if err != nil {
 		result.Fail(err.Error())
-		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "GetSwitch fail %s"+err.Error(), queueId, vm.ID, "", "", "")
+		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "GetSwitch fail %s"+err.Error(), queueId, vm.ID, 0, "", "", "")
 		return
 	}
 
 	securityGroupId, err := s.AliyunCommService.QuerySecurityGroupByVpc(host.VpcId, host.CloudRegion, ecsClient)
 	if err != nil {
 		result.Fail(err.Error())
-		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "QuerySecurityGroupByVpc fail %s"+err.Error(), queueId, vm.ID, "", "", "")
+		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "QuerySecurityGroupByVpc fail %s"+err.Error(), queueId, vm.ID, 0, "", "", "")
 		return
 	}
 
@@ -72,14 +72,14 @@ func (s AliyunVmService) CreateRemote(hostId, backingId, queueId uint) (result _
 		host.CloudRegion, ecsClient)
 	if err != nil {
 		result.Fail(err.Error())
-		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "CreateInst fail %s"+err.Error(), queueId, vm.ID, "", "", "")
+		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "CreateInst fail %s"+err.Error(), queueId, vm.ID, 0, "", "", "")
 		return
 	}
 
 	err = s.AliyunEcsService.StartInst(vm.CloudInstId, ecsClient)
 	if err != nil {
 		result.Fail(err.Error())
-		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "StartInst fail %s"+err.Error(), queueId, vm.ID, "", "", "")
+		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "StartInst fail %s"+err.Error(), queueId, vm.ID, 0, "", "", "")
 		return
 	}
 
@@ -90,7 +90,7 @@ func (s AliyunVmService) CreateRemote(hostId, backingId, queueId uint) (result _
 		status, vm.MacAddress, err = s.AliyunEcsService.QueryInst(vm.CloudInstId, host.CloudRegion, ecsClient)
 		if err != nil {
 			result.Fail(err.Error())
-			s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "QueryInst fail %s"+err.Error(), queueId, vm.ID, vm.VncPort, "", "")
+			s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "QueryInst fail %s"+err.Error(), queueId, vm.ID, vm.VncPort, vm.VncUrl, "", "")
 			return
 		}
 
@@ -102,7 +102,7 @@ func (s AliyunVmService) CreateRemote(hostId, backingId, queueId uint) (result _
 	vm.NodeIp, err = s.AliyunEcsService.AllocateIp(vm.CloudInstId, ecsClient)
 	if err != nil {
 		result.Fail(err.Error())
-		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "AllocateIp fail %s"+err.Error(), queueId, vm.ID, vm.VncPort, "", "")
+		s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), "AllocateIp fail %s"+err.Error(), queueId, vm.ID, vm.VncPort, vm.VncUrl, "", "")
 		return
 	}
 
@@ -110,10 +110,10 @@ func (s AliyunVmService) CreateRemote(hostId, backingId, queueId uint) (result _
 	s.VmRepo.UpdateVmCloudInst(vm)
 
 	vncPassword, _ := s.AliyunEcsService.QueryVncPassword(vm.CloudInstId, host.CloudRegion, ecsClient)
-	vm.VncPort, _ = s.AliyunEcsService.QueryVncUrl(
+	vm.VncUrl, _ = s.AliyunEcsService.QueryVncUrl(
 		vm.CloudInstId, vncPassword, host.CloudRegion, vm.OsCategory == consts.Windows, ecsClient)
 
-	s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, vm.VncPort, "", "")
+	s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID, vm.VncPort, vm.VncUrl, "", "")
 
 	return
 }

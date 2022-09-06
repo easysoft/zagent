@@ -1,62 +1,138 @@
 VERSION=1.0.0
-PROJECT=zv-server
+PROJECT=zv
 PACKAGE=${PROJECT}-${VERSION}
-BINARY=zv-server
+BINARY_SERVER=server
+BINARY_HOST=host
+BINARY_VM=vm
 BIN_DIR=bin
 BIN_ZIP_DIR=${BIN_DIR}/zip/${PROJECT}/${VERSION}/
 BIN_ZIP_RELAT=../../../zip/${PROJECT}/${VERSION}/
 BIN_OUT=${BIN_DIR}/${PROJECT}/${VERSION}/
-BIN_WIN64=${BIN_OUT}win64/zv-server/
-BIN_WIN32=${BIN_OUT}win32/zv-server/
-BIN_LINUX=${BIN_OUT}linux/zv-server/
-BIN_MAC=${BIN_OUT}mac/zv-server/
+BIN_SERVER_WIN64=${BIN_OUT}win64/
+BIN_SERVER_WIN32=${BIN_OUT}win32/
+BIN_SERVER_LINUX=${BIN_OUT}linux/
+BIN_SERVER_MAC=${BIN_OUT}mac/
 QINIU_DIR=/Users/aaron/work/zentao/qiniu/
 QINIU_DIST_DIR=${QINIU_DIR}${PROJECT}/${VERSION}/
 
-default: prepare_res compile_all copy_files package
+server: prepare_res_server compile_server copy_server_files package_server
+host: prepare_res_host compile_host copy_host_files package_host
+vm: prepare_res_vm compile_vm copy_vm_files package_vm
 
-win64: prepare_res compile_win64 copy_files package
-win32: prepare_res compile_win32 copy_files package
-linux: prepare_res compile_linux copy_files package
-mac: prepare_res compile_mac copy_files package
-upload: upload_to
-
-prepare_res:
-	@echo 'start prepare res'
+prepare_res_server:
+	@echo 'start prepare server res'
 	@go-bindata -o=res/server/res.go -pkg=serverRes res/server/...
 	@rm -rf ${BIN_DIR}
 
-compile_all: compile_win64 compile_win32 compile_linux compile_mac
+prepare_res_host:
+	@echo 'start prepare host res'
+	@go-bindata -o=res/host/res.go -pkg=hostRes res/host/...
+	@rm -rf ${BIN_DIR}
 
-compile_win64:
-	@echo 'start compile win64'
-	@CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ${BIN_WIN64}zv-server.exe cmd/server/main.go
+prepare_res_vm:
+	@echo 'start prepare vm res'
+	@go-bindata -o=res/vm/res.go -pkg=vmRes res/vm/...
+	@rm -rf ${BIN_DIR}
 
-compile_win32:
-	@echo 'start compile win32'
-	@CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o ${BIN_WIN32}zv-server.exe cmd/server/main.go
+compile_server: compile_server_win64 compile_server_win32 compile_server_linux compile_server_mac
+compile_host: compile_host_linux
+compile_vm: compile_vm_win64 compile_vm_win32 compile_vm_linux compile_vm_mac
 
-compile_linux:
-	@echo 'start compile linux'
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ${BIN_LINUX}zv-server cmd/server/main.go
+compile_server_win64:
+	@echo 'start compile server win64'
+	@CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ${BIN_SERVER_WIN64}/${BINARY_SERVER}/server.exe cmd/server/main.go
+compile_server_win32:
+	@echo 'start compile server win32'
+	@CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o ${BIN_SERVER_WIN32}/${BINARY_SERVER}/server.exe cmd/server/main.go
+compile_server_linux:
+	@echo 'start compile server linux'
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ${BIN_SERVER_LINUX}/${BINARY_SERVER}/server cmd/server/main.go
+compile_server_mac:
+	@echo 'start compile server mac'
+	@CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ${BIN_SERVER_MAC}/${BINARY_SERVER}/server cmd/server/main.go
 
-compile_mac:
-	@echo 'start compile mac'
-	@CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ${BIN_MAC}zv-server cmd/server/main.go
+compile_host_linux:
+	@echo 'start compile host linux'
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ${BIN_SERVER_LINUX}/${BINARY_HOST}/host cmd/host/main.go
 
-copy_files:
-	@echo 'start copy files'
-	@cp -r {cmd/server/server.yml,cmd/server/perms.yml,cmd/server/rbac_model.conf} bin
-	@for subdir in `ls ${BIN_OUT}`; \
-	    do cp -r {bin/server.yml,bin/perms.yml,bin/rbac_model.conf} "${BIN_OUT}$${subdir}/zv-server"; done
+compile_vm_win64:
+	@echo 'start compile vm win64'
+	@CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ${BIN_SERVER_WIN64}/${BINARY_VM}/vm.exe cmd/vm/main.go
+compile_vm_win32:
+	@echo 'start compile vm win32'
+	@CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o ${BIN_SERVER_WIN32}/${BINARY_VM}/vm.exe cmd/vm/main.go
+compile_vm_linux:
+	@echo 'start compile vm linux'
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ${BIN_SERVER_LINUX}/${BINARY_VM}/vm cmd/vm/main.go
+compile_vm_mac:
+	@echo 'start compil vme mac'
+	@CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ${BIN_SERVER_MAC}/${BINARY_VM}/vm cmd/vm/main.go
 
-package:
-	@echo 'start package'
+copy_server_files: copy_files_server_win64 copy_files_server_win32 copy_files_server_linux copy_files_server_mac
+
+copy_files_server_win64:
+	@echo 'start copy server files win64'
+	@cp {cmd/server/server.yml,cmd/server/perms.yml,cmd/server/rbac_model.conf} "${BIN_SERVER_WIN64}${BINARY_SERVER}"
+
+copy_files_server_win32:
+	@echo 'start copy server files win32'
+	@cp -r {cmd/server/server.yml,cmd/server/perms.yml,cmd/server/rbac_model.conf} "${BIN_SERVER_WIN32}${BINARY_SERVER}"
+
+copy_files_server_linux:
+	@echo 'start copy server files linux'
+	@cp -r {cmd/server/server.yml,cmd/server/perms.yml,cmd/server/rbac_model.conf} "${BIN_SERVER_LINUX}${BINARY_SERVER}"
+
+copy_files_server_mac:
+	@echo 'start copy server files darwin'
+	@cp -r {cmd/server/server.yml,cmd/server/perms.yml,cmd/server/rbac_model.conf} "${BIN_SERVER_MAC}${BINARY_SERVER}"
+
+copy_host_files:
+	@echo 'start copy host files'
+
+copy_vm_files:
+	@echo 'start copy vm files'
+
+package_server:
+	@echo 'start server package'
 	@find . -name .DS_Store -print0 | xargs -0 rm -f
-	@for subdir in `ls ${BIN_OUT}`; do mkdir -p ${BIN_DIR}/zip/${PROJECT}/${VERSION}/$${subdir}; done
+	@for platform in `ls ${BIN_OUT}`; do mkdir -p ${QINIU_DIST_DIR}$${platform}; done
 
 	@cd ${BIN_OUT} && \
-		for subdir in `ls ./`; do cd $${subdir} && zip -r ${BIN_ZIP_RELAT}$${subdir}/${BINARY}.zip "${BINARY}" && cd ..; done
+		for platform in `ls ./`; \
+			do  cd $${platform} && \
+				zip -r ${QINIU_DIST_DIR}$${platform}/${BINARY_SERVER}.zip "${BINARY_SERVER}" && \
+				md5sum ${QINIU_DIST_DIR}$${platform}/${BINARY_SERVER}.zip | awk '{print $$1}' | \
+					xargs echo > ${QINIU_DIST_DIR}$${platform}/${BINARY_SERVER}.zip.md5 && \
+				cd ..; \
+			done
+
+package_host:
+	@echo 'start package host'
+	@find . -name .DS_Store -print0 | xargs -0 rm -f
+	@for subdir in `ls ${BIN_OUT_HOST}`; do mkdir -p ${QINIU_DIST_DIR}$${platform}; done
+
+	@cd ${BIN_OUT} && \
+		for platform in `ls ./`; \
+			do  cd $${platform} && \
+				zip -r ${QINIU_DIST_DIR}$${platform}/${BINARY_HOST}.zip "${BINARY_HOST}" && \
+				md5sum ${QINIU_DIST_DIR}$${platform}/${BINARY_HOST}.zip | awk '{print $$1}' | \
+					xargs echo > ${QINIU_DIST_DIR}$${platform}/${BINARY_HOST}.zip.md5 && \
+				cd ..; \
+			done
+
+package_vm:
+	@echo 'start package vm'
+	@find . -name .DS_Store -print0 | xargs -0 rm -f
+	@for subdir in `ls ${BIN_OUT}`; do mkdir -p ${QINIU_DIST_DIR}$${platform}; done
+
+	@cd ${BIN_OUT} && \
+		for platform in `ls ./`; \
+			do  cd $${platform} && \
+				zip -r ${QINIU_DIST_DIR}$${platform}/${BINARY_VM}.zip "${BINARY_VM}" && \
+				md5sum ${QINIU_DIST_DIR}$${platform}/${BINARY_VM}.zip | awk '{print $$1}' | \
+					xargs echo > ${QINIU_DIST_DIR}$${platform}/${BINARY_VM}.zip.md5 && \
+				cd ..; \
+			done
 
 upload_to:
 	@echo 'upload...'

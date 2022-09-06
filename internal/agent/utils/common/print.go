@@ -6,7 +6,8 @@ import (
 	_commonUtils "github.com/easysoft/zv/internal/pkg/lib/common"
 	_i118Utils "github.com/easysoft/zv/internal/pkg/lib/i118"
 	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
-	agentRes "github.com/easysoft/zv/res/vm"
+	"github.com/easysoft/zv/res/host"
+	"github.com/easysoft/zv/res/vm"
 	"github.com/fatih/color"
 	"io/ioutil"
 	"path/filepath"
@@ -19,7 +20,7 @@ var (
 func PrintUsage(agentName string) {
 	_logUtils.PrintColor(_i118Utils.Sprintf("usage"), color.FgCyan)
 
-	usage := ReadResData(usageFile)
+	usage := ReadResData(usageFile, agentName)
 
 	app := consts.AppName + "-" + agentName
 	if _commonUtils.IsWin() {
@@ -29,13 +30,19 @@ func PrintUsage(agentName string) {
 	fmt.Printf("%s\n", usage)
 }
 
-func ReadResData(path string) string {
+func ReadResData(path, agentName string) string {
 	isRelease := _commonUtils.IsRelease()
 
 	var jsonStr string
 	if isRelease {
-		data, _ := agentRes.Asset(path)
+		var data []byte
+		if agentName == "host" {
+			data, _ = hostRes.Asset(path)
+		} else if agentName == "vm" {
+			data, _ = vmRes.Asset(path)
+		}
 		jsonStr = string(data)
+
 	} else {
 		buf, err := ioutil.ReadFile(path)
 		if err != nil {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/easysoft/zv/internal/pkg/lib/common"
 	"github.com/easysoft/zv/internal/pkg/lib/file"
+	_i118Utils "github.com/easysoft/zv/internal/pkg/lib/i118"
 	"github.com/easysoft/zv/internal/pkg/lib/log"
 	"github.com/easysoft/zv/res/server"
 	"github.com/jinzhu/configor"
@@ -17,6 +18,11 @@ var (
 )
 
 func Init() {
+	if Inst.Language == "" {
+		Inst.Language = "zh"
+	}
+	_i118Utils.InitI118(Inst.Language, "server")
+
 	exeDir := _fileUtils.GetExeDir()
 	configPath := ""
 	if _commonUtils.IsRelease() {
@@ -53,6 +59,7 @@ func GetRedisUris() []string {
 }
 
 type Config struct {
+	Language string `yaml:"language" env:"Language" default:"zh"`
 	LogLevel string `yaml:"logLevel" env:"LogLevel" default:"info"`
 	Debug    bool   `yaml:"debug" env:"Debug" default:"false"`
 	//BinData  bool   `yaml:"binData" default:"false" env:"BinData"`

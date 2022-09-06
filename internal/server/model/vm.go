@@ -41,6 +41,7 @@ type Vm struct {
 	RpcPort    int    `json:"rpcPort"`
 	SshPort    int    `json:"sshPort"`
 	VncPort    int    `json:"vncPort"`
+	VncUrl     string `json:"vncUrl"`
 	WorkDir    string `json:"workDir"`
 
 	DefPath          string `json:"defPath"`

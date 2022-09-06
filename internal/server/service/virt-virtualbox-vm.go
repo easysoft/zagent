@@ -48,7 +48,7 @@ func (s VirtualboxCloudVmService) CreateRemote(hostId, backingId, queueId uint) 
 		mapstructure.Decode(mp, &vmInResp)
 	}
 	s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID,
-		vmInResp.VncPort, vmInResp.ImagePath, vmInResp.BackingPath)
+		vmInResp.VncPort, vm.VncUrl, vmInResp.ImagePath, vmInResp.BackingPath)
 	return
 }
 

@@ -78,7 +78,7 @@ func (s NativeKvmService) CreateRemote(hostId, backingId, tmplId, queueId uint) 
 		mapstructure.Decode(mp, &vmInResp)
 	}
 	s.VmCommonService.SaveVmCreationResult(result.IsSuccess(), result.Msg, queueId, vm.ID,
-		vmInResp.VncPort, vmInResp.ImagePath, vmInResp.BackingPath)
+		vmInResp.VncPort, vm.VncUrl, vmInResp.ImagePath, vmInResp.BackingPath)
 
 	return
 }

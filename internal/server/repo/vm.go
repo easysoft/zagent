@@ -72,12 +72,13 @@ func (r VmRepo) UpdateVmCloudInst(vm model.Vm) {
 		})
 }
 
-func (r VmRepo) Launch(vncPort int, imagePath, backingPath string, id uint) {
+func (r VmRepo) Launch(vncPort int, vncUrl, imagePath, backingPath string, id uint) {
 	r.DB.Model(&model.Vm{}).Where("id=?", id).
 		Updates(
 			map[string]interface{}{
 				"status":       consts.VmLaunch,
 				"vnc_port":     vncPort,
+				"vnc_url":      vncUrl,
 				"image_path":   imagePath,
 				"backing_path": backingPath,
 			})
