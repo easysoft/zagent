@@ -69,7 +69,7 @@ func (s *HostService) Register(isBusy bool) {
 	var ok bool
 	var resp string
 
-	resp, ok = s.registerToZentao(host, false)
+	resp, ok = s.register(host)
 
 	if ok {
 		_logUtils.Info(_i118Utils.I118Prt.Sprintf("success_to_register", agentConf.Inst.Server))
@@ -78,15 +78,15 @@ func (s *HostService) Register(isBusy bool) {
 	}
 }
 
-func (s *HostService) registerToZentao(host interface{}, isZentao bool) (resp string, ok bool) {
+func (s *HostService) register(host interface{}) (resp string, ok bool) {
 	var url string
-	if isZentao {
+	if strings.Index(agentConf.Inst.Server, ":8085") > -1 {
+		uri := "client/host/register"
+		url = _httpUtils.GenUrl(agentConf.Inst.Server, uri)
+	} else {
 		uri := "api.php/v1/host/register"
 		url = s.ZentaoService.GenUrl(agentConf.Inst.Server, uri)
 		s.ZentaoService.GetConfig(agentConf.Inst.Server)
-	} else {
-		uri := "client/host/register"
-		url = _httpUtils.GenUrl(agentConf.Inst.Server, uri)
 	}
 
 	resp, ok = s.ZentaoService.Post(url, host, true)
