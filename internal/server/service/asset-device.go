@@ -19,7 +19,7 @@ func NewDeviceService() *DeviceService {
 	return &DeviceService{}
 }
 
-func (s DeviceService) Register(devices []domain.DeviceInst) (result _domain.RpcResp) {
+func (s DeviceService) Register(devices []domain.DeviceInst) (result _domain.RemoteResp) {
 	for _, device := range devices {
 		device.LastRegisterDate = time.Now()
 		err := s.DeviceRepo.Register(device)

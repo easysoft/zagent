@@ -15,13 +15,13 @@ type VmWareCloudVmService struct {
 	BackingRepo *repo.BackingRepo `inject:""`
 	VmRepo      *repo.VmRepo      `inject:""`
 
-	CommonService   *CommonService            `inject:""`
-	VmCommonService *VmCommonService          `inject:""`
-	RpcService      *commonService.RpcService `inject:""`
-	HistoryService  *HistoryService           `inject:""`
+	CommonService   *CommonService               `inject:""`
+	VmCommonService *VmCommonService             `inject:""`
+	RpcService      *commonService.RemoteService `inject:""`
+	HistoryService  *HistoryService              `inject:""`
 }
 
-func (s VmWareCloudVmService) CreateRemote(hostId, backingId, queueId uint) (result _domain.RpcResp) {
+func (s VmWareCloudVmService) CreateRemote(hostId, backingId, queueId uint) (result _domain.RemoteResp) {
 	host := s.HostRepo.Get(hostId)
 	backing := s.BackingRepo.Get(backingId)
 	backing.Name = s.VmCommonService.genTmplName(backing)
@@ -54,7 +54,7 @@ func (s VmWareCloudVmService) CreateRemote(hostId, backingId, queueId uint) (res
 	return
 }
 
-func (s VmWareCloudVmService) DestroyRemote(vmId, queueId uint) (result _domain.RpcResp) {
+func (s VmWareCloudVmService) DestroyRemote(vmId, queueId uint) (result _domain.RemoteResp) {
 	vm := s.VmRepo.GetById(vmId)
 	host := s.HostRepo.Get(vm.HostId)
 

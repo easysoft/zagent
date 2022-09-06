@@ -29,7 +29,7 @@ func NewAliyunDockerService() *AliyunDockerService {
 	return &AliyunDockerService{}
 }
 
-func (s AliyunDockerService) CreateRemote(hostId, queueId uint) (result _domain.RpcResp) {
+func (s AliyunDockerService) CreateRemote(hostId, queueId uint) (result _domain.RemoteResp) {
 	queue := s.QueueRepo.GetQueue(queueId)
 	host := s.HostRepo.Get(hostId)
 

@@ -11,8 +11,8 @@ import (
 )
 
 type VmService interface {
-	CreateRemote(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp)
-	DestroyRemote(vmId, queueId uint) (result _domain.RpcResp)
+	CreateRemote(hostId, backingId, tmplId, queueId uint) (result _domain.RemoteResp)
+	DestroyRemote(vmId, queueId uint) (result _domain.RemoteResp)
 	genVmName(backing model.VmBacking, vmId uint) (name string)
 }
 

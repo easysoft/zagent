@@ -12,7 +12,7 @@ type SeleniumService struct {
 	BuildRepo *repo.BuildRepo `inject:""`
 	VmRepo    *repo.VmRepo    `inject:""`
 
-	RpcService       *commonService.RpcService       `inject:""`
+	RpcService       *commonService.RemoteService    `inject:""`
 	QueueService     *QueueService                   `inject:""`
 	HistoryService   *HistoryService                 `inject:""`
 	WebSocketService *commonService.WebSocketService `inject:""`
@@ -22,7 +22,7 @@ func NewSeleniumService() *SeleniumService {
 	return &SeleniumService{}
 }
 
-func (s SeleniumService) RunRemote(queue model.Queue) (result _domain.RpcResp) {
+func (s SeleniumService) RunRemote(queue model.Queue) (result _domain.RemoteResp) {
 	vmId := queue.VmId
 	vm := s.VmRepo.GetById(vmId)
 

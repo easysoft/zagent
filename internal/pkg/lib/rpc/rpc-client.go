@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-func Post(url, method, api, mtd string, args interface{}) (resp _domain.RpcResp) {
+func Post(url, method, api, mtd string, args interface{}) (resp _domain.RemoteResp) {
 	cc := &codec.MsgpackCodec{}
 
 	data, _ := cc.Encode(args)

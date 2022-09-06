@@ -25,7 +25,7 @@ func NewVirtualBoxService() *VirtualBoxService {
 	return &VirtualBoxService{}
 }
 
-func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RpcResp, err error) {
+func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteResp, err error) {
 	var client *virtualboxapi.VirtualBox
 	var osTypeId string
 	var newMachineId string
@@ -158,7 +158,7 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RpcResp,
 	return
 }
 
-func (s VirtualBoxService) ListTmpl(req v1.VirtualBoxReq, prefix string) (result _domain.RpcResp, err error) {
+func (s VirtualBoxService) ListTmpl(req v1.VirtualBoxReq, prefix string) (result _domain.RemoteResp, err error) {
 	virtualBox, err := s.CreateClient(ip, port, req.CloudIamUser, req.CloudIamPassword)
 	if err != nil {
 		result.Fail(err.Error())
@@ -184,7 +184,7 @@ func (s VirtualBoxService) ListTmpl(req v1.VirtualBoxReq, prefix string) (result
 	return
 }
 
-func (s VirtualBoxService) Destroy(req v1.VirtualBoxReq) (result _domain.RpcResp, err error) {
+func (s VirtualBoxService) Destroy(req v1.VirtualBoxReq) (result _domain.RemoteResp, err error) {
 	var virtualBox *virtualboxapi.VirtualBox
 	var machine *virtualboxapi.Machine
 	var machineState *virtualboxsrv.MachineState

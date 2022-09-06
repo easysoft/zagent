@@ -39,8 +39,8 @@ func (s *ExecService) ExcCommand(build *domain.Build) (err error) {
 	return
 }
 
-func (s *ExecService) GetTestApp(build *domain.Build) _domain.RpcResp {
-	result := _domain.RpcResp{}
+func (s *ExecService) GetTestApp(build *domain.Build) _domain.RemoteResp {
+	result := _domain.RemoteResp{}
 
 	if strings.Index(build.AppUrl, "http://") == 0 {
 		s.DownloadApp(build)

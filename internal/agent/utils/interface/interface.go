@@ -76,7 +76,7 @@ func Post(url string, params interface{}) (interface{}, bool) {
 		_logUtils.PrintUnicode(bodyStr)
 	}
 
-	var result _domain.RpcResp
+	var result _domain.RemoteResp
 	json.Unmarshal(bodyStr, &result)
 
 	defer resp.Body.Close()

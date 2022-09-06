@@ -22,7 +22,7 @@ type HuaweiCloudDockerService struct {
 	HuaweiCloudCciService  *huaweicloud.HuaweiCloudCciService `inject:""`
 }
 
-func (s HuaweiCloudDockerService) CreateRemote(hostId, queueId uint) (result _domain.RpcResp) {
+func (s HuaweiCloudDockerService) CreateRemote(hostId, queueId uint) (result _domain.RemoteResp) {
 	queue := s.QueueRepo.GetQueue(queueId)
 	host := s.HostRepo.Get(hostId)
 

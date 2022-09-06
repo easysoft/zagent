@@ -2,123 +2,142 @@ package _httpUtils
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
-	_const "github.com/easysoft/zv/internal/pkg/const"
-	_domain "github.com/easysoft/zv/internal/pkg/domain"
-	_i118Utils "github.com/easysoft/zv/internal/pkg/lib/i118"
+	consts "github.com/easysoft/zv/internal/comm/const"
 	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
-	"github.com/easysoft/zv/internal/pkg/var"
+	"github.com/fatih/color"
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"time"
 )
 
-func Get(url string, requestTo string) (interface{}, bool) {
-	client := &http.Client{}
+const ()
 
-	if _var.Verbose {
-		_logUtils.Info(url)
+func Get(url string) (ret []byte, err error) {
+	if consts.Verbose {
+		_logUtils.Infof("===DEBUG===  request: %s", url)
 	}
 
-	req, reqErr := http.NewRequest("GET", url, nil)
-	if reqErr != nil {
-		_logUtils.Error(reqErr.Error())
-		return nil, false
+	client := &http.Client{
+		Timeout: 3 * time.Second,
 	}
 
-	resp, respErr := client.Do(req)
-
-	if respErr != nil {
-		_logUtils.Error(respErr.Error())
-		return nil, false
-	}
-
-	bodyStr, _ := ioutil.ReadAll(resp.Body)
-	if _var.Verbose {
-		_logUtils.PrintUnicode(bodyStr)
-	}
-	defer resp.Body.Close()
-
-	if requestTo == "farm" {
-		var bodyJson _domain.RpcResp
-		jsonErr := json.Unmarshal(bodyStr, &bodyJson)
-		if jsonErr != nil {
-			if strings.Index(string(bodyStr), "<html>") > -1 {
-				_logUtils.Error(_i118Utils.Sprintf("wrong_response_format", "html"))
-				return nil, false
-			} else {
-				_logUtils.Error(jsonErr.Error())
-				return nil, false
-			}
-		}
-		code := bodyJson.Code
-		return bodyJson.Payload, code == _const.ResultSuccess
-	} else {
-		var bodyJson map[string]interface{}
-		jsonErr := json.Unmarshal(bodyStr, &bodyJson)
-		if jsonErr != nil {
-			_logUtils.Error(jsonErr.Error())
-			return nil, false
-		} else {
-			return bodyJson, true
-		}
-	}
-}
-
-func Post(url string, params interface{}, headers map[string]string) (interface{}, bool) {
-	if _var.Verbose {
-		_logUtils.Info(url)
-	}
-	client := &http.Client{}
-
-	paramStr, err := json.Marshal(params)
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		_logUtils.Error(err.Error())
-		return nil, false
+		_logUtils.Infof(color.RedString("get request failed, error: %s.", err.Error()))
+		return
 	}
 
-	req, reqErr := http.NewRequest("POST", url, strings.NewReader(string(paramStr)))
-	if reqErr != nil {
-		_logUtils.Error(reqErr.Error())
-		return nil, false
+	resp, err := client.Do(req)
+	if err != nil {
+		_logUtils.Infof(color.RedString("get request failed, error: %s.", err.Error()))
+		return
 	}
-
-	req.Header.Set("Content-Type", "application/json")
-	if headers != nil {
-		for key, val := range headers {
-			req.Header.Set(key, val)
-		}
-	}
-
-	resp, respErr := client.Do(req)
-	if respErr != nil {
-		_logUtils.Error(respErr.Error())
-		return nil, false
-	}
-
-	bodyStr, _ := ioutil.ReadAll(resp.Body)
-	if _var.Verbose {
-		_logUtils.PrintUnicode(bodyStr)
-	}
-
-	var result _domain.RpcResp
-	json.Unmarshal(bodyStr, &result)
-
 	defer resp.Body.Close()
 
-	code := result.Code
-	return result, code == _const.ResultSuccess
-}
-
-func GenUrl(server string, path string) string {
-	server = UpdateUrl(server)
-	url := fmt.Sprintf("%sapi/v1/%s", server, path)
-	return url
-}
-
-func UpdateUrl(url string) string {
-	if strings.LastIndex(url, "/") < len(url)-1 {
-		url += "/"
+	if !IsSuccessCode(resp.StatusCode) {
+		_logUtils.Infof(color.RedString("read response failed, StatusCode: %d.", resp.StatusCode))
+		err = errors.New(resp.Status)
+		return
 	}
-	return url
+
+	ret, err = ioutil.ReadAll(resp.Body)
+	_logUtils.Infof("===DEBUG=== response: %s", _logUtils.ConvertUnicode(ret))
+
+	if err != nil {
+		_logUtils.Infof(color.RedString("read response failed, error ", err.Error()))
+		return
+	}
+
+	return
+}
+
+func Post(url string, data interface{}) (ret []byte, err error) {
+	return PostOrPut(url, "POST", data)
+}
+func Put(url string, data interface{}) (ret []byte, err error) {
+	return PostOrPut(url, "PUT", data)
+}
+
+func PostOrPut(url string, method string, data interface{}) (ret []byte, err error) {
+	if consts.Verbose {
+		_logUtils.Infof("===DEBUG===  request: %s", url)
+	}
+
+	client := &http.Client{
+		Timeout: 3 * time.Second,
+	}
+
+	dataBytes, err := json.Marshal(data)
+	if consts.Verbose {
+		_logUtils.Infof("===DEBUG===     data: %s", string(dataBytes))
+	}
+
+	if err != nil {
+		_logUtils.Infof(color.RedString("marshal request failed, error: %s.", err.Error()))
+		return
+	}
+
+	dataStr := string(dataBytes)
+
+	req, err := http.NewRequest(method, url, strings.NewReader(dataStr))
+	if err != nil {
+		_logUtils.Infof(color.RedString("post request failed, error: %s.", err.Error()))
+		return
+	}
+
+	//req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		_logUtils.Infof(color.RedString("post request failed, error: %s.", err.Error()))
+		return
+	}
+
+	if !IsSuccessCode(resp.StatusCode) {
+		_logUtils.Infof(color.RedString("post request return '%s'.", resp.Status))
+		err = errors.New(resp.Status)
+		return
+	}
+
+	ret, err = ioutil.ReadAll(resp.Body)
+	defer resp.Body.Close()
+
+	if consts.Verbose {
+		_logUtils.Infof("===DEBUG=== response: %s", _logUtils.ConvertUnicode(ret))
+	}
+
+	if err != nil {
+		_logUtils.Infof(color.RedString("read response failed, error: %s.", err.Error()))
+		return
+	}
+
+	return
+}
+
+func IsSuccessCode(code int) (success bool) {
+	return code >= 200 && code <= 299
+}
+
+func GenUrlWithParams(pth string, params map[string]interface{}, baseUrl string) (url string) {
+	uri := pth
+
+	index := 0
+	for key, val := range params {
+		if index == 0 {
+			uri += "?"
+		} else {
+			uri += "&"
+		}
+
+		uri += fmt.Sprintf("%v=%v", key, val)
+		index++
+	}
+
+	url = baseUrl + uri
+
+	return
 }

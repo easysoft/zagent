@@ -19,7 +19,7 @@ type HuaweiCloudVmService struct {
 	HuaweiCloudEcsService *huaweicloud.HuaweiCloudEcsService `inject:""`
 }
 
-func (s HuaweiCloudVmService) CreateRemote(hostId, backingId, queueId uint) (result _domain.RpcResp) {
+func (s HuaweiCloudVmService) CreateRemote(hostId, backingId, queueId uint) (result _domain.RemoteResp) {
 	host := s.HostRepo.Get(hostId)
 	backing := s.BackingRepo.Get(backingId)
 	backing.Name = s.VmCommonService.genTmplName(backing)
@@ -80,7 +80,7 @@ func (s HuaweiCloudVmService) CreateRemote(hostId, backingId, queueId uint) (res
 	return
 }
 
-func (s HuaweiCloudVmService) DestroyRemote(vmId, queueId uint) (result _domain.RpcResp) {
+func (s HuaweiCloudVmService) DestroyRemote(vmId, queueId uint) (result _domain.RemoteResp) {
 	vm := s.VmRepo.GetById(vmId)
 	host := s.HostRepo.Get(vm.HostId)
 

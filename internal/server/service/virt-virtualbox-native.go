@@ -15,13 +15,13 @@ type VirtualboxCloudVmService struct {
 	BackingRepo *repo.BackingRepo `inject:""`
 	VmRepo      *repo.VmRepo      `inject:""`
 
-	CommonService   *CommonService            `inject:""`
-	VmCommonService *VmCommonService          `inject:""`
-	HistoryService  *HistoryService           `inject:""`
-	RpcService      *commonService.RpcService `inject:""`
+	CommonService   *CommonService               `inject:""`
+	VmCommonService *VmCommonService             `inject:""`
+	HistoryService  *HistoryService              `inject:""`
+	RpcService      *commonService.RemoteService `inject:""`
 }
 
-func (s VirtualboxCloudVmService) CreateRemote(hostId, backingId, queueId uint) (result _domain.RpcResp) {
+func (s VirtualboxCloudVmService) CreateRemote(hostId, backingId, queueId uint) (result _domain.RemoteResp) {
 	host := s.HostRepo.Get(hostId)
 	backing := s.BackingRepo.Get(backingId)
 	backing.Name = s.VmCommonService.genTmplName(backing)
@@ -52,7 +52,7 @@ func (s VirtualboxCloudVmService) CreateRemote(hostId, backingId, queueId uint) 
 	return
 }
 
-func (s VirtualboxCloudVmService) DestroyRemote(vmId, queueId uint) (result _domain.RpcResp) {
+func (s VirtualboxCloudVmService) DestroyRemote(vmId, queueId uint) (result _domain.RemoteResp) {
 	vm := s.VmRepo.GetById(vmId)
 	host := s.HostRepo.Get(vm.HostId)
 

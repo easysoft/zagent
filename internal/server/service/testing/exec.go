@@ -130,9 +130,9 @@ func (s ExecService) CheckAndCallAppiumTest(queue model.Queue) {
 	var newTaskProgress consts.BuildProgress
 
 	if s.DeviceService.IsDeviceReady(device) {
-		rpcResult := s.FacadeService.RunAppiumTest(queue)
+		remoteResult := s.FacadeService.RunAppiumTest(queue)
 
-		if rpcResult.IsSuccess() {
+		if remoteResult.IsSuccess() {
 			s.QueueRepo.Run(queue) // start
 			s.HistoryService.Create(consts.Queue, queue.ID, queue.ID, consts.ProgressRunning, "")
 

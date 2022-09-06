@@ -18,12 +18,12 @@ type NativeKvmService struct {
 	BackingRepo *repo.BackingRepo `inject:""`
 	VmRepo      *repo.VmRepo      `inject:""`
 
-	VmCommonService *VmCommonService          `inject:""`
-	RpcService      *commonService.RpcService `inject:""`
-	HistoryService  *HistoryService           `inject:""`
+	VmCommonService *VmCommonService             `inject:""`
+	RpcService      *commonService.RemoteService `inject:""`
+	HistoryService  *HistoryService              `inject:""`
 }
 
-func (s NativeKvmService) CreateRemote(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp) {
+func (s NativeKvmService) CreateRemote(hostId, backingId, tmplId, queueId uint) (result _domain.RemoteResp) {
 	host := s.HostRepo.Get(hostId)
 	backing := s.BackingRepo.Get(backingId)
 	sysIso := s.IsoRepo.Get(backing.SysIsoId)
@@ -83,7 +83,7 @@ func (s NativeKvmService) CreateRemote(hostId, backingId, tmplId, queueId uint) 
 	return
 }
 
-func (s NativeKvmService) DestroyRemote(vmId, queueId uint) (result _domain.RpcResp) {
+func (s NativeKvmService) DestroyRemote(vmId, queueId uint) (result _domain.RemoteResp) {
 	vm := s.VmRepo.GetById(vmId)
 	host := s.HostRepo.Get(vm.HostId)
 

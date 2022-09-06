@@ -17,7 +17,7 @@ func NewPerformCtrl() *PerformCtrl {
 	return &PerformCtrl{}
 }
 
-func (c *PerformCtrl) Perform(ctx context.Context, build domain.Build, reply *_domain.RpcResp) error {
+func (c *PerformCtrl) Perform(ctx context.Context, build domain.Build, reply *_domain.RemoteResp) error {
 	result := domain.TestResult{}
 
 	reply.Pass("Pass to exec processor.")

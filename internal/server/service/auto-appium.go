@@ -13,7 +13,7 @@ type AppiumService struct {
 	BuildRepo  *repo.BuildRepo  `inject:""`
 
 	WebSocketService *commonService.WebSocketService `inject:""`
-	RpcService       *commonService.RpcService       `inject:""`
+	RpcService       *commonService.RemoteService    `inject:""`
 	QueueService     *QueueService                   `inject:""`
 	HistoryService   *HistoryService                 `inject:""`
 }
@@ -22,7 +22,7 @@ func NewAppiumService() *AppiumService {
 	return &AppiumService{}
 }
 
-func (s AppiumService) RunRemote(queue model.Queue) (result _domain.RpcResp) {
+func (s AppiumService) RunRemote(queue model.Queue) (result _domain.RemoteResp) {
 	serial := queue.Serial
 	device := s.DeviceRepo.GetBySerial(serial)
 

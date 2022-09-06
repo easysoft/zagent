@@ -13,7 +13,7 @@ type UnitService struct {
 	VmRepo    *repo.VmRepo    `inject:""`
 
 	QueueService     *QueueService                   `inject:""`
-	RpcService       *commonService.RpcService       `inject:""`
+	RpcService       *commonService.RemoteService    `inject:""`
 	FacadeService    *FacadeService                  `inject:""`
 	HistoryService   *HistoryService                 `inject:""`
 	WebSocketService *commonService.WebSocketService `inject:""`
@@ -23,7 +23,7 @@ func NewUnitService() *UnitService {
 	return &UnitService{}
 }
 
-func (s UnitService) RunRemote(queue model.Queue, host model.Host) (result _domain.RpcResp) {
+func (s UnitService) RunRemote(queue model.Queue, host model.Host) (result _domain.RemoteResp) {
 	build := model.NewUnitBuildPo(queue, host)
 	s.BuildRepo.Save(&build)
 

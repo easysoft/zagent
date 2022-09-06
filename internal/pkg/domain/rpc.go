@@ -5,7 +5,7 @@ import (
 	_const "github.com/easysoft/zv/internal/pkg/const"
 )
 
-type RpcReq struct {
+type RemoteReq struct {
 	ComputerIp   string
 	ComputerPort int
 
@@ -14,32 +14,32 @@ type RpcReq struct {
 	Data      interface{}
 }
 
-type RpcResp struct {
+type RemoteResp struct {
 	Code    _const.ResultCode `json:"code"`
 	Msg     string            `json:"msg"`
 	Payload interface{}       `json:"payload"`
 }
 
-func (result *RpcResp) Pass(msg string) {
+func (result *RemoteResp) Pass(msg string) {
 	result.Code = _const.ResultSuccess
 	result.Msg = msg
 }
 
-func (result *RpcResp) Passf(str string, args ...interface{}) {
+func (result *RemoteResp) Passf(str string, args ...interface{}) {
 	result.Code = _const.ResultSuccess
 	result.Msg = fmt.Sprintf(str, args...)
 }
 
-func (result *RpcResp) Fail(msg string) {
+func (result *RemoteResp) Fail(msg string) {
 	result.Code = _const.ResultFail
 	result.Msg = msg
 }
 
-func (result *RpcResp) Failf(str string, args ...interface{}) {
+func (result *RemoteResp) Failf(str string, args ...interface{}) {
 	result.Code = _const.ResultFail
 	result.Msg = fmt.Sprintf(str, args...)
 }
 
-func (result *RpcResp) IsSuccess() bool {
+func (result *RemoteResp) IsSuccess() bool {
 	return result.Code == _const.ResultSuccess
 }

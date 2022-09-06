@@ -33,7 +33,7 @@ func NewRunService() *FacadeService {
 
 // Create create machine
 func (s FacadeService) Create(hostId, backingId, tmplId, queueId uint) (
-	result _domain.RpcResp) {
+	result _domain.RemoteResp) {
 	host := s.HostRepo.Get(hostId)
 	capabilities := host.Capabilities.ToString()
 	vendor := host.Vendor.ToString()
@@ -60,39 +60,39 @@ func (s FacadeService) Create(hostId, backingId, tmplId, queueId uint) (
 
 	return
 }
-func (s FacadeService) CreateVmKvmNative(hostId, backingId, tmplId, queueId uint) (result _domain.RpcResp) {
+func (s FacadeService) CreateVmKvmNative(hostId, backingId, tmplId, queueId uint) (result _domain.RemoteResp) {
 	result = s.KvmNativeService.CreateRemote(hostId, backingId, tmplId, queueId)
 	return
 }
 
-func (s FacadeService) CreateVmVirtualBox(hostId, backingId, queueId uint) (result _domain.RpcResp) {
+func (s FacadeService) CreateVmVirtualBox(hostId, backingId, queueId uint) (result _domain.RemoteResp) {
 	result = s.VirtualboxCloudVmService.CreateRemote(hostId, backingId, queueId)
 	return
 }
-func (s FacadeService) CreateVmVmWare(hostId, backingId, queueId uint) (result _domain.RpcResp) {
+func (s FacadeService) CreateVmVmWare(hostId, backingId, queueId uint) (result _domain.RemoteResp) {
 	result = s.VmWareCloudVmService.CreateRemote(hostId, backingId, queueId)
 	return
 }
-func (s FacadeService) CreateVmHuaweiCloud(hostId, backingId, queueId uint) (result _domain.RpcResp) {
+func (s FacadeService) CreateVmHuaweiCloud(hostId, backingId, queueId uint) (result _domain.RemoteResp) {
 	result = s.HuaweiCloudVmService.CreateRemote(hostId, backingId, queueId)
 	return
 }
-func (s FacadeService) CreateVmAliyun(hostId, backingId, queueId uint) (result _domain.RpcResp) {
+func (s FacadeService) CreateVmAliyun(hostId, backingId, queueId uint) (result _domain.RemoteResp) {
 	result = s.AliyunVmService.CreateRemote(hostId, backingId, queueId)
 	return
 }
 
-func (s FacadeService) CreateDockerHuaweiCloud(hostId, queueId uint) (result _domain.RpcResp) {
+func (s FacadeService) CreateDockerHuaweiCloud(hostId, queueId uint) (result _domain.RemoteResp) {
 	result = s.HuaweiCloudDockerService.CreateRemote(hostId, queueId)
 	return
 }
-func (s FacadeService) CreateDockerAliyun(hostId, queueId uint) (result _domain.RpcResp) {
+func (s FacadeService) CreateDockerAliyun(hostId, queueId uint) (result _domain.RemoteResp) {
 	result = s.AliyunDockerService.CreateRemote(hostId, queueId)
 	return
 }
 
 // RunTest run testing
-func (s FacadeService) RunTest(queue model.Queue, host model.Host) (result _domain.RpcResp) {
+func (s FacadeService) RunTest(queue model.Queue, host model.Host) (result _domain.RemoteResp) {
 	if queue.BuildType == consts.SeleniumTest {
 		s.RunSeleniumTest(queue)
 	} else if queue.BuildType == consts.AppiumTest {
@@ -130,44 +130,44 @@ func (s FacadeService) Destroy(queue model.Queue) {
 	}
 }
 
-func (s FacadeService) RunSeleniumTest(queue model.Queue) (result _domain.RpcResp) {
+func (s FacadeService) RunSeleniumTest(queue model.Queue) (result _domain.RemoteResp) {
 	result = s.SeleniumService.RunRemote(queue)
 	return
 }
-func (s FacadeService) RunAppiumTest(queue model.Queue) (result _domain.RpcResp) {
+func (s FacadeService) RunAppiumTest(queue model.Queue) (result _domain.RemoteResp) {
 	result = s.AppiumService.RunRemote(queue)
 	return
 }
-func (s FacadeService) RunUnitTest(queue model.Queue, host model.Host) (result _domain.RpcResp) {
+func (s FacadeService) RunUnitTest(queue model.Queue, host model.Host) (result _domain.RemoteResp) {
 	result = s.UnitService.RunRemote(queue, host)
 	return
 }
 
-func (s FacadeService) DestroyVmKvmNative(queue model.Queue) (result _domain.RpcResp) {
+func (s FacadeService) DestroyVmKvmNative(queue model.Queue) (result _domain.RemoteResp) {
 	s.KvmNativeService.DestroyRemote(queue.VmId, queue.ID)
 	return
 }
-func (s FacadeService) DestroyVmVirtualBox(queue model.Queue) (result _domain.RpcResp) {
+func (s FacadeService) DestroyVmVirtualBox(queue model.Queue) (result _domain.RemoteResp) {
 	s.VirtualboxCloudVmService.DestroyRemote(queue.VmId, queue.ID)
 	return
 }
-func (s FacadeService) DestroyVmVmWare(queue model.Queue) (result _domain.RpcResp) {
+func (s FacadeService) DestroyVmVmWare(queue model.Queue) (result _domain.RemoteResp) {
 	s.VmWareCloudVmService.DestroyRemote(queue.VmId, queue.ID)
 	return
 }
-func (s FacadeService) DestroyVmHuaweiCloud(queue model.Queue) (result _domain.RpcResp) {
+func (s FacadeService) DestroyVmHuaweiCloud(queue model.Queue) (result _domain.RemoteResp) {
 	s.HuaweiCloudVmService.DestroyRemote(queue.VmId, queue.ID)
 	return
 }
-func (s FacadeService) DestroyVmAliyun(queue model.Queue) (result _domain.RpcResp) {
+func (s FacadeService) DestroyVmAliyun(queue model.Queue) (result _domain.RemoteResp) {
 	s.AliyunVmService.DestroyRemote(queue.VmId, queue.ID)
 	return
 }
-func (s FacadeService) DestroyDockerHuaweiCloud(queue model.Queue) (result _domain.RpcResp) {
+func (s FacadeService) DestroyDockerHuaweiCloud(queue model.Queue) (result _domain.RemoteResp) {
 	s.HuaweiCloudDockerService.DestroyRemote(queue.VmId, queue.ID)
 	return
 }
-func (s FacadeService) DestroyDockerAliyun(queue model.Queue) (result _domain.RpcResp) {
+func (s FacadeService) DestroyDockerAliyun(queue model.Queue) (result _domain.RemoteResp) {
 	s.AliyunDockerService.DestroyRemote(queue.VmId, queue.ID)
 	return
 }

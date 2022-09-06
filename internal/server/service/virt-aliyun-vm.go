@@ -26,7 +26,7 @@ func NewAliyunVmService() *AliyunVmService {
 	return &AliyunVmService{}
 }
 
-func (s AliyunVmService) CreateRemote(hostId, backingId, queueId uint) (result _domain.RpcResp) {
+func (s AliyunVmService) CreateRemote(hostId, backingId, queueId uint) (result _domain.RemoteResp) {
 	host := s.HostRepo.Get(hostId)
 	backing := s.BackingRepo.Get(backingId)
 	backing.Name = s.VmCommonService.genTmplName(backing)
@@ -118,7 +118,7 @@ func (s AliyunVmService) CreateRemote(hostId, backingId, queueId uint) (result _
 	return
 }
 
-func (s AliyunVmService) DestroyRemote(vmId, queueId uint) (result _domain.RpcResp) {
+func (s AliyunVmService) DestroyRemote(vmId, queueId uint) (result _domain.RemoteResp) {
 	vm := s.VmRepo.GetById(vmId)
 	host := s.HostRepo.Get(vm.HostId)
 
