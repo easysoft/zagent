@@ -173,8 +173,12 @@ func (s VirtualBoxService) ListTmpl(req v1.VirtualBoxReq, prefix string) (result
 
 	list := make([]virtualboxapi.Machine, 0)
 	for _, item := range machines {
-		name, err := item.GetName()
-		if err == nil && (prefix == "" || strings.Index(name, prefix) > -1) {
+		id, err1 := item.GetID()
+		name, err2 := item.GetName()
+		if err1 == nil && err2 == nil && (prefix == "" || strings.Index(name, prefix) > -1) {
+			item.ID = id
+			item.Name = name
+
 			list = append(list, *item)
 		}
 	}
