@@ -42,12 +42,12 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 
 	cmd = fmt.Sprintf(
 		"VBoxManage clonevm %s"+
-			" --name=\"%s\""+
+			" --name=%s"+
 			"--snapshot=%s-snap"+
 			" --register"+
 			" --mode=all"+
 			" --options=link",
-		req.BackingName, backingName, vmName)
+		backingName, vmName, backingName)
 	out, err = _shellUtils.ExeShell(cmd)
 
 	bridge, _, _ := s.getBridgeAndMacAddress(req.BackingName)
