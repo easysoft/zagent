@@ -43,10 +43,10 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 	cmd = fmt.Sprintf(
 		"VBoxManage clonevm %s"+
 			" --name=%s"+
-			" --snapshot=%s-snap"+
-			" --register"+
 			" --mode=machineandchildren"+
-			" --options=link",
+			" --snapshot=%s-snap"+
+			" --options=link"+
+			" --register",
 		backingName, vmName, backingName)
 	out, err = _shellUtils.ExeShell(cmd)
 
