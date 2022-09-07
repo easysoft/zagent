@@ -45,7 +45,7 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 			" --name=%s"+
 			" --snapshot=%s-snap"+
 			" --register"+
-			" --mode=all"+
+			" --mode=machineandchildren"+
 			" --options=link",
 		backingName, vmName, backingName)
 	out, err = _shellUtils.ExeShell(cmd)
