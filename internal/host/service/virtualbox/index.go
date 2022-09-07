@@ -29,6 +29,8 @@ func NewVirtualBoxService() *VirtualBoxService {
 
 func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteResp, err error) {
 	vmName := req.VmUniqueName
+	vncPort := _commonUtils.GetVncPort()
+	vncPassword := _stringUtils.Uuid()
 
 	cmd := fmt.Sprintf("VBoxManage snapshot %s delete %s-snap", vmName, vmName)
 	out, err := _shellUtils.ExeShell(cmd)
