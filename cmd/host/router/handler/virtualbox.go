@@ -1,6 +1,7 @@
 package hostHandler
 
 import (
+	"fmt"
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
 	"github.com/easysoft/zv/internal/host/service/virtualbox"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
@@ -32,7 +33,7 @@ func (c *VirtualBoxCtrl) Create(ctx iris.Context) {
 	result, err := c.VirtualBoxService.Create(req)
 	if err != nil {
 		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError,
-			"fail to create virtualbox vm, reason %s.", err.Error()))
+			fmt.Sprintf("fail to create virtualbox vm, reason %s.", err.Error()), nil))
 		return
 	}
 
