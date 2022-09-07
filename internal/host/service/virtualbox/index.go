@@ -99,42 +99,31 @@ func (s VirtualBoxService) Destroy(req v1.VirtualBoxReq) (result _domain.RemoteR
 }
 
 func (s VirtualBoxService) ListTmpl(req v1.VirtualBoxReq) (result _domain.RemoteResp, err error) {
-	virtualBox, err := s.CreateClient(ip, port, req.CloudIamUser, req.CloudIamPassword)
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-
-	machines, err := virtualBox.GetMachines()
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
+	out, _ := _shellUtils.ExeShell(fmt.Sprintf("VBoxManage list vms"))
+	arr := strings.Split(out, "\n")
 
 	list := make([]virtualboxapi.Machine, 0)
-	for _, item := range machines {
-		id, err1 := item.GetID()
-		name, err2 := item.GetName()
-		if err1 == nil && err2 == nil && (req.Prefix == "" || strings.Index(name, req.Prefix) > -1) {
-			item.ID = id
-			item.Name = name
+	regx1, _ := regexp.Compile(`"(.+)"`)
+	regx2, _ := regexp.Compile(`\{(.+)\}`)
 
-			list = append(list, *item)
+	for _, item := range arr {
+		arr1 := regx1.FindStringSubmatch(item)
+		name := arr1[1]
+
+		arr2 := regx2.FindStringSubmatch(item)
+		id := arr2[1]
+
+		if req.Prefix == "" || strings.Index(name, req.Prefix) > -1 {
+			item := virtualboxapi.Machine{
+				ID:   id,
+				Name: name,
+			}
+			list = append(list, item)
 		}
 	}
 
 	result.Pass("")
 	result.Payload = list
-
-	return
-}
-
-func (s VirtualBoxService) CreateClient(ip string, port int, account, password string) (
-	client *virtualboxapi.VirtualBox, err error) {
-	url := fmt.Sprintf("http://%s:%d", ip, port)
-	client = virtualboxapi.NewVirtualBox(account, password, url, false, "")
-
-	err = client.Logon()
 
 	return
 }
