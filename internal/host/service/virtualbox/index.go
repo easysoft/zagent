@@ -204,7 +204,7 @@ func (s VirtualBoxService) CreateClient(ip string, port int, account, password s
 func (s VirtualBoxService) getBridgeAndMacAddress(vmName string) (bridge, macAddress string, err error) {
 	out, err := _shellUtils.ExeShell(fmt.Sprintf("VBoxManage showvminfo %s", vmName))
 
-	regx1, _ := regexp.Compile(`MAC: ([A-Z0-9]+),'`)
+	regx1, _ := regexp.Compile(`MAC: ([A-Z0-9]+),`)
 	arr1 := regx1.FindStringSubmatch(out)
 	macAddress = arr1[1]
 
