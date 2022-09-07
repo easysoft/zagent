@@ -90,7 +90,7 @@ func (s VirtualBoxService) Destroy(req v1.VirtualBoxReq) (result _domain.RemoteR
 		return
 	}
 
-	cmd = fmt.Sprintf("VBoxManage unregistervm --delete win10-001 %s", req.VmUniqueName)
+	cmd = fmt.Sprintf("VBoxManage unregistervm --delete %s", req.VmUniqueName)
 	_, err = _shellUtils.ExeShell(cmd)
 	if err != nil {
 		result.Fail(err.Error())
