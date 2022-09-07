@@ -40,7 +40,7 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 			" --options=link",
 		req.BackingName, req.VmUniqueName))
 
-	bridge, macAddress, _ := s.getBridgeAndMacAddress(req.VmUniqueName)
+	bridge, _, _ := s.getBridgeAndMacAddress(req.BackingName)
 
 	out, err = _shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --macaddress1 %s",
 		req.VmUniqueName, ""))
@@ -59,6 +59,8 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 	out, err = _shellUtils.ExeShell(fmt.Sprintf("VBoxManage startvm %s", req.VmUniqueName))
 
 	_logUtils.Infof(out)
+
+	_, macAddress, _ := s.getBridgeAndMacAddress(req.BackingName)
 
 	result.Pass("")
 	result.Payload = v1.VirtualBoxResp{
