@@ -28,18 +28,23 @@ func NewVirtualBoxService() *VirtualBoxService {
 }
 
 func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteResp, err error) {
-	// enable vnc and set port
-	vncPort := _commonUtils.GetVncPort()
-	vncPassword := _stringUtils.Uuid()
+	vmName := req.VmUniqueName
 
-	createCmd := fmt.Sprintf(
+	cmd := fmt.Sprintf("VBoxManage snapshot %s delete %s-snap", vmName, vmName)
+	out, err := _shellUtils.ExeShell(cmd)
+
+	cmd = fmt.Sprintf("VBoxManage snapshot %s take %s-snap --description 'for zv linked clones'", vmName, vmName)
+	out, err = _shellUtils.ExeShell(cmd)
+
+	cmd = fmt.Sprintf(
 		"VBoxManage clonevm %s"+
 			" --name=\"%s\""+
+			"--snapshot=%s-snap"+
 			" --register"+
 			" --mode=all"+
 			" --options=link",
-		req.BackingName, req.VmUniqueName)
-	out, err := _shellUtils.ExeShell(createCmd)
+		req.BackingName, vmName, vmName)
+	out, err = _shellUtils.ExeShell(cmd)
 
 	bridge, _, _ := s.getBridgeAndMacAddress(req.BackingName)
 
@@ -62,10 +67,8 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 
 	result.Pass("")
 	result.Payload = v1.VirtualBoxResp{
-		Name:        req.VmUniqueName,
-		MacAddress:  macAddress,
-		VncPort:     vncPort,
-		VncPassword: vncPassword,
+		Name:       req.VmUniqueName,
+		MacAddress: macAddress,
 	}
 
 	return
