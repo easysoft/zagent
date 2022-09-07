@@ -2,6 +2,7 @@ package virtualboxService
 
 import "C"
 import (
+	"errors"
 	"fmt"
 	"github.com/easysoft/zv/cmd/host/router/v1"
 	"github.com/easysoft/zv/internal/pkg/vendors/virtualbox/api"
@@ -32,6 +33,11 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 	backingName := req.BackingName
 	vncPort := _commonUtils.GetVncPort()
 	vncPassword := _stringUtils.Uuid()
+
+	if s.isVmExist(vmName) {
+		err = errors.New("vm with same name exist")
+		return
+	}
 
 	cmd := fmt.Sprintf("VBoxManage snapshot %s delete %s-snap", backingName, backingName)
 	out, err := _shellUtils.ExeShell(cmd)
@@ -201,6 +207,16 @@ func (s VirtualBoxService) CreateClient(ip string, port int, account, password s
 	client = virtualboxapi.NewVirtualBox(account, password, url, false, "")
 
 	err = client.Logon()
+
+	return
+}
+
+func (s VirtualBoxService) isVmExist(vmName string) (ret bool) {
+	out, _ := _shellUtils.ExeShell(fmt.Sprintf("VBoxManage showvminfo %s", vmName))
+
+	if strings.Index(out, vmName) > -1 {
+		return true
+	}
 
 	return
 }
