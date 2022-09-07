@@ -10,6 +10,7 @@ import (
 	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
+	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
 	"strings"
 )
 
@@ -124,9 +125,12 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 
 	// enable vnc and set port
 	vncPort := _commonUtils.GetVncPort()
+	vncPassword := _stringUtils.Uuid()
 	_shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --vrde on", req.VmUniqueName))
-	_shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --vrdeproperty VNCPassword=%s", req.VmUniqueName, req.CloudIamPassword))
-	_shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --vrdemulticon on --vrdeport %d", req.VmUniqueName, vncPort))
+	_shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --vrdeproperty VNCPassword=%s",
+		req.VmUniqueName, vncPassword))
+	_shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --vrdemulticon on --vrdeport %d",
+		req.VmUniqueName, vncPort))
 
 	// launch machine
 	machine, err = client.FindMachine(req.VmUniqueName)
@@ -150,9 +154,10 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 
 	result.Pass("")
 	result.Payload = v1.VirtualBoxResp{
-		Name:       req.VmUniqueName,
-		MacAddress: macAddress,
-		VncPort:    vncPort,
+		Name:        req.VmUniqueName,
+		MacAddress:  macAddress,
+		VncPort:     vncPort,
+		VncPassword: vncPassword,
 	}
 
 	return

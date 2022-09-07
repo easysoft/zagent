@@ -58,7 +58,7 @@ func (s *SetupService) GenWebsockifyTokens() {
 		portStr := strconv.Itoa(port)
 
 		// uuid: 192.168.1.215:5901
-		content := fmt.Sprintf("%s: %s:%s", _stringUtils.NewUuid(), agentConf.Inst.NodeIp, portStr)
+		content := fmt.Sprintf("%s: %s:%s", _stringUtils.Uuid(), agentConf.Inst.NodeIp, portStr)
 
 		pth := filepath.Join(agentConf.Inst.DirToken, portStr+".txt")
 		_fileUtils.WriteFile(pth, content)

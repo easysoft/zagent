@@ -144,7 +144,7 @@ func (s AliyunEcsService) QueryVncUrl(id, vncPassword, regionId string, isWindow
 	return
 }
 func (s AliyunEcsService) QueryVncPassword(id, regionId string, client *ecs.Client) (password string, err error) {
-	password = "P2s" + _stringUtils.NewUuid()[:3]
+	password = "P2s" + _stringUtils.Uuid()[:3]
 
 	req := &ecs.ModifyInstanceVncPasswdRequest{
 		InstanceId:  tea.String(id),

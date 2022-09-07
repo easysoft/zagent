@@ -36,7 +36,7 @@ func (s HuaweiCloudDockerService) CreateRemote(hostId, queueId uint) (result _do
 		strings.Join(strings.Split(queue.BuildCommands, "\n"), "; "),
 	}
 
-	jobName := queue.TaskName + "-" + _stringUtils.NewUuid()
+	jobName := queue.TaskName + "-" + _stringUtils.Uuid()
 	image := queue.DockerImage
 	region := host.CloudRegion
 	namespace := host.CloudNamespace

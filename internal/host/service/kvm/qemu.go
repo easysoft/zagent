@@ -45,7 +45,7 @@ func (s *QemuService) GenVmDefFromCfg(domCfg *libvirtxml.Domain, macAddress, vmN
 	mainDiskIndex := s.GetMainDiskIndex(domCfg)
 
 	domCfg.Name = vmName
-	domCfg.UUID = _stringUtils.NewUuidWithSep()
+	domCfg.UUID = _stringUtils.UuidWithSep()
 	domCfg.Devices.Disks[mainDiskIndex].Source.File = &libvirtxml.DomainDiskSourceFile{
 		File: rawPath,
 	}
@@ -122,7 +122,7 @@ func (s *QemuService) GenVmDefTest(src, vmName, rawPath, backingPath string, vmC
 	mainDiskIndex := s.GetMainDiskIndex(domCfg)
 
 	domCfg.Name = vmName
-	domCfg.UUID = _stringUtils.NewUuidWithSep()
+	domCfg.UUID = _stringUtils.UuidWithSep()
 	domCfg.Devices.Disks[mainDiskIndex].Source.File = &libvirtxml.DomainDiskSourceFile{
 		File: rawPath,
 	}

@@ -19,6 +19,7 @@ type VirtualBoxResp struct {
 	Name        string `json:"name"`
 	MacAddress  string `json:"macAddress"`
 	VncPort     int    `json:"vncPort"`
+	VncPassword string `json:"vncPassword"`
 	ImagePath   string `json:"imagePath"`
 	BackingPath string `json:"backingPath"`
 }

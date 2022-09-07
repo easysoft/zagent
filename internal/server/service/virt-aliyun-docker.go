@@ -57,7 +57,7 @@ func (s AliyunDockerService) CreateRemote(hostId, queueId uint) (result _domain.
 	}
 
 	image := queue.DockerImage
-	jobName := queue.TaskName + "-" + _stringUtils.NewUuid()
+	jobName := queue.TaskName + "-" + _stringUtils.Uuid()
 
 	id, err := s.AliyunEciService.CreateInst(jobName, image, "", cmd,
 		eipId, switchId, securityGroupId, host.CloudRegion, eciClient)
