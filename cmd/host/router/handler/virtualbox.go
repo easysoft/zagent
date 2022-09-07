@@ -31,7 +31,8 @@ func (c *VirtualBoxCtrl) Create(ctx iris.Context) {
 
 	result, err := c.VirtualBoxService.Create(req)
 	if err != nil {
-		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "fail to create virtualbox vm", err))
+		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError,
+			"fail to create virtualbox vm, reason %s.", err.Error()))
 		return
 	}
 
