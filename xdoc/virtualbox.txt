@@ -8,7 +8,7 @@ sudo apt-get update
 sudo apt-get install virtualbox-6.1 virtualbox-ext-pack
 VBoxManage setproperty vrdeextpack VNC
 
-vboxwebsrv -H 192.168.0.56
+vboxwebsrv -H 127.0.0.1
 
 VBoxManage modifyvm win10-pro-x64-zh_cn --vrde on
 VBoxManage modifyvm win10-pro-x64-zh_cn --vrdeproperty VNCPassword=P2ssw0rd
@@ -17,4 +17,3 @@ VBoxManage modifyvm win10-pro-x64-zh_cn --vrdemulticon on --vrdeport 51111
 qemu-img convert -f qcow2 -O vdi win10-pro-x64-zh_cn.qcow2 win10-pro-x64-zh_cn.vdi
 
 rm -rf "/home/aaron/VirtualBox VMs/test-*"
-vboxwebsrv -H 192.168.0.56

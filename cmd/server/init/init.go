@@ -23,8 +23,6 @@ import (
 	"time"
 
 	"github.com/kataras/iris/v12/context"
-
-	_ "github.com/easysoft/zv/res/server/docs"
 )
 
 func Init(version string, printVersion, printRouter *bool) {

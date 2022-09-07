@@ -16,8 +16,6 @@ import (
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"time"
-
-	_ "github.com/easysoft/zv/res/host/docs"
 )
 
 func Init() {
