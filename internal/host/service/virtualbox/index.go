@@ -33,8 +33,8 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 	var tmplMachine *virtualboxapi.Machine
 	var machine *virtualboxapi.Machine
 	var newMachine *virtualboxapi.Machine
-	//var snapshot *virtualboxapi.Machine
-	//var snapshotMachine *virtualboxapi.Machine
+	var snapshot *virtualboxapi.Machine
+	var snapshotMachine *virtualboxapi.Machine
 	var adpt *virtualboxapi.NetworkAdapter
 	var session *virtualboxapi.Session
 	var progress *virtualboxapi.Progress
@@ -56,20 +56,20 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 		result.Fail(err.Error())
 		return
 	}
-	//snapshot, err = tmplMachine.FindSnapshot()
-	//if err != nil {
-	//	result.Fail(err.Error())
-	//	return
-	//}
-	//snapshotMachine, err = snapshot.FindSnapshotMachine()
-	//if err != nil {
-	//	result.Fail(err.Error())
-	//	return
-	//}
+	snapshot, err = tmplMachine.FindSnapshot()
+	if err != nil {
+		result.Fail(err.Error())
+		return
+	}
+	snapshotMachine, err = snapshot.FindSnapshotMachine()
+	if err != nil {
+		result.Fail(err.Error())
+		return
+	}
 
-	//snapshotName, _ := snapshot.GetName()
-	//snapshotMachineName, _ := snapshotMachine.GetName()
-	//_logUtils.Infof("snapshot %s on machine %s", snapshotName, snapshotMachineName)
+	snapshotName, _ := snapshot.GetName()
+	snapshotMachineName, _ := snapshotMachine.GetName()
+	_logUtils.Infof("snapshot %s on machine %s", snapshotName, snapshotMachineName)
 
 	// create machine
 	newMachineId, err = client.CreateMachine(req.VmUniqueName, osTypeId)
@@ -77,7 +77,7 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 		result.Fail(err.Error())
 		return
 	}
-	progress, newMachine, err = tmplMachine.CloneTo(newMachineId)
+	progress, newMachine, err = snapshotMachine.CloneTo(newMachineId)
 	if err != nil {
 		result.Fail(err.Error())
 		return
