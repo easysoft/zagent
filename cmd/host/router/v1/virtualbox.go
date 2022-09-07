@@ -4,13 +4,9 @@ type VirtualBoxReq struct {
 	VmUniqueName string `json:"vmUniqueName" example:"test-win10-x64-pro-zh_cn"`
 	BackingName  string `json:"backingName"`
 
-	Bridge       string `json:"bridge"`
-	VmCpu        uint   `json:"vmCpu"`
-	VmMemorySize uint   `json:"vmMemorySize"`
-	VncPort      int    `json:"vncPort"`
-
-	CloudIamUser     string `json:"cloudIamUser"`
-	CloudIamPassword string `json:"cloudIamPassword"`
+	VmCpu        uint `json:"vmCpu"`
+	VmMemorySize uint `json:"vmMemorySize"`
+	VncPort      int  `json:"vncPort"`
 
 	Prefix string `json:"prefix"`
 }
