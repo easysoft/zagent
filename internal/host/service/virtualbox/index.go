@@ -32,13 +32,14 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 	vncPort := _commonUtils.GetVncPort()
 	vncPassword := _stringUtils.Uuid()
 
-	out, err := _shellUtils.ExeShell(fmt.Sprintf(
+	createCmd := fmt.Sprintf(
 		"VBoxManage clonevm %s"+
 			" --name=\"%s\""+
 			" --register"+
 			" --mode=all"+
 			" --options=link",
-		req.BackingName, req.VmUniqueName))
+		req.BackingName, req.VmUniqueName)
+	out, err := _shellUtils.ExeShell(createCmd)
 
 	bridge, _, _ := s.getBridgeAndMacAddress(req.BackingName)
 
