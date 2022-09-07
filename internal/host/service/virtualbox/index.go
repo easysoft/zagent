@@ -204,11 +204,13 @@ func (s VirtualBoxService) CreateClient(ip string, port int, account, password s
 func (s VirtualBoxService) getBridgeAndMacAddress(vmName string) (bridge, macAddress string, err error) {
 	out, err := _shellUtils.ExeShell(fmt.Sprintf("VBoxManage showvminfo %s", vmName))
 
-	regx, _ := regexp.Compile(`MAC: ([A-Z0-9]+), Attachment: Bridged Interface '([A-Z0-9]+)'`)
-	arr := regx.FindAllStringSubmatch(out, -1)
+	regx1, _ := regexp.Compile(`MAC: ([A-Z0-9]+),'`)
+	arr1 := regx1.FindStringSubmatch(out)
+	macAddress = arr1[1]
 
-	macAddress = arr[0][1]
-	bridge = arr[0][2]
+	regx2, _ := regexp.Compile(`Bridged Interface '([A-Z0-9]+)'`)
+	arr2 := regx2.FindStringSubmatch(out)
+	bridge = arr2[1]
 
 	return
 }
