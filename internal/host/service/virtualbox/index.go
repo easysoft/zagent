@@ -11,6 +11,7 @@ import (
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
 	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
+	"regexp"
 	"strings"
 )
 
@@ -27,141 +28,37 @@ func NewVirtualBoxService() *VirtualBoxService {
 }
 
 func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteResp, err error) {
-	var client *virtualboxapi.VirtualBox
-	var osTypeId string
-	var newMachineId string
-	var tmplMachine *virtualboxapi.Machine
-	var machine *virtualboxapi.Machine
-	var newMachine *virtualboxapi.Machine
-	var snapshot *virtualboxapi.Machine
-	var snapshotMachine *virtualboxapi.Machine
-	var adpt *virtualboxapi.NetworkAdapter
-	var session *virtualboxapi.Session
-	var progress *virtualboxapi.Progress
-
-	client, err = s.CreateClient(ip, port, req.CloudIamUser, req.CloudIamPassword)
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-
-	// get backing tmplMachine
-	tmplMachine, err = client.FindMachine(req.BackingName)
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-	osTypeId, err = tmplMachine.GetOsTypeId()
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-	snapshot, err = tmplMachine.FindSnapshot()
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-	snapshotMachine, err = snapshot.FindSnapshotMachine()
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-
-	snapshotName, _ := snapshot.GetName()
-	snapshotMachineName, _ := snapshotMachine.GetName()
-	_logUtils.Infof("snapshot '%s' on machine '%s'", snapshotName, snapshotMachineName)
-
-	// create machine
-	newMachineId, err = client.CreateMachine(req.VmUniqueName, osTypeId)
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-	progress, newMachine, err = snapshotMachine.CloneTo(newMachineId)
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-	err = progress.WaitForCompletion(10000)
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-
-	err = newMachine.SetCPUCount(uint32(req.VmCpu))
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-	err = newMachine.SetMemorySize(uint32(req.VmMemorySize))
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-	err = newMachine.SetMemorySize(uint32(req.VmMemorySize))
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-
-	adpt, err = newMachine.GetNetworkAdapter(0)
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-	err = adpt.SetBridge(req.Bridge)
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-	macAddress, err := adpt.GetMACAddress()
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-	_logUtils.Infof("machine mac address %s", macAddress)
-
-	err = newMachine.SaveSettings()
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-	err = newMachine.Register()
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-
 	// enable vnc and set port
 	vncPort := _commonUtils.GetVncPort()
 	vncPassword := _stringUtils.Uuid()
-	out, err := _shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --vrde on", req.VmUniqueName))
+
+	out, err := _shellUtils.ExeShell(fmt.Sprintf(
+		"VBoxManage clonevm %s"+
+			" --name=\"%s\""+
+			" --register"+
+			" --mode=all"+
+			" --options=link",
+		req.BackingName, req.VmUniqueName))
+
+	bridge, macAddress, _ := s.getBridgeAndMacAddress(req.VmUniqueName)
+
+	out, err = _shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --macaddress1 %s",
+		req.VmUniqueName, ""))
+
+	out, err = _shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --nic1 bridged", req.VmUniqueName))
+	out, err = _shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s  --bridgeadapter1 %s",
+		req.VmUniqueName, bridge))
+
+	out, err = _shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --vrde on", req.VmUniqueName))
 	out, err = _shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --vrdeproperty VNCPassword=%s",
 		req.VmUniqueName, vncPassword))
 	out, err = _shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --vrdemulticon on --vrdeport %d",
 		req.VmUniqueName, vncPort))
 	out, err = _shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --vram 128", req.VmUniqueName))
+
+	out, err = _shellUtils.ExeShell(fmt.Sprintf("VBoxManage startvm %s", req.VmUniqueName))
+
 	_logUtils.Infof(out)
-
-	// launch machine
-	machine, err = client.FindMachine(req.VmUniqueName)
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-
-	session, err = client.GetSession()
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-
-	progress, err = machine.Launch(session.ManagedObjectId)
-	err = progress.WaitForCompletion(10000)
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
 
 	result.Pass("")
 	result.Payload = v1.VirtualBoxResp{
@@ -298,6 +195,18 @@ func (s VirtualBoxService) CreateClient(ip string, port int, account, password s
 	client = virtualboxapi.NewVirtualBox(account, password, url, false, "")
 
 	err = client.Logon()
+
+	return
+}
+
+func (s VirtualBoxService) getBridgeAndMacAddress(vmName string) (bridge, macAddress string, err error) {
+	out, err := _shellUtils.ExeShell(fmt.Sprintf("VBoxManage showvminfo %s", vmName))
+
+	regx, _ := regexp.Compile(`MAC: ([A-Z0-9]+), Attachment: Bridged Interface '([A-Z0-9]+)'`)
+	arr := regx.FindStringSubmatch(out)
+
+	macAddress = arr[0]
+	bridge = arr[0]
 
 	return
 }
