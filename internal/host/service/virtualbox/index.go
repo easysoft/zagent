@@ -29,13 +29,14 @@ func NewVirtualBoxService() *VirtualBoxService {
 
 func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteResp, err error) {
 	vmName := req.VmUniqueName
+	backingName := req.BackingName
 	vncPort := _commonUtils.GetVncPort()
 	vncPassword := _stringUtils.Uuid()
 
-	cmd := fmt.Sprintf("VBoxManage snapshot %s delete %s-snap", vmName, vmName)
+	cmd := fmt.Sprintf("VBoxManage snapshot %s delete %s-snap", backingName, backingName)
 	out, err := _shellUtils.ExeShell(cmd)
 
-	cmd = fmt.Sprintf("VBoxManage snapshot %s take %s-snap --description 'for zv linked clones'", vmName, vmName)
+	cmd = fmt.Sprintf("VBoxManage snapshot %s take %s-snap --description 'for zv linked clones'", backingName, backingName)
 	out, err = _shellUtils.ExeShell(cmd)
 
 	cmd = fmt.Sprintf(
