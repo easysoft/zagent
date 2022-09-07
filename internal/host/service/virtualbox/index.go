@@ -36,7 +36,8 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 	cmd := fmt.Sprintf("VBoxManage snapshot %s delete %s-snap", backingName, backingName)
 	out, err := _shellUtils.ExeShell(cmd)
 
-	cmd = fmt.Sprintf("VBoxManage snapshot %s take %s-snap --description 'for zv linked clones'", backingName, backingName)
+	cmd = fmt.Sprintf("VBoxManage snapshot %s take %s-snap --description 'for zv linked clones'",
+		backingName, backingName)
 	out, err = _shellUtils.ExeShell(cmd)
 
 	cmd = fmt.Sprintf(
@@ -46,7 +47,7 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 			" --register"+
 			" --mode=all"+
 			" --options=link",
-		req.BackingName, vmName, vmName)
+		req.BackingName, backingName, vmName)
 	out, err = _shellUtils.ExeShell(cmd)
 
 	bridge, _, _ := s.getBridgeAndMacAddress(req.BackingName)
