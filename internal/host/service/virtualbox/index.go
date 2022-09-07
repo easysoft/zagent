@@ -85,10 +85,6 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 func (s VirtualBoxService) Destroy(req v1.VirtualBoxReq) (result _domain.RemoteResp, err error) {
 	cmd := fmt.Sprintf("VBoxManage controlvm %s poweroff", req.VmUniqueName)
 	_, err = _shellUtils.ExeShell(cmd)
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
 
 	cmd = fmt.Sprintf("VBoxManage unregistervm --delete %s", req.VmUniqueName)
 	_, err = _shellUtils.ExeShell(cmd)
