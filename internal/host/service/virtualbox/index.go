@@ -135,12 +135,13 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 	// enable vnc and set port
 	vncPort := _commonUtils.GetVncPort()
 	vncPassword := _stringUtils.Uuid()
-	_shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --vrde on", req.VmUniqueName))
-	_shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --vrdeproperty VNCPassword=%s",
+	out, err := _shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --vrde on", req.VmUniqueName))
+	out, err = _shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --vrdeproperty VNCPassword=%s",
 		req.VmUniqueName, vncPassword))
-	_shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --vrdemulticon on --vrdeport %d",
+	out, err = _shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --vrdemulticon on --vrdeport %d",
 		req.VmUniqueName, vncPort))
-	_shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --vram 256", req.VmUniqueName))
+	out, err = _shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --vram 128", req.VmUniqueName))
+	_logUtils.Infof(out)
 
 	// launch machine
 	machine, err = client.FindMachine(req.VmUniqueName)
