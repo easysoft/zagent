@@ -69,7 +69,7 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 
 	snapshotName, _ := snapshot.GetName()
 	snapshotMachineName, _ := snapshotMachine.GetName()
-	_logUtils.Infof("snapshot %s on machine %s", snapshotName, snapshotMachineName)
+	_logUtils.Infof("snapshot '%s' on machine '%s'", snapshotName, snapshotMachineName)
 
 	// create machine
 	newMachineId, err = client.CreateMachine(req.VmUniqueName, osTypeId)
@@ -140,6 +140,7 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 		req.VmUniqueName, vncPassword))
 	_shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --vrdemulticon on --vrdeport %d",
 		req.VmUniqueName, vncPort))
+	_shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --vram 256", req.VmUniqueName))
 
 	// launch machine
 	machine, err = client.FindMachine(req.VmUniqueName)
