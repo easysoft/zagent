@@ -205,10 +205,10 @@ func (s VirtualBoxService) getBridgeAndMacAddress(vmName string) (bridge, macAdd
 	out, err := _shellUtils.ExeShell(fmt.Sprintf("VBoxManage showvminfo %s", vmName))
 
 	regx, _ := regexp.Compile(`MAC: ([A-Z0-9]+), Attachment: Bridged Interface '([A-Z0-9]+)'`)
-	arr := regx.FindStringSubmatch(out)
+	arr := regx.FindAllStringSubmatch(out, -1)
 
-	macAddress = arr[0]
-	bridge = arr[0]
+	macAddress = arr[0][1]
+	bridge = arr[0][2]
 
 	return
 }
