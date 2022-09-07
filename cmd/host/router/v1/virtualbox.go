@@ -11,6 +11,8 @@ type VirtualBoxReq struct {
 
 	CloudIamUser     string `json:"cloudIamUser"`
 	CloudIamPassword string `json:"cloudIamPassword"`
+
+	Prefix string `json:"prefix"`
 }
 
 type VirtualBoxResp struct {

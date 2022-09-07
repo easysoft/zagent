@@ -1,7 +1,6 @@
 package hostRouter
 
 import (
-	"github.com/easysoft/zv/cmd/agent/router/handler"
 	hostHandler "github.com/easysoft/zv/cmd/host/router/handler"
 	serverConf "github.com/easysoft/zv/internal/server/conf"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
@@ -11,8 +10,7 @@ import (
 type Router struct {
 	api *iris.Application
 
-	ArithCtrl *handler.ArithCtrl   `inject:""`
-	JobCtrl   *hostHandler.JobCtrl `inject:""`
+	JobCtrl *hostHandler.JobCtrl `inject:""`
 
 	KvmCtrl        *hostHandler.KvmCtrl        `inject:""`
 	VirtualBoxCtrl *hostHandler.VirtualBoxCtrl `inject:""`

@@ -158,7 +158,7 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 	return
 }
 
-func (s VirtualBoxService) ListTmpl(req v1.VirtualBoxReq, prefix string) (result _domain.RemoteResp, err error) {
+func (s VirtualBoxService) ListTmpl(req v1.VirtualBoxReq) (result _domain.RemoteResp, err error) {
 	virtualBox, err := s.CreateClient(ip, port, req.CloudIamUser, req.CloudIamPassword)
 	if err != nil {
 		result.Fail(err.Error())
@@ -175,7 +175,7 @@ func (s VirtualBoxService) ListTmpl(req v1.VirtualBoxReq, prefix string) (result
 	for _, item := range machines {
 		id, err1 := item.GetID()
 		name, err2 := item.GetName()
-		if err1 == nil && err2 == nil && (prefix == "" || strings.Index(name, prefix) > -1) {
+		if err1 == nil && err2 == nil && (req.Prefix == "" || strings.Index(name, req.Prefix) > -1) {
 			item.ID = id
 			item.Name = name
 

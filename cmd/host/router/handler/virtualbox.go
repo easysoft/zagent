@@ -66,14 +66,13 @@ func (c *VirtualBoxCtrl) Destroy(ctx iris.Context) {
 // @Success 200 {object} _httpUtils.Response{data=[]v1.KvmRespTempl} "code = success? 1 : 0"
 // @Router /api/v1/virtualbox/listTempl [post]
 func (c *VirtualBoxCtrl) ListTmpl(ctx iris.Context) {
-	prefix := ctx.URLParam("prefix")
 	req := v1.VirtualBoxReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
 
-	result, err := c.VirtualBoxService.ListTmpl(req, prefix)
+	result, err := c.VirtualBoxService.ListTmpl(req)
 
 	if err != nil {
 		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "fail to list vm tmpl", err))
