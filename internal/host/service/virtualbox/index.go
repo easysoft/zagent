@@ -212,9 +212,9 @@ func (s VirtualBoxService) CreateClient(ip string, port int, account, password s
 }
 
 func (s VirtualBoxService) isVmExist(vmName string) (ret bool) {
-	out, _ := _shellUtils.ExeShell(fmt.Sprintf("VBoxManage showvminfo %s", vmName))
+	out, _ := _shellUtils.ExeShell(fmt.Sprintf("VBoxManage list vms"))
 
-	if strings.Index(out, vmName) > -1 {
+	if strings.Index(out, fmt.Sprintf("\"%s\"", vmName)) > -1 {
 		return true
 	}
 
