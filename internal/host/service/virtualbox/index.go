@@ -67,6 +67,10 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 		return
 	}
 
+	snapshotName, _ := snapshot.GetName()
+	snapshotMachineName, _ := snapshotMachine.GetName()
+	_logUtils.Infof("snapshot %s on machine %s", snapshotName, snapshotMachineName)
+
 	// create machine
 	newMachineId, err = client.CreateMachine(req.VmUniqueName, osTypeId)
 	if err != nil {
