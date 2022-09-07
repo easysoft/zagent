@@ -42,9 +42,6 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 
 	bridge, _, _ := s.getBridgeAndMacAddress(req.BackingName)
 
-	out, err = _shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --macaddress1 %s",
-		req.VmUniqueName, ""))
-
 	out, err = _shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s --nic1 bridged", req.VmUniqueName))
 	out, err = _shellUtils.ExeShell(fmt.Sprintf("VBoxManage modifyvm %s  --bridgeadapter1 %s",
 		req.VmUniqueName, bridge))
