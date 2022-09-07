@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/easysoft/zv/cmd/host/router/v1"
 	"github.com/easysoft/zv/internal/pkg/vendors/virtualbox/api"
-	"github.com/easysoft/zv/internal/pkg/vendors/virtualbox/srv"
 	_domain "github.com/easysoft/zv/pkg/domain"
 	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
@@ -83,6 +82,26 @@ func (s VirtualBoxService) Create(req v1.VirtualBoxReq) (result _domain.RemoteRe
 	return
 }
 
+func (s VirtualBoxService) Destroy(req v1.VirtualBoxReq) (result _domain.RemoteResp, err error) {
+	cmd := fmt.Sprintf("VBoxManage controlvm %s poweroff", req.VmUniqueName)
+	_, err = _shellUtils.ExeShell(cmd)
+	if err != nil {
+		result.Fail(err.Error())
+		return
+	}
+
+	cmd = fmt.Sprintf("VBoxManage unregistervm --delete win10-001 %s", req.VmUniqueName)
+	_, err = _shellUtils.ExeShell(cmd)
+	if err != nil {
+		result.Fail(err.Error())
+		return
+	}
+
+	_commonUtils.RemoveVncPort(req.VncPort)
+
+	return
+}
+
 func (s VirtualBoxService) ListTmpl(req v1.VirtualBoxReq) (result _domain.RemoteResp, err error) {
 	virtualBox, err := s.CreateClient(ip, port, req.CloudIamUser, req.CloudIamPassword)
 	if err != nil {
@@ -110,93 +129,6 @@ func (s VirtualBoxService) ListTmpl(req v1.VirtualBoxReq) (result _domain.Remote
 
 	result.Pass("")
 	result.Payload = list
-
-	return
-}
-
-func (s VirtualBoxService) Destroy(req v1.VirtualBoxReq) (result _domain.RemoteResp, err error) {
-	var virtualBox *virtualboxapi.VirtualBox
-	var machine *virtualboxapi.Machine
-	var machineState *virtualboxsrv.MachineState
-	var session *virtualboxapi.Session
-	var console *virtualboxapi.Console
-	var progress *virtualboxapi.Progress
-	var media []string
-
-	virtualBox, err = s.CreateClient(ip, port, req.CloudIamUser, req.CloudIamPassword)
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-
-	machine, err = virtualBox.FindMachine(req.VmUniqueName)
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-
-	machineState, err = machine.GetMachineState()
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-	_logUtils.Infof("machine state %s", *machineState)
-
-	session, err = virtualBox.GetSession()
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-
-	err = machine.Lock(session, virtualboxsrv.LockTypeShared)
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-
-	console, err = session.GetConsole()
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-
-	progress, err = console.PowerDown()
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-
-	err = progress.WaitForCompletion(10000)
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-
-	media, err = machine.Unregister()
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-
-	err = machine.DiscardSettings()
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-
-	err = machine.DeleteConfig(media)
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-
-	err = session.Release()
-	if err != nil {
-		result.Fail(err.Error())
-		return
-	}
-
-	_commonUtils.RemoveVncPort(req.VncPort)
 
 	return
 }

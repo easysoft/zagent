@@ -33,7 +33,7 @@ func (c *VirtualBoxCtrl) Create(ctx iris.Context) {
 	result, err := c.VirtualBoxService.Create(req)
 	if err != nil {
 		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError,
-			fmt.Sprintf("fail to create virtualbox vm, reason %s.", err.Error()), nil))
+			fmt.Sprintf("fail to create virtualbox vm, reason: %s.", err.Error()), nil))
 		return
 	}
 
