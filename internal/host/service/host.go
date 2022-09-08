@@ -85,10 +85,10 @@ func (s *HostService) Register(isBusy bool) {
 func (s *HostService) register(host interface{}) (resp string, ok bool) {
 	var url string
 	if strings.Index(agentConf.Inst.Server, ":8085") > -1 {
-		uri := "client/vm/register"
+		uri := "client/host/register"
 		url = _httpUtils.GenUrl(agentConf.Inst.Server, uri)
 	} else {
-		uri := "api.php/v1/vm/register"
+		uri := "api.php/v1/host/register"
 		url = s.ZentaoService.GenUrl(agentConf.Inst.Server, uri)
 	}
 
