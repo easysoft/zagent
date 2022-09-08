@@ -82,11 +82,6 @@ func GenVirtualBoxReq(vm Vm, backing VmBacking, host Host) (req v1.VirtualBoxReq
 
 		VmCpu:        backing.SuggestCpuCount,
 		VmMemorySize: backing.SuggestMemorySize,
-
-		CloudIamUser:     host.CloudIamUser,
-		CloudIamPassword: host.CloudIamPassword,
-
-		Bridge: host.Bridge,
 	}
 
 	return

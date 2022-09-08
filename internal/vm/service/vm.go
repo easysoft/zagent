@@ -57,7 +57,7 @@ func (s *VmService) Check() {
 
 }
 
-func (s *VmService) Register(isBusy bool) (resp string, ok bool) {
+func (s *VmService) Register(isBusy bool) (resp []byte, ok bool) {
 	vm := domain.Vm{
 		MacAddress: agentConf.Inst.MacAddress,
 		Ip:         agentConf.Inst.NodeIp, Port: agentConf.Inst.NodePort,
@@ -74,17 +74,14 @@ func (s *VmService) Register(isBusy bool) (resp string, ok bool) {
 	if strings.Index(agentConf.Inst.Server, ":8085") > -1 {
 		uri := "client/vm/register"
 		url = _httpUtils.GenUrl(agentConf.Inst.Server, uri)
-
-		bytes, err := _httpUtils.Post(url, vm)
-		resp = string(bytes)
-		ok = err == nil
-
 	} else {
 		uri := "api.php/v1/vm/register"
 		url = s.ZentaoService.GenUrl(agentConf.Inst.Server, uri)
-		s.ZentaoService.GetConfig(agentConf.Inst.Server)
+	}
 
-		resp, ok = s.ZentaoService.Post(url, vm, true)
+	resp, err := _httpUtils.Post(url, vm)
+	if err != nil {
+		return
 	}
 
 	if ok {

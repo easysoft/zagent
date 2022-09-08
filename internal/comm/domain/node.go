@@ -27,5 +27,7 @@ type Node struct {
 	SshPort    int    `json:"sshPort" yaml:"sshPort"`
 	VncAddress string `json:"vncAddress" yaml:"vncAddress"`
 
+	Secret string `json:"secret" yaml:"secret"`
+
 	LastRegisterDate time.Time `json:"lastRegisterDate" yaml:"lastRegisterDate"`
 }

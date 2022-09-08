@@ -85,21 +85,16 @@ func (s *HostService) Register(isBusy bool) {
 func (s *HostService) register(host interface{}) (resp string, ok bool) {
 	var url string
 	if strings.Index(agentConf.Inst.Server, ":8085") > -1 {
-		uri := "client/host/register"
+		uri := "client/vm/register"
 		url = _httpUtils.GenUrl(agentConf.Inst.Server, uri)
-
-		bytes, err := _httpUtils.Post(url, host)
-		resp = string(bytes)
-		ok = err == nil
-
 	} else {
-		uri := "api.php/v1/host/register"
+		uri := "api.php/v1/vm/register"
 		url = s.ZentaoService.GenUrl(agentConf.Inst.Server, uri)
-		s.ZentaoService.GetConfig(agentConf.Inst.Server)
-
-		resp, ok = s.ZentaoService.Post(url, host, true)
-
 	}
+
+	bytes, err := _httpUtils.Post(url, host)
+	resp = string(bytes)
+	ok = err == nil
 
 	if ok {
 		_logUtils.Info(_i118Utils.I118Prt.Sprintf("success_to_register", agentConf.Inst.Server))

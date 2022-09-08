@@ -59,6 +59,7 @@ type Config struct {
 	Server     string             `yaml:"Server"`
 	NodeIp     string             `yaml:"ip"`
 	NodePort   int                `yaml:"port"`
+	Secret     string
 	MacAddress string
 
 	Language string

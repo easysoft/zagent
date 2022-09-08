@@ -12,7 +12,8 @@ import (
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
 	"github.com/libvirt/libvirt-go"
-	"github.com/libvirt/libvirt-go-xml"
+	libvirtxml "github.com/libvirt/libvirt-go-xml"
+
 	"path/filepath"
 	"strings"
 )
@@ -21,8 +22,6 @@ const (
 	LibvirtConnStrLocal  = "qemu:///system"
 	LibvirtConnStrRemote = "qemu+ssh://%s:22/system?socket=/var/run/libvirt/libvirt-sock"
 )
-
-var ()
 
 type LibvirtService struct {
 	LibvirtConn *libvirt.Connect
