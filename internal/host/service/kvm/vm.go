@@ -29,6 +29,10 @@ func (s *VmService) GetVms() (vms []domain.Vm) {
 	for _, dom := range domains {
 		vm := domain.Vm{}
 		vm.Name, _ = dom.GetName()
+
+		// ODO: just for testing
+		vm.Name = strings.Replace(vm.Name, "tmpl-", "test-", -1)
+
 		if strings.Index(vm.Name, "test-") != 0 {
 			continue
 		}
