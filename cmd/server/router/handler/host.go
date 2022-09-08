@@ -1,10 +1,12 @@
 package handler
 
 import (
+	"encoding/json"
 	v1 "github.com/easysoft/zv/cmd/server/router/v1"
 	serverService "github.com/easysoft/zv/internal/server/service"
 	_const "github.com/easysoft/zv/pkg/const"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
+	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"github.com/kataras/iris/v12"
 )
 
@@ -31,6 +33,9 @@ func (c *HostCtrl) Register(ctx iris.Context) {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
 		return
 	}
+
+	str, _ := json.Marshal(req)
+	_logUtils.Infof("%v", str)
 
 	success := c.AssertService.RegisterHost(req)
 	code := _const.ResultFail

@@ -8,6 +8,7 @@ import (
 
 type HostRegisterReq struct {
 	Status consts.HostStatus `json:"status" example:"online"` // Enums consts.HostStatus
+	Secret string            `json:"secret" yaml:"secret"`
 
 	Vms []VmInHostReq `json:"vms"`
 }
