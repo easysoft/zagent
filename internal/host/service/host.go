@@ -1,6 +1,8 @@
 package hostAgentService
 
 import (
+	"encoding/json"
+	v1 "github.com/easysoft/zv/cmd/server/router/v1"
 	agentConf "github.com/easysoft/zv/internal/agent/conf"
 	agentService "github.com/easysoft/zv/internal/agent/service"
 	testingService "github.com/easysoft/zv/internal/agent/service/testing"
@@ -70,19 +72,24 @@ func (s *HostService) Register(isBusy bool) {
 	host.Vms = s.VmService.GetVms()
 	s.VmService.UpdateVmMapAndDestroyTimeout(host.Vms)
 
-	var ok bool
-	var resp string
+	respBytes, ok := s.register(host)
 
-	resp, ok = s.register(host)
+	respObj := v1.HostRegisterResp{}
+	json.Unmarshal(respBytes, &respObj)
+	consts.AuthToken = respObj.Token
+
+	if consts.AuthToken == "" {
+		ok = false
+	}
 
 	if ok {
 		_logUtils.Info(_i118Utils.I118Prt.Sprintf("success_to_register", agentConf.Inst.Server))
 	} else {
-		_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_register", agentConf.Inst.Server, resp))
+		_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_register", agentConf.Inst.Server, respBytes))
 	}
 }
 
-func (s *HostService) register(host interface{}) (resp string, ok bool) {
+func (s *HostService) register(host interface{}) (resp []byte, ok bool) {
 	var url string
 	if strings.Index(agentConf.Inst.Server, ":8085") > -1 {
 		uri := "client/host/register"
@@ -92,8 +99,7 @@ func (s *HostService) register(host interface{}) (resp string, ok bool) {
 		url = s.ZentaoService.GenUrl(agentConf.Inst.Server, uri)
 	}
 
-	bytes, err := _httpUtils.Post(url, host)
-	resp = string(bytes)
+	resp, err := _httpUtils.Post(url, host)
 	ok = err == nil
 
 	if ok {

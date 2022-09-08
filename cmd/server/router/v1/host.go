@@ -13,6 +13,10 @@ type HostRegisterReq struct {
 	Vms []VmInHostReq `json:"vms"`
 }
 
+type HostRegisterResp struct {
+	Token string `json:"token" yaml:"token"`
+}
+
 type VmInHostReq struct {
 	Name   string          `json:"name"`
 	Status consts.VmStatus `json:"status" example:"running"` // Enums consts.VmStatus

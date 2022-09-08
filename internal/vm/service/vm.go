@@ -57,7 +57,7 @@ func (s *VmService) Check() {
 
 }
 
-func (s *VmService) Register(isBusy bool) (resp []byte, ok bool) {
+func (s *VmService) Register(isBusy bool) (respBytes []byte, ok bool) {
 	vm := domain.Vm{
 		MacAddress: agentConf.Inst.MacAddress,
 		Ip:         agentConf.Inst.NodeIp, Port: agentConf.Inst.NodePort,
@@ -79,15 +79,18 @@ func (s *VmService) Register(isBusy bool) (resp []byte, ok bool) {
 		url = s.ZentaoService.GenUrl(agentConf.Inst.Server, uri)
 	}
 
-	resp, err := _httpUtils.Post(url, vm)
+	var err error
+	respBytes, err = _httpUtils.Post(url, vm)
 	if err != nil {
 		return
 	}
 
+	ok = err == nil
+
 	if ok {
 		_logUtils.Info(_i118Utils.I118Prt.Sprintf("success_to_register", agentConf.Inst.Server))
 	} else {
-		_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_register", agentConf.Inst.Server, resp))
+		_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_register", agentConf.Inst.Server, respBytes))
 	}
 
 	return
