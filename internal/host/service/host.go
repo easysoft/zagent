@@ -55,7 +55,11 @@ func (s *HostService) Check() {
 
 func (s *HostService) Register(isBusy bool) {
 	host := domain.HostNode{
-		Node: domain.Node{Ip: agentConf.Inst.NodeIp, Port: agentConf.Inst.NodePort},
+		Node: domain.Node{
+			Ip:     agentConf.Inst.NodeIp,
+			Port:   agentConf.Inst.NodePort,
+			Secret: agentConf.Inst.Secret,
+		},
 	}
 	if isBusy {
 		host.Status = consts.HostBusy
@@ -83,13 +87,25 @@ func (s *HostService) register(host interface{}) (resp string, ok bool) {
 	if strings.Index(agentConf.Inst.Server, ":8085") > -1 {
 		uri := "client/host/register"
 		url = _httpUtils.GenUrl(agentConf.Inst.Server, uri)
+
+		bytes, err := _httpUtils.Post(url, host)
+		resp = string(bytes)
+		ok = err == nil
+
 	} else {
 		uri := "api.php/v1/host/register"
 		url = s.ZentaoService.GenUrl(agentConf.Inst.Server, uri)
 		s.ZentaoService.GetConfig(agentConf.Inst.Server)
+
+		resp, ok = s.ZentaoService.Post(url, host, true)
+
 	}
 
-	resp, ok = s.ZentaoService.Post(url, host, true)
+	if ok {
+		_logUtils.Info(_i118Utils.I118Prt.Sprintf("success_to_register", agentConf.Inst.Server))
+	} else {
+		_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_register", agentConf.Inst.Server, resp))
+	}
 
 	return
 }
