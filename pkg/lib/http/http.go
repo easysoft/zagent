@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	consts "github.com/easysoft/zv/internal/comm/const"
+	agentUtils "github.com/easysoft/zv/internal/pkg/utils/common"
+	_const "github.com/easysoft/zv/pkg/const"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"github.com/fatih/color"
 	"io/ioutil"
@@ -90,6 +92,10 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 
 	//req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	if strings.Index(url, "api.php") > -1 {
+		req.Header.Set(_const.Authorization, agentUtils.GenAuthorization())
+	}
 
 	resp, err := client.Do(req)
 	if err != nil {
