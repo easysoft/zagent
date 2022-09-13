@@ -2,8 +2,8 @@ package vmRouter
 
 import (
 	vmHandler "github.com/easysoft/zv/cmd/vm/router/handler"
-	_httpUtils "github.com/easysoft/zv/internal/pkg/lib/http"
 	serverConf "github.com/easysoft/zv/internal/server/conf"
+	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	"github.com/kataras/iris/v12"
 )
 

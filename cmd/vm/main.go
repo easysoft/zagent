@@ -7,7 +7,7 @@ import (
 	"github.com/easysoft/zv/internal/agent/utils/common"
 	"github.com/easysoft/zv/internal/agent/utils/const"
 	consts "github.com/easysoft/zv/internal/comm/const"
-	"github.com/easysoft/zv/internal/pkg/lib/log"
+	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"github.com/fatih/color"
 	"os"
 	"os/signal"
