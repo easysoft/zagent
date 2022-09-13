@@ -3,9 +3,9 @@ package aliyun
 import (
 	"github.com/easysoft/zv/cmd/test/_const"
 	consts "github.com/easysoft/zv/internal/comm/const"
-	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
-	_stringUtils "github.com/easysoft/zv/internal/pkg/lib/string"
-	"github.com/easysoft/zv/internal/server/service/vendors/huaweicloud"
+	"github.com/easysoft/zv/internal/pkg/vendors/huaweicloud"
+	_logUtils "github.com/easysoft/zv/pkg/lib/log"
+	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
 	"strings"
 	"testing"
 )
@@ -24,7 +24,7 @@ func TestHuaweiCloudCci(t *testing.T) {
 		client)
 
 	image := "swr.cn-east-3.myhuaweicloud.com/tester-im/maven-testng:1.0"
-	name := "maven-testng-" + _stringUtils.NewUuid()
+	name := "maven-testng-" + _stringUtils.Uuid()
 	cmd := []string{
 		"/bin/bash",
 		"-c",

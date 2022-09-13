@@ -3,8 +3,8 @@ package aliyun
 import (
 	_const "github.com/easysoft/zv/cmd/test/_const"
 	consts "github.com/easysoft/zv/internal/comm/const"
-	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
-	"github.com/easysoft/zv/internal/server/service/vendors/huaweicloud"
+	"github.com/easysoft/zv/internal/pkg/vendors/huaweicloud"
+	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"testing"
 )
 

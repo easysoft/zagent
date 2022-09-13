@@ -3,9 +3,9 @@ package aliyun
 import (
 	_const "github.com/easysoft/zv/cmd/test/_const"
 	consts "github.com/easysoft/zv/internal/comm/const"
-	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
-	_stringUtils "github.com/easysoft/zv/internal/pkg/lib/string"
-	"github.com/easysoft/zv/internal/server/service/vendors/huaweicloud"
+	"github.com/easysoft/zv/internal/pkg/vendors/huaweicloud"
+	_logUtils "github.com/easysoft/zv/pkg/lib/log"
+	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
 	"testing"
 	"time"
 )
@@ -24,7 +24,7 @@ func TestHuaweiCloudEcs(t *testing.T) {
 
 	huaweiCloudService := huaweicloud.NewHuaweiCloudEcsService()
 	id, name, err := huaweiCloudService.CreateInst(
-		"win10-x64-pro-zh_cn-"+_stringUtils.NewUuidWithSep(), "image-win10-x64-pro-zh_cn", ecsClient, imgClient, vpcClient)
+		"win10-x64-pro-zh_cn-"+_stringUtils.Uuid(), "image-win10-x64-pro-zh_cn", ecsClient, imgClient, vpcClient)
 
 	<-time.After(5 * time.Second)
 
