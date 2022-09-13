@@ -9,9 +9,10 @@ type Request struct {
 }
 
 type Response struct {
-	Code _const.ResultCode `json:"code"`
-	Msg  string            `json:"message"`
-	Data interface{}       `json:"data"`
+	Code  _const.ResultCode `json:"code"`
+	Msg   string            `json:"message"`
+	Token string            `json:"message"`
+	Data  interface{}       `json:"data"`
 }
 type ResponsePage struct {
 	Response
@@ -23,6 +24,10 @@ type ResponsePage struct {
 }
 
 func ApiRes(code _const.ResultCode, msg string, objects interface{}) (r *Response) {
+	r = &Response{Code: code, Msg: msg, Data: objects}
+	return
+}
+func ApiResToken(code _const.ResultCode, msg string, objects interface{}) (r *Response) {
 	r = &Response{Code: code, Msg: msg, Data: objects}
 	return
 }

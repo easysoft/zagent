@@ -43,6 +43,7 @@ func (c *HostCtrl) Register(ctx iris.Context) {
 		code = _const.ResultSuccess
 	}
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(code, "操作成功", ""))
+	data := iris.Map{"token": "123"}
+	_, _ = ctx.JSON(_httpUtils.ApiRes(code, "操作成功", data))
 	return
 }

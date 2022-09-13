@@ -14,6 +14,9 @@ type HostRegisterReq struct {
 }
 
 type HostRegisterResp struct {
+	Data HostRegisterRespData `json:"data" yaml:"data"`
+}
+type HostRegisterRespData struct {
 	Token string `json:"token" yaml:"token"`
 }
 

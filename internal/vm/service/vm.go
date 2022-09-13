@@ -1,6 +1,8 @@
 package vmAgentService
 
 import (
+	"encoding/json"
+	v1 "github.com/easysoft/zv/cmd/server/router/v1"
 	"github.com/easysoft/zv/internal/agent/conf"
 	agentService "github.com/easysoft/zv/internal/agent/service"
 	testingService "github.com/easysoft/zv/internal/agent/service/testing"
@@ -57,7 +59,7 @@ func (s *VmService) Check() {
 
 }
 
-func (s *VmService) Register(isBusy bool) (respBytes []byte, ok bool) {
+func (s *VmService) Register(isBusy bool) (ok bool) {
 	vm := domain.Vm{
 		MacAddress: agentConf.Inst.MacAddress,
 		Ip:         agentConf.Inst.NodeIp, Port: agentConf.Inst.NodePort,
@@ -70,28 +72,37 @@ func (s *VmService) Register(isBusy bool) (respBytes []byte, ok bool) {
 		vm.Status = consts.VmReady
 	}
 
-	var url string
-	if strings.Index(agentConf.Inst.Server, ":8085") > -1 {
-		uri := "client/vm/register"
-		url = _httpUtils.GenUrl(agentConf.Inst.Server, uri)
-	} else {
-		uri := "api.php/v1/vm/register"
-		url = s.ZentaoService.GenUrl(agentConf.Inst.Server, uri)
-	}
+	respBytes, ok := s.register(vm)
 
-	var err error
-	respBytes, err = _httpUtils.Post(url, vm)
-	if err != nil {
-		return
-	}
+	respObj := v1.HostRegisterResp{}
+	json.Unmarshal(respBytes, &respObj)
+	consts.AuthToken = respObj.Data.Token
 
-	ok = err == nil
+	if consts.AuthToken == "" {
+		ok = false
+	}
 
 	if ok {
 		_logUtils.Info(_i118Utils.I118Prt.Sprintf("success_to_register", agentConf.Inst.Server))
 	} else {
 		_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_register", agentConf.Inst.Server, respBytes))
 	}
+
+	return
+}
+
+func (s *VmService) register(host interface{}) (resp []byte, ok bool) {
+	var url string
+	if strings.Index(agentConf.Inst.Server, ":8085") > -1 {
+		uri := "client/host/register"
+		url = _httpUtils.GenUrl(agentConf.Inst.Server, uri)
+	} else {
+		uri := "api.php/v1/host/register"
+		url = s.ZentaoService.GenUrl(agentConf.Inst.Server, uri)
+	}
+
+	resp, err := _httpUtils.Post(url, host)
+	ok = err == nil
 
 	return
 }
