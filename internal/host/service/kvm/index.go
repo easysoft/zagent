@@ -329,8 +329,12 @@ func (s *LibvirtService) ListTmpl() (ret []v1.KvmRespTempl, err error) {
 				MacAddress: domainCfg.Devices.Interfaces[0].MAC.Address,
 			}
 
-			if len(domainCfg.Devices.Interfaces) > 0 {
-				tmpl.VncPost = domainCfg.Devices.Graphics[0].VNC.Port
+			if domainCfg.Devices != nil && len(domainCfg.Devices.Graphics) > 0 {
+				for _, item := range domainCfg.Devices.Graphics {
+					if item.VNC != nil {
+						tmpl.VncPost = item.VNC.Port
+					}
+				}
 			}
 
 			mainDiskIndex := s.QemuService.GetMainDiskIndex(domainCfg)
