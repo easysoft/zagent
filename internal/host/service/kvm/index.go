@@ -390,6 +390,7 @@ func (s *LibvirtService) Connect(str string) {
 	if !active {
 		_logUtils.Errorf("not active")
 	}
+
 	return
 }
 

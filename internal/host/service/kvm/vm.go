@@ -3,6 +3,7 @@ package kvmService
 import (
 	"github.com/easysoft/zv/internal/comm/const"
 	"github.com/easysoft/zv/internal/comm/domain"
+	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
 	"github.com/libvirt/libvirt-go"
 	libvirtxml "github.com/libvirt/libvirt-go-xml"
 	"strings"
@@ -46,11 +47,12 @@ func (s *VmService) GetVms() (vms []domain.Vm) {
 			vm.Status = consts.VmShutOff
 		}
 
-		// get vm info
 		newXml, _ := dom.GetXMLDesc(0)
 		newDomCfg := &libvirtxml.Domain{}
 		newDomCfg.Unmarshal(newXml)
-		vm.Ip = newDomCfg.Devices.Interfaces[0].IP[0].Address
+
+		vmMacAddress := newDomCfg.Devices.Interfaces[0].MAC.Address
+		vm.Ip, _ = s.GetVmIpByMac(vmMacAddress)
 
 		vms = append(vms, vm)
 	}
@@ -99,4 +101,22 @@ func (s *VmService) getKeys(m map[string]domain.Vm) []string {
 		keys = append(keys, k)
 	}
 	return keys
+}
+
+func (s *VmService) GetVmIpByMac(macAddress string) (ip string, err error) {
+	cmd := `virsh net-dhcp-leases default | grep ipv4 | awk '{print $3,$5 }'`
+
+	out, err := _shellUtils.ExeSysCmd(cmd)
+	arr := strings.Split(out, "\n")
+
+	for _, line := range arr {
+		cols := strings.Split(line, " ")
+		if strings.TrimSpace(cols[0]) == macAddress {
+			ip = strings.Split(strings.TrimSpace(cols[1]), "/")[0]
+
+			break
+		}
+	}
+
+	return
 }
