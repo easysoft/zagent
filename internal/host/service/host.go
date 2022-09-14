@@ -14,6 +14,7 @@ import (
 	_i118Utils "github.com/easysoft/zv/pkg/lib/i118"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"strings"
+	"time"
 )
 
 type HostService struct {
@@ -58,11 +59,15 @@ func (s *HostService) Check() {
 func (s *HostService) Register(isBusy bool) {
 	host := domain.HostNode{
 		Node: domain.Node{
-			Ip:     agentConf.Inst.NodeIp,
-			Port:   agentConf.Inst.NodePort,
-			Secret: agentConf.Inst.Secret,
+			Ip:   agentConf.Inst.NodeIp,
+			Port: agentConf.Inst.NodePort,
 		},
 	}
+
+	if consts.AuthToken == "" || consts.ExpiredDate.Unix() < time.Now().Unix() {
+		host.Secret = agentConf.Inst.Secret
+	}
+
 	if isBusy {
 		host.Status = consts.HostBusy
 	} else {
@@ -78,7 +83,10 @@ func (s *HostService) Register(isBusy bool) {
 		respObj := v1.HostRegisterResp{}
 		err := json.Unmarshal(respBytes, &respObj)
 		if err == nil {
-			consts.AuthToken = respObj.Token
+			if respObj.Token != "" {
+				consts.AuthToken = respObj.Token
+				consts.ExpiredDate = respObj.ExpiredDate
+			}
 		}
 	}
 

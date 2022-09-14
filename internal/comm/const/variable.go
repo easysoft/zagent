@@ -1,9 +1,13 @@
 package consts
 
-import "sync"
+import (
+	"sync"
+	"time"
+)
 
 var (
-	AuthToken = ""
+	AuthToken   = ""
+	ExpiredDate = time.Now()
 
 	Verbose          = false
 	ExistVncPortMap  = sync.Map{}

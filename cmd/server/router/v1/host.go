@@ -4,6 +4,7 @@ import (
 	"github.com/easysoft/zv/internal/comm/const"
 	"github.com/easysoft/zv/internal/server/model"
 	"github.com/jinzhu/copier"
+	"time"
 )
 
 type HostRegisterReq struct {
@@ -14,7 +15,8 @@ type HostRegisterReq struct {
 }
 
 type HostRegisterResp struct {
-	Token string `json:"token" yaml:"token"`
+	Token       string    `json:"token" yaml:"token"`
+	ExpiredDate time.Time `json:"expiredDate" yaml:"expiredDate"`
 }
 
 type VmInHostReq struct {
