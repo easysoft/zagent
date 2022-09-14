@@ -51,8 +51,8 @@ func (s *VmService) GetVms() (vms []domain.Vm) {
 		newDomCfg := &libvirtxml.Domain{}
 		newDomCfg.Unmarshal(newXml)
 
-		vmMacAddress := newDomCfg.Devices.Interfaces[0].MAC.Address
-		vm.Ip, _ = s.GetVmIpByMac(vmMacAddress)
+		vm.MacAddress = newDomCfg.Devices.Interfaces[0].MAC.Address
+		vm.Ip, _ = s.GetVmIpByMac(vm.MacAddress)
 
 		vms = append(vms, vm)
 	}

@@ -26,6 +26,7 @@ const (
 type LibvirtService struct {
 	LibvirtConn *libvirt.Connect
 	QemuService *QemuService `inject:""`
+	VmService   *VmService   `inject:""`
 }
 
 func NewLibvirtService() *LibvirtService {
@@ -97,18 +98,13 @@ func (s *LibvirtService) CreateVm(req *v1.KvmReq, removeSameName bool) (dom *lib
 	}
 
 	// get new vm info
-	newXml := ""
-	newXml, err = dom.GetXMLDesc(0)
-	if err != nil {
-		return
-	}
-
+	newXml, _ := dom.GetXMLDesc(0)
 	newDomCfg := &libvirtxml.Domain{}
-	err = newDomCfg.Unmarshal(newXml)
+	newDomCfg.Unmarshal(newXml)
 
-	vmIp = newDomCfg.Devices.Interfaces[0].IP[0].Address
 	vmMacAddress = newDomCfg.Devices.Interfaces[0].MAC.Address
 	vmVncPort = newDomCfg.Devices.Graphics[0].VNC.Port
+	vmIp, _ = s.VmService.GetVmIpByMac(vmMacAddress)
 
 	return
 }
