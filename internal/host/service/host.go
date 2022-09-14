@@ -74,14 +74,17 @@ func (s *HostService) Register(isBusy bool) {
 
 	respBytes, ok := s.register(host)
 
-	respObj := v1.HostRegisterResp{}
-	json.Unmarshal(respBytes, &respObj)
-	consts.AuthToken = respObj.Data.Token
+	if ok {
+		respObj := v1.HostRegisterResp{}
+		err := json.Unmarshal(respBytes, &respObj)
+		if err == nil {
+			consts.AuthToken = respObj.Data.Token
+		}
+	}
 
 	if consts.AuthToken == "" {
 		ok = false
 	}
-
 	if ok {
 		_logUtils.Info(_i118Utils.I118Prt.Sprintf("success_to_register", agentConf.Inst.Server))
 	} else {
