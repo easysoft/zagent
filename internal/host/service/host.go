@@ -85,6 +85,7 @@ func (s *HostService) Register(isBusy bool) {
 	if consts.AuthToken == "" {
 		ok = false
 	}
+
 	if ok {
 		_logUtils.Info(_i118Utils.I118Prt.Sprintf("success_to_register", agentConf.Inst.Server))
 	} else {
