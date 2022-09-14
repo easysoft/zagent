@@ -3,6 +3,7 @@ package kvmService
 import "C"
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
 	agentConf "github.com/easysoft/zv/internal/agent/conf"
@@ -65,7 +66,8 @@ func (s *LibvirtService) CreateVm(req *v1.KvmReq, removeSameName bool) (dom *lib
 	tmplXml := s.GetVmDef(vmTemplateName)
 	tmplDomCfg := &libvirtxml.Domain{}
 	err = tmplDomCfg.Unmarshal(tmplXml)
-	if err != nil {
+	if tmplXml == "" || err != nil {
+		err = errors.New(fmt.Sprintf("get tmpl %s err", vmTemplateName))
 		return
 	}
 
