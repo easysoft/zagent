@@ -333,6 +333,7 @@ func (s *LibvirtService) ListTmpl() (ret []v1.KvmRespTempl, err error) {
 				for _, item := range domainCfg.Devices.Graphics {
 					if item.VNC != nil {
 						tmpl.VncPost = item.VNC.Port
+						break
 					}
 				}
 			}
