@@ -97,7 +97,7 @@ func (s *VmService) register(host interface{}) (resp []byte, ok bool) {
 		uri := "client/host/register"
 		url = _httpUtils.GenUrl(agentConf.Inst.Server, uri)
 	} else {
-		uri := "api.php/v1/host/register"
+		uri := "api.php/v1/host/heartbeat"
 		url = s.ZentaoService.GenUrl(agentConf.Inst.Server, uri)
 	}
 
