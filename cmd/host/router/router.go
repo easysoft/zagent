@@ -10,7 +10,8 @@ import (
 type Router struct {
 	api *iris.Application
 
-	JobCtrl *hostHandler.JobCtrl `inject:""`
+	SecurityCtrl *hostHandler.SecurityCtrl `inject:""`
+	JobCtrl      *hostHandler.JobCtrl      `inject:""`
 
 	KvmCtrl        *hostHandler.KvmCtrl        `inject:""`
 	VirtualBoxCtrl *hostHandler.VirtualBoxCtrl `inject:""`
@@ -33,6 +34,8 @@ func (r *Router) App() {
 		v1 := app.Party("/v1")
 		{
 			//v1.Use(core.Auth())
+
+			v1.Post("/refreshSecret", r.SecurityCtrl.RefreshSecret).Name = "创建任务"
 
 			v1.PartyFunc("/job", func(client iris.Party) {
 				client.Post("/add", r.JobCtrl.Add).Name = "创建任务"

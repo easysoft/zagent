@@ -64,8 +64,8 @@ func (s *HostService) Register(isBusy bool) {
 		},
 	}
 
-	if consts.AuthToken == "" || consts.ExpiredDate.Unix() < time.Now().Unix() {
-		host.Secret = agentConf.Inst.Secret
+	if consts.IsSecretChanged || consts.AuthToken == "" || consts.ExpiredDate.Unix() < time.Now().Unix() {
+		host.Secret = consts.AuthSecret
 	}
 
 	if isBusy {

@@ -6,8 +6,10 @@ import (
 )
 
 var (
-	AuthToken   = ""
-	ExpiredDate = time.Now()
+	AuthSecret      = ""
+	IsSecretChanged = true
+	AuthToken       = ""
+	ExpiredDate     = time.Now()
 
 	Verbose          = false
 	ExistVncPortMap  = sync.Map{}
