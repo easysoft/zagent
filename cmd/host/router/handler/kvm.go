@@ -2,6 +2,7 @@ package hostHandler
 
 import (
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
+	consts "github.com/easysoft/zv/internal/comm/const"
 	hostKvmService "github.com/easysoft/zv/internal/host/service/kvm"
 	_const "github.com/easysoft/zv/pkg/const"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
@@ -52,9 +53,9 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 
 	dom, vmVncPort, vmRawPath, vmBackingPath, err := c.LibvirtService.CreateVm(&req, true)
 
+	vmStatus := consts.VmLaunch
 	if err != nil {
-		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "fail to create kvm vm", err))
-		return
+		vmStatus = consts.VmFailCreate
 	}
 
 	vmName, _ := dom.GetName()
@@ -64,6 +65,7 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 		VncPort:     strconv.Itoa(vmVncPort),
 		ImagePath:   vmRawPath,
 		BackingPath: vmBackingPath,
+		Status:      vmStatus,
 	}
 
 	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to create vm", vm))

@@ -37,11 +37,12 @@ type KvmReqClone struct {
 }
 
 type KvmResp struct {
-	Name        string `json:"name"`
-	MacAddress  string `json:"macAddress"`
-	VncPort     string `json:"vncPort"`
-	ImagePath   string `json:"imagePath"`
-	BackingPath string `json:"backingPath"`
+	Name        string          `json:"name"`
+	MacAddress  string          `json:"macAddress"`
+	VncPort     string          `json:"vncPort"`
+	ImagePath   string          `json:"imagePath"`
+	BackingPath string          `json:"backingPath"`
+	Status      consts.VmStatus `json:"status"`
 }
 type KvmRespTempl struct {
 	Name string `json:"name"`
