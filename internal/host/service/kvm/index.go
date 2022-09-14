@@ -43,7 +43,7 @@ func NewLibvirtService() *LibvirtService {
 }
 
 func (s *LibvirtService) CreateVm(req *v1.KvmReq, removeSameName bool) (dom *libvirt.Domain,
-	vmVncPort int, vmRawPath, vmBackingPath string, err error) {
+	vmIp string, vmVncPort int, vmRawPath, vmBackingPath string, err error) {
 
 	reqMsg, err := json.Marshal(req)
 	_logUtils.Infof("%s", reqMsg)
@@ -106,6 +106,7 @@ func (s *LibvirtService) CreateVm(req *v1.KvmReq, removeSameName bool) (dom *lib
 	newDomCfg := &libvirtxml.Domain{}
 	err = newDomCfg.Unmarshal(newXml)
 
+	vmIp = newDomCfg.Devices.Interfaces[0].IP[0].Address
 	vmMacAddress = newDomCfg.Devices.Interfaces[0].MAC.Address
 	vmVncPort = newDomCfg.Devices.Graphics[0].VNC.Port
 

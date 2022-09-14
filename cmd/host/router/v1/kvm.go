@@ -38,6 +38,7 @@ type KvmReqClone struct {
 
 type KvmResp struct {
 	Name        string          `json:"name"`
+	IpAddress   string          `json:"macAddress"`
 	MacAddress  string          `json:"macAddress"`
 	VncPort     string          `json:"vncPort"`
 	ImagePath   string          `json:"imagePath"`
