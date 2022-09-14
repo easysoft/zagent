@@ -55,7 +55,9 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 
 	vmStatus := consts.VmLaunch
 	if err != nil {
-		vmStatus = consts.VmFailCreate
+		ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "fail to create vm", v1.KvmResp{
+			Status: consts.VmFailCreate,
+		}))
 	}
 
 	vmName, _ := dom.GetName()
