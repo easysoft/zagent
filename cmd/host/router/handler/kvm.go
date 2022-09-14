@@ -53,12 +53,14 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 
 	dom, vmIp, vmVncPort, vmRawPath, vmBackingPath, err := c.LibvirtService.CreateVm(&req, true)
 
+	vmName := req.VmUniqueName
 	vmStatus := consts.VmLaunch
-	if err != nil {
+	if err != nil || dom == nil {
 		vmStatus = consts.VmFailCreate
+	} else {
+		vmName, _ = dom.GetName()
 	}
 
-	vmName, _ := dom.GetName()
 	vm := v1.KvmResp{
 		Name:        vmName,
 		IpAddress:   vmIp,
