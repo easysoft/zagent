@@ -4,6 +4,7 @@ import (
 	"github.com/easysoft/zv/internal/comm/const"
 	"github.com/easysoft/zv/internal/comm/domain"
 	"github.com/libvirt/libvirt-go"
+	libvirtxml "github.com/libvirt/libvirt-go-xml"
 	"strings"
 	"time"
 )
@@ -44,6 +45,12 @@ func (s *VmService) GetVms() (vms []domain.Vm) {
 		} else if domainState == libvirt.DOMAIN_SHUTOFF || domainState == libvirt.DOMAIN_SHUTDOWN {
 			vm.Status = consts.VmShutOff
 		}
+
+		// get vm info
+		newXml, _ := dom.GetXMLDesc(0)
+		newDomCfg := &libvirtxml.Domain{}
+		newDomCfg.Unmarshal(newXml)
+		vm.Ip = newDomCfg.Devices.Interfaces[0].IP[0].Address
 
 		vms = append(vms, vm)
 	}
