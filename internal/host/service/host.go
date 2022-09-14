@@ -78,7 +78,7 @@ func (s *HostService) Register(isBusy bool) {
 		respObj := v1.HostRegisterResp{}
 		err := json.Unmarshal(respBytes, &respObj)
 		if err == nil {
-			consts.AuthToken = respObj.Data.Token
+			consts.AuthToken = respObj.Token
 		}
 	}
 

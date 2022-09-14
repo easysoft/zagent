@@ -5,8 +5,7 @@ import (
 	"errors"
 	"fmt"
 	consts "github.com/easysoft/zv/internal/comm/const"
-	agentUtils "github.com/easysoft/zv/internal/pkg/utils/common"
-	_const "github.com/easysoft/zv/pkg/const"
+	"github.com/easysoft/zv/internal/pkg/utils/common"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"github.com/fatih/color"
 	"io/ioutil"
@@ -31,6 +30,8 @@ func Get(url string) (ret []byte, err error) {
 		_logUtils.Infof(color.RedString("get request failed, error: %s.", err.Error()))
 		return
 	}
+
+	commonUtils.AddBearTokenIfNeeded(req)
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -93,9 +94,7 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 	//req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	if strings.Index(url, "api.php") > -1 {
-		req.Header.Set(_const.Authorization, agentUtils.GenAuthorization())
-	}
+	commonUtils.AddBearTokenIfNeeded(req)
 
 	resp, err := client.Do(req)
 	if err != nil {
