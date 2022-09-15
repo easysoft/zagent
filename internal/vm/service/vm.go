@@ -18,10 +18,6 @@ import (
 	"time"
 )
 
-const (
-	hostIpInNatNetwork = "192.168.122.1"
-)
-
 type VmService struct {
 	VmMapVar  map[string]domain.Vm
 	TimeStamp int64
@@ -127,7 +123,7 @@ func (s *VmService) register(host interface{}) (resp []byte, ok bool) {
 
 func (s *VmService) getSecret() (err error) {
 	uri := "api/v1/register/security/vmGetSecret"
-	url := _httpUtils.GenUrl(fmt.Sprintf("http://%s/", hostIpInNatNetwork), uri)
+	url := _httpUtils.GenUrl(fmt.Sprintf("http://%s/", consts.KvmHostIpInNatNetwork), uri)
 
 	_, macObj := _commonUtils.GetIp()
 	data := domain.SecurityReq{

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
 	agentConf "github.com/easysoft/zv/internal/agent/conf"
+	natHelper "github.com/easysoft/zv/internal/agent/utils/nat"
 	"github.com/easysoft/zv/internal/comm/const"
 	"github.com/easysoft/zv/internal/comm/domain"
 	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
@@ -45,7 +46,7 @@ func NewLibvirtService() *LibvirtService {
 }
 
 func (s *LibvirtService) CreateVm(req *v1.KvmReq, removeSameName bool) (dom *libvirt.Domain,
-	vmIp string, vmVncPort int, vmRawPath, vmBackingPath string, err error) {
+	vmIp string, vmVncPort, vmAgentPortMapped int, vmRawPath, vmBackingPath string, err error) {
 
 	reqMsg, err := json.Marshal(req)
 	_logUtils.Infof("%s", reqMsg)
@@ -107,6 +108,14 @@ func (s *LibvirtService) CreateVm(req *v1.KvmReq, removeSameName bool) (dom *lib
 	vmMacAddress = newDomCfg.Devices.Interfaces[0].MAC.Address
 	vmVncPort = newDomCfg.Devices.Graphics[0].VNC.Port
 	vmIp, _ = s.VmService.GetVmIpByMac(vmMacAddress)
+
+	// map vm agent port to host
+	vmAgentPortMapped, err = natHelper.GetValidPort()
+	if err != nil {
+		return
+	}
+
+	err = natHelper.ForwardPort(vmIp, consts.AgentServicePost, agentConf.Inst.NodeIp, vmAgentPortMapped)
 
 	return
 }

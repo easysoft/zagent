@@ -16,7 +16,7 @@ type Router struct {
 	KvmCtrl        *hostHandler.KvmCtrl        `inject:""`
 	VirtualBoxCtrl *hostHandler.VirtualBoxCtrl `inject:""`
 	VmWareCtrl     *hostHandler.VmWareCtrl     `inject:""`
-	VncCtrl        *hostHandler.VncCtrl        `inject:""`
+	VirtualCtrl    *hostHandler.VirtualCtrl    `inject:""`
 	MultiPassCtrl  *hostHandler.MultiPassCtrl  `inject:""`
 }
 
@@ -42,8 +42,10 @@ func (r *Router) App() {
 			v1.PartyFunc("/job", func(client iris.Party) {
 				client.Post("/add", r.JobCtrl.Add).Name = "创建任务"
 			})
-			v1.PartyFunc("/vnc", func(client iris.Party) {
-				client.Get("/getToken", r.VncCtrl.GetToken).Name = "获取VNC的Token"
+
+			v1.PartyFunc("/virtual", func(client iris.Party) {
+				client.Post("/mapVmPort", r.VirtualCtrl.MapVmPort).Name = "映射虚机端口到宿主机"
+				client.Get("/getVncToken", r.VirtualCtrl.GetToken).Name = "获取VNC的Token"
 			})
 
 			v1.PartyFunc("/kvm", func(client iris.Party) {

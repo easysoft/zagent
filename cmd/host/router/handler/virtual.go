@@ -1,27 +1,44 @@
 package hostHandler
 
 import (
+	v1 "github.com/easysoft/zv/cmd/host/router/v1"
 	hostAgentService "github.com/easysoft/zv/internal/host/service"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	"github.com/kataras/iris/v12"
 )
 
-type VncCtrl struct {
+type VirtualCtrl struct {
 	SetupService *hostAgentService.SetupService `inject:""`
 }
 
-func NewVncCtrl() *VncCtrl {
-	return &VncCtrl{}
+func NewVirtualCtrl() *VirtualCtrl {
+	return &VirtualCtrl{}
+}
+
+func (c *VirtualCtrl) MapVmPort(ctx iris.Context) {
+	req := v1.VmPortMapReq{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		return
+	}
+
+	resp, err := c.SetupService.MapVmPort(req)
+	if err != nil {
+		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		return
+	}
+
+	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success", resp))
 }
 
 // GetToken
 // @summary 根据VNC Port获取Token
 // @Accept json
 // @Produce json
-// @Param port query string true "Vnc Port"
+// @Param port query string true "Virtual Port"
 // @Success 200 {object} _httpUtils.Response{iris.Map} "code = success? 1 : 0"
 // @Router /api/v1/vnc/getToken [get]
-func (c *VncCtrl) GetToken(ctx iris.Context) {
+func (c *VirtualCtrl) GetToken(ctx iris.Context) {
 	port := ctx.URLParam("port")
 
 	if port == "" {

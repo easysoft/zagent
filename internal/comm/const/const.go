@@ -32,4 +32,7 @@ const (
 	ResDownDir        = "down"
 	ResDriverDir      = "driver"
 	ResDriverName     = "driver"
+
+	KvmHostIpInNatNetwork = "192.168.122.1"
+	AgentServicePost      = 8086
 )

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
 	agentConf "github.com/easysoft/zv/internal/agent/conf"
+	natHelper "github.com/easysoft/zv/internal/agent/utils/nat"
 	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
 	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
 	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
@@ -25,6 +26,21 @@ func NewSetupService() *SetupService {
 	srv.LaunchNoVNCService()
 
 	return &srv
+}
+
+func (s *SetupService) MapVmPort(req v1.VmPortMapReq) (resp v1.VmPortMapResp, err error) {
+	resp.HostPort, err = natHelper.GetValidPort()
+	if err != nil {
+		return
+	}
+
+	resp.VmIp = req.VmIp
+	resp.VmPort = req.VmPort
+	resp.HostIp = req.HostIp
+
+	natHelper.ForwardPort(req.VmIp, req.VmPort, req.HostIp, resp.HostPort)
+
+	return
 }
 
 func (s *SetupService) LaunchWebsockifyService() (ret v1.VncTokenResp) {
