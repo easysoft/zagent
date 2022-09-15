@@ -61,6 +61,7 @@ type Config struct {
 	NodePort   int                `yaml:"port"`
 	MacAddress string
 
+	Secret   string
 	Language string
 	NodeName string
 	WorkDir  string

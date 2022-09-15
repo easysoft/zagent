@@ -1,11 +1,16 @@
 package hostHandler
 
 import (
-	v1 "github.com/easysoft/zv/cmd/host/router/v1"
+	agentConf "github.com/easysoft/zv/internal/agent/conf"
 	"github.com/easysoft/zv/internal/agent/service"
-	consts "github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/comm/domain"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	"github.com/kataras/iris/v12"
+	"sync"
+)
+
+var (
+	vmMacMap = sync.Map{}
 )
 
 type SecurityCtrl struct {
@@ -16,16 +21,20 @@ func NewSecurityCtrl() *JobCtrl {
 	return &JobCtrl{}
 }
 
-func (c *SecurityCtrl) RefreshSecret(ctx iris.Context) {
-	req := v1.SecurityReq{}
+func (c *SecurityCtrl) VmGetSecret(ctx iris.Context) {
+	req := domain.SecurityReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
 		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
 
-	consts.AuthSecret = req.Secret
-	consts.IsSecretChanged = true
+	data := domain.SecurityResp{}
 
-	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to refresh secret", nil))
+	mac, ok := vmMacMap.Load(req.MacAddress)
+	if ok && mac != "" {
+		data.Secret = agentConf.Inst.Secret
+	}
+
+	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to refresh secret", data))
 	return
 }

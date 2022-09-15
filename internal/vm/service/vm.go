@@ -2,18 +2,24 @@ package vmAgentService
 
 import (
 	"encoding/json"
-	v1 "github.com/easysoft/zv/cmd/server/router/v1"
+	"errors"
+	"fmt"
 	"github.com/easysoft/zv/internal/agent/conf"
 	agentService "github.com/easysoft/zv/internal/agent/service"
 	testingService "github.com/easysoft/zv/internal/agent/service/testing"
 	agentZentaoService "github.com/easysoft/zv/internal/agent/service/zentao"
 	"github.com/easysoft/zv/internal/comm/const"
 	"github.com/easysoft/zv/internal/comm/domain"
+	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	_i118Utils "github.com/easysoft/zv/pkg/lib/i118"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"strings"
 	"time"
+)
+
+const (
+	hostIpInNatNetwork = "192.168.122.1"
 )
 
 type VmService struct {
@@ -72,11 +78,23 @@ func (s *VmService) Register(isBusy bool) (ok bool) {
 		vm.Status = consts.VmReady
 	}
 
+	if consts.AuthSecret == "" || consts.AuthToken == "" || consts.ExpiredDate.Unix() < time.Now().Unix() { // re-apply token using secret
+		s.getSecret()
+		vm.Secret = consts.AuthSecret
+	}
+
 	respBytes, ok := s.register(vm)
 
-	respObj := v1.HostRegisterResp{}
-	json.Unmarshal(respBytes, &respObj)
-	consts.AuthToken = respObj.Data.Token
+	if ok {
+		respObj := domain.RegisterResp{}
+		err := json.Unmarshal(respBytes, &respObj)
+		if err == nil {
+			if respObj.Token != "" {
+				consts.AuthToken = respObj.Token
+				consts.ExpiredDate = respObj.ExpiredDate
+			}
+		}
+	}
 
 	if consts.AuthToken == "" {
 		ok = false
@@ -94,15 +112,45 @@ func (s *VmService) Register(isBusy bool) (ok bool) {
 func (s *VmService) register(host interface{}) (resp []byte, ok bool) {
 	var url string
 	if strings.Index(agentConf.Inst.Server, ":8085") > -1 {
-		uri := "client/host/register"
+		uri := "client/vm/register"
 		url = _httpUtils.GenUrl(agentConf.Inst.Server, uri)
 	} else {
-		uri := "api.php/v1/host/register"
+		uri := "api.php/v1/vm/register"
 		url = s.ZentaoService.GenUrl(agentConf.Inst.Server, uri)
 	}
 
 	resp, err := _httpUtils.Post(url, host)
 	ok = err == nil
+
+	return
+}
+
+func (s *VmService) getSecret() (err error) {
+	uri := "api/v1/register/security/vmGetSecret"
+	url := _httpUtils.GenUrl(fmt.Sprintf("http://%s/", hostIpInNatNetwork), uri)
+
+	_, macObj := _commonUtils.GetIp()
+	data := domain.SecurityReq{
+		MacAddress: macObj.String(),
+	}
+
+	bytes, err := _httpUtils.Post(url, data)
+	if err != nil {
+		return
+	}
+
+	resp := domain.SecurityResp{}
+
+	err = json.Unmarshal(bytes, &resp)
+	if err != nil {
+		return
+	}
+
+	consts.AuthSecret = resp.Secret
+	if consts.AuthSecret == "" {
+		err = errors.New("secret is empty")
+		return
+	}
 
 	return
 }

@@ -40,4 +40,6 @@ type Vm struct {
 	CdromDriver      string `json:"cdromDriver"`
 	ResolutionHeight int    `json:"resolutionHeight"`
 	ResolutionWidth  int    `json:"resolutionWidth"`
+
+	Secret string `json:"secret" yaml:"secret"`
 }

@@ -2,7 +2,6 @@ package hostAgentService
 
 import (
 	"encoding/json"
-	v1 "github.com/easysoft/zv/cmd/server/router/v1"
 	agentConf "github.com/easysoft/zv/internal/agent/conf"
 	agentService "github.com/easysoft/zv/internal/agent/service"
 	testingService "github.com/easysoft/zv/internal/agent/service/testing"
@@ -64,8 +63,8 @@ func (s *HostService) Register(isBusy bool) {
 		},
 	}
 
-	if consts.IsSecretChanged || consts.AuthToken == "" || consts.ExpiredDate.Unix() < time.Now().Unix() {
-		host.Secret = consts.AuthSecret
+	if consts.AuthToken == "" || consts.ExpiredDate.Unix() < time.Now().Unix() { // re-apply token using secret
+		host.Secret = agentConf.Inst.Secret
 	}
 
 	if isBusy {
@@ -80,7 +79,7 @@ func (s *HostService) Register(isBusy bool) {
 	respBytes, ok := s.register(host)
 
 	if ok {
-		respObj := v1.HostRegisterResp{}
+		respObj := domain.RegisterResp{}
 		err := json.Unmarshal(respBytes, &respObj)
 		if err == nil {
 			if respObj.Token != "" {

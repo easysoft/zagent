@@ -35,7 +35,9 @@ func (r *Router) App() {
 		{
 			//v1.Use(core.Auth())
 
-			v1.Post("/refreshSecret", r.SecurityCtrl.RefreshSecret).Name = "创建任务"
+			v1.PartyFunc("/security", func(client iris.Party) {
+				client.Post("/vmGetSecret", r.SecurityCtrl.VmGetSecret).Name = "虚拟机用Mac地址请求安全码"
+			})
 
 			v1.PartyFunc("/job", func(client iris.Party) {
 				client.Post("/add", r.JobCtrl.Add).Name = "创建任务"
