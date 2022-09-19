@@ -78,6 +78,8 @@ func (s *HostService) Register(isBusy bool) {
 	s.VmService.UpdateVmMapAndDestroyTimeout(host.Vms)
 
 	respBytes, ok := s.register(host)
+	hostBytes, _ := json.Marshal(host)
+	_logUtils.Info(string(hostBytes))
 
 	if ok {
 		respObj := domain.RegisterResp{}
