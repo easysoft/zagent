@@ -84,13 +84,10 @@ func (s *HostService) Register(isBusy bool) {
 	if ok {
 		respObj := domain.RegisterResp{}
 		err := json.Unmarshal(respBytes, &respObj)
-		if err == nil {
+		if err == nil && respObj.Token != "" {
 			respObj.ExpiredDate, _ = _dateUtils.UnitToDate(respObj.ExpiredTimeUnix)
-
-			if respObj.Token != "" {
-				consts.AuthToken = respObj.Token
-				consts.ExpiredDate = respObj.ExpiredDate
-			}
+			consts.AuthToken = respObj.Token
+			consts.ExpiredDate = respObj.ExpiredDate
 		}
 	}
 
