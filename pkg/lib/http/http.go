@@ -91,8 +91,8 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 		return
 	}
 
-	//req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("Content-Type", "application/json")
+	//req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	commonUtils.AddBearTokenIfNeeded(req)
 
