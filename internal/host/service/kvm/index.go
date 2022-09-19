@@ -114,14 +114,13 @@ func (s *LibvirtService) CreateVm(req *v1.KvmReq, removeSameName bool) (dom *lib
 	if err != nil {
 		return
 	}
-
 	err = natHelper.ForwardPort(vmIp, consts.AgentServicePost, agentConf.Inst.NodeIp, vmAgentPortMapped)
 
 	return
 }
 
 func (s *LibvirtService) CloneVm(req *v1.KvmReqClone, removeSameName bool) (dom *libvirt.Domain,
-	vmVncPort int, vmRawPath, vmBackingPath string, err error) {
+	vmIp string, vmVncPort, vmAgentPortMapped int, vmRawPath, vmBackingPath string, err error) {
 
 	reqMsg, err := json.Marshal(req)
 	_logUtils.Infof("%s", reqMsg)
@@ -187,17 +186,21 @@ func (s *LibvirtService) CloneVm(req *v1.KvmReqClone, removeSameName bool) (dom 
 		return
 	}
 
-	newXml := ""
-	newXml, err = dom.GetXMLDesc(0)
-	if err != nil {
-		return
-	}
-
+	// get new vm info
+	newXml, _ := dom.GetXMLDesc(0)
 	newDomCfg := &libvirtxml.Domain{}
-	err = newDomCfg.Unmarshal(newXml)
+	newDomCfg.Unmarshal(newXml)
 
 	vmMacAddress = newDomCfg.Devices.Interfaces[0].MAC.Address
 	vmVncPort = newDomCfg.Devices.Graphics[0].VNC.Port
+	vmIp, _ = s.VmService.GetVmIpByMac(vmMacAddress)
+
+	// map vm agent port to host
+	vmAgentPortMapped, err = natHelper.GetValidPort()
+	if err != nil {
+		return
+	}
+	err = natHelper.ForwardPort(vmIp, consts.AgentServicePost, agentConf.Inst.NodeIp, vmAgentPortMapped)
 
 	return
 }

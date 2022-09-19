@@ -40,7 +40,9 @@ type KvmResp struct {
 	Name        string          `json:"name"`
 	IpAddress   string          `json:"macAddress"`
 	MacAddress  string          `json:"macAddress"`
-	VncPort     string          `json:"vncPort"`
+	AgentPort   int             `json:"agentPort"`
+	VncPort     int             `json:"vncPort"`
+	VncUrl      string          `json:"vncUrl"`
 	ImagePath   string          `json:"imagePath"`
 	BackingPath string          `json:"backingPath"`
 	Status      consts.VmStatus `json:"status"`

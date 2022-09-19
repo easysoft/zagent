@@ -35,14 +35,20 @@ func GetValidPort() (ret int, err error) {
 
 func ForwardPort(vmIp string, vmPort int, hostIp string, hostPort int) (err error) {
 	/**
-	sudo iptables -A INPUT -p tcp --dport 58086 -j ACCEPT
-	sudo iptables -t nat -A PREROUTING -d 10.0.7.248 -p tcp -m tcp --dport 58086 -j DNAT --to-destination 192.168.122.212:8086
-	sudo iptables -t nat -A POSTROUTING -s 192.168.122.0/255.255.255.0 -d 192.168.122.212 -p tcp -m tcp --dport 8086 -j SNAT --to-source 192.168.122.1
+	sudo iptables -A INPUT -p tcp --dport 54000 -j ACCEPT
+	sudo iptables -t nat -A PREROUTING -d 192.168.0.56 -p tcp -m tcp --dport 54000 -j DNAT --to-destination 192.168.122.79:4000
+	sudo iptables -t nat -A POSTROUTING -s 192.168.122.0/255.255.255.0 -d 192.168.122.79 -p tcp -m tcp --dport 4000 -j SNAT --to-source 192.168.122.1
 
 	sudo iptables -t nat  -L -n --line-number
 	sudo iptables -D FORWARD 14 -t filter
 	sudo ufw disable && sudo ufw enable
 	sudo sysctl -a | grep forward
+
+	sudo sysctl -w net.ipv4.ip_forward=1
+	sudo modprobe br_netfilter
+	sudo sysctl -w net.bridge.bridge-nf-call-iptables=1
+	net.bridge.bridge-nf-call-iptables = 1
+	sudo lsmod |grep br_netfilter
 	*/
 
 	cmd := fmt.Sprintf(`sudo iptables -A INPUT -p tcp --dport %d -j ACCEPT`, hostPort)
@@ -85,7 +91,7 @@ func RemoveForwardByVm(vmIp string, vmPort int, hostIp string, hostPort int) (er
 
 	_logUtils.Info(output)
 
-	// sudo iptables -t nat  -L -n --line-number | grep 192.168.122.212 | awk '{print $1}'
+	// sudo iptables -t nat  -L -n --line-number | grep 192.168.122.79 | awk '{print $1}'
 	cmd = fmt.Sprintf(`sudo iptables -t nat  -L -n --line-number | grep %s | awk '{print $1}'`, vmIp)
 	output, err = _shellUtils.ExeSysCmd(cmd)
 	if err != nil {

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/easysoft/zv/internal/comm/const"
 	"github.com/easysoft/zv/internal/comm/domain"
-	"github.com/easysoft/zv/internal/pkg/const"
-	"github.com/easysoft/zv/internal/pkg/lib/rpc"
+	_const "github.com/easysoft/zv/pkg/const"
+	_rpcUtils "github.com/easysoft/zv/pkg/lib/rpc"
 	"log"
 	"testing"
 )

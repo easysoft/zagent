@@ -7,7 +7,6 @@ import (
 	_const "github.com/easysoft/zv/pkg/const"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	"github.com/kataras/iris/v12"
-	"strconv"
 )
 
 type KvmCtrl struct {
@@ -51,7 +50,7 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 		return
 	}
 
-	dom, vmIp, vmVncPort, vmRawPath, vmBackingPath, err := c.LibvirtService.CreateVm(&req, true)
+	dom, vmIp, vmVncPort, vmAgentPortMapped, vmRawPath, vmBackingPath, err := c.LibvirtService.CreateVm(&req, true)
 
 	vmName := req.VmUniqueName
 	vmStatus := consts.VmLaunch
@@ -65,7 +64,8 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 		Name:        vmName,
 		IpAddress:   vmIp,
 		MacAddress:  req.VmMacAddress,
-		VncPort:     strconv.Itoa(vmVncPort),
+		AgentPort:   vmAgentPortMapped,
+		VncPort:     vmVncPort,
 		ImagePath:   vmRawPath,
 		BackingPath: vmBackingPath,
 		Status:      vmStatus,
@@ -96,7 +96,7 @@ func (c *KvmCtrl) Clone(ctx iris.Context) {
 		return
 	}
 
-	dom, vmVncPort, vmRawPath, vmBackingPath, err := c.LibvirtService.CloneVm(&req, true)
+	dom, vmIp, vmVncPort, vmAgentPortMapped, vmRawPath, vmBackingPath, err := c.LibvirtService.CloneVm(&req, true)
 
 	if err != nil {
 		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "fail to clone vm", err))
@@ -106,8 +106,10 @@ func (c *KvmCtrl) Clone(ctx iris.Context) {
 	vmName, _ := dom.GetName()
 	vm := v1.KvmResp{
 		Name:        vmName,
+		IpAddress:   vmIp,
 		MacAddress:  req.VmMacAddress,
-		VncPort:     strconv.Itoa(vmVncPort),
+		AgentPort:   vmAgentPortMapped,
+		VncPort:     vmVncPort,
 		ImagePath:   vmRawPath,
 		BackingPath: vmBackingPath,
 	}
