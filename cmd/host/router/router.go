@@ -2,6 +2,7 @@ package hostRouter
 
 import (
 	hostHandler "github.com/easysoft/zv/cmd/host/router/handler"
+	"github.com/easysoft/zv/internal/agent/core"
 	serverConf "github.com/easysoft/zv/internal/server/conf"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	"github.com/kataras/iris/v12"
@@ -33,7 +34,7 @@ func (r *Router) App() {
 	{
 		v1 := app.Party("/v1")
 		{
-			//v1.Use(core.Auth())
+			v1.Use(core.Auth())
 
 			v1.PartyFunc("/security", func(client iris.Party) {
 				client.Post("/vmGetSecret", r.SecurityCtrl.VmGetSecret).Name = "虚拟机用Mac地址请求安全码"
