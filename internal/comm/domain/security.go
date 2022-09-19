@@ -12,6 +12,6 @@ type SecurityResp struct {
 
 type RegisterResp struct {
 	Token           string    `json:"token" yaml:"token"`
-	ExpiredTimeUnix int64     `json:"expiredTime" yaml:"expiredTime"`
+	ExpiredTimeUnix int64     `json:"expiredTimeUnix" yaml:"expiredTimeUnix"`
 	ExpiredDate     time.Time `json:"expiredDate" yaml:"expiredDate"`
 }
