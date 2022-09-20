@@ -80,7 +80,7 @@ func (s *VmService) Register(isBusy bool) (ok bool) {
 		vm.Secret, vm.Ip, err = s.notifyHost()
 
 		if err != nil {
-			_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_notify", agentConf.Inst.Server, err.Error()))
+			_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_notify", err.Error()))
 			return
 		}
 	}

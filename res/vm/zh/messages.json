@@ -15,7 +15,7 @@
     },
     {
       "id": "fail_to_notify",
-      "translation": "虚机通知宿主机请求失败，响应%v。"
+      "translation": "虚机通知宿主机请求失败，错误%s。"
     },
     {
       "id": "start_server",
