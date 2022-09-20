@@ -2,12 +2,13 @@ package domain
 
 import "time"
 
-type SecurityReq struct {
+type VmNotifyReq struct {
 	MacAddress string `json:"macAddress"`
 }
 
-type SecurityResp struct {
+type VmNotifyResp struct {
 	Secret string `json:"secret"`
+	Ip     string `json:"ip"`
 }
 
 type RegisterResp struct {

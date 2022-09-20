@@ -75,8 +75,13 @@ func (s *VmService) Register(isBusy bool) (ok bool) {
 	}
 
 	if consts.AuthSecret == "" || consts.AuthToken == "" || consts.ExpiredDate.Unix() < time.Now().Unix() { // re-apply token using secret
-		s.getSecret()
-		vm.Secret = consts.AuthSecret
+		var err error
+		vm.Secret, vm.Ip, err = s.notifyHost()
+
+		if err != nil {
+			_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_notify", agentConf.Inst.Server, err.Error()))
+			return
+		}
 	}
 
 	respBytes, ok := s.register(vm)
@@ -121,12 +126,12 @@ func (s *VmService) register(host interface{}) (resp []byte, ok bool) {
 	return
 }
 
-func (s *VmService) getSecret() (err error) {
-	uri := "api/v1/register/security/vmGetSecret"
+func (s *VmService) notifyHost() (secret, ip string, err error) {
+	uri := "api/v1/virtual/security/notifyHost"
 	url := _httpUtils.GenUrl(fmt.Sprintf("http://%s/", consts.KvmHostIpInNatNetwork), uri)
 
 	_, macObj := _commonUtils.GetIp()
-	data := domain.SecurityReq{
+	data := domain.VmNotifyReq{
 		MacAddress: macObj.String(),
 	}
 
@@ -135,15 +140,16 @@ func (s *VmService) getSecret() (err error) {
 		return
 	}
 
-	resp := domain.SecurityResp{}
+	resp := domain.VmNotifyResp{}
 
 	err = json.Unmarshal(bytes, &resp)
 	if err != nil {
 		return
 	}
 
-	consts.AuthSecret = resp.Secret
-	if consts.AuthSecret == "" {
+	secret = resp.Secret
+	ip = resp.Ip
+	if secret == "" {
 		err = errors.New("secret is empty")
 		return
 	}

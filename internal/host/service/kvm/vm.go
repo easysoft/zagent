@@ -10,22 +10,22 @@ import (
 	"time"
 )
 
-type VmService struct {
+type KvmService struct {
 	VmMapVar  map[string]domain.Vm
 	TimeStamp int64
 
 	LibvirtService *LibvirtService `inject:""`
 }
 
-func NewVmService() *VmService {
-	s := VmService{}
+func NewVmService() *KvmService {
+	s := KvmService{}
 	s.TimeStamp = time.Now().Unix()
 	s.VmMapVar = map[string]domain.Vm{}
 
 	return &s
 }
 
-func (s *VmService) GetVms() (vms []domain.Vm) {
+func (s *KvmService) GetVms() (vms []domain.Vm) {
 	domains := s.LibvirtService.ListVm()
 
 	for _, dom := range domains {
@@ -60,7 +60,7 @@ func (s *VmService) GetVms() (vms []domain.Vm) {
 	return vms
 }
 
-func (s *VmService) UpdateVmMapAndDestroyTimeout(vms []domain.Vm) {
+func (s *KvmService) UpdateVmMapAndDestroyTimeout(vms []domain.Vm) {
 	names := map[string]bool{}
 
 	for _, vm := range vms {
@@ -95,7 +95,7 @@ func (s *VmService) UpdateVmMapAndDestroyTimeout(vms []domain.Vm) {
 	}
 }
 
-func (s *VmService) getKeys(m map[string]domain.Vm) []string {
+func (s *KvmService) getKeys(m map[string]domain.Vm) []string {
 	keys := make([]string, 0, len(m))
 	for k := range m {
 		keys = append(keys, k)
@@ -103,7 +103,7 @@ func (s *VmService) getKeys(m map[string]domain.Vm) []string {
 	return keys
 }
 
-func (s *VmService) GetVmIpByMac(macAddress string) (ip string, err error) {
+func (s *KvmService) GetVmIpByMac(macAddress string) (ip string, err error) {
 	cmd := `virsh net-dhcp-leases default | grep ipv4 | awk '{print $3,$5 }'`
 
 	out, err := _shellUtils.ExeSysCmd(cmd)

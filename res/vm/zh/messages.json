@@ -14,6 +14,10 @@
       "translation": "注册失败%s，响应%v。"
     },
     {
+      "id": "fail_to_notify",
+      "translation": "虚机通知宿主机请求失败，响应%v。"
+    },
+    {
       "id": "start_server",
       "translation": "启动服务器%s 。。。"
     },

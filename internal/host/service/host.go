@@ -18,7 +18,7 @@ import (
 )
 
 type HostService struct {
-	VmService *hostKvmService.VmService `inject:""`
+	VmService *hostKvmService.KvmService `inject:""`
 
 	JobService  *agentService.JobService   `inject:""`
 	TestService *testingService.RunService `inject:""`

@@ -10,8 +10,7 @@ import (
 type Router struct {
 	api *iris.Application
 
-	SecurityCtrl *hostHandler.SecurityCtrl `inject:""`
-	JobCtrl      *hostHandler.JobCtrl      `inject:""`
+	JobCtrl *hostHandler.JobCtrl `inject:""`
 
 	KvmCtrl        *hostHandler.KvmCtrl        `inject:""`
 	VirtualBoxCtrl *hostHandler.VirtualBoxCtrl `inject:""`
@@ -35,15 +34,13 @@ func (r *Router) App() {
 		{
 			//v1.Use(core.Auth())
 
-			v1.PartyFunc("/security", func(client iris.Party) {
-				client.Post("/vmGetSecret", r.SecurityCtrl.VmGetSecret).Name = "虚拟机用Mac地址请求安全码"
-			})
-
 			v1.PartyFunc("/job", func(client iris.Party) {
 				client.Post("/add", r.JobCtrl.Add).Name = "创建任务"
 			})
 
 			v1.PartyFunc("/virtual", func(client iris.Party) {
+				client.Post("/notifyHost", r.VirtualCtrl.NotifyHost).Name = "虚拟机用Mac地址请求安全码"
+
 				client.Post("/mapVmPort", r.VirtualCtrl.MapVmPort).Name = "映射虚机端口到宿主机"
 				client.Get("/getVncToken", r.VirtualCtrl.GetToken).Name = "获取VNC的Token"
 			})

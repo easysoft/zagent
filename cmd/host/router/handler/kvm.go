@@ -10,7 +10,7 @@ import (
 )
 
 type KvmCtrl struct {
-	VmService      *hostKvmService.VmService      `inject:""`
+	VmService      *hostKvmService.KvmService     `inject:""`
 	LibvirtService *hostKvmService.LibvirtService `inject:""`
 }
 
@@ -50,7 +50,7 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 		return
 	}
 
-	dom, vmIp, vmVncPort, vmAgentPortMapped, vmRawPath, vmBackingPath, err := c.LibvirtService.CreateVm(&req, true)
+	dom, vmVncPort, vmAgentPortMapped, vmRawPath, vmBackingPath, err := c.LibvirtService.CreateVm(&req, true)
 
 	vmName := req.VmUniqueName
 	vmStatus := consts.VmLaunch
@@ -62,7 +62,6 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 
 	vm := v1.KvmResp{
 		Name:        vmName,
-		IpAddress:   vmIp,
 		MacAddress:  req.VmMacAddress,
 		AgentPort:   vmAgentPortMapped,
 		VncPort:     vmVncPort,

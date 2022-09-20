@@ -28,7 +28,7 @@ const (
 type LibvirtService struct {
 	LibvirtConn *libvirt.Connect
 	QemuService *QemuService `inject:""`
-	VmService   *VmService   `inject:""`
+	VmService   *KvmService  `inject:""`
 }
 
 func NewLibvirtService() *LibvirtService {
@@ -45,8 +45,8 @@ func NewLibvirtService() *LibvirtService {
 	return s
 }
 
-func (s *LibvirtService) CreateVm(req *v1.KvmReq, removeSameName bool) (dom *libvirt.Domain,
-	vmIp string, vmVncPort, vmAgentPortMapped int, vmRawPath, vmBackingPath string, err error) {
+func (s *LibvirtService) CreateVm(req *v1.KvmReq, removeSameName bool) (
+	dom *libvirt.Domain, vmVncPort, vmAgentPortMapped int, vmRawPath, vmBackingPath string, err error) {
 
 	reqMsg, err := json.Marshal(req)
 	_logUtils.Infof("%s", reqMsg)
@@ -107,14 +107,6 @@ func (s *LibvirtService) CreateVm(req *v1.KvmReq, removeSameName bool) (dom *lib
 
 	vmMacAddress = newDomCfg.Devices.Interfaces[0].MAC.Address
 	vmVncPort = newDomCfg.Devices.Graphics[0].VNC.Port
-	vmIp, _ = s.VmService.GetVmIpByMac(vmMacAddress)
-
-	// map vm agent port to host
-	vmAgentPortMapped, err = natHelper.GetValidPort()
-	if err != nil {
-		return
-	}
-	err = natHelper.ForwardPort(vmIp, consts.AgentServicePost, agentConf.Inst.NodeIp, vmAgentPortMapped)
 
 	return
 }
