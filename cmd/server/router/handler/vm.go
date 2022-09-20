@@ -8,6 +8,7 @@ import (
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"github.com/kataras/iris/v12"
+	"net/http"
 )
 
 type VmCtrl struct {
@@ -38,12 +39,12 @@ func (c *VmCtrl) Register(ctx iris.Context) {
 	_logUtils.Infof("%v", str)
 
 	success := c.AssertService.RegisterVm(req)
-	code := _const.ResultFail
-	if success {
-		code = _const.ResultSuccess
+	if !success {
+		ctx.StopWithJSON(http.StatusInternalServerError, "register fail")
+		return
 	}
 
-	data := iris.Map{"token": "123"}
-	_, _ = ctx.JSON(_httpUtils.ApiRes(code, "操作成功", data))
+	_, _ = ctx.JSON(iris.Map{"token": "123"})
+
 	return
 }
