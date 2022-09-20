@@ -11,6 +11,7 @@ import (
 	"github.com/easysoft/zv/internal/comm/const"
 	"github.com/easysoft/zv/internal/comm/domain"
 	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
+	_dateUtils "github.com/easysoft/zv/pkg/lib/date"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	_i118Utils "github.com/easysoft/zv/pkg/lib/i118"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
@@ -89,11 +90,10 @@ func (s *VmService) Register(isBusy bool) (ok bool) {
 	if ok {
 		respObj := domain.RegisterResp{}
 		err := json.Unmarshal(respBytes, &respObj)
-		if err == nil {
-			if respObj.Token != "" {
-				consts.AuthToken = respObj.Token
-				consts.ExpiredDate = respObj.ExpiredDate
-			}
+		if err == nil && respObj.Token != "" {
+			respObj.ExpiredDate, _ = _dateUtils.UnitToDate(respObj.ExpiredTimeUnix)
+			consts.AuthToken = respObj.Token
+			consts.ExpiredDate = respObj.ExpiredDate
 		}
 	}
 
