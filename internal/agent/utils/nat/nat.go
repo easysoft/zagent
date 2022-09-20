@@ -17,10 +17,7 @@ const (
 
 func GetValidPort() (ret int, err error) {
 	cmd := fmt.Sprintf(`netstat -tln | awk '{print $4}' | grep -o ':51[0-9]\{3\}'`)
-	output, err := _shellUtils.ExeSysCmd(cmd)
-	if err != nil {
-		return
-	}
+	output, _ := _shellUtils.ExeSysCmd(cmd)
 
 	list := strings.Split(output, "\n")
 
