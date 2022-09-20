@@ -8,7 +8,8 @@ import (
 )
 
 type Router struct {
-	api *iris.Application
+	api      *iris.Application
+	TestCtrl *vmHandler.TestCtrl `inject:""`
 
 	JobCtrl *vmHandler.JobCtrl `inject:""`
 }
@@ -27,6 +28,8 @@ func (r *Router) App() {
 		v1 := app.Party("/v1")
 		{
 			//v1.Use(core.Auth())
+
+			v1.Get("/test", r.TestCtrl.Test).Name = "测试"
 
 			v1.PartyFunc("/job", func(client iris.Party) {
 				client.Post("/add", r.JobCtrl.Add).Name = "创建任务"
