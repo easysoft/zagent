@@ -10,7 +10,7 @@ const (
 	ServerPort = 8085
 	AgentPort  = 8086
 
-	AgentCheckInterval = 15 // sec
+	AgentCheckInterval = 5  // sec
 	WebCheckInterval   = 60 // sec
 
 	DeviceRegisterExpireTime = 5 * 60 // sec
