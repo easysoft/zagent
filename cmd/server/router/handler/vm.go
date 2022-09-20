@@ -3,12 +3,14 @@ package handler
 import (
 	"encoding/json"
 	v1 "github.com/easysoft/zv/cmd/server/router/v1"
+	"github.com/easysoft/zv/internal/comm/domain"
 	"github.com/easysoft/zv/internal/server/service"
 	_const "github.com/easysoft/zv/pkg/const"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"github.com/kataras/iris/v12"
 	"net/http"
+	"time"
 )
 
 type VmCtrl struct {
@@ -44,7 +46,11 @@ func (c *VmCtrl) Register(ctx iris.Context) {
 		return
 	}
 
-	_, _ = ctx.JSON(iris.Map{"token": "123"})
+	data := domain.RegisterResp{
+		Token:           "123",
+		ExpiredTimeUnix: time.Now().Unix() + 24*3600,
+	}
+	_, _ = ctx.JSON(data)
 
 	return
 }
