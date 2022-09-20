@@ -2,7 +2,12 @@ package v1
 
 import consts "github.com/easysoft/zv/internal/comm/const"
 
+type DestroyVmReq struct {
+	Ip string `json:"ip"`
+}
+
 type VmPortMapReq struct {
+	VmName string                `json:"vmName"`
 	VmIp   string                `json:"vmIp"`
 	VmPort int                   `json:"vmPort"`
 	HostIp string                `json:"hostIp"`

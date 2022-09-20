@@ -2,6 +2,7 @@ package hostHandler
 
 import (
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
+	natHelper "github.com/easysoft/zv/internal/agent/utils/nat"
 	consts "github.com/easysoft/zv/internal/comm/const"
 	hostKvmService "github.com/easysoft/zv/internal/host/service/kvm"
 	_const "github.com/easysoft/zv/pkg/const"
@@ -132,7 +133,15 @@ func (c *KvmCtrl) Destroy(ctx iris.Context) {
 		return
 	}
 
+	req := v1.DestroyVmReq{}
+	err := ctx.ReadJSON(&req)
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		return
+	}
+
 	c.LibvirtService.DestroyVmByName(name, true)
+	natHelper.RemoveForward(req.Ip, 0)
 
 	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to destroy vm", name))
 	return

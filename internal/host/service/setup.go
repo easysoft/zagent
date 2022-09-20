@@ -29,7 +29,7 @@ func NewSetupService() *SetupService {
 	return &srv
 }
 
-func (s *SetupService) MapVmPort(req v1.VmPortMapReq) (resp v1.VmPortMapResp, err error) {
+func (s *SetupService) AddVmPortMap(req v1.VmPortMapReq) (resp v1.VmPortMapResp, err error) {
 	resp.HostPort, err = natHelper.GetValidPort()
 	if err != nil {
 		return
@@ -38,6 +38,17 @@ func (s *SetupService) MapVmPort(req v1.VmPortMapReq) (resp v1.VmPortMapResp, er
 	natHelper.ForwardPort(req.VmIp, req.VmPort, resp.HostPort, req.Type)
 
 	copier.CopyWithOption(&resp, req, copier.Option{DeepCopy: true})
+
+	return
+}
+
+func (s *SetupService) RemoveVmPortMap(req v1.VmPortMapReq) (resp v1.VmPortMapResp, err error) {
+	resp.HostPort, err = natHelper.GetValidPort()
+	if err != nil {
+		return
+	}
+
+	natHelper.RemoveForward(req.VmIp, req.VmPort)
 
 	return
 }

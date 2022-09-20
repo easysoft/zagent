@@ -60,16 +60,8 @@ func GetValidPort() (ret int, err error) {
 }
 
 func ForwardPort(vmIp string, vmPort int, hostPort int, typ consts.NatForwardType) (err error) {
-	cmd := fmt.Sprintf(`sudo nginx -t | grep test`)
-	out, err := _shellUtils.ExeSysCmd(cmd)
-
-	regx, _ := regexp.Compile(`file (.+) test`)
-	arr := regx.FindStringSubmatch(out)
-	confPath := arr[1]
-
-	dir := filepath.Dir(filepath.Dir(confPath))
-	name := fmt.Sprintf("%d:%d@%s", hostPort, vmPort, vmIp)
-	pth := filepath.Join(dir, fmt.Sprintf("conf.%s.d", typ), name)
+	confPath, _ := getNginxConf()
+	name, pth, _ := getNginxHotLoadingConf(confPath, vmIp, vmPort, typ)
 
 	content := "N/A"
 	if typ == consts.Http {
@@ -80,6 +72,32 @@ func ForwardPort(vmIp string, vmPort int, hostPort int, typ consts.NatForwardTyp
 	}
 
 	_fileUtils.WriteFile(pth, content)
+
+	// reload nginx
+	cmd := fmt.Sprintf(`sudo nginx -s reload`)
+	output, err := _shellUtils.ExeSysCmd(cmd)
+	if err != nil {
+		return
+	}
+
+	_logUtils.Info(output)
+
+	return
+}
+
+func RemoveForward(vmIp string, vmPort int) (err error) {
+	confPath, _ := getNginxConf()
+
+	dir := filepath.Dir(filepath.Dir(confPath))
+	name := fmt.Sprintf("%s:*", vmIp)
+	if vmPort > 0 {
+		name = fmt.Sprintf("%s:%d", vmIp, vmPort)
+	}
+
+	pth := filepath.Join(dir, "conf.*.d", name)
+
+	cmd := fmt.Sprintf("sudo rm -rf %s", pth)
+	_shellUtils.ExeSysCmd(cmd)
 
 	// reload nginx
 	cmd = fmt.Sprintf(`sudo nginx -s reload`)
@@ -93,34 +111,22 @@ func ForwardPort(vmIp string, vmPort int, hostPort int, typ consts.NatForwardTyp
 	return
 }
 
-func RemoveForwardByVm(vmIp string, vmPort int, hostIp string, hostPort int) (err error) {
-	// sudo iptables -t nat -D INPUT -p tcp --dport 58086 -j ACCEPT
-	cmd := fmt.Sprintf(`sudo iptables -t nat -D INPUT -p tcp --dport %d -j ACCEPT`, hostPort)
-	output, err := _shellUtils.ExeSysCmd(cmd)
-	if err != nil {
-		return
-	}
+func getNginxConf() (ret string, err error) {
+	cmd := fmt.Sprintf(`sudo nginx -t | grep test`)
+	out, err := _shellUtils.ExeSysCmd(cmd)
 
-	_logUtils.Info(output)
+	regx, _ := regexp.Compile(`file (.+) test`)
+	arr := regx.FindStringSubmatch(out)
+	ret = arr[1]
 
-	// sudo iptables -t nat  -L -n --line-number | grep 192.168.122.79 | awk '{print $1}'
-	cmd = fmt.Sprintf(`sudo iptables -t nat  -L -n --line-number | grep %s | awk '{print $1}'`, vmIp)
-	output, err = _shellUtils.ExeSysCmd(cmd)
-	if err != nil {
-		return
-	}
+	return
+}
 
-	arr := strings.Split(output, "\n")
-
-	for _, item := range arr {
-		// sudo iptables -nvL
-		// sudo iptables -t nat -D POSTROUTING 2
-		// sudo iptables -t filter -D LIBVIRT_FWI 2
-		// sudo iptables -t filter -D LIBVIRT_FWO 2
-
-		cmd = fmt.Sprintf(`iptables -t nat -D INPUT %s`, item)
-		output, err = _shellUtils.ExeSysCmd(cmd)
-	}
+func getNginxHotLoadingConf(confPath, vmIp string, vmPort int, typ consts.NatForwardType) (
+	name, ret string, err error) {
+	dir := filepath.Dir(filepath.Dir(confPath))
+	name = fmt.Sprintf("%s:%d", vmIp, vmPort)
+	ret = filepath.Join(dir, fmt.Sprintf("conf.%s.d", typ), name)
 
 	return
 }

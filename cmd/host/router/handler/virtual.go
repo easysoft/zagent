@@ -69,7 +69,7 @@ func (c *VirtualCtrl) MapVmPort(ctx iris.Context) {
 		return
 	}
 
-	resp, err := c.SetupService.MapVmPort(req)
+	resp, err := c.SetupService.AddVmPortMap(req)
 	if err != nil {
 		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
