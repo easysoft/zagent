@@ -44,7 +44,8 @@ func (r *Router) App() {
 			v1.PartyFunc("/virtual", func(client iris.Party) {
 				client.Post("/notifyHost", r.VirtualCtrl.NotifyHost).Name = "虚拟机用Mac地址请求安全码"
 
-				client.Post("/mapVmPort", r.VirtualCtrl.MapVmPort).Name = "映射虚机端口到宿主机"
+				client.Post("/addVmPortMap", r.VirtualCtrl.AddVmPortMap).Name = "映射虚机端口到宿主机"
+				client.Post("/removeVmPortMap", r.VirtualCtrl.RemoveVmPortMap).Name = "映射虚机端口到宿主机"
 				client.Get("/getVncToken", r.VirtualCtrl.GetToken).Name = "获取VNC的Token"
 			})
 

@@ -62,7 +62,7 @@ func (c *VirtualCtrl) NotifyHost(ctx iris.Context) {
 	return
 }
 
-func (c *VirtualCtrl) MapVmPort(ctx iris.Context) {
+func (c *VirtualCtrl) AddVmPortMap(ctx iris.Context) {
 	req := v1.VmPortMapReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
@@ -70,6 +70,22 @@ func (c *VirtualCtrl) MapVmPort(ctx iris.Context) {
 	}
 
 	resp, err := c.SetupService.AddVmPortMap(req)
+	if err != nil {
+		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		return
+	}
+
+	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success", resp))
+}
+
+func (c *VirtualCtrl) RemoveVmPortMap(ctx iris.Context) {
+	req := v1.VmPortMapReq{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		return
+	}
+
+	resp, err := c.SetupService.RemoveVmPortMap(req)
 	if err != nil {
 		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
