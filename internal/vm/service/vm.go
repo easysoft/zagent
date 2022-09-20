@@ -127,7 +127,7 @@ func (s *VmService) register(host interface{}) (resp []byte, ok bool) {
 }
 
 func (s *VmService) notifyHost() (secret, ip string, err error) {
-	uri := "client/virtual/notifyHost"
+	uri := "virtual/notifyHost"
 	url := _httpUtils.GenUrl(
 		fmt.Sprintf("http://%s:%d/", consts.KvmHostIpInNatNetwork, consts.AgentPort),
 		uri)
