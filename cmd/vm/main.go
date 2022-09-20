@@ -41,7 +41,7 @@ func main() {
 	flagSet.StringVar(&agentConf.Inst.NodeName, "n", "", "")
 	flagSet.StringVar(&agentConf.Inst.NodeIp, "i", "", "")
 	flagSet.IntVar(&agentConf.Inst.NodePort, "p", 8086, "")
-	flagSet.StringVar(&agentConf.Inst.Secret, "S", "", "")
+	flagSet.StringVar(&agentConf.Inst.Secret, "secret", "", "")
 	flagSet.StringVar(&agentConf.Inst.Language, "l", "zh", "")
 
 	flagSet.BoolVar(&help, "h", false, "")
