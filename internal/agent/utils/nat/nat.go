@@ -1,6 +1,7 @@
 package natHelper
 
 import (
+	"errors"
 	"fmt"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
@@ -15,19 +16,24 @@ const (
 )
 
 func GetValidPort() (ret int, err error) {
-	cmd := fmt.Sprintf(`sudo iptables -t filter -L -n --line-number | awk '{print $1}' | grep -o '51[0-9]\{3\}'`)
+	cmd := fmt.Sprintf(`netstat -tln | awk '{print $4}' | grep -o ':51[0-9]\{3\}'`)
 	output, err := _shellUtils.ExeSysCmd(cmd)
 	if err != nil {
 		return
 	}
-	arr := strings.Split(output, "\n")
 
-	for p := 51800; p <= 51999; p++ {
-		str := strconv.Itoa(p)
-		if !_stringUtils.StrInArr(str, arr) {
+	list := strings.Split(output, "\n")
+
+	for p := PortStart; p <= PortEnd; p++ {
+		str := ":" + strconv.Itoa(p)
+		if !_stringUtils.StrInArr(str, list) {
 			ret = p
 			break
 		}
+	}
+
+	if ret == 0 {
+		err = errors.New("no port left")
 	}
 
 	return

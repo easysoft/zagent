@@ -33,11 +33,8 @@ func (c *VirtualCtrl) NotifyHost(ctx iris.Context) {
 		return
 	}
 
-	data := domain.VmNotifyResp{}
-
-	mac, ok := vmMacMap.Load(req.MacAddress)
-	if ok && mac != "" {
-		data.Secret = agentConf.Inst.Secret
+	data := domain.VmNotifyResp{
+		Secret: agentConf.Inst.Secret,
 	}
 
 	// get vm ip
