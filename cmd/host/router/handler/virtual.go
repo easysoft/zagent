@@ -50,7 +50,7 @@ func (c *VirtualCtrl) NotifyHost(ctx iris.Context) {
 		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return
 	}
-	err = natHelper.ForwardPort(vmIp, consts.AgentServicePost, agentConf.Inst.NodeIp, vmAgentPortMapped)
+	err = natHelper.ForwardPort(vmIp, consts.AgentServicePost, vmAgentPortMapped, consts.Http)
 	if err != nil {
 		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
 		return

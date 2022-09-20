@@ -357,3 +357,14 @@ const (
 func (e EntityType) ToString() string {
 	return string(e)
 }
+
+type NatForwardType string
+
+const (
+	Http   NatForwardType = "http"
+	Stream NatForwardType = "stream"
+)
+
+func (e NatForwardType) ToString() string {
+	return string(e)
+}

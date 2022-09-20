@@ -3,9 +3,13 @@ package natHelper
 import (
 	"errors"
 	"fmt"
+	consts "github.com/easysoft/zv/internal/comm/const"
+	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
 	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
+	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -13,6 +17,25 @@ import (
 const (
 	PortStart = 51800
 	PortEnd   = 51999
+
+	httpConf = `server{
+					listen      %d;
+					server_name  %s;
+					location / {
+						proxy_pass   http://%s:%d;
+					}
+				}`
+
+	streamConf = `upstream %s {
+					server %s:%d;    # 源服务
+				}
+			
+				server {
+					listen %d;                # 监听代理主机的端口
+					proxy_connect_timeout 1h;
+					proxy_timeout 1h;
+					proxy_pass %s;        # 转向的服务
+				}`
 )
 
 func GetValidPort() (ret int, err error) {
@@ -36,45 +59,31 @@ func GetValidPort() (ret int, err error) {
 	return
 }
 
-func ForwardPort(vmIp string, vmPort int, hostIp string, hostPort int) (err error) {
-	/**
-	sudo iptables -A INPUT -p tcp --dport 54000 -j ACCEPT
-	sudo iptables -t nat -A PREROUTING -d 192.168.0.56 -p tcp -m tcp --dport 54000 -j DNAT --to-destination 192.168.122.79:4000
-	sudo iptables -t nat -A POSTROUTING -s 192.168.122.0/255.255.255.0 -d 192.168.122.79 -p tcp -m tcp --dport 4000 -j SNAT --to-source 192.168.122.1
+func ForwardPort(vmIp string, vmPort int, hostPort int, typ consts.NatForwardType) (err error) {
+	cmd := fmt.Sprintf(`sudo nginx -t | grep test`)
+	out, err := _shellUtils.ExeSysCmd(cmd)
 
-	sudo iptables -t nat  -L -n --line-number
-	sudo iptables -D FORWARD 14 -t filter
-	sudo ufw disable && sudo ufw enable
-	sudo sysctl -a | grep forward
+	regx, _ := regexp.Compile(`file (.+) test`)
+	arr := regx.FindStringSubmatch(out)
+	confPath := arr[1]
 
-	sudo sysctl -w net.ipv4.ip_forward=1
-	sudo modprobe br_netfilter
-	sudo sysctl -w net.bridge.bridge-nf-call-iptables=1
-	net.bridge.bridge-nf-call-iptables = 1
-	sudo lsmod |grep br_netfilter
-	*/
+	dir := filepath.Dir(filepath.Dir(confPath))
+	name := fmt.Sprintf("%d:%d@%s", hostPort, vmPort, vmIp)
+	pth := filepath.Join(dir, fmt.Sprintf("conf.%s.d", typ), name)
 
-	cmd := fmt.Sprintf(`sudo iptables -A INPUT -p tcp --dport %d -j ACCEPT`, hostPort)
+	content := "N/A"
+	if typ == consts.Http {
+		content = fmt.Sprintf(httpConf, hostPort, name, vmIp, vmPort)
+	} else {
+		upstreamName := fmt.Sprintf("%s-%d", strings.ReplaceAll(vmIp, ".", "-"), vmPort)
+		content = fmt.Sprintf(streamConf, upstreamName, vmIp, vmPort, hostPort, upstreamName)
+	}
+
+	_fileUtils.WriteFile(pth, content)
+
+	// reload nginx
+	cmd = fmt.Sprintf(`sudo nginx -s reload`)
 	output, err := _shellUtils.ExeSysCmd(cmd)
-	if err != nil {
-		return
-	}
-
-	//
-	cmd = fmt.Sprintf(`sudo iptables -t nat -A PREROUTING -d %s`+
-		` -p tcp -m tcp --dport %d -j DNAT --to-destination %s:%d`,
-		hostIp, hostPort, vmIp, vmPort)
-	output, err = _shellUtils.ExeSysCmd(cmd)
-	if err != nil {
-		return
-	}
-
-	//
-	cmd = fmt.Sprintf(`sudo iptables -t nat -A POSTROUTING`+
-		` -s 192.168.122.0/255.255.255.0`+
-		` -d %s -p tcp -m tcp --dport %d -j SNAT --to-source 192.168.122.1`,
-		vmIp, vmPort)
-	output, err = _shellUtils.ExeSysCmd(cmd)
 	if err != nil {
 		return
 	}

@@ -7,7 +7,6 @@ import (
 	"fmt"
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
 	agentConf "github.com/easysoft/zv/internal/agent/conf"
-	natHelper "github.com/easysoft/zv/internal/agent/utils/nat"
 	"github.com/easysoft/zv/internal/comm/const"
 	"github.com/easysoft/zv/internal/comm/domain"
 	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
@@ -186,13 +185,6 @@ func (s *LibvirtService) CloneVm(req *v1.KvmReqClone, removeSameName bool) (dom 
 	vmMacAddress = newDomCfg.Devices.Interfaces[0].MAC.Address
 	vmVncPort = newDomCfg.Devices.Graphics[0].VNC.Port
 	vmIp, _ = s.VmService.GetVmIpByMac(vmMacAddress)
-
-	// map vm agent port to host
-	vmAgentPortMapped, err = natHelper.GetValidPort()
-	if err != nil {
-		return
-	}
-	err = natHelper.ForwardPort(vmIp, consts.AgentServicePost, agentConf.Inst.NodeIp, vmAgentPortMapped)
 
 	return
 }

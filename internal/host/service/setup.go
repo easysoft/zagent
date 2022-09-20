@@ -8,6 +8,7 @@ import (
 	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
 	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
 	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
+	"github.com/jinzhu/copier"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -34,11 +35,9 @@ func (s *SetupService) MapVmPort(req v1.VmPortMapReq) (resp v1.VmPortMapResp, er
 		return
 	}
 
-	resp.VmIp = req.VmIp
-	resp.VmPort = req.VmPort
-	resp.HostIp = req.HostIp
+	natHelper.ForwardPort(req.VmIp, req.VmPort, resp.HostPort, req.Type)
 
-	natHelper.ForwardPort(req.VmIp, req.VmPort, req.HostIp, resp.HostPort)
+	copier.CopyWithOption(&resp, req, copier.Option{DeepCopy: true})
 
 	return
 }
