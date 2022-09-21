@@ -23,7 +23,7 @@ func Auth() iris.Handler {
 		if success {
 			ctx.Next()
 		} else {
-			ctx.StopWithJSON(http.StatusOK, _httpUtils.ApiRes(iris.StatusUnauthorized, "wrong token", nil))
+			ctx.StopWithJSON(http.StatusUnauthorized, _httpUtils.ApiRes(_const.ResultFail, "wrong token", nil))
 		}
 	}
 }
