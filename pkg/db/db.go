@@ -2,7 +2,7 @@ package _db
 
 import (
 	"fmt"
-	agentConf "github.com/easysoft/zv/internal/pkg/agent/conf"
+	agentConf "github.com/easysoft/zv/internal/pkg/conf"
 	serverConf "github.com/easysoft/zv/internal/server/conf"
 	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"

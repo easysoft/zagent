@@ -32,7 +32,6 @@ func (s *KvmService) GetVms() (vms []domain.Vm) {
 		vm := domain.Vm{}
 		vm.Name, _ = dom.GetName()
 
-		// TODO: just for testing
 		vm.Name = strings.Replace(vm.Name, "tmpl-", "test-", -1)
 
 		if strings.Index(vm.Name, "test-") != 0 {

@@ -1,4 +1,4 @@
-package hostAgentService
+package virtualService
 
 import (
 	"fmt"

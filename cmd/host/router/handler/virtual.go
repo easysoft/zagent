@@ -2,10 +2,10 @@ package hostHandler
 
 import (
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
+	virtualService "github.com/easysoft/zv/internal/host/service/virtual"
 	agentConf "github.com/easysoft/zv/internal/pkg/agent/conf"
 	natHelper "github.com/easysoft/zv/internal/pkg/agent/utils/nat"
 
-	hostAgentService "github.com/easysoft/zv/internal/host/service"
 	kvmService "github.com/easysoft/zv/internal/host/service/kvm"
 	consts "github.com/easysoft/zv/internal/pkg/const"
 	"github.com/easysoft/zv/internal/pkg/domain"
@@ -20,8 +20,8 @@ var (
 )
 
 type VirtualCtrl struct {
-	SetupService *hostAgentService.SetupService `inject:""`
-	KvmService   *kvmService.KvmService         `inject:""`
+	SetupService *virtualService.SetupService `inject:""`
+	KvmService   *kvmService.KvmService       `inject:""`
 }
 
 func NewVirtualCtrl() *VirtualCtrl {
