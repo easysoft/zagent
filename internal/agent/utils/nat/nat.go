@@ -60,8 +60,15 @@ func GetValidPort() (ret int, err error) {
 }
 
 func ForwardPort(vmIp string, vmPort int, hostPort int, typ consts.NatForwardType) (err error) {
-	confPath, _ := getNginxConf()
-	name, pth, _ := getNginxHotLoadingConf(confPath, vmIp, vmPort, typ)
+	confPath, err := getNginxConf()
+	if err != nil {
+		return
+	}
+
+	name, pth, err := getNginxHotLoadingConf(confPath, vmIp, vmPort, typ)
+	if err != nil {
+		return
+	}
 
 	content := "N/A"
 	if typ == consts.Http {
@@ -82,9 +89,9 @@ func RemoveForward(vmIp string, vmPort int) (err error) {
 	confPath, _ := getNginxConf()
 
 	dir := filepath.Dir(filepath.Dir(confPath))
-	name := fmt.Sprintf("%s:*", vmIp)
+	name := fmt.Sprintf("%s:*.conf", vmIp)
 	if vmPort > 0 {
-		name = fmt.Sprintf("%s:%d", vmIp, vmPort)
+		name = fmt.Sprintf("%s:%d.conf", vmIp, vmPort)
 	}
 
 	pth := filepath.Join(dir, "conf.*.d", name)
@@ -103,7 +110,12 @@ func getNginxConf() (ret string, err error) {
 
 	regx, _ := regexp.Compile(`file (.+) test`)
 	arr := regx.FindStringSubmatch(string(out))
-	ret = arr[1]
+
+	if len(arr) > 1 {
+		ret = arr[1]
+	} else {
+		err = errors.New("not found")
+	}
 
 	return
 }
@@ -112,7 +124,7 @@ func getNginxHotLoadingConf(confPath, vmIp string, vmPort int, typ consts.NatFor
 	name, ret string, err error) {
 	dir := filepath.Dir(filepath.Dir(confPath))
 	name = fmt.Sprintf("%s:%d", vmIp, vmPort)
-	ret = filepath.Join(dir, fmt.Sprintf("conf.%s.d", typ), name)
+	ret = filepath.Join(dir, fmt.Sprintf("conf.%s.d", typ), name+".conf")
 
 	return
 }
