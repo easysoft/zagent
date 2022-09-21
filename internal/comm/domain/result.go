@@ -9,6 +9,6 @@ type Result struct {
 }
 
 func (result *Result) Success(msg string) {
-	result.Code = _const.ResultSuccess.Int()
+	result.Code = _const.ResultPass.Int()
 	result.Msg = msg
 }

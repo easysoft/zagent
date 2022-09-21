@@ -21,12 +21,12 @@ type RemoteResp struct {
 }
 
 func (result *RemoteResp) Pass(msg string) {
-	result.Code = _const.ResultSuccess
+	result.Code = _const.ResultPass
 	result.Msg = msg
 }
 
 func (result *RemoteResp) Passf(str string, args ...interface{}) {
-	result.Code = _const.ResultSuccess
+	result.Code = _const.ResultPass
 	result.Msg = fmt.Sprintf(str, args...)
 }
 
@@ -41,5 +41,5 @@ func (result *RemoteResp) Failf(str string, args ...interface{}) {
 }
 
 func (result *RemoteResp) IsSuccess() bool {
-	return result.Code == _const.ResultSuccess
+	return result.Code == _const.ResultPass
 }

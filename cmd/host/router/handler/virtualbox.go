@@ -27,18 +27,18 @@ func NewVirtualBoxCtrl() *VirtualBoxCtrl {
 func (c *VirtualBoxCtrl) Create(ctx iris.Context) {
 	req := v1.VirtualBoxReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
 	result, err := c.VirtualBoxService.Create(req)
 	if err != nil {
-		ctx.JSON(_httpUtils.ApiRes(_const.ResultFail,
+		ctx.JSON(_httpUtils.RespData(_const.ResultFail,
 			fmt.Sprintf("fail to create virtualbox vm, reason: %s.", err.Error()), nil))
 		return
 	}
 
-	ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "success to create vm", result))
+	ctx.JSON(_httpUtils.RespData(_const.ResultPass, "success to create vm", result))
 
 	return
 }
@@ -53,13 +53,13 @@ func (c *VirtualBoxCtrl) Create(ctx iris.Context) {
 func (c *VirtualBoxCtrl) Destroy(ctx iris.Context) {
 	req := v1.VirtualBoxReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
 	c.VirtualBoxService.Destroy(req)
 
-	ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "success to destroy vm", req.VmUniqueName))
+	ctx.JSON(_httpUtils.RespData(_const.ResultPass, "success to destroy vm", req.VmUniqueName))
 	return
 }
 
@@ -71,18 +71,18 @@ func (c *VirtualBoxCtrl) Destroy(ctx iris.Context) {
 func (c *VirtualBoxCtrl) ListTmpl(ctx iris.Context) {
 	req := v1.VirtualBoxReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
 	result, err := c.VirtualBoxService.ListTmpl(req)
 
 	if err != nil {
-		ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, "fail to list vm tmpl", err))
+		ctx.JSON(_httpUtils.RespData(_const.ResultFail, "fail to list vm tmpl", err))
 		return
 	}
 
-	ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "success to list vm tmpl", result))
+	ctx.JSON(_httpUtils.RespData(_const.ResultPass, "success to list vm tmpl", result))
 
 	return
 }

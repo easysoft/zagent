@@ -19,11 +19,11 @@ func NewValidCtrl() *ValidCtrl {
 func (c *ValidCtrl) Valid(ctx iris.Context) {
 	model := domain.ValidRequest{}
 	if err := ctx.ReadJSON(&model); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
 	result := c.ValidService.Valid(model)
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "请求成功", result))
+	_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass, "请求成功", result))
 }

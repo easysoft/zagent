@@ -31,12 +31,12 @@ func (c *BuildCtrl) UploadResult(ctx iris.Context) {
 
 	uploadedFiles, n, err := ctx.UploadFormFiles(dir, beforeFileSave)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, fmt.Sprintf("获取上传的文件错误, 字节%d", n), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, fmt.Sprintf("获取上传的文件错误, 字节%d", n), nil))
 	}
 
 	filePath := "N/A"
 	if uploadedFiles == nil || len(uploadedFiles) == 0 {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, fmt.Sprintf("上传的文件为空, 字节%d", n), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, fmt.Sprintf("上传的文件为空, 字节%d", n), nil))
 	} else {
 		filePath = filepath.Join(dir, uploadedFiles[0].Filename)
 	}
@@ -59,6 +59,6 @@ func (c *BuildCtrl) UploadResult(ctx iris.Context) {
 
 	c.BuildService.SaveResult(build)
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess,
+	_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass,
 		fmt.Sprintf("操作成功 %s %#v", filePath, params), nil))
 }

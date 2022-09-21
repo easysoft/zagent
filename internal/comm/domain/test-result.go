@@ -27,11 +27,11 @@ type TestResult struct {
 }
 
 func (result *TestResult) Pass(msg string) {
-	result.Code = _const.ResultSuccess.Int()
+	result.Code = _const.ResultPass.Int()
 	result.Msg = msg
 }
 func (result *TestResult) Passf(str string, args ...interface{}) {
-	result.Code = _const.ResultSuccess.Int()
+	result.Code = _const.ResultPass.Int()
 	result.Msg = fmt.Sprintf(str+"\n", args...)
 }
 
@@ -46,5 +46,5 @@ func (result *TestResult) Failf(str string, args ...interface{}) {
 }
 
 func (result *TestResult) IsSuccess() bool {
-	return result.Code == _const.ResultSuccess.Int()
+	return result.Code == _const.ResultPass.Int()
 }

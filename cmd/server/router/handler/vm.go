@@ -33,7 +33,7 @@ func NewVmCtrl() *VmCtrl {
 func (c *VmCtrl) Register(ctx iris.Context) {
 	req := v1.VmRegisterReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
 		return
 	}
 

@@ -49,7 +49,7 @@ func (c *TaskCtrl) List(ctx iris.Context) {
 
 	projects, total := c.TaskService.List(keywords, disabled, pageNo, pageSize)
 
-	_, _ = ctx.JSON(_httpUtils.ApiResPage(_const.ResultSuccess, "请求成功",
+	_, _ = ctx.JSON(_httpUtils.RespDataPagination(_const.ResultPass, "请求成功",
 		projects, pageNo, pageSize, total))
 }
 
@@ -62,7 +62,7 @@ func (c *TaskCtrl) List(ctx iris.Context) {
 func (c *TaskCtrl) Get(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
@@ -70,7 +70,7 @@ func (c *TaskCtrl) Get(ctx iris.Context) {
 	buildHistories := c.HistoryService.GetBuildHistoriesByTask(task.ID)
 
 	result := v1.TaskResp{Task: task, BuildHistories: buildHistories}
-	_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "操作成功", result))
+	_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass, "操作成功", result))
 	return
 }
 
@@ -84,7 +84,7 @@ func (c *TaskCtrl) Get(ctx iris.Context) {
 func (c *TaskCtrl) Create(ctx iris.Context) {
 	req := v1.TaskReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
@@ -104,11 +104,11 @@ func (c *TaskCtrl) Create(ctx iris.Context) {
 	po, _ := req.ToModel()
 	err := c.TaskService.Save(&po, userId)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, "操作失败", nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, "操作失败", nil))
 		return
 	}
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "操作成功", po))
+	_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass, "操作成功", po))
 	return
 }
 
@@ -122,17 +122,17 @@ func (c *TaskCtrl) Create(ctx iris.Context) {
 func (c *TaskCtrl) Update(ctx iris.Context) {
 	model := model.Task{}
 	if err := ctx.ReadJSON(&model); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
 	err := c.TaskService.Update(&model)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, "操作失败", nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, "操作失败", nil))
 		return
 	}
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "操作成功", model))
+	_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass, "操作成功", model))
 }
 
 // Delete
@@ -145,17 +145,17 @@ func (c *TaskCtrl) Update(ctx iris.Context) {
 func (c *TaskCtrl) Delete(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
 	c.TaskService.Delete(uint(id))
-	_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "操作成功", ""))
+	_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass, "操作成功", ""))
 }
 
 func (c *TaskCtrl) TestWs(ctx iris.Context) {
 	data := map[string]interface{}{"action": serverConst.TaskUpdate, "taskId": 1, "msg": ""}
 	c.WebSocketService.Broadcast(serverConst.WsNamespace, serverConst.WsDefaultRoom, serverConst.WsEvent, data)
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "操作成功", ""))
+	_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass, "操作成功", ""))
 }

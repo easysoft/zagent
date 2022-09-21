@@ -24,7 +24,7 @@ func (c *BaseCtrl) Validate(s interface{}, ctx iris.Context) bool {
 		errs := err.(validator.ValidationErrors)
 		for _, e := range errs.Translate(validate.ValidateTrans) {
 			if len(e) > 0 {
-				_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, e, nil))
+				_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass, e, nil))
 				return true
 			}
 		}

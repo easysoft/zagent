@@ -24,17 +24,17 @@ func (c *PermCtrl) GetPermission(ctx iris.Context) {
 
 	perm, err := c.PermService.GetPermission(id)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass, err.Error(), nil))
 		return
 	}
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "操作成功", c.PermService.PermTransform(perm)))
+	_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass, "操作成功", c.PermService.PermTransform(perm)))
 }
 
 func (c *PermCtrl) CreatePermission(ctx iris.Context) {
 	perm := new(model.Permission)
 	if err := ctx.ReadJSON(perm); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
 		return
 	}
 	err := validate.Validate.Struct(*perm)
@@ -42,7 +42,7 @@ func (c *PermCtrl) CreatePermission(ctx iris.Context) {
 		errs := err.(validator.ValidationErrors)
 		for _, e := range errs.Translate(validate.ValidateTrans) {
 			if len(e) > 0 {
-				_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, e, nil))
+				_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, e, nil))
 				return
 			}
 		}
@@ -50,15 +50,15 @@ func (c *PermCtrl) CreatePermission(ctx iris.Context) {
 
 	err = c.PermService.CreatePermission(perm)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, fmt.Sprintf("Error create prem: %s", err.Error()), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, fmt.Sprintf("Error create prem: %s", err.Error()), nil))
 		return
 	}
 
 	if perm.ID == 0 {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, "操作失败", perm))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, "操作失败", perm))
 		return
 	}
-	_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "操作成功", c.PermService.PermTransform(perm)))
+	_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass, "操作成功", c.PermService.PermTransform(perm)))
 
 }
 
@@ -66,7 +66,7 @@ func (c *PermCtrl) UpdatePermission(ctx iris.Context) {
 	aul := new(model.Permission)
 
 	if err := ctx.ReadJSON(aul); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
 		return
 	}
 	err := validate.Validate.Struct(*aul)
@@ -74,7 +74,7 @@ func (c *PermCtrl) UpdatePermission(ctx iris.Context) {
 		errs := err.(validator.ValidationErrors)
 		for _, e := range errs.Translate(validate.ValidateTrans) {
 			if len(e) > 0 {
-				_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, e, nil))
+				_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, e, nil))
 				return
 			}
 		}
@@ -83,11 +83,11 @@ func (c *PermCtrl) UpdatePermission(ctx iris.Context) {
 	id, _ := ctx.Params().GetUint("id")
 	err = c.PermService.UpdatePermission(id, aul)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, fmt.Sprintf("Error update prem: %s", err.Error()), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, fmt.Sprintf("Error update prem: %s", err.Error()), nil))
 		return
 	}
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "操作成功", c.PermService.PermTransform(aul)))
+	_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass, "操作成功", c.PermService.PermTransform(aul)))
 
 }
 
@@ -95,20 +95,20 @@ func (c *PermCtrl) DeletePermission(ctx iris.Context) {
 	id, _ := ctx.Params().GetUint("id")
 	err := c.PermService.DeletePermissionById(id)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
 		return
 	}
-	_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "删除成功", nil))
+	_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass, "删除成功", nil))
 }
 
 func (c *PermCtrl) GetAllPermissions(ctx iris.Context) {
 	permissions, count, err := c.PermService.GetAllPermissions(nil)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
 	transform := c.PermService.PermsTransform(permissions)
-	_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "操作成功", map[string]interface{}{"items": transform, "total": count, "limit": "s.Limit"}))
+	_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass, "操作成功", map[string]interface{}{"items": transform, "total": count, "limit": "s.Limit"}))
 
 }

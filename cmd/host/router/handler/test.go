@@ -14,7 +14,7 @@ func NewTestCtrl() *TestCtrl {
 }
 
 func (c *TestCtrl) Test(ctx iris.Context) {
-	ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "success", iris.Map{
+	ctx.JSON(_httpUtils.RespData(_const.ResultPass, "success", iris.Map{
 		"code": 0,
 	}))
 	return

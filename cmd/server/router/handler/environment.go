@@ -21,10 +21,10 @@ func NewEnvironmentCtrl() *EnvironmentCtrl {
 func (c *EnvironmentCtrl) GetData(ctx iris.Context) {
 	model := model.Environment{}
 	if err := ctx.ReadJSON(&model); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
 	data := c.EnvironmentService.GetMap(model)
-	_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "请求成功", data))
+	_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass, "请求成功", data))
 }

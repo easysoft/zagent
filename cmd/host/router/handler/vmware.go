@@ -26,13 +26,13 @@ func NewVmWareCtrl() *VmWareCtrl {
 func (c *VmWareCtrl) Create(ctx iris.Context) {
 	req := v1.VmWareReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
 	id, macAddress, err := c.VmWareService.CreateVm(&req, true)
 	if err != nil {
-		ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "fail to create VmWare vm", err))
+		ctx.JSON(_httpUtils.RespData(_const.ResultPass, "fail to create VmWare vm", err))
 		return
 	}
 
@@ -43,7 +43,7 @@ func (c *VmWareCtrl) Create(ctx iris.Context) {
 		//VncPort:  strconv.Itoa(VmWareVncPort),
 	}
 
-	ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "success to create VmWare vm", vm))
+	ctx.JSON(_httpUtils.RespData(_const.ResultPass, "success to create VmWare vm", vm))
 
 	return
 }
@@ -58,12 +58,12 @@ func (c *VmWareCtrl) Create(ctx iris.Context) {
 func (c *VmWareCtrl) Destroy(ctx iris.Context) {
 	req := v1.VmWareReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
 	c.VmWareService.DestroyVm(&req, true)
 
-	ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "success to destroy VmWare vm", req.VmId))
+	ctx.JSON(_httpUtils.RespData(_const.ResultPass, "success to destroy VmWare vm", req.VmId))
 	return
 }
