@@ -2,8 +2,8 @@ package multipass
 
 import (
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
-	agentConf "github.com/easysoft/zv/internal/agent/conf"
 	multiPassService "github.com/easysoft/zv/internal/host/service/multipass"
+	agentConf "github.com/easysoft/zv/internal/pkg/agent/conf"
 	consts "github.com/easysoft/zv/internal/pkg/const"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"log"

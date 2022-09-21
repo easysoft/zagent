@@ -1,8 +1,8 @@
 package docker
 
 import (
-	agentConf "github.com/easysoft/zv/internal/agent/conf"
 	hostDockerService "github.com/easysoft/zv/internal/host/service/docker"
+	agentConf "github.com/easysoft/zv/internal/pkg/agent/conf"
 	consts "github.com/easysoft/zv/internal/pkg/const"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"testing"
