@@ -16,9 +16,9 @@ func (e BizErr) Error() string {
 }
 
 func NewBizErr(msg string) BizErr {
-	return BizErr{_const.ResultFail.Int(), msg}
+	return BizErr{Code: _const.ResultFail.Int(), Msg: msg}
 }
 
 func NewBizErrWithCode(code int, msg string) BizErr {
-	return BizErr{code, msg}
+	return BizErr{Code: code, Msg: msg}
 }
