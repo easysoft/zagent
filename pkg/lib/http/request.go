@@ -10,8 +10,8 @@ type Request struct {
 
 type Response struct {
 	Code  _const.ResultCode `json:"code"`
-	Msg   string            `json:"message"`
-	Token string            `json:"message"`
+	Msg   string            `json:"msg"`
+	Token string            `json:"msg"`
 	Data  interface{}       `json:"data"`
 }
 type ResponsePage struct {
