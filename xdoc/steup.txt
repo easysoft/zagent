@@ -22,6 +22,10 @@ sudo systemctl restart zv.service
 sudo systemctl enable zv.service
 sudo systemctl disable zv.service
 
+sudo chown root:aaron /usr/sbin/nginx
+sudo chmod 750 /usr/sbin/nginx
+sudo chmod u+s /usr/sbin/nginx
+sudo chmod -R 666 /apps/nginx/conf.*.d
 
 # 本地安装swaggo，生成并上传。 https://github.com/swaggo/swag
 rm -rf res/server/docs

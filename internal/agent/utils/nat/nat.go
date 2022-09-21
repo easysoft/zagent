@@ -5,7 +5,6 @@ import (
 	"fmt"
 	consts "github.com/easysoft/zv/internal/comm/const"
 	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
 	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
 	"os/exec"
@@ -74,14 +73,7 @@ func ForwardPort(vmIp string, vmPort int, hostPort int, typ consts.NatForwardTyp
 
 	_fileUtils.WriteFile(pth, content)
 
-	// reload nginx
-	cmd := fmt.Sprintf(`sudo nginx -s reload`)
-	output, err := _shellUtils.ExeSysCmd(cmd)
-	if err != nil {
-		return
-	}
-
-	_logUtils.Info(output)
+	reloadNginx()
 
 	return
 }
@@ -97,23 +89,16 @@ func RemoveForward(vmIp string, vmPort int) (err error) {
 
 	pth := filepath.Join(dir, "conf.*.d", name)
 
-	cmd := fmt.Sprintf("sudo rm -rf %s", pth)
+	cmd := fmt.Sprintf("rm -rf %s", pth)
 	_shellUtils.ExeSysCmd(cmd)
 
-	// reload nginx
-	cmd = fmt.Sprintf(`sudo nginx -s reload`)
-	output, err := _shellUtils.ExeSysCmd(cmd)
-	if err != nil {
-		return
-	}
-
-	_logUtils.Info(output)
+	reloadNginx()
 
 	return
 }
 
 func getNginxConf() (ret string, err error) {
-	cmd := fmt.Sprintf(`sudo nginx -t | grep test`)
+	cmd := fmt.Sprintf(`nginx -t | grep test`)
 	out, err := exec.Command("cmd", "/C", cmd).Output()
 
 	regx, _ := regexp.Compile(`file (.+) test`)
@@ -130,4 +115,9 @@ func getNginxHotLoadingConf(confPath, vmIp string, vmPort int, typ consts.NatFor
 	ret = filepath.Join(dir, fmt.Sprintf("conf.%s.d", typ), name)
 
 	return
+}
+
+func reloadNginx() {
+	cmd := fmt.Sprintf(`nginx -s reload`)
+	_shellUtils.ExeSysCmd(cmd)
 }
