@@ -78,6 +78,7 @@ func (s *VmService) Register(isBusy bool) (ok bool) {
 	if consts.AuthSecret == "" || consts.AuthToken == "" || consts.ExpiredDate.Unix() < time.Now().Unix() { // re-apply token using secret
 		var err error
 		vm.Secret, vm.Ip, err = s.notifyHost()
+		consts.AuthSecret = vm.Secret
 
 		if err != nil {
 			_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_notify", err.Error()))
