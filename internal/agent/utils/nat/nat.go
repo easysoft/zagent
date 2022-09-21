@@ -119,7 +119,7 @@ func getNginxHotLoadingConf(vmIp string, vmPort int, typ consts.NatForwardType) 
 	name, ret string, err error) {
 
 	homeDir, _ := _fileUtils.GetUserHome()
-	dir := filepath.Join(homeDir, "zagent", "nginx", "conf."+typ.ToString()+".d")
+	dir := filepath.Join(homeDir, "zagent", "nginx")
 	name = fmt.Sprintf("%s:%d", vmIp, vmPort)
 	name = strings.ReplaceAll(strings.ReplaceAll(name, ".", "-"), ":", "_")
 
