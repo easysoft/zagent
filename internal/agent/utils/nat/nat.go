@@ -8,7 +8,6 @@ import (
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
 	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -114,10 +113,10 @@ func RemoveForward(vmIp string, vmPort int) (err error) {
 
 func getNginxConf() (ret string, err error) {
 	cmd := fmt.Sprintf(`sudo nginx -t | grep test`)
-	out, err := exec.Command("/bin/bash", "-c", cmd).Output()
+	out, err := _shellUtils.ExeSysCmd(cmd)
 
 	regx, _ := regexp.Compile(`file (.+) test`)
-	arr := regx.FindStringSubmatch(string(out))
+	arr := regx.FindStringSubmatch(out)
 	ret = arr[1]
 
 	return
