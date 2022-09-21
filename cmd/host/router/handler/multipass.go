@@ -26,7 +26,7 @@ func NewMultiPassCtrl() *MultiPassCtrl {
 func (c *MultiPassCtrl) List(ctx iris.Context) {
 	domains, err := c.MultiPassService.GetVmList()
 	if domains == nil || err != nil {
-		ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "fail to find MultiPass vm", err))
+		ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "fail to find MultiPass vm", err))
 		return
 	}
 	var mps []v1.MultiPassResp
@@ -40,7 +40,7 @@ func (c *MultiPassCtrl) List(ctx iris.Context) {
 		mps = append(mps, mp)
 	}
 
-	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to get MultiPass vm", mps))
+	ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "success to get MultiPass vm", mps))
 
 	return
 }
@@ -55,12 +55,12 @@ func (c *MultiPassCtrl) List(ctx iris.Context) {
 func (c *MultiPassCtrl) Create(ctx iris.Context) {
 	req := v1.MultiPassReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
 		return
 	}
 	domains, err := c.MultiPassService.CreateVm(&req, false)
 	if err != nil {
-		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "fail to create vm", err))
+		ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, "fail to create vm", err))
 		return
 	}
 
@@ -68,7 +68,7 @@ func (c *MultiPassCtrl) Create(ctx iris.Context) {
 		Name: domains.Name, //VncPort:  strconv.Itoa(MultiPassVncPort),
 	}
 
-	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to create MultiPass vm", vm))
+	ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "success to create MultiPass vm", vm))
 
 	return
 }
@@ -89,7 +89,7 @@ func (c *MultiPassCtrl) Destroy(ctx iris.Context) {
 
 	c.MultiPassService.DestroyVm(name)
 
-	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to destroy MultiPass vm", name))
+	ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "success to destroy MultiPass vm", name))
 	return
 }
 
@@ -109,7 +109,7 @@ func (c *MultiPassCtrl) Reboot(ctx iris.Context) {
 
 	c.MultiPassService.RebootVmByName(name)
 
-	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to reboot vm", name))
+	ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "success to reboot vm", name))
 	return
 }
 
@@ -157,13 +157,13 @@ func (c *MultiPassCtrl) GetToken(ctx iris.Context) {
 	port := ctx.URLParam("port")
 
 	if port == "" {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "no port param", nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, "no port param", nil))
 		return
 	}
 
 	ret := c.MultiPassService.GetToken(port)
 	if ret.Token == "" {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "token not found", nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, "token not found", nil))
 		return
 	}
 

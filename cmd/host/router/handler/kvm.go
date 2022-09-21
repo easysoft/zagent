@@ -28,11 +28,11 @@ func (c *KvmCtrl) ListTmpl(ctx iris.Context) {
 	templs, err := c.LibvirtService.ListTmpl()
 
 	if err != nil {
-		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "fail to list vm tmpl", err))
+		ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, "fail to list vm tmpl", err))
 		return
 	}
 
-	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to list vm tmpl", templs))
+	ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "success to list vm tmpl", templs))
 
 	return
 }
@@ -47,7 +47,7 @@ func (c *KvmCtrl) ListTmpl(ctx iris.Context) {
 func (c *KvmCtrl) Create(ctx iris.Context) {
 	req := v1.KvmReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
@@ -71,7 +71,7 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 		Status:      vmStatus,
 	}
 
-	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to create vm", vm))
+	ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "success to create vm", vm))
 
 	return
 }
@@ -87,19 +87,19 @@ func (c *KvmCtrl) Clone(ctx iris.Context) {
 	req := v1.KvmReqClone{}
 	err := ctx.ReadJSON(&req)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
 	if req.VmSrc == "" {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "request vmSrc field can not be empty.", nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, "request vmSrc field can not be empty.", nil))
 		return
 	}
 
 	dom, vmIp, vmVncPort, vmAgentPortMapped, vmRawPath, vmBackingPath, err := c.LibvirtService.CloneVm(&req, true)
 
 	if err != nil {
-		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "fail to clone vm", err))
+		ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, "fail to clone vm", err))
 		return
 	}
 
@@ -114,7 +114,7 @@ func (c *KvmCtrl) Clone(ctx iris.Context) {
 		BackingPath: vmBackingPath,
 	}
 
-	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to create vm", vm))
+	ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "success to create vm", vm))
 
 	return
 }
@@ -136,13 +136,13 @@ func (c *KvmCtrl) Destroy(ctx iris.Context) {
 	req := v1.DestroyVmReq{}
 	err := ctx.ReadJSON(&req)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
 	err = c.LibvirtService.DestroyVmByName(name, true)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
@@ -223,7 +223,7 @@ func (c *KvmCtrl) Resume(ctx iris.Context) {
 //func (c *KvmCtrl) Boot(ctx iris.Context) {
 //	req :=v1.KvmReq{}
 //	if err := ctx.ReadJSON(&req); err != nil {
-//		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+//		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
 //		return
 //	}
 //
@@ -235,7 +235,7 @@ func (c *KvmCtrl) Resume(ctx iris.Context) {
 //func (c *KvmCtrl) Shutdown(ctx iris.Context) {
 //	req :=v1.KvmReq{}
 //	if err := ctx.ReadJSON(&req); err != nil {
-//		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+//		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
 //		return
 //	}
 //

@@ -44,7 +44,7 @@ func NewUserCtrl() *UserCtrl {
 func (c *UserCtrl) GetProfile(ctx iris.Context) {
 	cred := jwt.GetCredentials(ctx)
 	if cred == nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(401, "not login", nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, "not login", nil))
 		return
 	}
 

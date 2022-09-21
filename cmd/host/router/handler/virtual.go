@@ -8,6 +8,7 @@ import (
 	"github.com/easysoft/zv/internal/comm/domain"
 	hostAgentService "github.com/easysoft/zv/internal/host/service"
 	kvmService "github.com/easysoft/zv/internal/host/service/kvm"
+	_const "github.com/easysoft/zv/pkg/const"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	"github.com/kataras/iris/v12"
 	"sync"
@@ -29,7 +30,7 @@ func NewVirtualCtrl() *VirtualCtrl {
 func (c *VirtualCtrl) NotifyHost(ctx iris.Context) {
 	req := domain.VmNotifyReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
-		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
@@ -40,58 +41,58 @@ func (c *VirtualCtrl) NotifyHost(ctx iris.Context) {
 	// get vm ip
 	vmIp, err := c.KvmService.GetVmIpByMac(req.MacAddress)
 	if err != nil {
-		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
 	// map vm agent port to host
 	vmAgentPortMapped, err := natHelper.GetValidPort()
 	if err != nil {
-		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
 		return
 	}
 	err = natHelper.ForwardPort(vmIp, consts.AgentServicePost, vmAgentPortMapped, consts.Http)
 	if err != nil {
-		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
 	data.Ip = vmIp
 
-	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to refresh secret", data))
+	ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "success to refresh secret", data))
 	return
 }
 
 func (c *VirtualCtrl) AddVmPortMap(ctx iris.Context) {
 	req := v1.VmPortMapReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
 	resp, err := c.SetupService.AddVmPortMap(req)
 	if err != nil {
-		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
-	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success", resp))
+	ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "success", resp))
 }
 
 func (c *VirtualCtrl) RemoveVmPortMap(ctx iris.Context) {
 	req := v1.VmPortMapReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
 	resp, err := c.SetupService.RemoveVmPortMap(req)
 	if err != nil {
-		ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
-	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success", resp))
+	ctx.JSON(_httpUtils.ApiRes(_const.ResultSuccess, "success", resp))
 }
 
 // GetToken
@@ -105,13 +106,13 @@ func (c *VirtualCtrl) GetToken(ctx iris.Context) {
 	port := ctx.URLParam("port")
 
 	if port == "" {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "no port param", nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, "no port param", nil))
 		return
 	}
 
 	ret := c.SetupService.GetToken(port)
 	if ret.Token == "" {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, "token not found", nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(_const.ResultFail, "token not found", nil))
 		return
 	}
 
