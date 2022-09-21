@@ -35,7 +35,7 @@ func RespDataPagination(code _const.ResultCode, msg string, objects interface{},
 	return
 }
 
-func RespDataFromBizErr(code domain.BizErr) (r *Response) {
+func RespDataFromBizErr(code *domain.BizErr) (r *Response) {
 	r = &Response{Code: code, Msg: code.Msg}
 	return
 }

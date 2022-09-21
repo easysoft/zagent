@@ -237,7 +237,8 @@ func (s *LibvirtService) DestroyVmByName(name string, removeDiskImage bool) (biz
 
 	err = dom.Destroy()
 	if err != nil {
-		bizErr = domain.NewBizErr(err.Error())
+		tmp := domain.NewBizErr(err.Error())
+		bizErr = &tmp
 		return
 	}
 
