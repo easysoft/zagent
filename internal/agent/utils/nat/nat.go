@@ -99,7 +99,7 @@ func RemoveForward(vmIp string, vmPort int) (err error) {
 
 func getNginxConf() (ret string, err error) {
 	cmd := fmt.Sprintf(`nginx -t | grep test`)
-	out, err := _shellUtils.ExeSysCmd(cmd)
+	out, err := exec.Command("/bin/bash", "-c", cmd).Output()
 
 	regx, _ := regexp.Compile(`file (.+) test`)
 	arr := regx.FindStringSubmatch(string(out))
