@@ -221,16 +221,17 @@ func (s *LibvirtService) DestroyVm(dom *libvirt.Domain) (err error) {
 
 	return
 }
-func (s *LibvirtService) DestroyVmByName(name string, removeDiskImage bool) (bizErr domain.BizErr) {
+func (s *LibvirtService) DestroyVmByName(name string, removeDiskImage bool) (bizErr *domain.BizErr) {
 	dom, err := s.GetVm(name)
 	if err != nil {
-		bizErr = domain.ResultVmNotFound
+		bizErr = &domain.ResultVmNotFound
 		return
 	}
 
 	dickPath, err := s.QemuService.GetDisk(dom)
 	if err != nil {
-		bizErr = domain.NewBizErr(err.Error())
+		tmp := domain.NewBizErr(err.Error())
+		bizErr = &tmp
 		return
 	}
 
