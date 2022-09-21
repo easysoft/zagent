@@ -11,7 +11,7 @@ type Request struct {
 type Response struct {
 	Code  _const.ResultCode `json:"code"`
 	Msg   string            `json:"msg"`
-	Token string            `json:"msg"`
+	Token string            `json:"token"`
 	Data  interface{}       `json:"data"`
 }
 type ResponsePage struct {
