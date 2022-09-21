@@ -64,10 +64,9 @@ func (s *VmService) Check() {
 }
 
 func (s *VmService) Register(isBusy bool) (ok bool) {
-	vm := domain.Vm{
+	vm := domain.VmRegisterReq{
 		MacAddress: agentConf.Inst.MacAddress,
-		Ip:         agentConf.Inst.NodeIp, Port: agentConf.Inst.NodePort,
-		Name: agentConf.Inst.NodeName, WorkDir: agentConf.Inst.WorkDir,
+		Ip:         agentConf.Inst.NodeIp,
 	}
 
 	if isBusy {
@@ -78,7 +77,7 @@ func (s *VmService) Register(isBusy bool) (ok bool) {
 
 	if consts.AuthSecret == "" || consts.ExpiredDate.Unix() < time.Now().Unix() { // re-apply token using secret
 		var err error
-		vm.Secret, vm.Ip, err = s.notifyHost()
+		vm.Secret, vm.Ip, vm.AgentPortOnHost, err = s.notifyHost()
 		consts.AuthSecret = vm.Secret
 
 		if err != nil {
@@ -128,7 +127,7 @@ func (s *VmService) register(host interface{}) (resp []byte, ok bool) {
 	return
 }
 
-func (s *VmService) notifyHost() (secret, ip string, err error) {
+func (s *VmService) notifyHost() (secret, ip string, agentPortOnHost int, err error) {
 	uri := "virtual/notifyHost"
 	url := _httpUtils.GenUrl(
 		fmt.Sprintf("http://%s:%d/", consts.KvmHostIpInNatNetwork, consts.AgentPort),
@@ -157,6 +156,7 @@ func (s *VmService) notifyHost() (secret, ip string, err error) {
 		return
 	}
 
+	agentPortOnHost = respData.AgentPortOnHost
 	secret = respData.Secret
 	ip = respData.Ip
 	if secret == "" {

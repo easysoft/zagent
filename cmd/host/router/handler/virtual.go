@@ -58,6 +58,7 @@ func (c *VirtualCtrl) NotifyHost(ctx iris.Context) {
 	}
 
 	data.Ip = vmIp
+	data.AgentPortOnHost = vmAgentPortMapped
 
 	ctx.JSON(_httpUtils.RespData(_const.ResultPass, "success to refresh secret", data))
 	return
