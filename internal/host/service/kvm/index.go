@@ -221,7 +221,7 @@ func (s *LibvirtService) DestroyVm(dom *libvirt.Domain) (err error) {
 
 	return
 }
-func (s *LibvirtService) DestroyVmByName(name string, removeDiskImage bool) {
+func (s *LibvirtService) DestroyVmByName(name string, removeDiskImage bool) (err error) {
 	dom, err := s.GetVm(name)
 	if err != nil {
 		return
@@ -230,6 +230,9 @@ func (s *LibvirtService) DestroyVmByName(name string, removeDiskImage bool) {
 	dickPath, err := s.QemuService.GetDisk(dom)
 
 	err = dom.Destroy()
+	if err != nil {
+		return
+	}
 
 	if removeDiskImage && dickPath != "" {
 		_fileUtils.RmDir(dickPath)

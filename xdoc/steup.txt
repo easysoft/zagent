@@ -22,6 +22,7 @@ sudo systemctl restart zv.service
 sudo systemctl enable zv.service
 sudo systemctl disable zv.service
 
+sudo iptables -I INPUT -p tcp --dport 51800 -j ACCEPT
 sudo chmod -R 777 /apps/nginx/conf.*.d
 sudo chown -R  root:aaron /apps/nginx/conf.*.d
 
