@@ -60,12 +60,7 @@ func GetValidPort() (ret int, err error) {
 }
 
 func ForwardPort(vmIp string, vmPort int, hostPort int, typ consts.NatForwardType) (err error) {
-	confPath, err := getNginxConf()
-	if err != nil {
-		return
-	}
-
-	name, pth, err := getNginxHotLoadingConf(confPath, vmIp, vmPort, typ)
+	name, pth, err := getNginxHotLoadingConf(vmIp, vmPort, typ)
 	if err != nil {
 		return
 	}
@@ -120,9 +115,11 @@ func getNginxConf() (ret string, err error) {
 	return
 }
 
-func getNginxHotLoadingConf(confPath, vmIp string, vmPort int, typ consts.NatForwardType) (
+func getNginxHotLoadingConf(vmIp string, vmPort int, typ consts.NatForwardType) (
 	name, ret string, err error) {
-	dir := filepath.Dir(filepath.Dir(confPath))
+
+	homeDir, _ := _fileUtils.GetUserHome()
+	dir := filepath.Join(homeDir, "nginx", "conf."+typ.ToString()+".d")
 	name = fmt.Sprintf("%s:%d", vmIp, vmPort)
 	name = strings.ReplaceAll(strings.ReplaceAll(name, ".", "-"), ":", "_")
 
