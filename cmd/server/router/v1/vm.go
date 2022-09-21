@@ -8,6 +8,7 @@ import (
 
 type VmRegisterReq struct {
 	Status consts.VmStatus `json:"status" example:"ready"` // Enums consts.VmStatus
+	Secret string          `json:"secret" yaml:"secret"`
 
 	MacAddress string `json:"macAddress" example:"1C:1C:1C:24:F4:BF"`
 	Ip         string `json:"ip"`
