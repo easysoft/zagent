@@ -72,7 +72,8 @@ func ForwardPort(vmIp string, vmPort int, hostPort int, typ consts.NatForwardTyp
 
 	content := "N/A"
 	if typ == consts.Http {
-		content = fmt.Sprintf(httpConf, hostPort, name, vmIp, vmPort)
+		serverName := strings.ReplaceAll(strings.ReplaceAll(name, ".", "-"), ":", "_")
+		content = fmt.Sprintf(httpConf, hostPort, serverName, vmIp, vmPort)
 	} else {
 		upstreamName := fmt.Sprintf("%s-%d", strings.ReplaceAll(vmIp, ".", "-"), vmPort)
 		content = fmt.Sprintf(streamConf, upstreamName, vmIp, vmPort, hostPort, upstreamName)

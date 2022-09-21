@@ -76,6 +76,39 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 	return
 }
 
+// Destroy
+// @summary 摧毁KVM虚拟机
+// @Accept json
+// @Produce json
+// @Param name path string true "Kvm Name"
+// @Success 200 {object} _httpUtils.Response{} "code = success? 1 : 0"
+// @Router /api/v1/kvm/{name}/destroy [post]
+func (c *KvmCtrl) Destroy(ctx iris.Context) {
+	name := ctx.Params().GetString("name")
+	if name == "" {
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, "vm name is empty", nil))
+		return
+	}
+
+	req := v1.DestroyVmReq{}
+	err := ctx.ReadJSON(&req)
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
+		return
+	}
+
+	bizErr := c.LibvirtService.DestroyVmByName(name, true)
+	if bizErr != nil {
+		ctx.JSON(_httpUtils.RespDataFromBizErr(bizErr))
+		return
+	}
+
+	natHelper.RemoveForward(req.Ip, 0)
+
+	ctx.JSON(_httpUtils.RespData(_const.ResultPass, "success to destroy vm", name))
+	return
+}
+
 // Clone
 // @summary 克隆KVM虚拟机
 // @Accept json
@@ -116,39 +149,6 @@ func (c *KvmCtrl) Clone(ctx iris.Context) {
 
 	ctx.JSON(_httpUtils.RespData(_const.ResultPass, "success to create vm", vm))
 
-	return
-}
-
-// Destroy
-// @summary 摧毁KVM虚拟机
-// @Accept json
-// @Produce json
-// @Param name path string true "Kvm Name"
-// @Success 200 {object} _httpUtils.Response{} "code = success? 1 : 0"
-// @Router /api/v1/kvm/{name}/destroy [post]
-func (c *KvmCtrl) Destroy(ctx iris.Context) {
-	name := ctx.Params().GetString("name")
-	if name == "" {
-		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, "vm name is empty", nil))
-		return
-	}
-
-	req := v1.DestroyVmReq{}
-	err := ctx.ReadJSON(&req)
-	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
-		return
-	}
-
-	bizErr := c.LibvirtService.DestroyVmByName(name, true)
-	if bizErr != nil {
-		ctx.JSON(_httpUtils.RespDataFromBizErr(bizErr))
-		return
-	}
-
-	natHelper.RemoveForward(req.Ip, 0)
-
-	ctx.JSON(_httpUtils.RespData(_const.ResultPass, "success to destroy vm", name))
 	return
 }
 
