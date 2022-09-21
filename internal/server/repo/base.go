@@ -3,7 +3,7 @@ package repo
 import (
 	"errors"
 	"fmt"
-	commDomain "github.com/easysoft/zv/internal/comm/domain"
+	"github.com/easysoft/zv/internal/pkg/domain"
 	_db "github.com/easysoft/zv/pkg/db"
 	"github.com/fatih/color"
 	"gorm.io/gorm"
@@ -27,7 +27,7 @@ func (r *BaseRepo) Defer(tx *gorm.DB, code *int) {
 }
 
 // GetAll 批量查询
-func (r *BaseRepo) GetAll(model interface{}, s *commDomain.Search) *gorm.DB {
+func (r *BaseRepo) GetAll(model interface{}, s *domain.Search) *gorm.DB {
 	db := _db.GetInst().DB().Model(model)
 	sort := "desc"
 	orderBy := "created_at"
@@ -46,7 +46,7 @@ func (r *BaseRepo) GetAll(model interface{}, s *commDomain.Search) *gorm.DB {
 }
 
 // Found 查询条件
-func (r *BaseRepo) Found(s *commDomain.Search) *gorm.DB {
+func (r *BaseRepo) Found(s *domain.Search) *gorm.DB {
 	return _db.GetInst().DB().Scopes(r.Relation(s.Relations), r.FoundByWhere(s.Fields))
 }
 
@@ -69,7 +69,7 @@ func (r *BaseRepo) UpdateObj(v, d interface{}, id uint) error {
 }
 
 // Relation 加载关联关系
-func (r *BaseRepo) Relation(relates []*commDomain.Relate) func(db *gorm.DB) *gorm.DB {
+func (r *BaseRepo) Relation(relates []*domain.Relate) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if len(relates) > 0 {
 			for _, re := range relates {
@@ -88,7 +88,7 @@ func (r *BaseRepo) Relation(relates []*commDomain.Relate) func(db *gorm.DB) *gor
 }
 
 // FoundByWhere 查询条件
-func (r *BaseRepo) FoundByWhere(fields []*commDomain.Filed) func(db *gorm.DB) *gorm.DB {
+func (r *BaseRepo) FoundByWhere(fields []*domain.Filed) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if len(fields) > 0 {
 			for _, field := range fields {
@@ -127,12 +127,12 @@ func (r *BaseRepo) FoundByWhere(fields []*commDomain.Filed) func(db *gorm.DB) *g
 }
 
 // GetRelations 转换前端获取关联关系为 []*Relate
-func (r *BaseRepo) GetRelations(relation string, fs map[string]interface{}) []*commDomain.Relate {
-	var relates []*commDomain.Relate
+func (r *BaseRepo) GetRelations(relation string, fs map[string]interface{}) []*domain.Relate {
+	var relates []*domain.Relate
 	if len(relation) > 0 {
 		arr := strings.Split(relation, ";")
 		for _, item := range arr {
-			relate := &commDomain.Relate{
+			relate := &domain.Relate{
 				Value: item,
 			}
 			// 增加关联过滤
@@ -150,7 +150,7 @@ func (r *BaseRepo) GetRelations(relation string, fs map[string]interface{}) []*c
 }
 
 // GetSearch 转换前端查询关系为 *Filed
-func (r *BaseRepo) GetSearch(key, search string) *commDomain.Filed {
+func (r *BaseRepo) GetSearch(key, search string) *domain.Filed {
 	if len(search) > 0 {
 		if strings.Contains(search, ":") {
 			searches := strings.Split(search, ":")
@@ -160,21 +160,21 @@ func (r *BaseRepo) GetSearch(key, search string) *commDomain.Filed {
 					value = fmt.Sprintf("%%%s%%", searches[0])
 				}
 
-				return &commDomain.Filed{
+				return &domain.Filed{
 					Condition: searches[1],
 					Key:       key,
 					Value:     value,
 				}
 
 			} else if len(searches) == 1 {
-				return &commDomain.Filed{
+				return &domain.Filed{
 					Condition: "=",
 					Key:       key,
 					Value:     searches[0],
 				}
 			}
 		} else {
-			return &commDomain.Filed{
+			return &domain.Filed{
 				Condition: "=",
 				Key:       key,
 				Value:     search,

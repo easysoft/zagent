@@ -2,7 +2,7 @@ package serverService
 
 import (
 	"fmt"
-	commDomain "github.com/easysoft/zv/internal/comm/domain"
+	commDomain "github.com/easysoft/zv/internal/pkg/domain"
 	bizCasbin "github.com/easysoft/zv/internal/server/biz/casbin"
 	"github.com/easysoft/zv/internal/server/biz/transformer"
 	"github.com/easysoft/zv/internal/server/model"

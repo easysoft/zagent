@@ -3,10 +3,9 @@ package main
 import (
 	"flag"
 	vmInit "github.com/easysoft/zv/cmd/vm/init"
-	"github.com/easysoft/zv/internal/agent/conf"
-	"github.com/easysoft/zv/internal/agent/utils/common"
-	"github.com/easysoft/zv/internal/agent/utils/const"
-	consts "github.com/easysoft/zv/internal/comm/const"
+	agentConf "github.com/easysoft/zv/internal/pkg/agent/conf"
+	agentUtils "github.com/easysoft/zv/internal/pkg/agent/utils/common"
+	consts "github.com/easysoft/zv/internal/pkg/const"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"github.com/fatih/color"
 	"os"
@@ -36,7 +35,7 @@ func main() {
 
 	flagSet = flag.NewFlagSet(consts.AppNameAgentVm, flag.ContinueOnError)
 
-	flagSet.StringVar(&runMode, "t", agentConst.Vm.ToString(), "")
+	flagSet.StringVar(&runMode, "t", consts.RunModeVm.ToString(), "")
 	flagSet.StringVar(&agentConf.Inst.Server, "s", "http://192.168.0.107:8085", "")
 	flagSet.StringVar(&agentConf.Inst.NodeName, "n", "", "")
 	flagSet.StringVar(&agentConf.Inst.NodeIp, "i", "", "")
@@ -64,7 +63,7 @@ func start() {
 	_logUtils.Init(consts.AppNameAgentVm)
 
 	if err := flagSet.Parse(os.Args[1:]); err == nil {
-		agentConf.Inst.RunMode = agentConst.RunMode(runMode)
+		agentConf.Inst.RunMode = consts.RunMode(runMode)
 		vmInit.Init()
 	}
 }

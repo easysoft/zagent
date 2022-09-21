@@ -3,8 +3,8 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	consts "github.com/easysoft/zv/internal/comm/const"
-	"github.com/easysoft/zv/internal/comm/domain"
+	consts "github.com/easysoft/zv/internal/pkg/const"
+	"github.com/easysoft/zv/internal/pkg/domain"
 	serverService "github.com/easysoft/zv/internal/server/service"
 	_const "github.com/easysoft/zv/pkg/const"
 	_dateUtils "github.com/easysoft/zv/pkg/lib/date"

@@ -1,8 +1,8 @@
 package repo
 
 import (
-	"github.com/easysoft/zv/internal/comm/const"
-	"github.com/easysoft/zv/internal/comm/domain"
+	"github.com/easysoft/zv/internal/pkg/const"
+	"github.com/easysoft/zv/internal/pkg/domain"
 	_intUtils "github.com/easysoft/zv/pkg/lib/int"
 )
 

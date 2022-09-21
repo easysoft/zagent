@@ -2,7 +2,7 @@ package vmCron
 
 import (
 	"fmt"
-	consts "github.com/easysoft/zv/internal/comm/const"
+	consts "github.com/easysoft/zv/internal/pkg/const"
 	vmAgentService "github.com/easysoft/zv/internal/vm/service"
 	_cronUtils "github.com/easysoft/zv/pkg/lib/cron"
 	_dateUtils "github.com/easysoft/zv/pkg/lib/date"

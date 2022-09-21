@@ -1,8 +1,8 @@
 package vmHandler
 
 import (
-	"github.com/easysoft/zv/internal/agent/service"
-	"github.com/easysoft/zv/internal/comm/domain"
+	agentService "github.com/easysoft/zv/internal/pkg/agent/service"
+	"github.com/easysoft/zv/internal/pkg/domain"
 	_const "github.com/easysoft/zv/pkg/const"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	"github.com/kataras/iris/v12"

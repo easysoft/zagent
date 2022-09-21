@@ -1,7 +1,7 @@
 package serverService
 
 import (
-	consts "github.com/easysoft/zv/internal/comm/const"
+	consts "github.com/easysoft/zv/internal/pkg/const"
 	"github.com/easysoft/zv/internal/server/model"
 	"github.com/easysoft/zv/internal/server/repo"
 	serverUitls "github.com/easysoft/zv/internal/server/utils/lib"

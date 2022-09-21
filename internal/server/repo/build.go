@@ -1,8 +1,8 @@
 package repo
 
 import (
-	"github.com/easysoft/zv/internal/comm/const"
-	"github.com/easysoft/zv/internal/comm/domain"
+	"github.com/easysoft/zv/internal/pkg/const"
+	"github.com/easysoft/zv/internal/pkg/domain"
 	"github.com/easysoft/zv/internal/server/model"
 	"gorm.io/gorm"
 	"time"

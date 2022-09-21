@@ -2,7 +2,7 @@ package serverService
 
 import (
 	"fmt"
-	"github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/pkg/const"
 	virtualboxapi "github.com/easysoft/zv/internal/pkg/vendors/virtualbox/api"
 	"github.com/easysoft/zv/internal/server/model"
 	"github.com/easysoft/zv/internal/server/repo"

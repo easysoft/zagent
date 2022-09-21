@@ -2,7 +2,7 @@ package serverUitls
 
 import (
 	"fmt"
-	"github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/pkg/const"
 	"strings"
 )
 

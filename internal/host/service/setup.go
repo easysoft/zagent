@@ -3,8 +3,8 @@ package hostAgentService
 import (
 	"fmt"
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
-	agentConf "github.com/easysoft/zv/internal/agent/conf"
-	natHelper "github.com/easysoft/zv/internal/agent/utils/nat"
+	agentConf "github.com/easysoft/zv/internal/pkg/agent/conf"
+	natHelper "github.com/easysoft/zv/internal/pkg/agent/utils/nat"
 	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
 	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
 	_stringUtils "github.com/easysoft/zv/pkg/lib/string"

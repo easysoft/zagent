@@ -2,7 +2,7 @@ package repo
 
 import (
 	v1 "github.com/easysoft/zv/cmd/server/router/v1"
-	"github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/pkg/const"
 	"github.com/easysoft/zv/internal/server/model"
 	"gorm.io/gorm"
 	"time"

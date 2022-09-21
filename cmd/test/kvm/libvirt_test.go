@@ -2,7 +2,7 @@ package kvm
 
 import (
 	agentConf "github.com/easysoft/zv/internal/agent/conf"
-	"github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/pkg/const"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"testing"
 )
@@ -20,7 +20,7 @@ func TestLibVirt(t *testing.T) {
 	src:  xml template
 	base: backing file, get by vm's OsCategory properties etc.
 	*/
-	//vm := domain.Vm{DiskSize: 40000,
+	//vm := domain.RunModeVm{DiskSize: 40000,
 	//	OsCategory: consts.Windows, OsType: consts.Win10,
 	//	OsVersion: "x64-pro", OsLang: consts.ZH_CN,
 	//	VmCpu: 2,

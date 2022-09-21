@@ -11,7 +11,7 @@ import (
 	client "github.com/docker/docker/client"
 	"github.com/docker/go-connections/nat"
 	agentConf "github.com/easysoft/zv/internal/agent/conf"
-	commDomain "github.com/easysoft/zv/internal/comm/domain"
+	commDomain "github.com/easysoft/zv/internal/pkg/domain"
 	_commonUtils "github.com/easysoft/zv/internal/pkg/lib/common"
 	_logUtils "github.com/easysoft/zv/internal/pkg/lib/log"
 	"io"

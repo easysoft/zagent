@@ -1,6 +1,6 @@
 package v1
 
-import "github.com/easysoft/zv/internal/comm/const"
+import consts "github.com/easysoft/zv/internal/pkg/const"
 
 type Environment struct {
 	OsCategory consts.OsCategory `json:"osCategory" example:"windows"`

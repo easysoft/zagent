@@ -1,7 +1,7 @@
 package _commonUtils
 
 import (
-	consts "github.com/easysoft/zv/internal/comm/const"
+	consts "github.com/easysoft/zv/internal/pkg/const"
 	"sync"
 )
 

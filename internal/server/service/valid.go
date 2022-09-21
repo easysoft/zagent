@@ -1,7 +1,7 @@
 package serverService
 
 import (
-	commDomain "github.com/easysoft/zv/internal/comm/domain"
+	commDomain "github.com/easysoft/zv/internal/pkg/domain"
 )
 
 type ValidService struct {

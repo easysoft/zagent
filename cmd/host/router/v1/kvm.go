@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"github.com/easysoft/zv/internal/comm/const"
+	consts "github.com/easysoft/zv/internal/pkg/const"
 )
 
 type KvmReq struct {

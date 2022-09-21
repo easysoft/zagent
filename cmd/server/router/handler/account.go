@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/easysoft/zv/internal/comm/domain"
+	"github.com/easysoft/zv/internal/pkg/domain"
 	"github.com/easysoft/zv/internal/server/biz/const"
 	jwt2 "github.com/easysoft/zv/internal/server/biz/jwt"
 	"github.com/easysoft/zv/internal/server/biz/redis"

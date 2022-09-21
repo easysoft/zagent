@@ -3,7 +3,7 @@ package handler
 import (
 	"encoding/json"
 	v1 "github.com/easysoft/zv/cmd/server/router/v1"
-	"github.com/easysoft/zv/internal/comm/domain"
+	"github.com/easysoft/zv/internal/pkg/domain"
 	"github.com/easysoft/zv/internal/server/service"
 	_const "github.com/easysoft/zv/pkg/const"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
@@ -26,7 +26,7 @@ func NewVmCtrl() *VmCtrl {
 // @summary 向服务器注册虚拟机
 // @Accept json
 // @Produce json
-// @Param task body v1.VmRegisterReq true "Vm Object"
+// @Param task body v1.VmRegisterReq true "RunModeVm Object"
 // @Success 200 {object} _httpUtils.Response "code = success? 1 : 0"
 // @Router /api/v1/client/vm/register [post]
 func (c *VmCtrl) Register(ctx iris.Context) {

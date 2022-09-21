@@ -2,7 +2,7 @@ package repo
 
 import (
 	"fmt"
-	commDomain "github.com/easysoft/zv/internal/comm/domain"
+	commDomain "github.com/easysoft/zv/internal/pkg/domain"
 	"github.com/easysoft/zv/internal/server/model"
 	"github.com/fatih/color"
 	"gorm.io/gorm"

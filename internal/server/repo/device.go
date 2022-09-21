@@ -1,7 +1,7 @@
 package repo
 
 import (
-	commDomain "github.com/easysoft/zv/internal/comm/domain"
+	"github.com/easysoft/zv/internal/pkg/domain"
 	"github.com/easysoft/zv/internal/server/model"
 	"gorm.io/gorm"
 )
@@ -15,7 +15,7 @@ func NewDeviceRepo() *DeviceRepo {
 	return &DeviceRepo{}
 }
 
-func (r DeviceRepo) Register(device commDomain.DeviceInst) (err error) {
+func (r DeviceRepo) Register(device domain.DeviceInst) (err error) {
 	code := 1
 	tx := r.DB.Begin()
 	defer Defer(tx, &code)

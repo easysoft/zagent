@@ -2,13 +2,13 @@ package hostAgentService
 
 import (
 	"encoding/json"
-	agentConf "github.com/easysoft/zv/internal/agent/conf"
-	agentService "github.com/easysoft/zv/internal/agent/service"
-	testingService "github.com/easysoft/zv/internal/agent/service/testing"
-	agentZentaoService "github.com/easysoft/zv/internal/agent/service/zentao"
-	"github.com/easysoft/zv/internal/comm/const"
-	"github.com/easysoft/zv/internal/comm/domain"
 	hostKvmService "github.com/easysoft/zv/internal/host/service/kvm"
+	agentConf "github.com/easysoft/zv/internal/pkg/agent/conf"
+	agentService "github.com/easysoft/zv/internal/pkg/agent/service"
+	agentTestingService "github.com/easysoft/zv/internal/pkg/agent/service/testing"
+	agentZentaoService "github.com/easysoft/zv/internal/pkg/agent/service/zentao"
+	"github.com/easysoft/zv/internal/pkg/const"
+	"github.com/easysoft/zv/internal/pkg/domain"
 	_dateUtils "github.com/easysoft/zv/pkg/lib/date"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	_i118Utils "github.com/easysoft/zv/pkg/lib/i118"
@@ -20,8 +20,8 @@ import (
 type HostService struct {
 	VmService *hostKvmService.KvmService `inject:""`
 
-	JobService  *agentService.JobService   `inject:""`
-	TestService *testingService.RunService `inject:""`
+	JobService  *agentService.JobService        `inject:""`
+	TestService *agentTestingService.RunService `inject:""`
 
 	ZentaoService *agentZentaoService.ZentaoService `inject:""`
 }

@@ -2,8 +2,8 @@ package repo
 
 import (
 	"fmt"
-	"github.com/easysoft/zv/internal/comm/const"
-	domain "github.com/easysoft/zv/internal/comm/domain"
+	"github.com/easysoft/zv/internal/pkg/const"
+	"github.com/easysoft/zv/internal/pkg/domain"
 	"github.com/easysoft/zv/internal/server/model"
 	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
 	"gorm.io/gorm"

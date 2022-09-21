@@ -1,7 +1,7 @@
 package v1
 
 import (
-	consts "github.com/easysoft/zv/internal/comm/const"
+	consts "github.com/easysoft/zv/internal/pkg/const"
 	"github.com/easysoft/zv/internal/server/model"
 	"github.com/jinzhu/copier"
 )

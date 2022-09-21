@@ -3,7 +3,7 @@ package aliyun
 import (
 	"fmt"
 	testconst "github.com/easysoft/zv/cmd/test/_const"
-	"github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/pkg/const"
 	"github.com/easysoft/zv/internal/pkg/vendors/aliyun"
 	serverConst "github.com/easysoft/zv/internal/server/utils/const"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"

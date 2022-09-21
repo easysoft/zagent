@@ -2,8 +2,8 @@ package serverService
 
 import (
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
-	"github.com/easysoft/zv/internal/comm/const"
-	"github.com/easysoft/zv/internal/comm/domain"
+	"github.com/easysoft/zv/internal/pkg/const"
+	"github.com/easysoft/zv/internal/pkg/domain"
 	"github.com/easysoft/zv/internal/server/model"
 	"github.com/easysoft/zv/internal/server/repo"
 	commonService "github.com/easysoft/zv/internal/server/service/common"

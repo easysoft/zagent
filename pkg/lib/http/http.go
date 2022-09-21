@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	consts "github.com/easysoft/zv/internal/comm/const"
-	"github.com/easysoft/zv/internal/pkg/utils/common"
+	consts "github.com/easysoft/zv/internal/pkg/const"
+	"github.com/easysoft/zv/internal/pkg/utils"
 	_const "github.com/easysoft/zv/pkg/const"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"github.com/fatih/color"
@@ -36,7 +36,7 @@ func Get(url string) (ret []byte, err error) {
 		return
 	}
 
-	commonUtils.AddBearTokenIfNeeded(req)
+	utils.AddBearTokenIfNeeded(req)
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -104,7 +104,7 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 	req.Header.Set("Content-Type", "application/json")
 	//req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	commonUtils.AddBearTokenIfNeeded(req)
+	utils.AddBearTokenIfNeeded(req)
 
 	resp, err := client.Do(req)
 	if err != nil {

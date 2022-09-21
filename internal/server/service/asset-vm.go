@@ -3,7 +3,7 @@ package serverService
 import (
 	"crypto/rand"
 	"fmt"
-	consts "github.com/easysoft/zv/internal/comm/const"
+	consts "github.com/easysoft/zv/internal/pkg/const"
 	"github.com/easysoft/zv/internal/server/model"
 	"github.com/easysoft/zv/internal/server/repo"
 	"github.com/easysoft/zv/internal/server/service/common"

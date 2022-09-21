@@ -1,7 +1,7 @@
 package _httpUtils
 
 import (
-	"github.com/easysoft/zv/internal/comm/domain"
+	"github.com/easysoft/zv/internal/pkg/domain"
 	_const "github.com/easysoft/zv/pkg/const"
 	_domain "github.com/easysoft/zv/pkg/domain"
 )

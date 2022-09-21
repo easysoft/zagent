@@ -1,7 +1,7 @@
 package _sshUtils
 
 import (
-	consts "github.com/easysoft/zv/internal/comm/const"
+	consts "github.com/easysoft/zv/internal/pkg/const"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	_resUtils "github.com/easysoft/zv/pkg/lib/res"
 	"golang.org/x/crypto/ssh"

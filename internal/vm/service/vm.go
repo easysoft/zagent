@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/easysoft/zv/internal/agent/conf"
-	agentService "github.com/easysoft/zv/internal/agent/service"
-	testingService "github.com/easysoft/zv/internal/agent/service/testing"
-	agentZentaoService "github.com/easysoft/zv/internal/agent/service/zentao"
-	"github.com/easysoft/zv/internal/comm/const"
-	"github.com/easysoft/zv/internal/comm/domain"
+	agentConf "github.com/easysoft/zv/internal/pkg/agent/conf"
+	agentService "github.com/easysoft/zv/internal/pkg/agent/service"
+	agentTestingService "github.com/easysoft/zv/internal/pkg/agent/service/testing"
+	agentZentaoService "github.com/easysoft/zv/internal/pkg/agent/service/zentao"
+	"github.com/easysoft/zv/internal/pkg/const"
+	"github.com/easysoft/zv/internal/pkg/domain"
 	_domain "github.com/easysoft/zv/pkg/domain"
 	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
 	_dateUtils "github.com/easysoft/zv/pkg/lib/date"
@@ -24,9 +24,9 @@ type VmService struct {
 	VmMapVar  map[string]domain.Vm
 	TimeStamp int64
 
-	VmService   *VmService                 `inject:""`
-	JobService  *agentService.JobService   `inject:""`
-	TestService *testingService.RunService `inject:""`
+	VmService   *VmService                      `inject:""`
+	JobService  *agentService.JobService        `inject:""`
+	TestService *agentTestingService.RunService `inject:""`
 
 	ZentaoService *agentZentaoService.ZentaoService `inject:""`
 }

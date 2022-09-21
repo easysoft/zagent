@@ -3,7 +3,7 @@ package handler
 import (
 	"encoding/json"
 	v1 "github.com/easysoft/zv/cmd/server/router/v1"
-	"github.com/easysoft/zv/internal/comm/domain"
+	"github.com/easysoft/zv/internal/pkg/domain"
 	serverService "github.com/easysoft/zv/internal/server/service"
 	_const "github.com/easysoft/zv/pkg/const"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
@@ -27,7 +27,7 @@ func NewHostCtrl() *HostCtrl {
 // @summary 向服务器注册宿主机
 // @Accept json
 // @Produce json
-// @Param task body v1.HostRegisterReq true "Host Object"
+// @Param task body v1.HostRegisterReq true "RunModeHost Object"
 // @Success 200 {object} _httpUtils.Response "code = success? 1 : 0"
 // @Router /api/v1/client/host/register [post]
 func (c *HostCtrl) Register(ctx iris.Context) {

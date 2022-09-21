@@ -1,8 +1,8 @@
 package repo
 
 import (
-	consts "github.com/easysoft/zv/internal/comm/const"
-	"github.com/easysoft/zv/internal/comm/domain"
+	consts "github.com/easysoft/zv/internal/pkg/const"
+	"github.com/easysoft/zv/internal/pkg/domain"
 	"github.com/easysoft/zv/internal/server/model"
 	serverConst "github.com/easysoft/zv/internal/server/utils/const"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"

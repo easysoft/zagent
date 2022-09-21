@@ -1,7 +1,7 @@
 package model
 
 import (
-	consts "github.com/easysoft/zv/internal/comm/const"
+	consts "github.com/easysoft/zv/internal/pkg/const"
 )
 
 type Container struct {

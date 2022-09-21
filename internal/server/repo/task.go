@@ -1,7 +1,7 @@
 package repo
 
 import (
-	"github.com/easysoft/zv/internal/comm/const"
+	"github.com/easysoft/zv/internal/pkg/const"
 	"github.com/easysoft/zv/internal/server/model"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"gorm.io/gorm"
