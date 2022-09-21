@@ -198,153 +198,6 @@ func (e OsLang) ToString() string {
 	return string(e)
 }
 
-type BrowserType string
-
-const (
-	Chrome  BrowserType = "chrome"
-	Firefox BrowserType = "firefox"
-	Edge    BrowserType = "edge"
-	IE      BrowserType = "ie"
-)
-
-func (e BrowserType) ToString() string {
-	return string(e)
-}
-
-type AuthType string
-
-const (
-	None        AuthType = ""
-	BasicAuth   AuthType = "basicAuth"
-	BearerToken AuthType = "bearerToken"
-	OAuth2      AuthType = "oauth2"
-)
-
-func (e AuthType) ToString() string {
-	return string(e)
-}
-
-type OAuth2TypeGrantType string
-
-const (
-	AuthCode                         OAuth2TypeGrantType = "authCode"
-	AuthCodeWithPKCE                 OAuth2TypeGrantType = "authCodeWithPKCE" // pkce: Proof Key for Code Exchange
-	Implicit                         OAuth2TypeGrantType = "implicit"
-	ResourceOwnerPasswordCredentials OAuth2TypeGrantType = "resourceOwnerPasswordCredentials"
-	ClientCredentials                OAuth2TypeGrantType = "clientCredentials"
-)
-
-type OAuth2ClientAuthType string
-
-const (
-	AsBasicAuthHeader OAuth2ClientAuthType = "asBasicAuthHeader"
-	CredentInBody     OAuth2ClientAuthType = "credentInBody"
-)
-
-func (e OAuth2ClientAuthType) ToString() string {
-	return string(e)
-}
-
-type CodeChallengeMethod string
-
-const (
-	SHA256 CodeChallengeMethod = "sha256"
-	Plain  CodeChallengeMethod = "plain"
-)
-
-func (e CodeChallengeMethod) ToString() string {
-	return string(e)
-}
-
-type TestType string
-
-const (
-	Auto      TestType = "auto"
-	Interface TestType = "interface"
-	Case      TestType = "case"
-	Scenario  TestType = "scenario"
-)
-
-func (e TestType) ToString() string {
-	return string(e)
-}
-
-type PreviewType string
-
-const (
-	Json PreviewType = "json"
-	Html PreviewType = "html"
-	Xml  PreviewType = "xml"
-	Text PreviewType = "text"
-)
-
-func (e PreviewType) ToString() string {
-	return string(e)
-}
-
-type ProcessorType string
-
-const (
-	Simple    ProcessorType = "simple"
-	DataLoop  ProcessorType = "data_loop"
-	Extractor ProcessorType = "extractor"
-)
-
-func (e ProcessorType) ToString() string {
-	return string(e)
-}
-
-type ErrorAction string
-
-const (
-	ActionContinue        ErrorAction = "continue"
-	ActionStartNextThread ErrorAction = "start_next_thread"
-	ActionLoop            ErrorAction = "loop"
-	ActionStopThread      ErrorAction = "stop_thread"
-	ActionStopTest        ErrorAction = "stop_test"
-	ActionStopTestNow     ErrorAction = "stop_test_now"
-)
-
-func (e ErrorAction) ToString() string {
-	return string(e)
-}
-
-type DataSource string
-
-const (
-	ZenData DataSource = "zendata"
-	CSV     DataSource = "csv"
-	Excel   DataSource = "excel"
-)
-
-func (e DataSource) ToString() string {
-	return string(e)
-}
-
-type ExtractorType string
-
-const (
-	Value       ExtractorType = "value"
-	XPath       ExtractorType = "xpath"
-	JSONPath    ExtractorType = "json_path"
-	CssSelector ExtractorType = "sss_selector"
-)
-
-func (e ExtractorType) ToString() string {
-	return string(e)
-}
-
-type ExtractorSource string
-
-const (
-	Body   ExtractorSource = "body"
-	Header ExtractorSource = "header"
-)
-
-func (e ExtractorSource) ToString() string {
-	return string(e)
-}
-
 type EntityType string
 
 const (
@@ -366,5 +219,18 @@ const (
 )
 
 func (e NatForwardType) ToString() string {
+	return string(e)
+}
+
+type BrowserType string
+
+const (
+	Chrome  BrowserType = "chrome"
+	Firefox BrowserType = "firefox"
+	Edge    BrowserType = "edge"
+	IE      BrowserType = "ie"
+)
+
+func (e BrowserType) ToString() string {
 	return string(e)
 }

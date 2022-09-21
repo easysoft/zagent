@@ -10,6 +10,7 @@ import (
 	agentZentaoService "github.com/easysoft/zv/internal/agent/service/zentao"
 	"github.com/easysoft/zv/internal/comm/const"
 	"github.com/easysoft/zv/internal/comm/domain"
+	_domain "github.com/easysoft/zv/pkg/domain"
 	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
 	_dateUtils "github.com/easysoft/zv/pkg/lib/date"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
@@ -134,24 +135,30 @@ func (s *VmService) notifyHost() (secret, ip string, err error) {
 		uri)
 
 	_, macObj := _commonUtils.GetIp()
-	data := domain.VmNotifyReq{
+	reqData := domain.VmNotifyReq{
 		MacAddress: macObj.String(),
 	}
 
-	bytes, err := _httpUtils.Post(url, data)
+	bytes, err := _httpUtils.Post(url, reqData)
 	if err != nil {
 		return
 	}
 
-	resp := domain.VmNotifyResp{}
-
+	resp := _domain.Response{}
 	err = json.Unmarshal(bytes, &resp)
 	if err != nil {
 		return
 	}
 
-	secret = resp.Secret
-	ip = resp.Ip
+	respDataBytes, _ := json.Marshal(resp.Data)
+	respData := domain.VmNotifyResp{}
+	err = json.Unmarshal(respDataBytes, &respData)
+	if err != nil {
+		return
+	}
+
+	secret = respData.Secret
+	ip = respData.Ip
 	if secret == "" {
 		err = errors.New("secret is empty")
 		return

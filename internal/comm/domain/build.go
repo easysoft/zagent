@@ -52,8 +52,4 @@ type Build struct {
 
 	Progress consts.BuildProgress `json:"progress"`
 	Status   consts.BuildStatus   `json:"status"`
-
-	// interface test
-	TestScenario TestScenario `json:"testScenario,omitempty"`
-	TestSet      TestSet      `json:"testSet,omitempty"`
 }
