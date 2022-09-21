@@ -72,8 +72,7 @@ func ForwardPort(vmIp string, vmPort int, hostPort int, typ consts.NatForwardTyp
 
 	content := "N/A"
 	if typ == consts.Http {
-		serverName := strings.ReplaceAll(strings.ReplaceAll(name, ".", "-"), ":", "_")
-		content = fmt.Sprintf(httpConf, hostPort, serverName, vmIp, vmPort)
+		content = fmt.Sprintf(httpConf, hostPort, name, vmIp, vmPort)
 	} else {
 		upstreamName := fmt.Sprintf("%s-%d", strings.ReplaceAll(vmIp, ".", "-"), vmPort)
 		content = fmt.Sprintf(streamConf, upstreamName, vmIp, vmPort, hostPort, upstreamName)
@@ -125,6 +124,8 @@ func getNginxHotLoadingConf(confPath, vmIp string, vmPort int, typ consts.NatFor
 	name, ret string, err error) {
 	dir := filepath.Dir(filepath.Dir(confPath))
 	name = fmt.Sprintf("%s:%d", vmIp, vmPort)
+	name = strings.ReplaceAll(strings.ReplaceAll(name, ".", "-"), ":", "_")
+
 	ret = filepath.Join(dir, fmt.Sprintf("conf.%s.d", typ), name+".conf")
 
 	return
