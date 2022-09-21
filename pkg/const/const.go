@@ -17,3 +17,7 @@ const (
 	Authorization = "Authorization"
 	Bearer        = "Bearer"
 )
+
+var (
+	IsRelease = false
+)

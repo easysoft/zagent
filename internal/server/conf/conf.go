@@ -2,6 +2,7 @@ package serverConf
 
 import (
 	"fmt"
+	_const "github.com/easysoft/zv/pkg/const"
 	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
 	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
 	_i118Utils "github.com/easysoft/zv/pkg/lib/i118"
@@ -18,6 +19,7 @@ var (
 )
 
 func Init() {
+	_const.IsRelease = _commonUtils.IsRelease()
 	if Inst.Language == "" {
 		Inst.Language = "zh"
 	}

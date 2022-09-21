@@ -3,6 +3,7 @@ package agentConf
 import (
 	agentConst "github.com/easysoft/zv/internal/agent/utils/const"
 	consts "github.com/easysoft/zv/internal/comm/const"
+	_const "github.com/easysoft/zv/pkg/const"
 	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
 	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
@@ -16,6 +17,7 @@ var (
 )
 
 func Init(app string) {
+	_const.IsRelease = _commonUtils.IsRelease()
 	if Inst.Language == "" {
 		Inst.Language = "zh"
 	}

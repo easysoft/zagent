@@ -6,6 +6,7 @@ import (
 	"fmt"
 	consts "github.com/easysoft/zv/internal/comm/const"
 	"github.com/easysoft/zv/internal/pkg/utils/common"
+	_const "github.com/easysoft/zv/pkg/const"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"github.com/fatih/color"
 	"io/ioutil"
@@ -21,8 +22,12 @@ func Get(url string) (ret []byte, err error) {
 		_logUtils.Infof("===DEBUG===  request: %s", url)
 	}
 
+	timeout := 3 * time.Second
+	if !_const.IsRelease {
+		timeout = 60 * time.Second
+	}
 	client := &http.Client{
-		Timeout: 3 * time.Second,
+		Timeout: timeout,
 	}
 
 	req, err := http.NewRequest("GET", url, nil)
@@ -69,8 +74,13 @@ func PostOrPut(url string, method string, data interface{}) (ret []byte, err err
 		_logUtils.Infof("===DEBUG===  request: %s", url)
 	}
 
+	timeout := 3 * time.Second
+	if !_const.IsRelease {
+		timeout = 60 * time.Second
+	}
+
 	client := &http.Client{
-		Timeout: 3 * time.Second,
+		Timeout: timeout,
 	}
 
 	dataBytes, err := json.Marshal(data)
