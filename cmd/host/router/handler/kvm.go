@@ -140,7 +140,12 @@ func (c *KvmCtrl) Destroy(ctx iris.Context) {
 		return
 	}
 
-	c.LibvirtService.DestroyVmByName(name, true)
+	err = c.LibvirtService.DestroyVmByName(name, true)
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(iris.StatusInternalServerError, err.Error(), nil))
+		return
+	}
+
 	natHelper.RemoveForward(req.Ip, 0)
 
 	ctx.JSON(_httpUtils.ApiRes(iris.StatusOK, "success to destroy vm", name))
