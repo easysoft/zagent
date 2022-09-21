@@ -81,7 +81,7 @@ func (s *VmService) Register(isBusy bool) (ok bool) {
 		consts.AuthSecret = vm.Secret
 
 		if err != nil || vm.Secret == "" || vm.Ip == "" || vm.AgentPortOnHost == 0 {
-			_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_notify", err.Error()))
+			_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_notify", "error or return empty value"))
 			return
 		}
 	}
