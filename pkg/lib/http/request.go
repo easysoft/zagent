@@ -5,14 +5,12 @@ import _const "github.com/easysoft/zv/pkg/const"
 type Request struct {
 	PageSize int `json:"pageSize"`
 	PageNo   int `json:"pageNo"`
-	Aa       int `json:"aa"`
 }
 
 type Response struct {
-	Code  _const.ResultCode `json:"code"`
-	Msg   string            `json:"msg"`
-	Token string            `json:"token"`
-	Data  interface{}       `json:"data"`
+	Code _const.ResultCode `json:"code"`
+	Msg  string            `json:"msg"`
+	Data interface{}       `json:"data"`
 }
 type ResponsePage struct {
 	Response
