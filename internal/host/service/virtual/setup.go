@@ -30,7 +30,7 @@ func NewSetupService() *SetupService {
 }
 
 func (s *SetupService) AddVmPortMap(req v1.VmPortMapReq) (resp v1.VmPortMapResp, err error) {
-	resp.HostPort, err = natHelper.GetValidPort()
+	resp.HostPort, err = natHelper.GetValidPort(req.VmIp)
 	if err != nil {
 		return
 	}
@@ -43,7 +43,7 @@ func (s *SetupService) AddVmPortMap(req v1.VmPortMapReq) (resp v1.VmPortMapResp,
 }
 
 func (s *SetupService) RemoveVmPortMap(req v1.VmPortMapReq) (resp v1.VmPortMapResp, err error) {
-	resp.HostPort, err = natHelper.GetValidPort()
+	resp.HostPort, err = natHelper.GetValidPort(req.VmIp)
 	if err != nil {
 		return
 	}
