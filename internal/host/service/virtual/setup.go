@@ -38,7 +38,7 @@ func (s *SetupService) AddVmPortMap(req v1.VmPortMapReq) (resp v1.VmPortMapResp,
 }
 
 func (s *SetupService) RemoveVmPortMap(req v1.VmPortMapReq) (err error) {
-	err = natHelper.RemoveForward(req.VmIp, req.VmPort)
+	err = natHelper.RemoveForward(req.VmIp, req.VmPort, req.Type)
 
 	return
 }

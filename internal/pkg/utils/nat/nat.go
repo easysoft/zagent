@@ -7,7 +7,6 @@ import (
 	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
 	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
 	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -105,16 +104,16 @@ func getMappedInfo(vmIp string, vmPort int, typ consts.NatForwardType) (mappedPo
 	return
 }
 
-func RemoveForward(vmIp string, vmPort int) (err error) {
-	confPath, _ := getNginxConf()
+func RemoveForward(vmIp string, vmPort int, typ consts.NatForwardType) (err error) {
+	homeDir, _ := _fileUtils.GetUserHome()
+	dir := filepath.Join(homeDir, "zagent", "nginx", fmt.Sprintf("conf.%s.d", typ))
 
-	dir := filepath.Dir(filepath.Dir(confPath))
 	name := fmt.Sprintf("%s:*@*.conf", vmIp)
 	if vmPort > 0 {
 		name = fmt.Sprintf("%s:%d@*.conf", vmIp, vmPort)
 	}
 
-	pth := filepath.Join(dir, "conf.*.d", name)
+	pth := filepath.Join(dir, name)
 
 	cmd := fmt.Sprintf("rm -rf %s", pth)
 	_shellUtils.ExeSysCmd(cmd)
@@ -134,21 +133,21 @@ func RemoveForwardByPort(vmPort int, typ consts.NatForwardType) (err error) {
 	return
 }
 
-func getNginxConf() (ret string, err error) {
-	cmd := fmt.Sprintf(`nginx -t 2>&1 | grep test`)
-	out, err := exec.Command("/bin/bash", "-c", cmd).Output()
-
-	regx, _ := regexp.Compile(`file (.+) test`)
-	arr := regx.FindStringSubmatch(string(out))
-
-	if len(arr) > 1 {
-		ret = arr[1]
-	} else {
-		err = errors.New("not found")
-	}
-
-	return
-}
+//func getNginxConf() (ret string, err error) {
+//	cmd := fmt.Sprintf(`nginx -t 2>&1 | grep test`)
+//	out, err := exec.Command("/bin/bash", "-c", cmd).Output()
+//
+//	regx, _ := regexp.Compile(`file (.+) test`)
+//	arr := regx.FindStringSubmatch(string(out))
+//
+//	if len(arr) > 1 {
+//		ret = arr[1]
+//	} else {
+//		err = errors.New("not found")
+//	}
+//
+//	return
+//}
 
 func getNginxHotLoadingConf(vmIp string, vmPort int, hostPort int, typ consts.NatForwardType) (
 	name, ret string, err error) {
