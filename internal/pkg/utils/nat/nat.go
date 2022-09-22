@@ -42,8 +42,6 @@ func GetValidPort(ip string) (hostPort int, err error) {
 	port, _ := strconv.Atoi(arr[3])
 	hostPort = 51000 + port
 
-	err = RemoveForwardByPort(hostPort, consts.Http)
-
 	//cmd := fmt.Sprintf(`netstat -tln | awk '{print $4}' | grep -o ':51[0-9]\{3\}'`)
 	//output, _ := _shellUtils.ExeSysCmd(cmd)
 	//
@@ -90,10 +88,12 @@ func ForwardPortIfNeeded(vmIp string, vmPort int, typ consts.NatForwardType) (ho
 func RemoveForward(vmIp string, vmPort int) (err error) {
 	confPath, _ := getNginxConf()
 
+	vmIp = strings.ReplaceAll(vmIp, ".", "-")
+
 	dir := filepath.Dir(filepath.Dir(confPath))
-	name := fmt.Sprintf("%s:*.conf", vmIp)
+	name := fmt.Sprintf("%s_*_*.conf", vmIp)
 	if vmPort > 0 {
-		name = fmt.Sprintf("%s:%d.conf", vmIp, vmPort)
+		name = fmt.Sprintf("%s_%d_*.conf", vmIp, vmPort)
 	}
 
 	pth := filepath.Join(dir, "conf.*.d", name)
@@ -108,7 +108,7 @@ func RemoveForward(vmIp string, vmPort int) (err error) {
 func RemoveForwardByPort(vmPort int, typ consts.NatForwardType) (err error) {
 	homeDir, _ := _fileUtils.GetUserHome()
 	dir := filepath.Join(homeDir, "zagent", "nginx")
-	pth := filepath.Join(dir, fmt.Sprintf("conf.%s.d/*_%d.conf", typ, vmPort))
+	pth := filepath.Join(dir, fmt.Sprintf("conf.%s.d/*_*_%d.conf", typ, vmPort))
 
 	cmd := fmt.Sprintf("rm -rf %s", pth)
 	_, err = _shellUtils.ExeSysCmd(cmd)
