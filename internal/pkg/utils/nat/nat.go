@@ -17,7 +17,8 @@ const (
 	PortStart = 51800
 	PortEnd   = 51999
 
-	httpConf = `server{
+	httpConf = `
+                server{
 					listen      %d;
 					server_name  %s;
 					location / {
@@ -25,15 +26,12 @@ const (
 					}
 				}`
 
-	streamConf = `upstream %s {
-					server %s:%d;    # 源服务
-				}
-			
+	streamConf = `
 				server {
-					listen %d;                # 监听代理主机的端口
+					listen %d;   
 					proxy_connect_timeout 1h;
 					proxy_timeout 1h;
-					proxy_pass %s;        # 转向的服务
+					proxy_pass %s:%d;
 				}`
 )
 
@@ -74,8 +72,7 @@ func ForwardPortIfNeeded(vmIp string, vmPort int, typ consts.NatForwardType) (ho
 	if typ == consts.Http {
 		content = fmt.Sprintf(httpConf, hostPort, name, vmIp, vmPort)
 	} else {
-		upstreamName := fmt.Sprintf("%s:%d", vmIp, vmPort)
-		content = fmt.Sprintf(streamConf, upstreamName, vmIp, vmPort, hostPort, upstreamName)
+		content = fmt.Sprintf(streamConf, hostPort, vmIp, vmPort)
 	}
 
 	_fileUtils.WriteFile(pth, content)
