@@ -20,7 +20,6 @@ const (
 	httpConf = `
                 server{
 					listen      %d;
-					server_name  %s;
 					location / {
 						proxy_pass   http://%s:%d;
 					}
@@ -63,14 +62,14 @@ func GetValidPort(ip string) (hostPort int, err error) {
 func ForwardPortIfNeeded(vmIp string, vmPort int, typ consts.NatForwardType) (hostPort int, err error) {
 	hostPort, err = GetValidPort(vmIp)
 
-	name, pth, err := getNginxHotLoadingConf(vmIp, vmPort, hostPort, typ)
+	_, pth, err := getNginxHotLoadingConf(vmIp, vmPort, hostPort, typ)
 	if err != nil || _fileUtils.FileExist(pth) {
 		return
 	}
 
 	content := "N/A"
 	if typ == consts.Http {
-		content = fmt.Sprintf(httpConf, hostPort, name, vmIp, vmPort)
+		content = fmt.Sprintf(httpConf, hostPort, vmIp, vmPort)
 	} else {
 		content = fmt.Sprintf(streamConf, hostPort, vmIp, vmPort)
 	}
