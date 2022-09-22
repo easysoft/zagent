@@ -30,12 +30,7 @@ func NewSetupService() *SetupService {
 }
 
 func (s *SetupService) AddVmPortMap(req v1.VmPortMapReq) (resp v1.VmPortMapResp, err error) {
-	resp.HostPort, err = natHelper.GetValidPort(req.VmIp)
-	if err != nil {
-		return
-	}
-
-	natHelper.ForwardPort(req.VmIp, req.VmPort, resp.HostPort, req.Type)
+	resp.HostPort, _ = natHelper.ForwardPortIfNeeded(req.VmIp, req.VmPort, req.Type)
 
 	copier.CopyWithOption(&resp, req, copier.Option{DeepCopy: true})
 

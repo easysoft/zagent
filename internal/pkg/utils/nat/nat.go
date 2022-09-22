@@ -64,7 +64,9 @@ func GetValidPort(ip string) (hostPort int, err error) {
 	return
 }
 
-func ForwardPort(vmIp string, vmPort int, hostPort int, typ consts.NatForwardType) (err error) {
+func ForwardPortIfNeeded(vmIp string, vmPort int, typ consts.NatForwardType) (hostPort int, err error) {
+	hostPort, err = GetValidPort(vmIp)
+
 	name, pth, err := getNginxHotLoadingConf(vmIp, vmPort, hostPort, typ)
 	if err != nil {
 		return
