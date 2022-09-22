@@ -110,6 +110,10 @@ func (s *KvmService) GetVmIpByMac(macAddress string) (ip string, err error) {
 
 	for _, line := range arr {
 		cols := strings.Split(line, " ")
+		if len(cols) == 0 {
+			continue
+		}
+
 		if strings.TrimSpace(cols[0]) == macAddress {
 			ip = strings.Split(strings.TrimSpace(cols[1]), "/")[0]
 
