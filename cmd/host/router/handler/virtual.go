@@ -85,13 +85,13 @@ func (c *VirtualCtrl) RemoveVmPortMap(ctx iris.Context) {
 		return
 	}
 
-	resp, err := c.SetupService.RemoveVmPortMap(req)
+	err := c.SetupService.RemoveVmPortMap(req)
 	if err != nil {
 		ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
 		return
 	}
 
-	ctx.JSON(_httpUtils.RespData(_const.ResultPass, "success", resp))
+	ctx.JSON(_httpUtils.RespData(_const.ResultPass, "success", nil))
 }
 
 // GetToken
