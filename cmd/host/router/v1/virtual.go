@@ -9,17 +9,16 @@ type DestroyVmReq struct {
 type VmPortMapReq struct {
 	VmIp   string                `json:"vmIp"`
 	VmPort int                   `json:"vmPort"`
-	HostIp string                `json:"hostIp"`
 	Type   consts.NatForwardType `json:"type"`
 }
 
 type VmPortMapResp struct {
-	VmIp          string                `json:"vmIp"`
-	VmPort        int                   `json:"vmPort"`
-	HostIp        string                `json:"hostIp"`
-	HostPort      int                   `json:"hostPort"`
-	Type          consts.NatForwardType `json:"type"`
-	AlreadyMapped bool                  `json:"alreadyMapped"`
+	VmIp   string                `json:"vmIp"`
+	VmPort int                   `json:"vmPort"`
+	Type   consts.NatForwardType `json:"type"`
+
+	HostPort      int  `json:"hostPort"`
+	AlreadyMapped bool `json:"alreadyMapped"`
 }
 
 type VncTokenResp struct {
