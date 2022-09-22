@@ -4,7 +4,7 @@ import (
 	"fmt"
 	vmCron "github.com/easysoft/zv/cmd/vm/cron"
 	vmRouter "github.com/easysoft/zv/cmd/vm/router"
-	agentConf "github.com/easysoft/zv/internal/pkg/agent/conf"
+	agentConf "github.com/easysoft/zv/internal/pkg/conf"
 	consts "github.com/easysoft/zv/internal/pkg/const"
 	serverConf "github.com/easysoft/zv/internal/server/conf"
 	_db "github.com/easysoft/zv/pkg/db"

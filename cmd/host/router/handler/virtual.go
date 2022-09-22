@@ -3,8 +3,8 @@ package hostHandler
 import (
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
 	virtualService "github.com/easysoft/zv/internal/host/service/virtual"
-	agentConf "github.com/easysoft/zv/internal/pkg/agent/conf"
-	natHelper "github.com/easysoft/zv/internal/pkg/agent/utils/nat"
+	agentConf "github.com/easysoft/zv/internal/pkg/conf"
+	natHelper "github.com/easysoft/zv/internal/pkg/utils/nat"
 
 	kvmService "github.com/easysoft/zv/internal/host/service/kvm"
 	consts "github.com/easysoft/zv/internal/pkg/const"

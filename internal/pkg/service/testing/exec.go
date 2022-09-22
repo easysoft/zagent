@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	agentConf "github.com/easysoft/zv/internal/pkg/agent/conf"
+	agentConf "github.com/easysoft/zv/internal/pkg/conf"
 	"github.com/easysoft/zv/internal/pkg/domain"
 	_const "github.com/easysoft/zv/pkg/const"
 	_domain "github.com/easysoft/zv/pkg/domain"

@@ -3,9 +3,9 @@ package main
 import (
 	"flag"
 	vmInit "github.com/easysoft/zv/cmd/vm/init"
-	agentConf "github.com/easysoft/zv/internal/pkg/agent/conf"
-	agentUtils "github.com/easysoft/zv/internal/pkg/agent/utils/common"
+	agentConf "github.com/easysoft/zv/internal/pkg/conf"
 	consts "github.com/easysoft/zv/internal/pkg/const"
+	agentUtils "github.com/easysoft/zv/internal/pkg/utils/common"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"github.com/fatih/color"
 	"os"

@@ -4,7 +4,7 @@ import "C"
 import (
 	"errors"
 	"fmt"
-	agentConf "github.com/easysoft/zv/internal/pkg/agent/conf"
+	agentConf "github.com/easysoft/zv/internal/pkg/conf"
 	"github.com/easysoft/zv/internal/pkg/const"
 	"github.com/easysoft/zv/internal/pkg/domain"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"

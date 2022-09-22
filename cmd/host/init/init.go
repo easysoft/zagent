@@ -6,7 +6,7 @@ import (
 	hostRouter "github.com/easysoft/zv/cmd/host/router"
 	hostKvmService "github.com/easysoft/zv/internal/host/service/kvm"
 	virtualService "github.com/easysoft/zv/internal/host/service/virtual"
-	agentConf "github.com/easysoft/zv/internal/pkg/agent/conf"
+	agentConf "github.com/easysoft/zv/internal/pkg/conf"
 	consts "github.com/easysoft/zv/internal/pkg/const"
 	serverConf "github.com/easysoft/zv/internal/server/conf"
 	_db "github.com/easysoft/zv/pkg/db"

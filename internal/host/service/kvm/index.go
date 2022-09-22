@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
-	agentConf "github.com/easysoft/zv/internal/pkg/agent/conf"
+	agentConf "github.com/easysoft/zv/internal/pkg/conf"
 	"github.com/easysoft/zv/internal/pkg/const"
 	"github.com/easysoft/zv/internal/pkg/domain"
 	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
