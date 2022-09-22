@@ -3,6 +3,7 @@ package kvmService
 import (
 	"github.com/easysoft/zv/internal/pkg/const"
 	"github.com/easysoft/zv/internal/pkg/domain"
+	natHelper "github.com/easysoft/zv/internal/pkg/utils/nat"
 	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
 	"github.com/libvirt/libvirt-go"
 	libvirtxml "github.com/libvirt/libvirt-go-xml"
@@ -50,6 +51,13 @@ func (s *KvmService) GetVms() (vms []domain.Vm) {
 
 		vm.MacAddress = newDomCfg.Devices.Interfaces[0].MAC.Address
 		vm.Ip, _ = s.GetVmIpByMac(vm.MacAddress)
+
+		if vm.Status == consts.VmRunning && vm.Ip != "" {
+			vmAgentPortMapped, err := natHelper.GetValidPort(vm.Ip)
+			if err == nil {
+				natHelper.ForwardPort(vm.Ip, consts.AgentServicePost, vmAgentPortMapped, consts.Http)
+			}
+		}
 
 		vms = append(vms, vm)
 	}

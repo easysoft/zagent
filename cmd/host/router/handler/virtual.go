@@ -2,12 +2,9 @@ package hostHandler
 
 import (
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
+	kvmService "github.com/easysoft/zv/internal/host/service/kvm"
 	virtualService "github.com/easysoft/zv/internal/host/service/virtual"
 	agentConf "github.com/easysoft/zv/internal/pkg/conf"
-	natHelper "github.com/easysoft/zv/internal/pkg/utils/nat"
-
-	kvmService "github.com/easysoft/zv/internal/host/service/kvm"
-	consts "github.com/easysoft/zv/internal/pkg/const"
 	"github.com/easysoft/zv/internal/pkg/domain"
 	_const "github.com/easysoft/zv/pkg/const"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
@@ -47,19 +44,19 @@ func (c *VirtualCtrl) NotifyHost(ctx iris.Context) {
 	}
 
 	// map vm agent port to host
-	vmAgentPortMapped, err := natHelper.GetValidPort()
-	if err != nil {
-		ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
-		return
-	}
-	err = natHelper.ForwardPort(vmIp, consts.AgentServicePost, vmAgentPortMapped, consts.Http)
-	if err != nil {
-		ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
-		return
-	}
-
+	//vmAgentPortMapped, err := natHelper.GetValidPort()
+	//if err != nil {
+	//	ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
+	//	return
+	//}
+	//err = natHelper.ForwardPort(vmIp, consts.AgentServicePost, vmAgentPortMapped, consts.Http)
+	//if err != nil {
+	//	ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
+	//	return
+	//}
+	//
+	//data.AgentPortOnHost = vmAgentPortMapped
 	data.Ip = vmIp
-	data.AgentPortOnHost = vmAgentPortMapped
 
 	ctx.JSON(_httpUtils.RespData(_const.ResultPass, "success to refresh secret", data))
 	return

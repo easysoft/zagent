@@ -6,7 +6,6 @@ import (
 	consts "github.com/easysoft/zv/internal/pkg/const"
 	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
 	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
-	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
 	"os/exec"
 	"path/filepath"
 	"regexp"
@@ -38,19 +37,25 @@ const (
 				}`
 )
 
-func GetValidPort() (ret int, err error) {
-	cmd := fmt.Sprintf(`netstat -tln | awk '{print $4}' | grep -o ':51[0-9]\{3\}'`)
-	output, _ := _shellUtils.ExeSysCmd(cmd)
+func GetValidPort(ip string) (ret int, err error) {
+	arr := strings.Split(ip, ".")
+	port, _ := strconv.Atoi(arr[3])
+	port = 51000 + port
 
-	list := strings.Split(output, "\n")
+	err = RemoveForwardByPort(port, consts.Http)
 
-	for p := PortStart; p <= PortEnd; p++ {
-		str := ":" + strconv.Itoa(p)
-		if !_stringUtils.StrInArr(str, list) {
-			ret = p
-			break
-		}
-	}
+	//cmd := fmt.Sprintf(`netstat -tln | awk '{print $4}' | grep -o ':51[0-9]\{3\}'`)
+	//output, _ := _shellUtils.ExeSysCmd(cmd)
+	//
+	//list := strings.Split(output, "\n")
+	//
+	//for p := PortStart; p <= PortEnd; p++ {
+	//	str := ":" + strconv.Itoa(p)
+	//	if !_stringUtils.StrInArr(str, list) {
+	//		ret = p
+	//		break
+	//	}
+	//}
 
 	if ret == 0 {
 		err = errors.New("no port left")
@@ -98,6 +103,16 @@ func RemoveForward(vmIp string, vmPort int) (err error) {
 
 	return
 }
+func RemoveForwardByPort(vmPort int, typ consts.NatForwardType) (err error) {
+	homeDir, _ := _fileUtils.GetUserHome()
+	dir := filepath.Join(homeDir, "zagent", "nginx")
+	pth := filepath.Join(dir, fmt.Sprintf("conf.%s.d/*_%d.conf", typ, vmPort))
+
+	cmd := fmt.Sprintf("rm -rf %s", pth)
+	_, err = _shellUtils.ExeSysCmd(cmd)
+
+	return
+}
 
 func getNginxConf() (ret string, err error) {
 	cmd := fmt.Sprintf(`nginx -t 2>&1 | grep test`)
@@ -120,10 +135,21 @@ func getNginxHotLoadingConf(vmIp string, vmPort int, typ consts.NatForwardType) 
 
 	homeDir, _ := _fileUtils.GetUserHome()
 	dir := filepath.Join(homeDir, "zagent", "nginx")
-	name = fmt.Sprintf("%s:%d", vmIp, vmPort)
-	name = strings.ReplaceAll(strings.ReplaceAll(name, ".", "-"), ":", "_")
+	name = fmt.Sprintf("%s_%d", vmIp, vmPort)
+	name = strings.ReplaceAll(name, ".", "-")
 
 	ret = filepath.Join(dir, fmt.Sprintf("conf.%s.d", typ), name+".conf")
+
+	return
+}
+
+func RemoveNginxConfByPort(vmPort int, typ consts.NatForwardType) (err error) {
+	homeDir, _ := _fileUtils.GetUserHome()
+	dir := filepath.Join(homeDir, "zagent", "nginx")
+	pth := filepath.Join(dir, fmt.Sprintf("conf.%s.d/*_%d.conf", typ, vmPort))
+
+	cmd := fmt.Sprintf("rm -rf %s", pth)
+	_, err = _shellUtils.ExeSysCmd(cmd)
 
 	return
 }

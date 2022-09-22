@@ -41,5 +41,6 @@ type Vm struct {
 	ResolutionHeight int    `json:"resolutionHeight"`
 	ResolutionWidth  int    `json:"resolutionWidth"`
 
-	Secret string `json:"secret" yaml:"secret"`
+	Secret          string `json:"secret" yaml:"secret"`
+	AgentPortOnHost int    `json:"agentPortOnHost"`
 }
