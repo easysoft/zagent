@@ -56,7 +56,7 @@ func GetValidPort() (hostPort int, err error) {
 	return
 }
 
-func ForwardPortIfNeeded(vmIp string, vmPort int, typ consts.NatForwardType) (hostPort int, err error) {
+func ForwardPortIfNeeded(vmIp string, vmPort int, typ consts.NatForwardType) (hostPort int, alreadyMapped bool, err error) {
 	hostPort, err = GetValidPort()
 	if err != nil {
 		return
@@ -65,6 +65,7 @@ func ForwardPortIfNeeded(vmIp string, vmPort int, typ consts.NatForwardType) (ho
 	mappedHostPort := getMappedInfo(vmIp, vmPort, typ)
 	if mappedHostPort != 0 {
 		hostPort = mappedHostPort
+		alreadyMapped = true
 		return
 	}
 

@@ -53,7 +53,7 @@ func (s *KvmService) GetVms() (vms []domain.Vm) {
 		vm.Ip, _ = s.GetVmIpByMac(vm.MacAddress)
 
 		if vm.Status == consts.VmRunning && vm.Ip != "" {
-			vm.AgentPortOnHost, _ = natHelper.ForwardPortIfNeeded(vm.Ip, consts.AgentServicePost, consts.Http)
+			vm.AgentPortOnHost, _, _ = natHelper.ForwardPortIfNeeded(vm.Ip, consts.AgentServicePost, consts.Http)
 		}
 
 		vms = append(vms, vm)
