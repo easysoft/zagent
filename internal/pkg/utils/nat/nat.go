@@ -68,7 +68,7 @@ func ForwardPortIfNeeded(vmIp string, vmPort int, typ consts.NatForwardType) (ho
 	hostPort, err = GetValidPort(vmIp)
 
 	name, pth, err := getNginxHotLoadingConf(vmIp, vmPort, hostPort, typ)
-	if err != nil {
+	if err != nil || _fileUtils.FileExist(pth) {
 		return
 	}
 
