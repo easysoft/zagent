@@ -6,6 +6,7 @@ import (
 	consts "github.com/easysoft/zv/internal/pkg/const"
 	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
 	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
+	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
 	"os/exec"
 	"path/filepath"
 	"regexp"
@@ -34,23 +35,19 @@ const (
 				}`
 )
 
-func GetValidPort(ip string) (hostPort int, err error) {
-	arr := strings.Split(ip, ".")
-	port, _ := strconv.Atoi(arr[3])
-	hostPort = 51000 + port
+func GetValidPort() (hostPort int, err error) {
+	cmd := fmt.Sprintf(`netstat -tln | awk '{print $4}' | grep -o ':51[0-9]\{3\}'`)
+	output, _ := _shellUtils.ExeSysCmd(cmd)
 
-	//cmd := fmt.Sprintf(`netstat -tln | awk '{print $4}' | grep -o ':51[0-9]\{3\}'`)
-	//output, _ := _shellUtils.ExeSysCmd(cmd)
-	//
-	//list := strings.Split(output, "\n")
-	//
-	//for p := PortStart; p <= PortEnd; p++ {
-	//	str := ":" + strconv.Itoa(p)
-	//	if !_stringUtils.StrInArr(str, list) {
-	//		ret = p
-	//		break
-	//	}
-	//}
+	list := strings.Split(output, "\n")
+
+	for p := PortStart; p <= PortEnd; p++ {
+		str := ":" + strconv.Itoa(p)
+		if !_stringUtils.StrInArr(str, list) {
+			hostPort = p
+			break
+		}
+	}
 
 	if hostPort == 0 {
 		err = errors.New("no port left")
@@ -60,10 +57,19 @@ func GetValidPort(ip string) (hostPort int, err error) {
 }
 
 func ForwardPortIfNeeded(vmIp string, vmPort int, typ consts.NatForwardType) (hostPort int, err error) {
-	hostPort, err = GetValidPort(vmIp)
+	hostPort, err = GetValidPort()
+	if err != nil {
+		return
+	}
+
+	mappedHostPort := getMappedInfo(vmIp, vmPort, typ)
+	if mappedHostPort != 0 {
+		hostPort = mappedHostPort
+		return
+	}
 
 	_, pth, err := getNginxHotLoadingConf(vmIp, vmPort, hostPort, typ)
-	if err != nil || _fileUtils.FileExist(pth) {
+	if err != nil {
 		return
 	}
 
@@ -77,6 +83,23 @@ func ForwardPortIfNeeded(vmIp string, vmPort int, typ consts.NatForwardType) (ho
 	_fileUtils.WriteFile(pth, content)
 
 	reloadNginx()
+
+	return
+}
+
+func getMappedInfo(vmIp string, vmPort int, typ consts.NatForwardType) (mappedPort int) {
+	homeDir, _ := _fileUtils.GetUserHome()
+	dir := filepath.Join(homeDir, "zagent", "nginx", fmt.Sprintf("conf.%s.d", typ))
+
+	cmd := fmt.Sprintf("ls -al %s | grep %s:%d | grep -v grep", dir, vmIp, vmPort)
+	out, _ := _shellUtils.ExeSysCmd(cmd)
+
+	regx, _ := regexp.Compile(fmt.Sprintf(`%s:%d@([0-9]+).conf`, vmIp, vmPort))
+	arr := regx.FindStringSubmatch(out)
+	if len(arr) > 1 {
+		portStr := arr[1]
+		mappedPort, _ = strconv.Atoi(portStr)
+	}
 
 	return
 }
