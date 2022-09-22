@@ -40,9 +40,9 @@ const (
 func GetValidPort(ip string) (ret int, err error) {
 	arr := strings.Split(ip, ".")
 	port, _ := strconv.Atoi(arr[3])
-	port = 51000 + port
+	ret = 51000 + port
 
-	err = RemoveForwardByPort(port, consts.Http)
+	err = RemoveForwardByPort(ret, consts.Http)
 
 	//cmd := fmt.Sprintf(`netstat -tln | awk '{print $4}' | grep -o ':51[0-9]\{3\}'`)
 	//output, _ := _shellUtils.ExeSysCmd(cmd)
