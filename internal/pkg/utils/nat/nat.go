@@ -74,7 +74,7 @@ func ForwardPortIfNeeded(vmIp string, vmPort int, typ consts.NatForwardType) (ho
 	if typ == consts.Http {
 		content = fmt.Sprintf(httpConf, hostPort, name, vmIp, vmPort)
 	} else {
-		upstreamName := fmt.Sprintf("%s-%d", strings.ReplaceAll(vmIp, ".", "-"), vmPort)
+		upstreamName := fmt.Sprintf("%s:%d", vmIp, vmPort)
 		content = fmt.Sprintf(streamConf, upstreamName, vmIp, vmPort, hostPort, upstreamName)
 	}
 
@@ -88,12 +88,10 @@ func ForwardPortIfNeeded(vmIp string, vmPort int, typ consts.NatForwardType) (ho
 func RemoveForward(vmIp string, vmPort int) (err error) {
 	confPath, _ := getNginxConf()
 
-	vmIp = strings.ReplaceAll(vmIp, ".", "-")
-
 	dir := filepath.Dir(filepath.Dir(confPath))
-	name := fmt.Sprintf("%s_*_*.conf", vmIp)
+	name := fmt.Sprintf("%s:*@*.conf", vmIp)
 	if vmPort > 0 {
-		name = fmt.Sprintf("%s_%d_*.conf", vmIp, vmPort)
+		name = fmt.Sprintf("%s:%d@*.conf", vmIp, vmPort)
 	}
 
 	pth := filepath.Join(dir, "conf.*.d", name)
@@ -108,7 +106,7 @@ func RemoveForward(vmIp string, vmPort int) (err error) {
 func RemoveForwardByPort(vmPort int, typ consts.NatForwardType) (err error) {
 	homeDir, _ := _fileUtils.GetUserHome()
 	dir := filepath.Join(homeDir, "zagent", "nginx")
-	pth := filepath.Join(dir, fmt.Sprintf("conf.%s.d/*_*_%d.conf", typ, vmPort))
+	pth := filepath.Join(dir, fmt.Sprintf("conf.%s.d/*:%d@*.conf", typ, vmPort))
 
 	cmd := fmt.Sprintf("rm -rf %s", pth)
 	_, err = _shellUtils.ExeSysCmd(cmd)
@@ -137,21 +135,9 @@ func getNginxHotLoadingConf(vmIp string, vmPort int, hostPort int, typ consts.Na
 
 	homeDir, _ := _fileUtils.GetUserHome()
 	dir := filepath.Join(homeDir, "zagent", "nginx")
-	name = fmt.Sprintf("%s_%d_%d", vmIp, vmPort, hostPort)
-	name = strings.ReplaceAll(name, ".", "-")
+	name = fmt.Sprintf("%s:%d@%d", vmIp, vmPort, hostPort)
 
 	ret = filepath.Join(dir, fmt.Sprintf("conf.%s.d", typ), name+".conf")
-
-	return
-}
-
-func RemoveNginxConfByPort(vmPort int, typ consts.NatForwardType) (err error) {
-	homeDir, _ := _fileUtils.GetUserHome()
-	dir := filepath.Join(homeDir, "zagent", "nginx")
-	pth := filepath.Join(dir, fmt.Sprintf("conf.%s.d/*_%d.conf", typ, vmPort))
-
-	cmd := fmt.Sprintf("rm -rf %s", pth)
-	_, err = _shellUtils.ExeSysCmd(cmd)
 
 	return
 }
