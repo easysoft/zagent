@@ -216,6 +216,7 @@ type NatForwardType string
 const (
 	Http   NatForwardType = "http"
 	Stream NatForwardType = "stream"
+	All    NatForwardType = "*"
 )
 
 func (e NatForwardType) ToString() string {

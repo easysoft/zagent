@@ -103,7 +103,7 @@ func (c *KvmCtrl) Destroy(ctx iris.Context) {
 		return
 	}
 
-	natHelper.RemoveForward(req.Ip, 0)
+	natHelper.RemoveForward(req.Ip, 0, consts.All)
 
 	ctx.JSON(_httpUtils.RespData(_const.ResultPass, "success to destroy vm", name))
 	return
