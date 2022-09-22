@@ -37,12 +37,12 @@ const (
 				}`
 )
 
-func GetValidPort(ip string) (ret int, err error) {
+func GetValidPort(ip string) (hostPort int, err error) {
 	arr := strings.Split(ip, ".")
 	port, _ := strconv.Atoi(arr[3])
-	ret = 51000 + port
+	hostPort = 51000 + port
 
-	err = RemoveForwardByPort(ret, consts.Http)
+	err = RemoveForwardByPort(hostPort, consts.Http)
 
 	//cmd := fmt.Sprintf(`netstat -tln | awk '{print $4}' | grep -o ':51[0-9]\{3\}'`)
 	//output, _ := _shellUtils.ExeSysCmd(cmd)
@@ -57,7 +57,7 @@ func GetValidPort(ip string) (ret int, err error) {
 	//	}
 	//}
 
-	if ret == 0 {
+	if hostPort == 0 {
 		err = errors.New("no port left")
 	}
 
@@ -65,7 +65,7 @@ func GetValidPort(ip string) (ret int, err error) {
 }
 
 func ForwardPort(vmIp string, vmPort int, hostPort int, typ consts.NatForwardType) (err error) {
-	name, pth, err := getNginxHotLoadingConf(vmIp, vmPort, typ)
+	name, pth, err := getNginxHotLoadingConf(vmIp, vmPort, hostPort, typ)
 	if err != nil {
 		return
 	}
@@ -130,12 +130,12 @@ func getNginxConf() (ret string, err error) {
 	return
 }
 
-func getNginxHotLoadingConf(vmIp string, vmPort int, typ consts.NatForwardType) (
+func getNginxHotLoadingConf(vmIp string, vmPort int, hostPort int, typ consts.NatForwardType) (
 	name, ret string, err error) {
 
 	homeDir, _ := _fileUtils.GetUserHome()
 	dir := filepath.Join(homeDir, "zagent", "nginx")
-	name = fmt.Sprintf("%s_%d", vmIp, vmPort)
+	name = fmt.Sprintf("%s_%d_%d", vmIp, vmPort, hostPort)
 	name = strings.ReplaceAll(name, ".", "-")
 
 	ret = filepath.Join(dir, fmt.Sprintf("conf.%s.d", typ), name+".conf")
