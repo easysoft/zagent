@@ -23,36 +23,11 @@ type NoVncService struct {
 func NewNoVncService() *NoVncService {
 	srv := NoVncService{}
 
-	srv.GenWebsockifyTokens()
-	srv.LaunchWebsockifyService()
-	srv.LaunchNoVNCService()
+	srv.genWebsockifyTokens()
+	srv.launchWebsockifyService()
+	srv.launchNoVNCService()
 
 	return &srv
-}
-
-func (s *NoVncService) LaunchWebsockifyService() (ret v1.VncTokenResp) {
-	exePath := filepath.Join(agentConf.Inst.WorkDir, "websockify/run")
-	logPath := filepath.Join(agentConf.Inst.WorkDir, "websockify/nohup.log")
-
-	cmd := fmt.Sprintf("nohup %s --token-plugin TokenFile --token-source %s %d > %s 2>&1 &",
-		exePath, agentConf.Inst.DirToken, consts.WebsockifyPort, logPath)
-
-	_shellUtils.KillProcess("websockify")
-	_shellUtils.ExeShell(cmd)
-
-	return
-}
-
-func (s *NoVncService) LaunchNoVNCService() {
-	noVNCPath := filepath.Join(agentConf.Inst.WorkDir, "novnc")
-	logPath := filepath.Join(agentConf.Inst.WorkDir, "novnc/nohup.log")
-
-	cmd := fmt.Sprintf("nohup light-server -s %s -p %d > %s 2>&1 &", noVNCPath, consts.NoVncPort, logPath)
-
-	_shellUtils.KillProcess("light-server")
-	_shellUtils.ExeShell(cmd)
-
-	return
 }
 
 func (s *NoVncService) GetToken(port string) (ret v1.VncTokenResp, err error) {
@@ -67,7 +42,7 @@ func (s *NoVncService) GetToken(port string) (ret v1.VncTokenResp, err error) {
 	return
 }
 
-func (s *NoVncService) GenWebsockifyTokens() {
+func (s *NoVncService) genWebsockifyTokens() {
 	port := consts.VncPortStart
 	for port <= consts.VncPortEnd {
 		portStr := strconv.Itoa(port)
@@ -75,7 +50,7 @@ func (s *NoVncService) GenWebsockifyTokens() {
 		ip := agentConf.Inst.NodeIp
 
 		// uuid: 192.168.1.215:51800
-		content := fmt.Sprintf("%s:%s:%s", token, ip, portStr)
+		content := fmt.Sprintf("%s: %s:%s", token, ip, portStr)
 
 		pth := filepath.Join(agentConf.Inst.DirToken, portStr+".txt")
 		_fileUtils.WriteFile(pth, content)
@@ -89,6 +64,31 @@ func (s *NoVncService) GenWebsockifyTokens() {
 
 		port++
 	}
+}
+
+func (s *NoVncService) launchWebsockifyService() (ret v1.VncTokenResp) {
+	exePath := filepath.Join(agentConf.Inst.WorkDir, "websockify/run")
+	logPath := filepath.Join(agentConf.Inst.WorkDir, "websockify/nohup.log")
+
+	cmd := fmt.Sprintf("nohup %s --token-plugin TokenFile --token-source %s %d > %s 2>&1 &",
+		exePath, agentConf.Inst.DirToken, consts.WebsockifyPort, logPath)
+
+	_shellUtils.KillProcess("websockify")
+	_shellUtils.ExeShell(cmd)
+
+	return
+}
+
+func (s *NoVncService) launchNoVNCService() {
+	noVNCPath := filepath.Join(agentConf.Inst.WorkDir, "novnc")
+	logPath := filepath.Join(agentConf.Inst.WorkDir, "novnc/nohup.log")
+
+	cmd := fmt.Sprintf("nohup light-server -s %s -p %d > %s 2>&1 &", noVNCPath, consts.NoVncPort, logPath)
+
+	_shellUtils.KillProcess("light-server")
+	_shellUtils.ExeShell(cmd)
+
+	return
 }
 
 func (s *NoVncService) getPortByName(name string) (port int, err error) {
