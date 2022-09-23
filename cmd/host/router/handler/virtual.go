@@ -17,7 +17,8 @@ var (
 )
 
 type VirtualCtrl struct {
-	SetupService *virtualService.SetupService `inject:""`
+	NatService   *virtualService.NatService   `inject:""`
+	NoVncService *virtualService.NoVncService `inject:""`
 	KvmService   *kvmService.KvmService       `inject:""`
 }
 
@@ -69,7 +70,7 @@ func (c *VirtualCtrl) AddVmPortMap(ctx iris.Context) {
 		return
 	}
 
-	resp, err := c.SetupService.AddVmPortMap(req)
+	resp, err := c.NatService.AddVmPortMap(req)
 	if err != nil {
 		ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
 		return
@@ -85,7 +86,7 @@ func (c *VirtualCtrl) RemoveVmPortMap(ctx iris.Context) {
 		return
 	}
 
-	err := c.SetupService.RemoveVmPortMap(req)
+	err := c.NatService.RemoveVmPortMap(req)
 	if err != nil {
 		ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
 		return
@@ -109,7 +110,7 @@ func (c *VirtualCtrl) GetToken(ctx iris.Context) {
 		return
 	}
 
-	ret := c.SetupService.GetToken(port)
+	ret := c.NoVncService.GetToken(port)
 	if ret.Token == "" {
 		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, "token not found", nil))
 		return

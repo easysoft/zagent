@@ -7,7 +7,6 @@ import (
 	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	_i118Utils "github.com/easysoft/zv/pkg/lib/i118"
-	"os/user"
 	"path/filepath"
 )
 
@@ -30,21 +29,18 @@ func Init(app string) {
 		Inst.NodeIp = ip.String()
 	}
 
-	usr, _ := user.Current()
-	home := usr.HomeDir
-	if Inst.Host != "" {
-		home = "/home/" + Inst.User
-	}
-
-	Inst.WorkDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(home, consts.AppNameAgent))
+	home, _ := _fileUtils.GetUserHome()
+	Inst.WorkDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(home, consts.AppName))
 
 	if Inst.RunMode == consts.RunModeHost {
+		Inst.DirToken = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.WorkDir, consts.FolderToken))
+
 		Inst.DirKvm = _fileUtils.AddPathSepIfNeeded(filepath.Join(home, consts.FolderKvm))
 		Inst.DirIso = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, consts.FolderIso))
 		Inst.DirBaking = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, consts.FolderBacking))
 		Inst.DirImage = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, consts.FolderImage))
-		Inst.DirToken = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, consts.FolderToken))
 
+		_fileUtils.MkDirIfNeeded(Inst.DirToken)
 		_fileUtils.MkDirIfNeeded(Inst.DirIso)
 		_fileUtils.MkDirIfNeeded(Inst.DirBaking)
 		_fileUtils.MkDirIfNeeded(Inst.DirImage)

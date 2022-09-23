@@ -5,7 +5,6 @@ import (
 	"github.com/emirpasic/gods/maps"
 	"net"
 	"os"
-	"os/user"
 	"path"
 	"path/filepath"
 	"regexp"
@@ -92,12 +91,6 @@ func IsRelease() bool {
 	name := filepath.Base(arg1)
 
 	return strings.Index(name, "___") != 0 && strings.Index(arg1, "go-build") < 0
-}
-
-func GetUserHome() string {
-	userProfile, _ := user.Current()
-	home := userProfile.HomeDir
-	return home
 }
 
 func IsPortInUse(port int) bool {

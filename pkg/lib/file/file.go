@@ -219,7 +219,7 @@ func AddSepIfNeeded(pth string) string {
 
 func GetUserHome() (dir string, err error) {
 	user, err := user.Current()
-	if nil == err {
+	if err == nil {
 		dir = user.HomeDir
 	} else { // cross compile support
 

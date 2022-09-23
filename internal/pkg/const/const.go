@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	AppName          = "zv"
+	AppName          = "zagent"
 	AppNameServer    = "server"
 	AppNameAgent     = "agent"
 	AppNameAgentHost = "host"
