@@ -25,7 +25,6 @@ func NewNoVncService() *NoVncService {
 
 	srv.genWebsockifyTokens()
 	srv.launchWebsockifyService()
-	srv.launchNoVNCService()
 
 	return &srv
 }
@@ -74,18 +73,6 @@ func (s *NoVncService) launchWebsockifyService() (ret v1.VncTokenResp) {
 		exePath, agentConf.Inst.DirToken, consts.WebsockifyPort, logPath)
 
 	_shellUtils.KillProcess("websockify")
-	_shellUtils.ExeShell(cmd)
-
-	return
-}
-
-func (s *NoVncService) launchNoVNCService() {
-	noVNCPath := filepath.Join(agentConf.Inst.WorkDir, "novnc")
-	logPath := filepath.Join(agentConf.Inst.WorkDir, "novnc/nohup.log")
-
-	cmd := fmt.Sprintf("nohup light-server -s %s -p %d > %s 2>&1 &", noVNCPath, consts.NoVncPort, logPath)
-
-	_shellUtils.KillProcess("light-server")
 	_shellUtils.ExeShell(cmd)
 
 	return
