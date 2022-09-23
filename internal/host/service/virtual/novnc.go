@@ -69,18 +69,19 @@ func (s *NoVncService) GenWebsockifyTokens() {
 	port := consts.VncPortStart
 	for port <= consts.VncPortEnd {
 		portStr := strconv.Itoa(port)
+		token := _stringUtils.Uuid()
+		ip := agentConf.Inst.NodeIp
 
 		// uuid: 192.168.1.215:51800
-		content := fmt.Sprintf("%s: %s:%s", _stringUtils.Uuid(), agentConf.Inst.NodeIp, portStr)
+		content := fmt.Sprintf("%s:%s:%s", token, ip, portStr)
 
 		pth := filepath.Join(agentConf.Inst.DirToken, portStr+".txt")
 		_fileUtils.WriteFile(pth, content)
 
-		arr := strings.Split(content, ":")
 		result := v1.VncTokenResp{
-			Token: arr[0],
-			Ip:    arr[1],
-			Port:  arr[2],
+			Token: token,
+			Ip:    ip,
+			Port:  portStr,
 		}
 		s.syncMap.Store(portStr, result)
 
