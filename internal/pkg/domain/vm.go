@@ -43,4 +43,5 @@ type Vm struct {
 
 	Secret          string `json:"secret" yaml:"secret"`
 	AgentPortOnHost int    `json:"agentPortOnHost"`
+	VncPortOnHost   int    `json:"vncPortOnHost"`
 }
