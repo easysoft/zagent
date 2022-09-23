@@ -49,7 +49,7 @@ func (s *NoVncService) genWebsockifyTokens() {
 		token := _stringUtils.Uuid()
 		ip := agentConf.Inst.NodeIp
 
-		// uuid: 192.168.1.215:51800
+		// uuid: 192.168.1.215:51800	// must has space after first :
 		content := fmt.Sprintf("%s: %s:%s", token, ip, portStr)
 
 		pth := filepath.Join(agentConf.Inst.DirToken, portStr+".txt")
