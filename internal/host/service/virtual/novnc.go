@@ -55,13 +55,8 @@ func (s *NoVncService) LaunchNoVNCService() {
 	return
 }
 
-func (s *NoVncService) GetToken(name string) (ret v1.VncTokenResp, err error) {
-	port, err := s.getPortByName(name)
-	if err != nil {
-		return
-	}
-
-	obj, ok := s.syncMap.Load(strconv.Itoa(port))
+func (s *NoVncService) GetToken(port string) (ret v1.VncTokenResp, err error) {
+	obj, ok := s.syncMap.Load(port)
 
 	if !ok {
 		return
