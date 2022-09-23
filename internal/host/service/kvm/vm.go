@@ -7,7 +7,6 @@ import (
 	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
 	"github.com/libvirt/libvirt-go"
 	libvirtxml "github.com/libvirt/libvirt-go-xml"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -51,7 +50,7 @@ func (s *KvmService) GetVms() (vms []domain.Vm) {
 		newDomCfg.Unmarshal(newXml)
 
 		vm.MacAddress = newDomCfg.Devices.Interfaces[0].MAC.Address
-		vm.VncPortOnHost, _ = strconv.Atoi(newDomCfg.Devices.Graphics[0].VNC.AutoPort)
+		vm.VncPortOnHost = newDomCfg.Devices.Graphics[0].VNC.Port
 		vm.Ip, _ = s.GetVmIpByMac(vm.MacAddress)
 
 		if vm.Status == consts.VmRunning && vm.Ip != "" {
