@@ -103,14 +103,14 @@ func (c *VirtualCtrl) RemoveVmPortMap(ctx iris.Context) {
 // @Success 200 {object} _httpUtils.Response{iris.Map} "code = success? 1 : 0"
 // @Router /api/v1/vnc/getToken [get]
 func (c *VirtualCtrl) GetToken(ctx iris.Context) {
-	port := ctx.URLParam("port")
+	name := ctx.URLParam("name")
 
-	if port == "" {
-		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, "no port param", nil))
+	if name == "" {
+		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, "no name param", nil))
 		return
 	}
 
-	ret := c.NoVncService.GetToken(port)
+	ret := c.NoVncService.GetToken(name)
 	if ret.Token == "" {
 		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, "token not found", nil))
 		return

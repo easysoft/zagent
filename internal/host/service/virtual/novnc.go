@@ -1,6 +1,7 @@
 package virtualService
 
 import (
+	"errors"
 	"fmt"
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
 	agentConf "github.com/easysoft/zv/internal/pkg/conf"
@@ -8,8 +9,10 @@ import (
 	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
 	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
 	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
+	"os/exec"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"sync"
 )
 
@@ -52,7 +55,12 @@ func (s *NoVncService) LaunchNoVNCService() {
 	return
 }
 
-func (s *NoVncService) GetToken(port string) (ret v1.VncTokenResp) {
+func (s *NoVncService) GetToken(name string) (ret v1.VncTokenResp, err error) {
+	port, err := s.getPortByName(name)
+	if err != nil {
+		return
+	}
+
 	obj, ok := s.syncMap.Load(port)
 
 	if !ok {
@@ -86,4 +94,22 @@ func (s *NoVncService) GenWebsockifyTokens() {
 
 		port++
 	}
+}
+
+func (s *NoVncService) getPortByName(name string) (port int, err error) {
+	cmdStr := fmt.Sprintf("virsh vncdisplay %s", name)
+	out, err := exec.Command("/bin/bash", "-c", cmdStr).Output()
+	if err != nil {
+		return
+	}
+
+	line := strings.TrimSpace(strings.Split(string(out), "\n")[0])
+	if strings.Index(line, ":") != 0 {
+		err = errors.New("virsh vncdisplay cmd no putput")
+		return
+	}
+
+	port, err = strconv.Atoi(line[1:])
+
+	return
 }

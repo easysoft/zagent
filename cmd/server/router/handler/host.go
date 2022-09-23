@@ -8,7 +8,6 @@ import (
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"github.com/kataras/iris/v12"
-	"net/http"
 	"time"
 )
 
@@ -38,11 +37,11 @@ func (c *HostCtrl) Register(ctx iris.Context) {
 
 	_logUtils.Infof("%v", ctx.Request().RemoteAddr)
 
-	success := c.AssertService.RegisterHost(req)
-	if !success {
-		ctx.StopWithJSON(http.StatusInternalServerError, "register fail")
-		return
-	}
+	//success := c.AssertService.RegisterHost(req)
+	//if !success {
+	//	ctx.StopWithJSON(http.StatusInternalServerError, "register fail")
+	//	return
+	//}
 
 	data := domain.RegisterResp{
 		Token:           "123",
