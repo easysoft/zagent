@@ -61,7 +61,7 @@ func (s *NoVncService) GetToken(name string) (ret v1.VncTokenResp, err error) {
 		return
 	}
 
-	obj, ok := s.syncMap.Load(port)
+	obj, ok := s.syncMap.Load(5900 + port)
 
 	if !ok {
 		return
