@@ -110,7 +110,7 @@ func (c *VirtualCtrl) GetToken(ctx iris.Context) {
 		return
 	}
 
-	ret := c.NoVncService.GetToken(name)
+	ret, _ := c.NoVncService.GetToken(name)
 	if ret.Token == "" {
 		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, "token not found", nil))
 		return
