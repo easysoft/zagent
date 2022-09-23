@@ -68,8 +68,8 @@ func (s *NoVncService) GetToken(port string) (ret v1.VncTokenResp, err error) {
 }
 
 func (s *NoVncService) GenWebsockifyTokens() {
-	port := consts.NatPortStart
-	for port <= consts.NatPortEnd {
+	port := consts.VncPortStart
+	for port <= consts.VncPortEnd {
 		portStr := strconv.Itoa(port)
 		token := _stringUtils.Uuid()
 		ip := agentConf.Inst.NodeIp

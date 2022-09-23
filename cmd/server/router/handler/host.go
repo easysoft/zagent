@@ -35,7 +35,7 @@ func (c *HostCtrl) Register(ctx iris.Context) {
 		return
 	}
 
-	_logUtils.Infof("%v", ctx.Request().RemoteAddr)
+	_logUtils.Infof("remove: %v", ctx.Request().RemoteAddr)
 
 	//success := c.AssertService.RegisterHost(req)
 	//if !success {

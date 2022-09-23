@@ -20,6 +20,8 @@ const (
 	NoVncPort      = 51601
 	NatPortStart   = 51602
 	NatPortEnd     = 51799
+	VncPortStart   = 5901
+	VncPortEnd     = 5999
 
 	AgentCheckInterval = 5  // sec
 	WebCheckInterval   = 60 // sec
