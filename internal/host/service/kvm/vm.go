@@ -33,7 +33,7 @@ func (s *KvmService) GetVms() (vms []domain.Vm) {
 		vm := domain.Vm{}
 		vm.Name, _ = dom.GetName()
 
-		if strings.Index(vm.Name, "test-") != 0 {
+		if strings.Index(vm.Name, "test-") < 0 {
 			continue
 		}
 

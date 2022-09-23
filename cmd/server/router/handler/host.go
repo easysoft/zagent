@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"encoding/json"
 	v1 "github.com/easysoft/zv/cmd/server/router/v1"
 	"github.com/easysoft/zv/internal/pkg/domain"
 	serverService "github.com/easysoft/zv/internal/server/service"
@@ -37,8 +36,7 @@ func (c *HostCtrl) Register(ctx iris.Context) {
 		return
 	}
 
-	str, _ := json.Marshal(req)
-	_logUtils.Infof("%v", str)
+	_logUtils.Infof("%v", ctx.Request().RemoteAddr)
 
 	success := c.AssertService.RegisterHost(req)
 	if !success {
