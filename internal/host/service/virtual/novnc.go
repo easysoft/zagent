@@ -4,6 +4,7 @@ import (
 	"fmt"
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
 	agentConf "github.com/easysoft/zv/internal/pkg/conf"
+	consts "github.com/easysoft/zv/internal/pkg/const"
 	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
 	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
 	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
@@ -65,11 +66,11 @@ func (s *NoVncService) GetToken(port string) (ret v1.VncTokenResp) {
 }
 
 func (s *NoVncService) GenWebsockifyTokens() {
-	port := 5901
-	for port <= 6000 {
+	port := consts.VncPortStart
+	for port <= consts.VncPortEnd {
 		portStr := strconv.Itoa(port)
 
-		// uuid: 192.168.1.215:5901
+		// uuid: 192.168.1.215:51800
 		content := fmt.Sprintf("%s: %s:%s", _stringUtils.Uuid(), agentConf.Inst.NodeIp, portStr)
 
 		pth := filepath.Join(agentConf.Inst.DirToken, portStr+".txt")

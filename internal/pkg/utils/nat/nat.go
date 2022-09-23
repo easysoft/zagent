@@ -14,9 +14,6 @@ import (
 )
 
 const (
-	PortStart = 51800
-	PortEnd   = 51999
-
 	httpConf = `
                 server{
 					listen      %d;
@@ -40,7 +37,7 @@ func GetValidPort() (hostPort int, err error) {
 
 	list := strings.Split(output, "\n")
 
-	for p := PortStart; p <= PortEnd; p++ {
+	for p := consts.NatPortStart; p <= consts.NatPortEnd; p++ {
 		str := ":" + strconv.Itoa(p)
 		if !_stringUtils.StrInArr(str, list) {
 			hostPort = p

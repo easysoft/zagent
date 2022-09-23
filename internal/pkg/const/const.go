@@ -16,6 +16,11 @@ const (
 	ServerPort = 8085
 	AgentPort  = 8086
 
+	NatPortStart = 51600
+	NatPortEnd   = 51799
+	VncPortStart = 51800
+	VncPortEnd   = 51999
+
 	AgentCheckInterval = 5  // sec
 	WebCheckInterval   = 60 // sec
 
