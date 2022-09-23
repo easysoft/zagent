@@ -44,7 +44,7 @@ func (s *NoVncService) LaunchNoVNCService() {
 	noVNCPath := filepath.Join(agentConf.Inst.WorkDir, "novnc")
 	logPath := filepath.Join(agentConf.Inst.WorkDir, "novnc/nohup.log")
 
-	cmd := fmt.Sprintf("nohup light-server -s %s -p %d > %s 2>&1 &", noVNCPath, consts.NoVncServer, logPath)
+	cmd := fmt.Sprintf("nohup light-server -s %s -p %d > %s 2>&1 &", noVNCPath, consts.NoVncPort, logPath)
 
 	_shellUtils.KillProcess("light-server")
 	_shellUtils.ExeShell(cmd)

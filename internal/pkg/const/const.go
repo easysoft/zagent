@@ -17,7 +17,7 @@ const (
 	AgentPort  = 8086
 
 	WebsockifyPort = 51600
-	NoVncServer    = 51601
+	NoVncPort      = 51601
 	NatPortStart   = 51602
 	NatPortEnd     = 51799
 	VncPortStart   = 51800
