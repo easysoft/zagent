@@ -37,7 +37,7 @@ func GetValidPort() (hostPort int, err error) {
 
 	list := strings.Split(output, "\n")
 
-	for p := consts.NatPortStart; p <= consts.NatPortEnd; p++ {
+	for p := consts.VncPortStart; p <= consts.VncPortEnd; p++ {
 		str := ":" + strconv.Itoa(p)
 		if !_stringUtils.StrInArr(str, list) {
 			hostPort = p
