@@ -90,7 +90,7 @@ func (s *NoVncService) GenWebsockifyTokens() {
 			Ip:    ip,
 			Port:  portStr,
 		}
-		s.syncMap.Store(port, result)
+		s.syncMap.Store(portStr, result)
 
 		port++
 	}
