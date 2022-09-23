@@ -61,7 +61,7 @@ func (s *NoVncService) GetToken(name string) (ret v1.VncTokenResp, err error) {
 		return
 	}
 
-	obj, ok := s.syncMap.Load(5900 + port)
+	obj, ok := s.syncMap.Load(strconv.Itoa(port))
 
 	if !ok {
 		return
@@ -90,7 +90,7 @@ func (s *NoVncService) GenWebsockifyTokens() {
 			Ip:    ip,
 			Port:  portStr,
 		}
-		s.syncMap.Store(portStr, result)
+		s.syncMap.Store(port, result)
 
 		port++
 	}
