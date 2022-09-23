@@ -110,6 +110,7 @@ func (s *NoVncService) getPortByName(name string) (port int, err error) {
 	}
 
 	port, err = strconv.Atoi(line[1:])
+	port += 5900
 
 	return
 }
