@@ -10,7 +10,6 @@ import (
 	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
 	"path/filepath"
 	"strconv"
-	"strings"
 	"sync"
 )
 
@@ -32,8 +31,8 @@ func (s *NoVncService) LaunchWebsockifyService() (ret v1.VncTokenResp) {
 	exePath := filepath.Join(agentConf.Inst.WorkDir, "websockify/run")
 	logPath := filepath.Join(agentConf.Inst.WorkDir, "websockify/nohup.log")
 
-	cmd := fmt.Sprintf("nohup %s --token-plugin TokenFile --token-source %s 6080 > %s 2>&1 &",
-		exePath, agentConf.Inst.DirToken, logPath)
+	cmd := fmt.Sprintf("nohup %s --token-plugin TokenFile --token-source %s %d > %s 2>&1 &",
+		exePath, agentConf.Inst.DirToken, consts.WebsockifyPort, logPath)
 
 	_shellUtils.KillProcess("websockify")
 	_shellUtils.ExeShell(cmd)
@@ -45,7 +44,7 @@ func (s *NoVncService) LaunchNoVNCService() {
 	noVNCPath := filepath.Join(agentConf.Inst.WorkDir, "novnc")
 	logPath := filepath.Join(agentConf.Inst.WorkDir, "novnc/nohup.log")
 
-	cmd := fmt.Sprintf("nohup light-server -s  %s > %s 2>&1 &", noVNCPath, logPath)
+	cmd := fmt.Sprintf("nohup light-server -s %s -p %d > %s 2>&1 &", noVNCPath, consts.NoVncServer, logPath)
 
 	_shellUtils.KillProcess("light-server")
 	_shellUtils.ExeShell(cmd)
