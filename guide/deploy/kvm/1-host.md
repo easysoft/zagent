@@ -45,7 +45,7 @@ sudo service libvirt-bin restart
   ![image.png](1-host.assets/bVcSDTT.png)
 - 选择前面下载的Win10镜像文件作为本地安装介质；
   ![image.png](1-host.assets/bVcSDWS.png)
-- 网络设置页面，选择“主机设备”也就是宿主机的网卡，这样虚拟机会作为局域网中的一台电脑而存在；
+- 网络设置页面，选择“虚拟网络'default':NAT”，设备选择宿主机的网卡。此时，宿主机和虚拟机之间会建立一个网络，网关为192.168.122.1，虚拟机通过网络地址转换(NAT)访问外部网络，IP地址类似192.168.122.x；
   ![image.png](1-host.assets/bVcSDWW.png)
 - 按向导完成其他设置，并保存。
 

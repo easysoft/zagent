@@ -1,7 +1,8 @@
 ## 安装部署
 ### 1. 宿主机
 #### [1.1 KVM宿主机](kvm/1-host.md)
-#### [1.2 multipass宿主机](multipass/1-host.md)
+#### [1.2 宿主机端口映射](nat/index.md)
+#### [1.3 multipass宿主机](multipass/1-host.md)
 
 ### 2. 虚拟机
 #### [2.1 KVM虚拟机](kvm/2-vm.md)

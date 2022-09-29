@@ -27,10 +27,10 @@ sudo chown -R  root:aaron /apps/nginx/conf.*.d
 
 # /usr/sbin/nginx
 # /etc/nginx/nginx.conf
-sudo chown root:z /usr/sbin/nginx
+sudo chown root:aaron /usr/sbin/nginx
 sudo chmod 750 /usr/sbin/nginx
 sudo chmod u+s /usr/sbin/nginx
-sudo chmod -R 666 /apps/nginx/conf.*.d
+sudo chmod -R 666 /zagent/nginx/conf.*.d
 
 # 本地安装swaggo，生成并上传。 https://github.com/swaggo/swag
 rm -rf res/server/docs
