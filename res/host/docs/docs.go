@@ -78,7 +78,7 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "删除虚拟机到宿主机的端口映射",
+                "summary": "创建KVM虚拟机",
                 "parameters": [
                     {
                         "description": "Kvm Request Object",
@@ -94,7 +94,19 @@ var doc = `{
                     "200": {
                         "description": "code = success? 1 : 0",
                         "schema": {
-                            "$ref": "#/definitions/_domain.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/v1.KvmResp"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -243,7 +255,49 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/vnc/getToken": {
+        "/api/v1/virtual/addVmPortMap": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "新增虚拟机到宿主机端口的映射",
+                "parameters": [
+                    {
+                        "description": "Kvm Request Object",
+                        "name": "VmPortMapReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.KvmReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success? 1 : 0",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/v1.VmPortMapResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/virtual/getToken": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -278,6 +332,36 @@ var doc = `{
                                     }
                                 }
                             ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/virtual/removeVmPortMap": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "删除虚拟机到宿主机的端口映射",
+                "parameters": [
+                    {
+                        "description": "Kvm Request Object",
+                        "name": "VmPortMapReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.KvmReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success? 1 : 0",
+                        "schema": {
+                            "$ref": "#/definitions/_domain.Response"
                         }
                     }
                 }

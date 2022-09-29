@@ -251,8 +251,13 @@ paths:
         "200":
           description: 'code = success? 1 : 0'
           schema:
-            $ref: '#/definitions/_domain.Response'
-      summary: 删除虚拟机到宿主机的端口映射
+            allOf:
+            - $ref: '#/definitions/_domain.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/v1.KvmResp'
+              type: object
+      summary: 创建KVM虚拟机
   /api/v1/kvm/listTempl:
     get:
       produces:
@@ -270,7 +275,31 @@ paths:
                   type: array
               type: object
       summary: 获取KVM虚拟机模板信息
-  /api/v1/vnc/getToken:
+  /api/v1/virtual/addVmPortMap:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Kvm Request Object
+        in: body
+        name: VmPortMapReq
+        required: true
+        schema:
+          $ref: '#/definitions/v1.KvmReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'code = success? 1 : 0'
+          schema:
+            allOf:
+            - $ref: '#/definitions/_domain.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/v1.VmPortMapResp'
+              type: object
+      summary: 新增虚拟机到宿主机端口的映射
+  /api/v1/virtual/getToken:
     get:
       consumes:
       - application/json
@@ -293,4 +322,23 @@ paths:
                   $ref: '#/definitions/v1.VncTokenResp'
               type: object
       summary: 根据VNC Port获取Token
+  /api/v1/virtual/removeVmPortMap:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Kvm Request Object
+        in: body
+        name: VmPortMapReq
+        required: true
+        schema:
+          $ref: '#/definitions/v1.KvmReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'code = success? 1 : 0'
+          schema:
+            $ref: '#/definitions/_domain.Response'
+      summary: 删除虚拟机到宿主机的端口映射
 swagger: "2.0"
