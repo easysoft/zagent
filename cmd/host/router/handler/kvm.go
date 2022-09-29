@@ -22,7 +22,7 @@ func NewKvmCtrl() *KvmCtrl {
 // ListTmpl
 // @summary 获取KVM虚拟机模板信息
 // @Produce json
-// @Success 200 {object} _httpUtils.Response{data=[]v1.KvmRespTempl} "code = success? 1 : 0"
+// @Success 200 {object} _domain.Response{data=[]v1.KvmRespTempl} "code = success? 1 : 0"
 // @Router /api/v1/kvm/listTempl [get]
 func (c *KvmCtrl) ListTmpl(ctx iris.Context) {
 	templs, err := c.LibvirtService.ListTmpl()
@@ -42,7 +42,7 @@ func (c *KvmCtrl) ListTmpl(ctx iris.Context) {
 // @Accept json
 // @Produce json
 // @Param kvmReq body v1.KvmReq true "Kvm Request Object"
-// @Success 200 {object} _httpUtils.Response{data=v1.KvmResp} "code = success? 1 : 0"
+// @Success 200 {object} _domain.Response{data=v1.KvmResp} "code = success? 1 : 0"
 // @Router /api/v1/kvm/create [post]
 func (c *KvmCtrl) Create(ctx iris.Context) {
 	req := v1.KvmReq{}
@@ -81,7 +81,7 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 // @Accept json
 // @Produce json
 // @Param name path string true "Kvm Name"
-// @Success 200 {object} _httpUtils.Response{} "code = success? 1 : 0"
+// @Success 200 {object} _domain.Response{} "code = success? 1 : 0"
 // @Router /api/v1/kvm/{name}/destroy [post]
 func (c *KvmCtrl) Destroy(ctx iris.Context) {
 	name := ctx.Params().GetString("name")
@@ -114,7 +114,7 @@ func (c *KvmCtrl) Destroy(ctx iris.Context) {
 // @Accept json
 // @Produce json
 // @Param kvmReqClone body v1.KvmReqClone true "Kvm Request Object"
-// @Success 200 {object} _httpUtils.Response{data=v1.KvmResp} "code = success? 1 : 0"
+// @Success 200 {object} _domain.Response{data=v1.KvmResp} "code = success? 1 : 0"
 // @Router /api/v1/kvm/clone [post]
 func (c *KvmCtrl) Clone(ctx iris.Context) {
 	req := v1.KvmReqClone{}
@@ -157,7 +157,7 @@ func (c *KvmCtrl) Clone(ctx iris.Context) {
 // @Accept json
 // @Produce json
 // @Param name path string true "Kvm Name"
-// @Success 200 {object} _httpUtils.Response{} "code = success? 1 : 0"
+// @Success 200 {object} _domain.Response{} "code = success? 1 : 0"
 // @Router /api/v1/kvm/{name}/reboot [post]
 func (c *KvmCtrl) Reboot(ctx iris.Context) {
 	name := ctx.Params().GetString("name")
@@ -177,7 +177,7 @@ func (c *KvmCtrl) Reboot(ctx iris.Context) {
 // @Accept json
 // @Produce json
 // @Param name path string true "Kvm Name"
-// @Success 200 {object} _httpUtils.Response{} "code = success? 1 : 0"
+// @Success 200 {object} _domain.Response{} "code = success? 1 : 0"
 // @Router /api/v1/kvm/{name}/suspend [post]
 func (c *KvmCtrl) Suspend(ctx iris.Context) {
 	name := ctx.Params().GetString("name")
@@ -201,7 +201,7 @@ func (c *KvmCtrl) Suspend(ctx iris.Context) {
 // @Accept json
 // @Produce json
 // @Param name path string true "Kvm Name"
-// @Success 200 {object} _httpUtils.Response{} "code = success? 1 : 0"
+// @Success 200 {object} _domain.Response{} "code = success? 1 : 0"
 // @Router /api/v1/kvm/{name}/resume [post]
 func (c *KvmCtrl) Resume(ctx iris.Context) {
 	name := ctx.Params().GetString("name")

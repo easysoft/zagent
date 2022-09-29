@@ -16,13 +16,6 @@ func NewMultiPassCtrl() *MultiPassCtrl {
 	return &MultiPassCtrl{}
 }
 
-// List
-// @summary 获取MultiPass虚拟机
-// @Accept json
-// @Produce json
-// @Param task body v1.MultiPassReq true "MultiPass Request Object"
-// @Success 200 {object} _httpUtils.Response{data=v1.MultiPassResp} "code = success? 1 : 0"
-// @Router /api/v1/MultiPass/list [post]
 func (c *MultiPassCtrl) List(ctx iris.Context) {
 	domains, err := c.MultiPassService.GetVmList()
 	if domains == nil || err != nil {
@@ -45,13 +38,6 @@ func (c *MultiPassCtrl) List(ctx iris.Context) {
 	return
 }
 
-// Create
-// @summary 创建MultiPass虚拟机
-// @Accept json
-// @Produce json
-// @Param task body v1.MultiPassReq true "MultiPass Request Object"
-// @Success 200 {object} _httpUtils.Response{data=v1.MultiPassResp} "code = success? 1 : 0"
-// @Router /api/v1/MultiPass/create [post]
 func (c *MultiPassCtrl) Create(ctx iris.Context) {
 	req := v1.MultiPassReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
@@ -73,13 +59,6 @@ func (c *MultiPassCtrl) Create(ctx iris.Context) {
 	return
 }
 
-// Destroy
-// @summary 摧毁MultiPass虚拟机
-// @Accept json
-// @Produce json
-// @Param task body v1.MultiPassReq true "MultiPass Request Object"
-// @Success 200 {object} _httpUtils.Response{data=int} "code = success? 1 : 0"
-// @Router /api/v1/multipass/{name}/destroy [post]
 func (c *MultiPassCtrl) Destroy(ctx iris.Context) {
 	name := ctx.Params().GetString("name")
 	if name == "" {
@@ -93,13 +72,6 @@ func (c *MultiPassCtrl) Destroy(ctx iris.Context) {
 	return
 }
 
-// Reboot
-// @summary 重启MultiPass虚拟机
-// @Accept json
-// @Produce json
-// @Param name path string true "MultiPass Name"
-// @Success 200 {object} _httpUtils.Response{} "code = success? 1 : 0"
-// @Router /api/v1/MultiPass/{name}/reboot [post]
 func (c *MultiPassCtrl) Reboot(ctx iris.Context) {
 	name := ctx.Params().GetString("name")
 	if name == "" {
@@ -113,13 +85,6 @@ func (c *MultiPassCtrl) Reboot(ctx iris.Context) {
 	return
 }
 
-// Suspend
-// @summary 暂停MultiPass虚拟机
-// @Accept json
-// @Produce json
-// @Param name path string true "MultiPass Name"
-// @Success 200 {object} _httpUtils.Response{} "code = success? 1 : 0"
-// @Router /api/v1/MultiPass/{name}/suspend [post]
 func (c *MultiPassCtrl) Suspend(ctx iris.Context) {
 	name := ctx.Params().GetString("name")
 	if name == "" {
@@ -133,13 +98,6 @@ func (c *MultiPassCtrl) Suspend(ctx iris.Context) {
 	return
 }
 
-// Resume
-// @summary 恢复MultiPass虚拟机
-// @Accept json
-// @Produce json
-// @Param name path string true "MultiPass Name"
-// @Success 200 {object} _httpUtils.Response{} "code = success? 1 : 0"
-// @Router /api/v1/MultiPass/{name}/resume [post]
 func (c *MultiPassCtrl) Resume(ctx iris.Context) {
 	name := ctx.Params().GetString("name")
 	if name == "" {

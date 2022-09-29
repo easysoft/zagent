@@ -22,13 +22,6 @@ func NewVmCtrl() *VmCtrl {
 	return &VmCtrl{}
 }
 
-// Register
-// @summary 向服务器注册虚拟机
-// @Accept json
-// @Produce json
-// @Param task body v1.VmRegisterReq true "RunModeVm Object"
-// @Success 200 {object} _httpUtils.Response "code = success? 1 : 0"
-// @Router /api/v1/client/vm/register [post]
 func (c *VmCtrl) Register(ctx iris.Context) {
 	req := v1.VmRegisterReq{}
 	if err := ctx.ReadJSON(&req); err != nil {

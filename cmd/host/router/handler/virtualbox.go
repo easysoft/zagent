@@ -17,13 +17,6 @@ func NewVirtualBoxCtrl() *VirtualBoxCtrl {
 	return &VirtualBoxCtrl{}
 }
 
-// Create
-// @summary 创建VirtualBox虚拟机
-// @Accept json
-// @Produce json
-// @Param virtualboxReq body v1.VirtualBoxReq true "VirtualBox Request Object"
-// @Success 200 {object} _httpUtils.Response{data=v1.VirtualBoxResp} "code = success? 1 : 0"
-// @Router /api/v1/virtualbox/create [post]
 func (c *VirtualBoxCtrl) Create(ctx iris.Context) {
 	req := v1.VirtualBoxReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
@@ -43,13 +36,6 @@ func (c *VirtualBoxCtrl) Create(ctx iris.Context) {
 	return
 }
 
-// Destroy
-// @summary 摧毁VirtualBox虚拟机
-// @Accept json
-// @Produce json
-// @Param name path string true "VirtualBox Name"
-// @Success 200 {object} _httpUtils.Response{} "code = success? 1 : 0"
-// @Router /api/v1/virtualbox/{name}/destroy [post]
 func (c *VirtualBoxCtrl) Destroy(ctx iris.Context) {
 	req := v1.VirtualBoxReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
@@ -63,11 +49,6 @@ func (c *VirtualBoxCtrl) Destroy(ctx iris.Context) {
 	return
 }
 
-// ListTmpl
-// @summary 获取VirtualBox虚拟机模板信息
-// @Produce json
-// @Success 200 {object} _httpUtils.Response{data=[]v1.KvmRespTempl} "code = success? 1 : 0"
-// @Router /api/v1/virtualbox/listTempl [post]
 func (c *VirtualBoxCtrl) ListTmpl(ctx iris.Context) {
 	req := v1.VirtualBoxReq{}
 	if err := ctx.ReadJSON(&req); err != nil {

@@ -63,6 +63,12 @@ func (c *VirtualCtrl) NotifyHost(ctx iris.Context) {
 	return
 }
 
+// @summary 新增虚拟机到宿主机端口的映射
+// @Accept json
+// @Produce json
+// @Param kvmReq body v1.KvmReq true "Kvm Request Object"
+// @Success 200 {object} _domain.Response{data=v1.VmPortMapResp} "code = success? 1 : 0"
+// @Router /api/v1/kvm/create [post]
 func (c *VirtualCtrl) AddVmPortMap(ctx iris.Context) {
 	req := v1.VmPortMapReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
@@ -79,6 +85,12 @@ func (c *VirtualCtrl) AddVmPortMap(ctx iris.Context) {
 	ctx.JSON(_httpUtils.RespData(_const.ResultPass, "success", resp))
 }
 
+// @summary 删除虚拟机到宿主机的端口映射
+// @Accept json
+// @Produce json
+// @Param kvmReq body v1.KvmReq true "Kvm Request Object"
+// @Success 200 {object} _domain.Response "code = success? 1 : 0"
+// @Router /api/v1/kvm/create [post]
 func (c *VirtualCtrl) RemoveVmPortMap(ctx iris.Context) {
 	req := v1.VmPortMapReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
@@ -95,12 +107,11 @@ func (c *VirtualCtrl) RemoveVmPortMap(ctx iris.Context) {
 	ctx.JSON(_httpUtils.RespData(_const.ResultPass, "success", nil))
 }
 
-// GetToken
 // @summary 根据VNC Port获取Token
 // @Accept json
 // @Produce json
-// @Param port query string true "Virtual Port"
-// @Success 200 {object} _httpUtils.Response{iris.Map} "code = success? 1 : 0"
+// @Param port query string true "VNC Port"
+// @Success 200 {object} _domain.Response{data=v1.VncTokenResp} "code = success? 1 : 0"
 // @Router /api/v1/vnc/getToken [get]
 func (c *VirtualCtrl) GetToken(ctx iris.Context) {
 	port := ctx.URLParam("port")

@@ -21,13 +21,6 @@ func NewHostCtrl() *HostCtrl {
 	return &HostCtrl{}
 }
 
-// Register
-// @summary 向服务器注册宿主机
-// @Accept json
-// @Produce json
-// @Param task body v1.HostRegisterReq true "RunModeHost Object"
-// @Success 200 {object} _httpUtils.Response "code = success? 1 : 0"
-// @Router /api/v1/client/host/register [post]
 func (c *HostCtrl) Register(ctx iris.Context) {
 	req := v1.HostRegisterReq{}
 	if err := ctx.ReadJSON(&req); err != nil {

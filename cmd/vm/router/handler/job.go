@@ -16,13 +16,6 @@ func NewJobCtrl() *JobCtrl {
 	return &JobCtrl{}
 }
 
-// Add
-// @summary 创建任务
-// @Accept json
-// @Produce json
-// @Param task body domain.Build true "Build Request Object"
-// @Success 200 {object} _httpUtils.Response{} "code = success? 1 : 0"
-// @Router /api/v1/vmware/create [post]
 func (c *JobCtrl) Add(ctx iris.Context) {
 	build := domain.Build{}
 	if err := ctx.ReadJSON(&build); err != nil {

@@ -16,13 +16,6 @@ func NewVmWareCtrl() *VmWareCtrl {
 	return &VmWareCtrl{}
 }
 
-// Create
-// @summary 创建VmWare虚拟机
-// @Accept json
-// @Produce json
-// @Param task body v1.VmWareReq true "VmWare Request Object"
-// @Success 200 {object} _httpUtils.Response{data=v1.VmWareResp} "code = success? 1 : 0"
-// @Router /api/v1/vmware/create [post]
 func (c *VmWareCtrl) Create(ctx iris.Context) {
 	req := v1.VmWareReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
@@ -48,13 +41,6 @@ func (c *VmWareCtrl) Create(ctx iris.Context) {
 	return
 }
 
-// Destroy
-// @summary 摧毁VmWare虚拟机
-// @Accept json
-// @Produce json
-// @Param task body v1.VmWareReq true "VmWare Request Object"
-// @Success 200 {object} _httpUtils.Response{data=int} "code = success? 1 : 0"
-// @Router /api/v1/kvm/{name}/destroy [post]
 func (c *VmWareCtrl) Destroy(ctx iris.Context) {
 	req := v1.VmWareReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
