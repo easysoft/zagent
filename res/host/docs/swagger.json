@@ -1,0 +1,463 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "ZAgent宿主机API文档",
+        "contact": {
+            "name": "API Support",
+            "url": "https://github.com/easysoft/zv/issues",
+            "email": "462626@qq.com"
+        },
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/v1/kvm/clone": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "克隆KVM虚拟机",
+                "parameters": [
+                    {
+                        "description": "Kvm Request Object",
+                        "name": "kvmReqClone",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.KvmReqClone"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success? 1 : 0",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/v1.KvmResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/kvm/create": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "删除虚拟机到宿主机的端口映射",
+                "parameters": [
+                    {
+                        "description": "Kvm Request Object",
+                        "name": "kvmReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.KvmReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success? 1 : 0",
+                        "schema": {
+                            "$ref": "#/definitions/_domain.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/kvm/listTempl": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "获取KVM虚拟机模板信息",
+                "responses": {
+                    "200": {
+                        "description": "code = success? 1 : 0",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/v1.KvmRespTempl"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/kvm/{name}/destroy": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "摧毁KVM虚拟机",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Kvm Name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success? 1 : 0",
+                        "schema": {
+                            "$ref": "#/definitions/_domain.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/kvm/{name}/reboot": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "重启KVM虚拟机",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Kvm Name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success? 1 : 0",
+                        "schema": {
+                            "$ref": "#/definitions/_domain.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/kvm/{name}/resume": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "恢复KVM虚拟机",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Kvm Name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success? 1 : 0",
+                        "schema": {
+                            "$ref": "#/definitions/_domain.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/kvm/{name}/suspend": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "暂停KVM虚拟机",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Kvm Name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success? 1 : 0",
+                        "schema": {
+                            "$ref": "#/definitions/_domain.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/vnc/getToken": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "根据VNC Port获取Token",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "VNC Port",
+                        "name": "port",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success? 1 : 0",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/v1.VncTokenResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "_domain.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "object"
+                },
+                "data": {
+                    "type": "object"
+                },
+                "msg": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.KvmReq": {
+            "type": "object",
+            "properties": {
+                "osCategory": {
+                    "description": "Enums consts.OsCategory",
+                    "type": "string",
+                    "example": "windows"
+                },
+                "osLang": {
+                    "description": "Enums consts.OsLang",
+                    "type": "string",
+                    "example": "zh_cn"
+                },
+                "osType": {
+                    "description": "Enums consts.OsType",
+                    "type": "string",
+                    "example": "win10"
+                },
+                "osVersion": {
+                    "type": "string",
+                    "example": "x64-pro"
+                },
+                "vmBacking": {
+                    "type": "string"
+                },
+                "vmCpu": {
+                    "type": "integer",
+                    "example": 3
+                },
+                "vmDiskSize": {
+                    "type": "integer",
+                    "example": 30000
+                },
+                "vmMacAddress": {
+                    "type": "string"
+                },
+                "vmMemorySize": {
+                    "type": "integer",
+                    "example": 5120000
+                },
+                "vmTemplate": {
+                    "type": "string"
+                },
+                "vmUniqueName": {
+                    "type": "string",
+                    "example": "test-win10-x64-pro-zh_cn"
+                }
+            }
+        },
+        "v1.KvmReqClone": {
+            "type": "object",
+            "properties": {
+                "vmCpu": {
+                    "type": "integer",
+                    "example": 3
+                },
+                "vmDiskSize": {
+                    "type": "integer",
+                    "example": 30000
+                },
+                "vmMacAddress": {
+                    "type": "string"
+                },
+                "vmMemorySize": {
+                    "type": "integer",
+                    "example": 5120000
+                },
+                "vmSrc": {
+                    "type": "string",
+                    "example": "test-win10-x64-pro-zh_cn"
+                },
+                "vmUniqueName": {
+                    "type": "string",
+                    "example": "test-win10-x64-pro-zh_cn-clone1"
+                }
+            }
+        },
+        "v1.KvmResp": {
+            "type": "object",
+            "properties": {
+                "agentPort": {
+                    "type": "integer"
+                },
+                "backingPath": {
+                    "type": "string"
+                },
+                "imagePath": {
+                    "type": "string"
+                },
+                "macAddress": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "vncPort": {
+                    "type": "integer"
+                },
+                "vncUrl": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.KvmRespTempl": {
+            "type": "object",
+            "properties": {
+                "backingFile": {
+                    "type": "string"
+                },
+                "backingFormat": {
+                    "type": "string"
+                },
+                "cpuCoreNum": {
+                    "type": "integer"
+                },
+                "diskFile": {
+                    "type": "string"
+                },
+                "macAddress": {
+                    "type": "string"
+                },
+                "memoryUnit": {
+                    "type": "string"
+                },
+                "memoryValue": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "osArch": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "uuid": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.VmPortMapResp": {
+            "type": "object",
+            "properties": {
+                "alreadyMapped": {
+                    "type": "boolean"
+                },
+                "hostPort": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "vmIp": {
+                    "type": "string"
+                },
+                "vmPort": {
+                    "type": "integer"
+                }
+            }
+        },
+        "v1.VncTokenResp": {
+            "type": "object",
+            "properties": {
+                "ip": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

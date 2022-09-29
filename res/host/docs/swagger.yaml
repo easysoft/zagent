@@ -1,0 +1,296 @@
+definitions:
+  _domain.Response:
+    properties:
+      code:
+        type: object
+      data:
+        type: object
+      msg:
+        type: string
+    type: object
+  v1.KvmReq:
+    properties:
+      osCategory:
+        description: Enums consts.OsCategory
+        example: windows
+        type: string
+      osLang:
+        description: Enums consts.OsLang
+        example: zh_cn
+        type: string
+      osType:
+        description: Enums consts.OsType
+        example: win10
+        type: string
+      osVersion:
+        example: x64-pro
+        type: string
+      vmBacking:
+        type: string
+      vmCpu:
+        example: 3
+        type: integer
+      vmDiskSize:
+        example: 30000
+        type: integer
+      vmMacAddress:
+        type: string
+      vmMemorySize:
+        example: 5120000
+        type: integer
+      vmTemplate:
+        type: string
+      vmUniqueName:
+        example: test-win10-x64-pro-zh_cn
+        type: string
+    type: object
+  v1.KvmReqClone:
+    properties:
+      vmCpu:
+        example: 3
+        type: integer
+      vmDiskSize:
+        example: 30000
+        type: integer
+      vmMacAddress:
+        type: string
+      vmMemorySize:
+        example: 5120000
+        type: integer
+      vmSrc:
+        example: test-win10-x64-pro-zh_cn
+        type: string
+      vmUniqueName:
+        example: test-win10-x64-pro-zh_cn-clone1
+        type: string
+    type: object
+  v1.KvmResp:
+    properties:
+      agentPort:
+        type: integer
+      backingPath:
+        type: string
+      imagePath:
+        type: string
+      macAddress:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+      vncPort:
+        type: integer
+      vncUrl:
+        type: string
+    type: object
+  v1.KvmRespTempl:
+    properties:
+      backingFile:
+        type: string
+      backingFormat:
+        type: string
+      cpuCoreNum:
+        type: integer
+      diskFile:
+        type: string
+      macAddress:
+        type: string
+      memoryUnit:
+        type: string
+      memoryValue:
+        type: integer
+      name:
+        type: string
+      osArch:
+        type: string
+      type:
+        type: string
+      uuid:
+        type: string
+    type: object
+  v1.VmPortMapResp:
+    properties:
+      alreadyMapped:
+        type: boolean
+      hostPort:
+        type: integer
+      type:
+        type: string
+      vmIp:
+        type: string
+      vmPort:
+        type: integer
+    type: object
+  v1.VncTokenResp:
+    properties:
+      ip:
+        type: string
+      port:
+        type: string
+      token:
+        type: string
+    type: object
+info:
+  contact:
+    email: 462626@qq.com
+    name: API Support
+    url: https://github.com/easysoft/zv/issues
+  title: ZAgent宿主机API文档
+  version: "1.0"
+paths:
+  /api/v1/kvm/{name}/destroy:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Kvm Name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'code = success? 1 : 0'
+          schema:
+            $ref: '#/definitions/_domain.Response'
+      summary: 摧毁KVM虚拟机
+  /api/v1/kvm/{name}/reboot:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Kvm Name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'code = success? 1 : 0'
+          schema:
+            $ref: '#/definitions/_domain.Response'
+      summary: 重启KVM虚拟机
+  /api/v1/kvm/{name}/resume:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Kvm Name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'code = success? 1 : 0'
+          schema:
+            $ref: '#/definitions/_domain.Response'
+      summary: 恢复KVM虚拟机
+  /api/v1/kvm/{name}/suspend:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Kvm Name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'code = success? 1 : 0'
+          schema:
+            $ref: '#/definitions/_domain.Response'
+      summary: 暂停KVM虚拟机
+  /api/v1/kvm/clone:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Kvm Request Object
+        in: body
+        name: kvmReqClone
+        required: true
+        schema:
+          $ref: '#/definitions/v1.KvmReqClone'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'code = success? 1 : 0'
+          schema:
+            allOf:
+            - $ref: '#/definitions/_domain.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/v1.KvmResp'
+              type: object
+      summary: 克隆KVM虚拟机
+  /api/v1/kvm/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Kvm Request Object
+        in: body
+        name: kvmReq
+        required: true
+        schema:
+          $ref: '#/definitions/v1.KvmReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'code = success? 1 : 0'
+          schema:
+            $ref: '#/definitions/_domain.Response'
+      summary: 删除虚拟机到宿主机的端口映射
+  /api/v1/kvm/listTempl:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'code = success? 1 : 0'
+          schema:
+            allOf:
+            - $ref: '#/definitions/_domain.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/v1.KvmRespTempl'
+                  type: array
+              type: object
+      summary: 获取KVM虚拟机模板信息
+  /api/v1/vnc/getToken:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: VNC Port
+        in: query
+        name: port
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'code = success? 1 : 0'
+          schema:
+            allOf:
+            - $ref: '#/definitions/_domain.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/v1.VncTokenResp'
+              type: object
+      summary: 根据VNC Port获取Token
+swagger: "2.0"
