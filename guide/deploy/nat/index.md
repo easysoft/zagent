@@ -35,8 +35,6 @@
    }
    ```
 
-   
-
 5. 在conf.stream.d目录中创建ssh端口转发文件，访问宿主机50022端口相当于访问虚机22端口；
 
    ```
@@ -48,10 +46,10 @@
    }
    ```
 
-6. 执行nginx -s reload，重新加载nginx配置；
+6. 执行`nginx -s reload`，重新加载nginx配置；
 
-7. 如果虚拟机上有运行在80端口的Web服务（如Apache），用浏览器打开http://<宿主机IP>:50080，确认可访问虚拟机上的网站；
+7. 如果虚拟机上有运行在80端口的Web服务（如Apache），用浏览器打开`http://<宿主机IP>:50080`，确认可访问虚拟机上的网站；
 
-8. 如果虚拟机为Linux且安装了SSH服务，使用命令"ssh <宿主机IP> -p 50022"，确认可登录到虚拟机终端。
+8. 如果虚拟机为Linux且安装了SSH服务，使用命令`ssh <宿主机IP> -p 50022`，确认可登录到虚拟机终端。
 
 以上为端口转发的例子，实际工作中请根据自己的需要来决定转发哪些端口。ZAgent项目提供了映射虚拟机的API接口`api/v1/virtual/addVmPortMap`，具体代码请见[这里](https://github.com/easysoft/zenagent/blob/main/cmd/host/router/handler/virtual.go)。
