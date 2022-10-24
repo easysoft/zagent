@@ -20,7 +20,7 @@ type NoVncService struct {
 	syncMap sync.Map
 }
 
-func NewNoVncService() *NoVncService {
+func NewNovncService() *NoVncService {
 	srv := NoVncService{}
 
 	srv.genWebsockifyTokens()

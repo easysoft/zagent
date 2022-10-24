@@ -1,14 +1,16 @@
 package domain
 
-import _const "github.com/easysoft/zv/pkg/const"
+import (
+	consts "github.com/easysoft/zv/internal/pkg/const"
+)
 
 var (
-	ResultVmNotFound = BizErr{-10100, "RunModeVm Not Found"}
+	ResultVmNotFound = BizErr{consts.BizVmNotExist, "Vm Not Found"}
 )
 
 type BizErr struct {
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
+	Code consts.ResultCode `json:"code"`
+	Msg  string            `json:"msg"`
 }
 
 func (e BizErr) Error() string {
@@ -16,9 +18,9 @@ func (e BizErr) Error() string {
 }
 
 func NewBizErr(msg string) BizErr {
-	return BizErr{Code: _const.ResultFail.Int(), Msg: msg}
+	return BizErr{Code: consts.ResultFail, Msg: msg}
 }
 
-func NewBizErrWithCode(code int, msg string) BizErr {
+func NewBizErrWithCode(code consts.ResultCode, msg string) BizErr {
 	return BizErr{Code: code, Msg: msg}
 }

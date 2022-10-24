@@ -1,16 +1,5 @@
 package _const
 
-type ResultCode int
-
-const (
-	ResultPass ResultCode = 1
-	ResultFail ResultCode = 0
-)
-
-func (c ResultCode) Int() int {
-	return int(c)
-}
-
 type HttpMethod string
 
 const (

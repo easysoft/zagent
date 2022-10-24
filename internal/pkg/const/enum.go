@@ -1,5 +1,25 @@
 package consts
 
+type ResultCode string
+
+const (
+	ResultPass ResultCode = "SUCCESS"
+	ResultFail ResultCode = "FALL"
+
+	ResultUnauthorized ResultCode = "unauthorized"
+
+	BizVmNotExist    ResultCode = "BIZ_VM_NOT_EXIST"
+	BizImageNotExist ResultCode = "BIZ_IMAGE_NOT_EXIST"
+
+	BizReady               ResultCode = "BIZ_READY"
+	BizNotInstall          ResultCode = "BIZ_NOT_INSTALL"
+	BizServiceNotAvailable ResultCode = "BIZ_SERVICE_NOT_AVAILABLE"
+)
+
+func (c ResultCode) String() string {
+	return string(c)
+}
+
 type HostCapability string
 
 const (
@@ -248,5 +268,32 @@ const (
 )
 
 func (e RunMode) ToString() string {
+	return string(e)
+}
+
+type HostService string
+
+const (
+	ServiceKvm        HostService = "kvm"
+	ServiceNovnc      HostService = "novnc"
+	ServiceWebsockify HostService = "websockify"
+
+	ServiceAll HostService = "all"
+)
+
+func (e HostService) ToString() string {
+	return string(e)
+}
+
+type HostServiceStatus string
+
+const (
+	HostServiceReady        HostServiceStatus = "ready"
+	HostServiceNotAvailable HostServiceStatus = "not_available"
+	HostServiceNotInstall   HostServiceStatus = "not_install"
+	HostServiceUnknown      HostServiceStatus = "unknown"
+)
+
+func (e HostServiceStatus) ToString() string {
 	return string(e)
 }

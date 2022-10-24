@@ -46,7 +46,7 @@ func injectObj(router *hostRouter.Router) {
 
 	err := g.Provide(
 		// setup
-		&inject.Object{Value: virtualService.NewNoVncService()},
+		&inject.Object{Value: virtualService.NewNovncService()},
 
 		// cron
 		&inject.Object{Value: hostCron.NewAgentCron()},

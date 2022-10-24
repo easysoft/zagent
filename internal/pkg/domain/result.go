@@ -1,14 +1,14 @@
 package domain
 
-import _const "github.com/easysoft/zv/pkg/const"
+import consts "github.com/easysoft/zv/internal/pkg/const"
 
 type Result struct {
-	Code    int         `json:"code"`
+	Code    string      `json:"code"`
 	Msg     string      `json:"msg"`
 	Payload interface{} `json:"payload"`
 }
 
 func (result *Result) Success(msg string) {
-	result.Code = _const.ResultPass.Int()
+	result.Code = consts.ResultPass.String()
 	result.Msg = msg
 }

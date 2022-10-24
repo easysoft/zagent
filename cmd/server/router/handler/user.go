@@ -1,6 +1,7 @@
 package handler
 
 import (
+	consts "github.com/easysoft/zv/internal/pkg/const"
 	"github.com/easysoft/zv/internal/pkg/domain"
 	"github.com/easysoft/zv/internal/server/biz/jwt"
 	"github.com/easysoft/zv/internal/server/biz/transformer"
@@ -8,7 +9,6 @@ import (
 	"github.com/easysoft/zv/internal/server/model"
 	"github.com/easysoft/zv/internal/server/repo"
 	"github.com/easysoft/zv/internal/server/service"
-	_const "github.com/easysoft/zv/pkg/const"
 	_convertor "github.com/easysoft/zv/pkg/lib/convertor"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	"github.com/go-playground/validator/v10"
@@ -44,7 +44,7 @@ func NewUserCtrl() *UserCtrl {
 func (c *UserCtrl) GetProfile(ctx iris.Context) {
 	cred := jwt.GetCredentials(ctx)
 	if cred == nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, "not login", nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, "not login", nil))
 		return
 	}
 
@@ -60,19 +60,19 @@ func (c *UserCtrl) GetProfile(ctx iris.Context) {
 	}
 	user, err := c.UserRepo.GetUser(s)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 		return
 	}
-	_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass, "请求成功", c.userTransform(user)))
+	_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultPass, "请求成功", c.userTransform(user)))
 }
 
 func (c *UserCtrl) GetAdminInfo(ctx iris.Context) {
 	user, err := c.UserRepo.GetUser(nil)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 		return
 	}
-	_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass, "请求成功", map[string]string{"avatar": user.Avatar}))
+	_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultPass, "请求成功", map[string]string{"avatar": user.Avatar}))
 }
 
 func (c *UserCtrl) ChangeAvatar(ctx iris.Context) {
@@ -82,7 +82,7 @@ func (c *UserCtrl) ChangeAvatar(ctx iris.Context) {
 
 	avatar := new(model.Avatar)
 	if err := ctx.ReadJSON(avatar); err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 		return
 	}
 
@@ -91,7 +91,7 @@ func (c *UserCtrl) ChangeAvatar(ctx iris.Context) {
 		errs := err.(validator.ValidationErrors)
 		for _, e := range errs.Translate(validate.ValidateTrans) {
 			if len(e) > 0 {
-				_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, e, nil))
+				_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, e, nil))
 				return
 			}
 		}
@@ -102,10 +102,10 @@ func (c *UserCtrl) ChangeAvatar(ctx iris.Context) {
 	user.Avatar = avatar.Avatar
 	err = c.UserService.UpdateUserById(id, user)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 		return
 	}
-	_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass, "请求成功", c.userTransform(user)))
+	_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultPass, "请求成功", c.userTransform(user)))
 }
 
 /**
@@ -125,10 +125,10 @@ func (c *UserCtrl) GetUser(ctx iris.Context) {
 
 	user, err := c.UserRepo.GetUser(nil)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 		return
 	}
-	_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass, "操作成功", c.userTransform(user)))
+	_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultPass, "操作成功", c.userTransform(user)))
 }
 
 /**
@@ -148,7 +148,7 @@ func (c *UserCtrl) GetUser(ctx iris.Context) {
 func (c *UserCtrl) CreateUser(ctx iris.Context) {
 	user := new(model.User)
 	if err := ctx.ReadJSON(user); err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 		return
 	}
 
@@ -157,7 +157,7 @@ func (c *UserCtrl) CreateUser(ctx iris.Context) {
 		errs := err.(validator.ValidationErrors)
 		for _, e := range errs.Translate(validate.ValidateTrans) {
 			if len(e) > 0 {
-				_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, e, nil))
+				_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, e, nil))
 				return
 			}
 		}
@@ -165,15 +165,15 @@ func (c *UserCtrl) CreateUser(ctx iris.Context) {
 
 	err = c.UserService.CreateUser(user)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 		return
 	}
 
 	if user.ID == 0 {
-		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, "操作失败", nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, "操作失败", nil))
 		return
 	}
-	_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass, "操作成功", c.userTransform(user)))
+	_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultPass, "操作成功", c.userTransform(user)))
 	return
 
 }
@@ -196,7 +196,7 @@ func (c *UserCtrl) UpdateUser(ctx iris.Context) {
 	user := new(model.User)
 
 	if err := ctx.ReadJSON(user); err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 	}
 
 	err := validate.Validate.Struct(*user)
@@ -204,7 +204,7 @@ func (c *UserCtrl) UpdateUser(ctx iris.Context) {
 		errs := err.(validator.ValidationErrors)
 		for _, e := range errs.Translate(validate.ValidateTrans) {
 			if len(e) > 0 {
-				_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, e, nil))
+				_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, e, nil))
 				return
 			}
 		}
@@ -212,16 +212,16 @@ func (c *UserCtrl) UpdateUser(ctx iris.Context) {
 
 	id, _ := ctx.Params().GetUint("id")
 	if user.Username == "username" {
-		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, "不能编辑管理员", nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, "不能编辑管理员", nil))
 		return
 	}
 
 	err = c.UserService.UpdateUserById(id, user)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 		return
 	}
-	_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass, "操作成功", c.userTransform(user)))
+	_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultPass, "操作成功", c.userTransform(user)))
 }
 
 /**
@@ -241,10 +241,10 @@ func (c *UserCtrl) DeleteUser(ctx iris.Context) {
 
 	err := c.UserRepo.DeleteUser(id)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 		return
 	}
-	_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass, "删除成功", nil))
+	_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultPass, "删除成功", nil))
 }
 
 /**
@@ -264,12 +264,12 @@ func (c *UserCtrl) GetAllUsers(ctx iris.Context) {
 
 	users, count, err := c.UserRepo.GetAllUsers(nil)
 	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(iris.StatusUnauthorized, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultUnauthorized, err.Error(), nil))
 		return
 	}
 
 	transform := c.usersTransform(users)
-	_, _ = ctx.JSON(_httpUtils.RespData(_const.ResultPass, "操作成功", map[string]interface{}{"items": transform, "total": count, "limit": "s.Limit"}))
+	_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultPass, "操作成功", map[string]interface{}{"items": transform, "total": count, "limit": "s.Limit"}))
 
 }
 

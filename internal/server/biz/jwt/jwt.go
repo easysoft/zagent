@@ -70,7 +70,7 @@ func (m *JwtService) CheckJWT(ctx iris.Context) error {
 
 	// If the token is empty...
 	if token == "" {
-		// Check if it was required
+		// CheckStatus if it was required
 		if m.Config.CredentialsOptional {
 			Logf(ctx, "No credentials found (CredentialsOptional=true)")
 			// No error, just no token (and that is ok given that CredentialsOptional is true)
@@ -85,7 +85,7 @@ func (m *JwtService) CheckJWT(ctx iris.Context) error {
 	// Now parse the token
 
 	parsedToken, err := jwtParser.Parse(token, m.Config.ValidationKeyGetter)
-	// Check if there was an error in parsing...
+	// CheckStatus if there was an error in parsing...
 	if err != nil {
 		Logf(ctx, "Error parsing token: %v", err)
 		return err
@@ -99,7 +99,7 @@ func (m *JwtService) CheckJWT(ctx iris.Context) error {
 		return err
 	}
 
-	// Check if the parsed token is valid...
+	// CheckStatus if the parsed token is valid...
 	if !parsedToken.Valid {
 		Logf(ctx, "Token is invalid")
 		// m.Config.ErrorHandler(ctx, ErrTokenInvalid)

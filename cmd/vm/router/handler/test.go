@@ -1,7 +1,7 @@
 package vmHandler
 
 import (
-	_const "github.com/easysoft/zv/pkg/const"
+	consts "github.com/easysoft/zv/internal/pkg/const"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	"github.com/kataras/iris/v12"
 )
@@ -14,7 +14,7 @@ func NewTestCtrl() *TestCtrl {
 }
 
 func (c *TestCtrl) Test(ctx iris.Context) {
-	ctx.JSON(_httpUtils.RespData(_const.ResultPass, "success", iris.Map{
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success", iris.Map{
 		"code": 0,
 	}))
 	return

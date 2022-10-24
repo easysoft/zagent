@@ -2,7 +2,7 @@ package _domain
 
 import (
 	"fmt"
-	_const "github.com/easysoft/zv/pkg/const"
+	consts "github.com/easysoft/zv/internal/pkg/const"
 )
 
 type RemoteReq struct {
@@ -15,31 +15,31 @@ type RemoteReq struct {
 }
 
 type RemoteResp struct {
-	Code    _const.ResultCode `json:"code"`
+	Code    consts.ResultCode `json:"code"`
 	Msg     string            `json:"msg"`
 	Payload interface{}       `json:"payload"`
 }
 
 func (result *RemoteResp) Pass(msg string) {
-	result.Code = _const.ResultPass
+	result.Code = consts.ResultPass
 	result.Msg = msg
 }
 
 func (result *RemoteResp) Passf(str string, args ...interface{}) {
-	result.Code = _const.ResultPass
+	result.Code = consts.ResultPass
 	result.Msg = fmt.Sprintf(str, args...)
 }
 
 func (result *RemoteResp) Fail(msg string) {
-	result.Code = _const.ResultFail
+	result.Code = consts.ResultFail
 	result.Msg = msg
 }
 
 func (result *RemoteResp) Failf(str string, args ...interface{}) {
-	result.Code = _const.ResultFail
+	result.Code = consts.ResultFail
 	result.Msg = fmt.Sprintf(str, args...)
 }
 
 func (result *RemoteResp) IsSuccess() bool {
-	return result.Code == _const.ResultPass
+	return result.Code == consts.ResultPass
 }

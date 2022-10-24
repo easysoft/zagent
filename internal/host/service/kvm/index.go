@@ -374,6 +374,21 @@ func (s *LibvirtService) GetVmDef(name string) (xml string) {
 	return
 }
 
+func (s *LibvirtService) setVmProps(vm *domain.Vm) {
+	osCategory := consts.Windows
+	osType := consts.Win10
+	osVersion := "x64-pro"
+	osLang := consts.ZH_CN
+
+	vm.Backing = fmt.Sprintf("%s/%s/%s-%s", osCategory.ToString(), osType.ToString(),
+		osVersion, osLang.ToString())
+
+	vm.Tmpl = fmt.Sprintf("tmpl-%s-%s-%s",
+		osType.ToString(), osVersion, osLang.ToString())
+	vm.Name = fmt.Sprintf("test-%s-%s-%s-%s",
+		osType.ToString(), osVersion, osLang.ToString(), _stringUtils.Uuid())
+}
+
 func (s *LibvirtService) Connect(str string) {
 	if s.LibvirtConn != nil {
 		active, err := s.LibvirtConn.IsAlive()
@@ -404,17 +419,20 @@ func (s *LibvirtService) Connect(str string) {
 	return
 }
 
-func (s *LibvirtService) setVmProps(vm *domain.Vm) {
-	osCategory := consts.Windows
-	osType := consts.Win10
-	osVersion := "x64-pro"
-	osLang := consts.ZH_CN
+func (s *LibvirtService) IsAlive() (ret bool) {
+	if s.LibvirtConn == nil {
+		return false
+	}
 
-	vm.Backing = fmt.Sprintf("%s/%s/%s-%s", osCategory.ToString(), osType.ToString(),
-		osVersion, osLang.ToString())
+	ret, err := s.LibvirtConn.IsAlive()
+	if err != nil {
+		_logUtils.Errorf(err.Error())
+		return
+	}
 
-	vm.Tmpl = fmt.Sprintf("tmpl-%s-%s-%s",
-		osType.ToString(), osVersion, osLang.ToString())
-	vm.Name = fmt.Sprintf("test-%s-%s-%s-%s",
-		osType.ToString(), osVersion, osLang.ToString(), _stringUtils.Uuid())
+	if !ret {
+		_logUtils.Errorf("connect is not active")
+	}
+
+	return
 }

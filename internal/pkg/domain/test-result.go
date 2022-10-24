@@ -2,17 +2,17 @@ package domain
 
 import (
 	"fmt"
-	_const "github.com/easysoft/zv/pkg/const"
+	consts "github.com/easysoft/zv/internal/pkg/const"
 	"time"
 )
 
 type TestResult struct {
 	TestSetId uint `json:"testSetId" yaml:"testSetId"`
 
-	Version float64 `json:"version" yaml:"version"`
-	Name    string  `json:"name" yaml:"name"`
-	Code    int     `json:"code"`
-	Msg     string  `json:"msg"`
+	Version float64           `json:"version" yaml:"version"`
+	Name    string            `json:"name" yaml:"name"`
+	Code    consts.ResultCode `json:"code"`
+	Msg     string            `json:"msg"`
 
 	StartTime time.Time `json:"startTime" yaml:"startTime"`
 	EndTime   time.Time `json:"endTime" yaml:"endTime"`
@@ -27,24 +27,24 @@ type TestResult struct {
 }
 
 func (result *TestResult) Pass(msg string) {
-	result.Code = _const.ResultPass.Int()
+	result.Code = consts.ResultPass
 	result.Msg = msg
 }
 func (result *TestResult) Passf(str string, args ...interface{}) {
-	result.Code = _const.ResultPass.Int()
+	result.Code = consts.ResultPass
 	result.Msg = fmt.Sprintf(str+"\n", args...)
 }
 
 func (result *TestResult) Fail(msg string) {
-	result.Code = _const.ResultFail.Int()
+	result.Code = consts.ResultFail
 	result.Msg = msg
 }
 
 func (result *TestResult) Failf(str string, args ...interface{}) {
-	result.Code = _const.ResultFail.Int()
+	result.Code = consts.ResultFail
 	result.Msg = fmt.Sprintf(str+"\n", args...)
 }
 
 func (result *TestResult) IsSuccess() bool {
-	return result.Code == _const.ResultPass.Int()
+	return result.Code == consts.ResultPass
 }
