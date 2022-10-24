@@ -1,11 +1,5 @@
 package consts
 
-import (
-	"fmt"
-	_const "github.com/easysoft/zv/pkg/const"
-	"path/filepath"
-)
-
 const (
 	AppName          = "zagent"
 	AppNameServer    = "server"
@@ -65,10 +59,11 @@ const (
 	FolderBacking = "backing"
 	FolderImage   = "image"
 	FolderToken   = "token"
+
+	FolderNovnc      = "novnc"
+	FolderWebsockify = "websockify"
+
+	Localhost = "127.0.0.1"
 )
 
-var (
-	ConfigFile     = filepath.Join("conf", AppNameAgent+".yaml")
-	LogDir         = fmt.Sprintf("log%s", _const.PthSep)
-	ControlActions = []string{"start", "stop", "restart", "install", "uninstall"}
-)
+var ()
