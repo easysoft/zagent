@@ -1,4 +1,4 @@
-package hostStatusService
+package hostAgentService
 
 import (
 	"errors"
@@ -25,7 +25,7 @@ func NewStatusService() *StatusService {
 	return &StatusService{}
 }
 
-func (s *StatusService) Check(req v1.CheckReq) (ret v1.CheckResp, err error) {
+func (s *StatusService) Check(req v1.ServiceReq) (ret v1.CheckResp, err error) {
 	services := strings.Split(req.Services, ",")
 
 	if _stringUtils.StrInArr(consts.ServiceAll.ToString(), services) ||

@@ -11,6 +11,7 @@ import (
 	serverConf "github.com/easysoft/zv/internal/server/conf"
 	_db "github.com/easysoft/zv/pkg/db"
 	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
+	downloadUtils "github.com/easysoft/zv/pkg/lib/download"
 	"github.com/facebookgo/inject"
 	"github.com/kataras/iris/v12"
 	"github.com/sirupsen/logrus"
@@ -20,6 +21,7 @@ import (
 
 func Init() {
 	agentConf.Init(consts.AppNameAgentHost)
+	downloadUtils.InitTasks()
 
 	irisServer := NewServer(nil)
 	irisServer.App.Logger().SetLevel(serverConf.Inst.LogLevel)

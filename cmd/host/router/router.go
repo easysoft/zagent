@@ -10,9 +10,10 @@ import (
 type Router struct {
 	api *iris.Application
 
-	TestCtrl  *hostHandler.TestCtrl    `inject:""`
-	CheckCtrl *hostHandler.ServiceCtrl `inject:""`
-	JobCtrl   *hostHandler.JobCtrl     `inject:""`
+	TestCtrl     *hostHandler.TestCtrl     `inject:""`
+	DownloadCtrl *hostHandler.DownloadCtrl `inject:""`
+	CheckCtrl    *hostHandler.ServiceCtrl  `inject:""`
+	JobCtrl      *hostHandler.JobCtrl      `inject:""`
 
 	KvmCtrl        *hostHandler.KvmCtrl        `inject:""`
 	VirtualBoxCtrl *hostHandler.VirtualBoxCtrl `inject:""`
@@ -35,6 +36,10 @@ func (r *Router) App() {
 		v1 := app.Party("/v1")
 		{
 			//v1.Use(core.Auth())
+
+			v1.PartyFunc("/resource", func(client iris.Party) {
+				client.Post("/download", r.DownloadCtrl.Download).Name = "下载文件"
+			})
 
 			v1.PartyFunc("/service", func(client iris.Party) {
 				client.Post("/check", r.CheckCtrl.CheckStatus).Name = "检测服务状态"

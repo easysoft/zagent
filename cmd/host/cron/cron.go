@@ -5,8 +5,6 @@ import (
 	hostAgentService "github.com/easysoft/zv/internal/host/service"
 	consts "github.com/easysoft/zv/internal/pkg/const"
 	_cronUtils "github.com/easysoft/zv/pkg/lib/cron"
-	_dateUtils "github.com/easysoft/zv/pkg/lib/date"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"github.com/kataras/iris/v12"
 	"sync"
 	"time"
@@ -15,6 +13,8 @@ import (
 type CronService struct {
 	syncMap     sync.Map
 	HostService *hostAgentService.HostService `inject:""`
+
+	DownloadService *hostAgentService.DownloadService `inject:""`
 }
 
 func NewAgentCron() *CronService {
@@ -35,12 +35,14 @@ func (s *CronService) Init() {
 			lastCompletedTime, _ := s.syncMap.Load("lastCompletedTime")
 
 			if isRunning.(bool) || time.Now().Unix()-lastCompletedTime.(int64) < consts.AgentCheckInterval {
-				_logUtils.Infof("skip this iteration " + _dateUtils.DateTimeStr(time.Now()))
+				//_logUtils.Infof("skip this iteration " + _dateUtils.DateTimeStr(time.Now()))
 				return
 			}
 			s.syncMap.Store("isRunning", true)
 
+			//
 			s.HostService.Check()
+			s.DownloadService.CheckTask()
 
 			s.syncMap.Store("isRunning", false)
 			s.syncMap.Store("lastCompletedTime", time.Now().Unix())

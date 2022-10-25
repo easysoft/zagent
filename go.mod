@@ -20,6 +20,7 @@ require (
 	github.com/azumads/faker v0.0.0-20150921074035-6cae71ddb107
 	github.com/bitly/go-simplejson v0.5.0 // indirect
 	github.com/casbin/casbin/v2 v2.31.5
+	github.com/cavaliergopher/grab/v3 v3.0.1 // indirect
 	github.com/containerd/containerd v1.5.2 // indirect
 	github.com/denisenkom/go-mssqldb v0.9.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible

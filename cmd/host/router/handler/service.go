@@ -2,7 +2,7 @@ package hostHandler
 
 import (
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
-	hostStatusService "github.com/easysoft/zv/internal/host/service/status"
+	hostStatusService "github.com/easysoft/zv/internal/host/service"
 	consts "github.com/easysoft/zv/internal/pkg/const"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	"github.com/kataras/iris/v12"
@@ -17,7 +17,7 @@ func NewCheckCtrl() *ServiceCtrl {
 }
 
 func (c *ServiceCtrl) CheckStatus(ctx iris.Context) {
-	req := v1.CheckReq{}
+	req := v1.ServiceReq{}
 	err := ctx.ReadJSON(&req)
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))

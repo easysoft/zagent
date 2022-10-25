@@ -2,7 +2,7 @@ package v1
 
 import consts "github.com/easysoft/zv/internal/pkg/const"
 
-type CheckReq struct {
+type ServiceReq struct {
 	Services string `json:"services"`
 }
 
