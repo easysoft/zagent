@@ -3,23 +3,12 @@ package downloadUtils
 import (
 	"fmt"
 	"github.com/cavaliergopher/grab/v3"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
+	agentModel "github.com/easysoft/zv/internal/host/model"
 	"os"
-	"sync"
 	"time"
 )
 
-const (
-	keyNotStart   = "not_start"
-	keyInProgress = "in_progress"
-	keyCompleted  = "completed"
-)
-
-var (
-	syncMap sync.Map
-)
-
-func Download(task DownloadTask) {
+func Start(task agentModel.Download, ch chan int) {
 	fmt.Printf("Start to download %s ...\n", task.Url)
 
 	// start file downloads, 3 at a time
@@ -37,7 +26,16 @@ func Download(task DownloadTask) {
 	inProgress := 0
 	responses := make([]*grab.Response, 0)
 
+	isTerminate := false
+
 	for completed < 1 {
+		select {
+		case <-ch:
+			isTerminate = true
+			goto ExitDownload
+		default:
+		}
+
 		select {
 		case resp := <-respCh:
 			// a new response has been received and has started downloading
@@ -57,9 +55,9 @@ func Download(task DownloadTask) {
 				if resp != nil && resp.IsComplete() {
 					// print final result
 					if resp.Err() != nil && resp.HTTPResponse.StatusCode != 416 {
-						fmt.Fprintf(os.Stderr, "Error downloading %s: %v\n", resp.Request.URL(), resp.Err())
+						fmt.Fprintf(os.Stderr, "Error download %s: %v\n", resp.Request.URL(), resp.Err())
 					} else {
-						fmt.Printf("Finished %s %d / %d bytes (%d%%)\n", resp.Filename, resp.BytesComplete(), resp.Size(), int(100*resp.Progress()))
+						fmt.Printf("Finish %s %d / %d bytes (%d%%)\n", resp.Filename, resp.BytesComplete(), resp.Size(), int(100*resp.Progress()))
 					}
 
 					// mark completed
@@ -79,101 +77,13 @@ func Download(task DownloadTask) {
 		}
 	}
 
+ExitDownload:
+
 	t.Stop()
 
-	fmt.Printf("Success to download %s.\n", task.Url)
-}
-
-func InitTasks() {
-	syncMap.Store(keyNotStart, make([]DownloadTask, 0))
-	syncMap.Store(keyInProgress, make([]DownloadTask, 0))
-	syncMap.Store(keyCompleted, make([]DownloadTask, 0))
-}
-
-func AddTasks(urls []string) {
-	val, _ := syncMap.Load(keyNotStart)
-	list := val.([]DownloadTask)
-
-	for _, item := range urls {
-		list = append(list,
-			DownloadTask{
-				Url: item,
-			})
+	if isTerminate {
+		fmt.Printf("Force to terminate download %s.\n", task.Url)
+	} else {
+		fmt.Printf("Success to download %s.\n", task.Url)
 	}
-
-	syncMap.Store(keyNotStart, list)
-
-	return
-}
-
-func StartTask() {
-	notStartVal, _ := syncMap.Load(keyNotStart)
-	notStartList := notStartVal.([]DownloadTask)
-
-	if len(notStartList) == 0 {
-		_logUtils.Infof("no download task to run")
-		return
-	}
-
-	taskToStart := notStartList[0]
-
-	notStartList = notStartList[1:]
-	notStartVal = notStartList
-	syncMap.Store(keyNotStart, notStartList)
-	syncMap.Store(keyInProgress, []DownloadTask{taskToStart})
-
-	Download(taskToStart)
-}
-
-func CompleteTask() {
-	inProgressVal, _ := syncMap.Load(keyInProgress)
-	completedVal, _ := syncMap.Load(keyCompleted)
-
-	inProgressList := inProgressVal.([]DownloadTask)
-	completedList := completedVal.([]DownloadTask)
-
-	if len(inProgressList) == 0 {
-		return
-	}
-
-	one := inProgressList[0]
-	completedList = append(completedList, one)
-
-	syncMap.Store(keyInProgress, make([]DownloadTask, 0))
-	syncMap.Store(keyCompleted, completedList)
-
-	return
-}
-
-func GetTask() (ret DownloadTask) {
-	val, _ := syncMap.Load(keyNotStart)
-
-	list := val.([]DownloadTask)
-
-	if len(list) > 0 {
-		ret = list[0]
-
-		list = list[1:]
-		syncMap.Store(keyNotStart, list)
-	}
-
-	return
-}
-
-func IsRunning() (ret bool) {
-	inProgressVal, _ := syncMap.Load(keyInProgress)
-	inProgressList := inProgressVal.([]DownloadTask)
-
-	ret = len(inProgressList) > 0
-
-	return
-}
-
-func ClearTask() {
-	InitTasks()
-	return
-}
-
-type DownloadTask struct {
-	Url string
 }

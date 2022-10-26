@@ -6,7 +6,6 @@ import (
 	"github.com/easysoft/zv/cmd/server/router/handler"
 	bizCasbin "github.com/easysoft/zv/internal/server/biz/casbin"
 	"github.com/easysoft/zv/internal/server/biz/jwt"
-	"github.com/easysoft/zv/internal/server/biz/redis"
 	"github.com/easysoft/zv/internal/server/conf"
 	serverCron "github.com/easysoft/zv/internal/server/cron"
 	"github.com/easysoft/zv/internal/server/model"
@@ -39,10 +38,6 @@ func Init(version string, printVersion, printRouter *bool) {
 	router.InitService.InitDataIfNeeded()
 
 	router.App()
-
-	if serverConf.Inst.Redis.Enable {
-		redisUtils.InitRedisCluster(serverConf.GetRedisUris(), serverConf.Inst.Redis.Pwd)
-	}
 
 	iris.RegisterOnInterrupt(func() {
 		defer _db.GetInst().Close()
@@ -81,8 +76,6 @@ func injectObj(router *router.Router) {
 	if err := g.Provide(
 		// db
 		&inject.Object{Value: _db.GetInst().DB()},
-
-		// repo
 
 		// middleware
 		&inject.Object{Value: bizCasbin.NewEnforcer()},

@@ -721,7 +721,7 @@ const (
 
 	AdditionsFacilityStatusPreInit AdditionsFacilityStatus = "PreInit"
 
-	AdditionsFacilityStatusInit AdditionsFacilityStatus = "InitDataIfNeeded"
+	AdditionsFacilityStatusInit AdditionsFacilityStatus = "InitModels"
 
 	AdditionsFacilityStatusActive AdditionsFacilityStatus = "Active"
 
@@ -783,7 +783,7 @@ const (
 
 	GuestSessionWaitForFlagStart GuestSessionWaitForFlag = "Start"
 
-	GuestSessionWaitForFlagTerminate GuestSessionWaitForFlag = "Terminate"
+	GuestSessionWaitForFlagTerminate GuestSessionWaitForFlag = "TerminateTask"
 
 	GuestSessionWaitForFlagStatus GuestSessionWaitForFlag = "Status"
 )
@@ -795,7 +795,7 @@ const (
 
 	GuestSessionWaitResultStart GuestSessionWaitResult = "Start"
 
-	GuestSessionWaitResultTerminate GuestSessionWaitResult = "Terminate"
+	GuestSessionWaitResultTerminate GuestSessionWaitResult = "TerminateTask"
 
 	GuestSessionWaitResultStatus GuestSessionWaitResult = "Status"
 
@@ -875,7 +875,7 @@ const (
 
 	ProcessWaitForFlagStart ProcessWaitForFlag = "Start"
 
-	ProcessWaitForFlagTerminate ProcessWaitForFlag = "Terminate"
+	ProcessWaitForFlagTerminate ProcessWaitForFlag = "TerminateTask"
 
 	ProcessWaitForFlagStdIn ProcessWaitForFlag = "StdIn"
 
@@ -891,7 +891,7 @@ const (
 
 	ProcessWaitResultStart ProcessWaitResult = "Start"
 
-	ProcessWaitResultTerminate ProcessWaitResult = "Terminate"
+	ProcessWaitResultTerminate ProcessWaitResult = "TerminateTask"
 
 	ProcessWaitResultStatus ProcessWaitResult = "Status"
 

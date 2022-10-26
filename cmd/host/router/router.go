@@ -2,6 +2,7 @@ package hostRouter
 
 import (
 	hostHandler "github.com/easysoft/zv/cmd/host/router/handler"
+	hostService "github.com/easysoft/zv/internal/host/service"
 	serverConf "github.com/easysoft/zv/internal/server/conf"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	"github.com/kataras/iris/v12"
@@ -20,6 +21,8 @@ type Router struct {
 	VmWareCtrl     *hostHandler.VmWareCtrl     `inject:""`
 	VirtualCtrl    *hostHandler.VirtualCtrl    `inject:""`
 	MultiPassCtrl  *hostHandler.MultiPassCtrl  `inject:""`
+
+	InitService *hostService.InitService `inject:""`
 }
 
 func NewRouter(app *iris.Application) *Router {
@@ -37,8 +40,9 @@ func (r *Router) App() {
 		{
 			//v1.Use(core.Auth())
 
-			v1.PartyFunc("/resource", func(client iris.Party) {
-				client.Post("/download", r.DownloadCtrl.Download).Name = "下载文件"
+			v1.PartyFunc("/download", func(client iris.Party) {
+				client.Post("/addTasks", r.DownloadCtrl.AddTasks).Name = "添加下载任务"
+				client.Post("/terminateTask", r.DownloadCtrl.TerminateTask).Name = "强制终止下载任务"
 			})
 
 			v1.PartyFunc("/service", func(client iris.Party) {

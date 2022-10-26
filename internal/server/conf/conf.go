@@ -11,7 +11,6 @@ import (
 	"github.com/jinzhu/configor"
 	logger "github.com/sirupsen/logrus"
 	"path/filepath"
-	"strings"
 )
 
 var (
@@ -48,18 +47,6 @@ func Init() {
 	}
 }
 
-func GetRedisUris() []string {
-	addrs := make([]string, 0, 0)
-	hosts := strings.Split(Inst.Redis.Host, ";")
-	ports := strings.Split(Inst.Redis.Port, ";")
-	for _, h := range hosts {
-		for _, p := range ports {
-			addrs = append(addrs, fmt.Sprintf("%s:%s", h, p))
-		}
-	}
-	return addrs
-}
-
 type Config struct {
 	Language string `yaml:"language" env:"Language" default:"zh"`
 	LogLevel string `yaml:"logLevel" env:"LogLevel" default:"info"`
@@ -78,13 +65,7 @@ type Config struct {
 		RoleName        string `env:"AdminRoleName" default:"admin"`
 		RoleDisplayName string `env:"RoleDisplayName" default:"超级管理员"`
 	} `yaml:"admin,flow"`
-	DB    DBConfig `yaml:"db,flow"`
-	Redis struct {
-		Enable bool   `env:"RedisDisable" default:"false"`
-		Host   string `env:"RedisHost" default:"localhost"`
-		Port   string `env:"RedisPort" default:"6379"`
-		Pwd    string `env:"RedisPwd" default:""`
-	} `yaml:"redis,flow"`
+	DB DBConfig `yaml:"db,flow"`
 
 	Limit struct {
 		Disable bool    `env:"LimitDisable" default:"true"`
@@ -105,7 +86,7 @@ type Config struct {
 
 type DBConfig struct {
 	Prefix   string `yaml:"prefix" env:"DBPrefix" default:"biz_"`
-	Name     string `yaml:"name" env:"DBName" default:"ztest"`
+	Name     string `yaml:"name" env:"DBName" default:"zagent-server"`
 	Adapter  string `yaml:"adapter" env:"DBAdapter" default:"sqlite3"`
 	Host     string `yaml:"host" env:"DBHost" default:"localhost"`
 	Port     string `yaml:"port" env:"DBPort" default:"3306"`

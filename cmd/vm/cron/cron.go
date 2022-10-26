@@ -29,12 +29,12 @@ func (s *CronService) Init() {
 
 	_cronUtils.AddTask(
 		"check",
-		fmt.Sprintf("@every %ds", consts.AgentCheckInterval),
+		fmt.Sprintf("@every %ds", consts.AgentCheckExecutionInterval),
 		func() {
 			isRunning, _ := s.syncMap.Load("isRunning")
 			lastCompletedTime, _ := s.syncMap.Load("lastCompletedTime")
 
-			if isRunning.(bool) || time.Now().Unix()-lastCompletedTime.(int64) < consts.AgentCheckInterval {
+			if isRunning.(bool) || time.Now().Unix()-lastCompletedTime.(int64) < consts.AgentCheckExecutionInterval {
 				_logUtils.Infof("skip this iteration " + _dateUtils.DateTimeStr(time.Now()))
 				return
 			}

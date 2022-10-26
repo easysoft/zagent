@@ -120,7 +120,7 @@ func (r VmRepo) DestroyMissedVmsStatus(vms []string, hostId uint) {
 	db := r.DB.Model(&model.Vm{}).
 		Where("host_id = ? AND status <> ? "+
 			" AND strftime('%s','now') - strftime('%s',created_at) > ?",
-			hostId, consts.VmDestroy, consts.AgentCheckInterval)
+			hostId, consts.VmDestroy, consts.AgentCheckExecutionInterval)
 
 	if len(vms) > 0 {
 		db.Where("name NOT IN (?)", vms)

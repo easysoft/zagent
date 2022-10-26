@@ -16,7 +16,7 @@ func NewDownloadCtrl() *DownloadCtrl {
 	return &DownloadCtrl{}
 }
 
-func (c *DownloadCtrl) Download(ctx iris.Context) {
+func (c *DownloadCtrl) AddTasks(ctx iris.Context) {
 	req := v1.DownloadReq{}
 	err := ctx.ReadJSON(&req)
 	if err != nil {
@@ -25,6 +25,20 @@ func (c *DownloadCtrl) Download(ctx iris.Context) {
 	}
 
 	c.DownloadService.AddTasks(req)
+
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success", nil))
+	return
+}
+
+func (c *DownloadCtrl) TerminateTask(ctx iris.Context) {
+	req := v1.DownloadReq{}
+	err := ctx.ReadJSON(&req)
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
+
+	c.DownloadService.TerminateTask(req.Id)
 
 	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success", nil))
 	return

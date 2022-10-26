@@ -17,8 +17,11 @@ const (
 	VncPortStart   = 5901
 	VncPortEnd     = 5999
 
-	AgentCheckInterval = 5  // sec
-	WebCheckInterval   = 60 // sec
+	AgentCheckExecutionInterval = 15          // sec
+	AgentCheckDownloadInterval  = 15          // sec
+	WebCheckInterval            = 60          // sec
+	DownloadTimeout             = 4 * 60 * 60 // sec
+	DownloadRetry               = 3
 
 	DeviceRegisterExpireTime = 5 * 60 // sec
 

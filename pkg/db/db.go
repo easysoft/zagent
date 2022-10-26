@@ -30,11 +30,11 @@ func GetInst() *Instance {
 	return inst
 }
 
-func InitDB(model string) {
+func InitDB(mode string) {
 	var dialector gorm.Dialector
 
-	if model == "agent" || serverConf.Inst.DB.Adapter == "sqlite3" {
-		conn := DBFile(model)
+	if mode == "agent" || serverConf.Inst.DB.Adapter == "sqlite3" {
+		conn := DBFile(mode)
 		dialector = sqlite.Open(conn)
 
 	} else if serverConf.Inst.DB.Adapter == "mysql" {
@@ -52,7 +52,7 @@ func InitDB(model string) {
 	}
 
 	prefix := ""
-	if model == "agent" {
+	if mode == "agent" {
 		prefix = agentConf.Inst.DB.Prefix
 	} else {
 		prefix = serverConf.Inst.DB.Prefix
@@ -104,10 +104,11 @@ func (i *Instance) Close() error {
 }
 
 func DBFile(mode string) string {
+	dbName := "agent"
 	if mode != "agent" {
-		mode = serverConf.Inst.DB.Name
+		dbName = serverConf.Inst.DB.Name
 	}
 
-	path := filepath.Join(_fileUtils.GetExeDir(), strings.ToLower(mode+".db"))
+	path := filepath.Join(_fileUtils.GetExeDir(), strings.ToLower(dbName+".db"))
 	return path
 }

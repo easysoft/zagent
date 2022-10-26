@@ -166,6 +166,19 @@ func (e ServiceStatus) ToString() string {
 	return string(e)
 }
 
+type DownloadProgress string
+
+const (
+	Created    DownloadProgress = "created"
+	InProgress DownloadProgress = "in_progress"
+	Timeout    DownloadProgress = "timeout"
+	End        DownloadProgress = "end"
+)
+
+func (e DownloadProgress) ToString() string {
+	return string(e)
+}
+
 type OsDevice string
 
 const (

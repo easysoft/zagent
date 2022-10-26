@@ -21,7 +21,7 @@ func GetCrontabInstance() *cron.Cron {
 
 func AddTask(name string, schedule string, f func()) {
 	if _, ok := taskFunc[name]; !ok {
-		fmt.Println("Add a new task:", name)
+		fmt.Println("AddTasks a new task:", name)
 
 		cInstance := GetCrontabInstance()
 		cInstance.AddFunc(schedule, f)
