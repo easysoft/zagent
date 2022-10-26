@@ -17,8 +17,8 @@ func NewTaskRepo() *TaskRepo {
 	return &TaskRepo{}
 }
 
-func (r *TaskRepo) Query() (ret map[consts.DownloadProgress][]agentModel.Download, err error) {
-	ret = map[consts.DownloadProgress][]agentModel.Download{}
+func (r *TaskRepo) Query() (ret map[consts.DownloadStatus][]agentModel.Download, err error) {
+	ret = map[consts.DownloadStatus][]agentModel.Download{}
 
 	pos := make([]agentModel.Download, 0)
 
@@ -69,9 +69,14 @@ func (r *TaskRepo) Update(po *agentModel.Download) (err error) {
 	return
 }
 
-func (r *TaskRepo) EndTask(id uint) (err error) {
+func (r *TaskRepo) UpdateStatus(id uint, status consts.DownloadStatus, filePath string) (err error) {
 	err = r.DB.Model(&agentModel.Download{}).Where("id = ?", id).
-		Updates(map[string]interface{}{"status": consts.End, "end_time": time.Now()}).Error
+		Updates(map[string]interface{}{"status": status, "end_time": time.Now()}).Error
+
+	if filePath != "" {
+		err = r.DB.Model(&agentModel.Download{}).Where("id = ?", id).
+			Updates(map[string]interface{}{"path": filePath}).Error
+	}
 
 	return
 }
@@ -83,8 +88,8 @@ func (r *TaskRepo) Delete(id uint) (err error) {
 	return
 }
 
-func (r *TaskRepo) SetTimeout(po agentModel.Download) (err error) {
+func (r *TaskRepo) SetFailed(po agentModel.Download) (err error) {
 	r.DB.Model(&agentModel.Download{}).Where("id=?", po.ID).Updates(
-		map[string]interface{}{"status": consts.Timeout, "timeout_time": time.Now()})
+		map[string]interface{}{"status": consts.Failed, "timeout_time": time.Now()})
 	return
 }

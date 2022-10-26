@@ -39,11 +39,11 @@ func (s *DownloadService) CheckTask() (err error) {
 	if len(taskMap[consts.InProgress]) > 0 {
 		runningTask := taskMap[consts.InProgress][0]
 
-		if s.IsTimeout(runningTask) {
+		if s.IsError(runningTask) || s.IsTimeout(runningTask) {
 			if s.NeedRetry(runningTask) {
 				s.RestartTask(runningTask)
 			} else {
-				s.TaskRepo.SetTimeout(runningTask)
+				s.TaskRepo.SetFailed(runningTask)
 				toStartNewTask = true
 			}
 		}
@@ -75,20 +75,17 @@ func (s *DownloadService) StartTask(po agentModel.Download) {
 	syncMap.Store(int(po.ID), ch)
 
 	go func() {
-		downloadUtils.Start(po, ch)
+		filePath, finalStatus := downloadUtils.Start(po, ch)
+
+		s.TaskRepo.UpdateStatus(po.ID, finalStatus, filePath)
+
 		if ch != nil {
 			close(ch)
 		}
 	}()
 }
 
-func (s *DownloadService) EndTask(po agentModel.Download) {
-	s.TaskRepo.EndTask(po.ID)
-
-	return
-}
-
-func (s *DownloadService) TerminateTask(taskId int) {
+func (s *DownloadService) CancelTask(taskId int) {
 	chVal, ok := syncMap.Load(taskId)
 
 	if !ok || chVal == nil {
@@ -105,24 +102,20 @@ func (s *DownloadService) TerminateTask(taskId int) {
 }
 
 func (s *DownloadService) RestartTask(po agentModel.Download) (ret bool) {
-	s.KillTaskProcess(po)
-
+	s.CancelTask(po.TaskId)
 	s.StartTask(po)
 
 	return
 }
 
-func (s *DownloadService) KillTaskProcess(po agentModel.Download) (ret bool) {
+func (s *DownloadService) RemoveTask(req v1.DownloadReq) {
+	s.TaskRepo.Delete(uint(req.TaskId))
 
 	return
 }
 
-func (s *DownloadService) RemoveTasks(req v1.DownloadReq) {
-	for _, id := range req.Ids {
-		s.TaskRepo.Delete(uint(id))
-	}
-
-	return
+func (s *DownloadService) IsError(po agentModel.Download) bool {
+	return po.Status == consts.Error
 }
 
 func (s *DownloadService) IsTimeout(po agentModel.Download) bool {

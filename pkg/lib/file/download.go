@@ -28,8 +28,8 @@ func Download(url string, dst string) (err error) {
 	return
 }
 
-func HTTPDownload(uri string) ([]byte, error) {
-	res, err := http.Get(uri)
+func HTTPDownload(url string) ([]byte, error) {
+	res, err := http.Get(url)
 	if err != nil {
 		_logUtils.Error(err.Error())
 	}

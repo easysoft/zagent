@@ -166,16 +166,21 @@ func (e ServiceStatus) ToString() string {
 	return string(e)
 }
 
-type DownloadProgress string
+type DownloadStatus string
 
 const (
-	Created    DownloadProgress = "created"
-	InProgress DownloadProgress = "in_progress"
-	Timeout    DownloadProgress = "timeout"
-	End        DownloadProgress = "end"
+	Created    DownloadStatus = "created"
+	InProgress DownloadStatus = "in_progress"
+	Completed  DownloadStatus = "completed"
+
+	Error DownloadStatus = "error"
+
+	// final status
+	Canceled DownloadStatus = "canceled"
+	Failed   DownloadStatus = "failed"
 )
 
-func (e DownloadProgress) ToString() string {
+func (e DownloadStatus) ToString() string {
 	return string(e)
 }
 

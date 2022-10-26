@@ -57,11 +57,12 @@ const (
 
 	BuildParamSeleniumDriverPath = "${driverPath}"
 
-	FolderKvm     = "kvm"
-	FolderIso     = "iso"
-	FolderBacking = "backing"
-	FolderImage   = "image"
-	FolderToken   = "token"
+	FolderKvm      = "kvm"
+	FolderIso      = "iso"
+	FolderDownload = "download"
+	FolderBacking  = "backing"
+	FolderImage    = "image"
+	FolderToken    = "token"
 
 	FolderNovnc      = "novnc"
 	FolderWebsockify = "websockify"

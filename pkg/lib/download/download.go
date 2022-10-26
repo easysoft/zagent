@@ -4,15 +4,33 @@ import (
 	"fmt"
 	"github.com/cavaliergopher/grab/v3"
 	agentModel "github.com/easysoft/zv/internal/host/model"
+	consts "github.com/easysoft/zv/internal/pkg/const"
+	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
+	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
+	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
+	"io/ioutil"
 	"os"
+	"path/filepath"
+	"strings"
 	"time"
 )
 
-func Start(task agentModel.Download, ch chan int) {
+func Start(task agentModel.Download, ch chan int) (pth string, status consts.DownloadStatus) {
 	fmt.Printf("Start to download %s ...\n", task.Url)
 
+	targetDir := consts.FolderDownload
+	if task.Md5 == "" {
+		getMd5FromRemote(&task, targetDir)
+	}
+
+	pth = findSameFile(task, targetDir)
+	if pth != "" {
+		status = consts.Completed
+		return
+	}
+
 	// start file downloads, 3 at a time
-	respCh, err := grab.GetBatch(3, ".", task.Url)
+	respCh, err := grab.GetBatch(3, targetDir, task.Url)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
@@ -26,12 +44,12 @@ func Start(task agentModel.Download, ch chan int) {
 	inProgress := 0
 	responses := make([]*grab.Response, 0)
 
-	isTerminate := false
+	isCanceled := false
 
 	for completed < 1 {
 		select {
 		case <-ch:
-			isTerminate = true
+			isCanceled = true
 			goto ExitDownload
 		default:
 		}
@@ -81,9 +99,82 @@ ExitDownload:
 
 	t.Stop()
 
-	if isTerminate {
+	if isCanceled {
+		status = consts.Canceled
 		fmt.Printf("Force to terminate download %s.\n", task.Url)
 	} else {
-		fmt.Printf("Success to download %s.\n", task.Url)
+		if checkMd5(task) {
+			status = consts.Completed
+			pth = responses[0].Filename
+
+			fmt.Printf("Successfully download %s to %s.\n", task.Url, pth)
+		} else {
+			status = consts.Failed
+			fmt.Printf("Failed to download %s.\n", task.Url)
+		}
 	}
+
+	return
+}
+
+func checkMd5(task agentModel.Download) bool {
+	expectVal := task.Md5
+
+	cmdStr := ""
+	if _commonUtils.IsWin() {
+		cmdStr = "CertUtil -hashfile " + task.Path + " MD5"
+	} else {
+		cmdStr = "md5sum " + task.Path + " | awk '{print $1}'"
+	}
+	actualVal, _ := _shellUtils.ExeSysCmd(cmdStr)
+
+	if _commonUtils.IsWin() {
+		arr := strings.Split(actualVal, "\n")
+		if len(arr) > 1 {
+			actualVal = strings.TrimSpace(strings.Split(actualVal, "\n")[1])
+		}
+	}
+
+	pass := strings.TrimSpace(actualVal) == strings.TrimSpace(expectVal)
+
+	return pass
+}
+
+func getMd5FromRemote(task *agentModel.Download, dir string) (err error) {
+	index := strings.LastIndex(task.Url, ".")
+	md5FileUrl := task.Url[:index] + ".md5"
+
+	index2 := strings.LastIndex(task.Url, "/")
+	md5FilePath := filepath.Join(dir, task.Url[index2:]+".md5")
+
+	err = _fileUtils.Download(md5FileUrl, md5FilePath)
+	if err != nil {
+		return
+	}
+
+	task.Md5 = _fileUtils.ReadFile(md5FilePath)
+
+	return
+}
+
+func findSameFile(task agentModel.Download, dir string) (pth string) {
+	files, _ := ioutil.ReadDir(dir)
+
+	for _, fi := range files {
+		name := fi.Name()
+		extName := _fileUtils.GetExtName(fi.Name())
+		if extName != ".md5" {
+			continue
+		}
+
+		md5FilePath := filepath.Join(dir, name)
+		md5 := _fileUtils.ReadFile(md5FilePath)
+
+		if md5 == task.Md5 {
+			pth = md5FilePath
+			return
+		}
+	}
+
+	return
 }

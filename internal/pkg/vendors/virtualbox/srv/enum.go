@@ -783,7 +783,7 @@ const (
 
 	GuestSessionWaitForFlagStart GuestSessionWaitForFlag = "Start"
 
-	GuestSessionWaitForFlagTerminate GuestSessionWaitForFlag = "TerminateTask"
+	GuestSessionWaitForFlagTerminate GuestSessionWaitForFlag = "TerminateTasks"
 
 	GuestSessionWaitForFlagStatus GuestSessionWaitForFlag = "Status"
 )
@@ -795,7 +795,7 @@ const (
 
 	GuestSessionWaitResultStart GuestSessionWaitResult = "Start"
 
-	GuestSessionWaitResultTerminate GuestSessionWaitResult = "TerminateTask"
+	GuestSessionWaitResultTerminate GuestSessionWaitResult = "TerminateTasks"
 
 	GuestSessionWaitResultStatus GuestSessionWaitResult = "Status"
 
@@ -875,7 +875,7 @@ const (
 
 	ProcessWaitForFlagStart ProcessWaitForFlag = "Start"
 
-	ProcessWaitForFlagTerminate ProcessWaitForFlag = "TerminateTask"
+	ProcessWaitForFlagTerminate ProcessWaitForFlag = "TerminateTasks"
 
 	ProcessWaitForFlagStdIn ProcessWaitForFlag = "StdIn"
 
@@ -891,7 +891,7 @@ const (
 
 	ProcessWaitResultStart ProcessWaitResult = "Start"
 
-	ProcessWaitResultTerminate ProcessWaitResult = "TerminateTask"
+	ProcessWaitResultTerminate ProcessWaitResult = "TerminateTasks"
 
 	ProcessWaitResultStatus ProcessWaitResult = "Status"
 
