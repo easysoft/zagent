@@ -33,7 +33,7 @@ func NewDownloadService() *DownloadService {
 }
 
 func (s *DownloadService) CheckTask() (err error) {
-	taskMap, _ := s.TaskRepo.Query()
+	taskMap, _ := s.ListTask()
 
 	toStartNewTask := false
 	if len(taskMap[consts.InProgress]) > 0 {
@@ -53,6 +53,24 @@ func (s *DownloadService) CheckTask() (err error) {
 
 	if toStartNewTask && len(taskMap[consts.Created]) > 0 {
 		s.StartTask(taskMap[consts.Created][0])
+	}
+
+	return
+}
+
+func (s *DownloadService) ListTask() (ret map[consts.DownloadStatus][]agentModel.Download, err error) {
+	ret = map[consts.DownloadStatus][]agentModel.Download{}
+
+	pos, _ := s.TaskRepo.Query()
+
+	for _, po := range pos {
+		//_, ok := ret[po.Status]
+		//
+		//if !ok {
+		//	ret[po.Status] = make([]agentModel.Start, 0)
+		//}
+
+		ret[po.Status] = append(ret[po.Status], po)
 	}
 
 	return

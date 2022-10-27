@@ -43,7 +43,7 @@ func (r *Router) App() {
 			v1.PartyFunc("/download", func(client iris.Party) {
 				client.Post("/listTask", r.DownloadCtrl.ListTask).Name = "按状态列出下载任务"
 				client.Post("/addTasks", r.DownloadCtrl.AddTasks).Name = "添加下载任务"
-				client.Post("/terminateTask", r.DownloadCtrl.TerminateTask).Name = "强制终止下载任务"
+				client.Post("/cancelTask", r.DownloadCtrl.CancelTask).Name = "强制终止下载任务"
 			})
 
 			v1.PartyFunc("/service", func(client iris.Party) {

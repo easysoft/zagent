@@ -17,24 +17,10 @@ func NewTaskRepo() *TaskRepo {
 	return &TaskRepo{}
 }
 
-func (r *TaskRepo) Query() (ret map[consts.DownloadStatus][]agentModel.Download, err error) {
-	ret = map[consts.DownloadStatus][]agentModel.Download{}
-
-	pos := make([]agentModel.Download, 0)
-
+func (r *TaskRepo) Query() (pos []agentModel.Download, err error) {
 	err = r.DB.Model(&agentModel.Download{}).
 		Where("NOT deleted").
 		Find(&pos).Error
-
-	for _, po := range pos {
-		//_, ok := ret[po.Status]
-		//
-		//if !ok {
-		//	ret[po.Status] = make([]agentModel.Start, 0)
-		//}
-
-		ret[po.Status] = append(ret[po.Status], po)
-	}
 
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
