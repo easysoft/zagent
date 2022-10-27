@@ -66,6 +66,8 @@ func (r *Router) App() {
 				client.Get("/listTmpl", r.KvmCtrl.ListTmpl).Name = "克隆虚机"
 				client.Post("/create", r.KvmCtrl.Create).Name = "创建虚机"
 				client.Post("/clone", r.KvmCtrl.Clone).Name = "克隆虚机"
+				client.Post("/exportAsTmpl", r.KvmCtrl.ExportAsTmpl).Name = "导出为模板镜像"
+
 				client.Post("/{name:string}/destroy", r.KvmCtrl.Destroy).Name = "摧毁虚机"
 				client.Post("/{name:string}/reboot", r.KvmCtrl.Reboot).Name = "重启虚机"
 				client.Post("/{name:string}/suspend", r.KvmCtrl.Suspend).Name = "暂停虚机"

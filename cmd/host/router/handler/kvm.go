@@ -2,7 +2,7 @@ package hostHandler
 
 import (
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
-	hostKvmService "github.com/easysoft/zv/internal/host/service/kvm"
+	"github.com/easysoft/zv/internal/host/service/kvm"
 	consts "github.com/easysoft/zv/internal/pkg/const"
 	natHelper "github.com/easysoft/zv/internal/pkg/utils/nat"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
@@ -10,8 +10,8 @@ import (
 )
 
 type KvmCtrl struct {
-	VmService      *hostKvmService.KvmService     `inject:""`
-	LibvirtService *hostKvmService.LibvirtService `inject:""`
+	KvmService     *kvmService.KvmService     `inject:""`
+	LibvirtService *kvmService.LibvirtService `inject:""`
 }
 
 func NewKvmCtrl() *KvmCtrl {
@@ -50,7 +50,8 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 		return
 	}
 
-	dom, vmVncPort, vmAgentPortMapped, vmRawPath, vmBackingPath, err := c.LibvirtService.CreateVm(&req, true)
+	dom, macAddress, vmVncPort, vmAgentPortMapped, vmRawPath, err :=
+		c.KvmService.CreateVmFromImage(&req, true)
 
 	vmName := req.VmUniqueName
 	vmStatus := consts.VmLaunch
@@ -62,11 +63,11 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 
 	vm := v1.KvmResp{
 		Name:        vmName,
-		MacAddress:  req.VmMacAddress,
+		MacAddress:  macAddress,
 		AgentPort:   vmAgentPortMapped,
 		VncPort:     vmVncPort,
 		ImagePath:   vmRawPath,
-		BackingPath: vmBackingPath,
+		BackingPath: req.VmBacking,
 		Status:      vmStatus,
 	}
 
@@ -216,6 +217,23 @@ func (c *KvmCtrl) Resume(ctx iris.Context) {
 	}
 
 	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to resume vm", name))
+	return
+}
+
+func (c *KvmCtrl) ExportAsTmpl(ctx iris.Context) {
+	req := v1.KvmReq{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
+
+	err := c.KvmService.ExportAsTmpl(req.VmUniqueName)
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
+
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to export vm as template", nil))
 	return
 }
 

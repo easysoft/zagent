@@ -29,7 +29,6 @@ type Vm struct {
 	Port       int    `json:"port"`
 	MacAddress string `json:"macAddress"`
 	RpcPort    int    `json:"rpcPort"`
-	SshPort    int    `json:"sshPort"`
 	VncPort    int    `json:"vncPort"`
 	WorkDir    string `json:"workDir"`
 
@@ -42,6 +41,7 @@ type Vm struct {
 	ResolutionWidth  int    `json:"resolutionWidth"`
 
 	Secret          string `json:"secret" yaml:"secret"`
-	AgentPortOnHost int    `json:"agentPortOnHost"`
 	VncPortOnHost   int    `json:"vncPortOnHost"`
+	AgentPortOnHost int    `json:"agentPortOnHost"`
+	SshPortOnHost   int    `json:"sshPortOnHost"`
 }

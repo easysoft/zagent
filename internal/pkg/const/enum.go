@@ -184,6 +184,17 @@ func (e DownloadStatus) ToString() string {
 	return string(e)
 }
 
+type TaskType string
+
+const (
+	DownloadImage TaskType = "downloadImage"
+	ConvertImage  TaskType = "convertImage"
+)
+
+func (e TaskType) ToString() string {
+	return string(e)
+}
+
 type OsDevice string
 
 const (

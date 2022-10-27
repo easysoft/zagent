@@ -47,3 +47,23 @@ ps -ef | grep swagger | grep -v grep | awk '{print $2}' | xargs kill -9
 nohup swagger serve --no-open -p 50001 res/server/docs/swagger.json > server.log 2>&1 &
 nohup swagger serve --no-open -p 50002 res/host/docs/swagger.json > host.log 2>&1 &
 nohup swagger serve --no-open -p 50003 res/vm/docs/swagger.json > vm.log 2>&1 &
+
+qemu-img create -f qcow2 \
+    -o cluster_size=2M,backing_file=/home/aaron/zagent/kvm/download/win10.qcow2 \
+    /home/aaron/zagent/kvm/image/test-1.qcow2 60G
+
+virt-install \
+    --connect qemu:///system \
+    --virt-type kvm \
+    --name t01 \
+    --ram 4000 \
+    --vcpus 4 \
+    --network default \
+    --disk path=/home/aaron/zagent/kvm/image/test-1.qcow2,size=60000,sparse \
+    --boot hd \
+    --os-variant generic \
+    --noreboot \
+    --wait -1 \
+    --force
+
+virsh --connect qemu:///system start t01

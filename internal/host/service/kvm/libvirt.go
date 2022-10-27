@@ -3,7 +3,6 @@ package kvmService
 import "C"
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
 	agentConf "github.com/easysoft/zv/internal/pkg/conf"
@@ -15,7 +14,6 @@ import (
 	"github.com/libvirt/libvirt-go"
 	libvirtxml "github.com/libvirt/libvirt-go-xml"
 
-	"path/filepath"
 	"strings"
 )
 
@@ -44,71 +42,71 @@ func NewLibvirtService() *LibvirtService {
 	return s
 }
 
-func (s *LibvirtService) CreateVm(req *v1.KvmReq, removeSameName bool) (
-	dom *libvirt.Domain, vmVncPort, vmAgentPortMapped int, vmRawPath, vmBackingPath string, err error) {
-
-	reqMsg, err := json.Marshal(req)
-	_logUtils.Infof("%s", reqMsg)
-
-	vmMacAddress := req.VmMacAddress
-	vmUniqueName := req.VmUniqueName
-	vmTemplateName := req.VmTemplate
-	vmCpu := req.VmCpu
-	vmMemorySize := req.VmMemorySize
-	vmDiskSize := req.VmDiskSize
-	vmBackingPath = req.VmBacking
-
-	if removeSameName {
-		s.DestroyVmByName(vmUniqueName, true)
-	}
-
-	// gen tmpl xml definition
-	tmplXml := s.GetVmDef(vmTemplateName)
-	tmplDomCfg := &libvirtxml.Domain{}
-	err = tmplDomCfg.Unmarshal(tmplXml)
-	if tmplXml == "" || err != nil {
-		err = errors.New(fmt.Sprintf("get tmpl %s err", vmTemplateName))
-		return
-	}
-
-	// get BackingPath
-	if vmBackingPath == "" {
-		// use tmpl vm's image as backing path
-		mainDiskIndex := s.QemuService.GetMainDiskIndex(tmplDomCfg)
-		vmBackingPath = tmplDomCfg.Devices.Disks[mainDiskIndex].Source.File.File
-	} else {
-		vmBackingPath = filepath.Join(agentConf.Inst.DirKvm, vmBackingPath)
-	}
-
-	vmXml := ""
-	vmXml, vmRawPath, _ = s.QemuService.GenVmDef(tmplXml, vmMacAddress, vmUniqueName, vmBackingPath, vmCpu, vmMemorySize)
-	if err != nil {
-		_logUtils.Errorf("err gen vm xml, err %s", err.Error())
-		return
-	}
-
-	err = s.QemuService.createDiskFile(vmBackingPath, vmRawPath, vmDiskSize)
-	if err != nil {
-		_logUtils.Errorf(err.Error())
-		return
-	}
-
-	dom, err = s.LibvirtConn.DomainCreateXML(vmXml, libvirt.DOMAIN_NONE)
-	if err != nil {
-		_logUtils.Errorf(err.Error())
-		return
-	}
-
-	// get new vm info
-	newXml, _ := dom.GetXMLDesc(0)
-	newDomCfg := &libvirtxml.Domain{}
-	newDomCfg.Unmarshal(newXml)
-
-	vmMacAddress = newDomCfg.Devices.Interfaces[0].MAC.Address
-	vmVncPort = newDomCfg.Devices.Graphics[0].VNC.Port
-
-	return
-}
+//func (s *LibvirtService) CreateVmFromTmpl(req *v1.KvmReq, removeSameName bool) (
+//	dom *libvirt.Domain, vmVncPortMapped, vmAgentPortMapped int, vmRawPath, vmBackingPath string, err error) {
+//
+//	reqMsg, err := json.Marshal(req)
+//	_logUtils.Infof("%s", reqMsg)
+//
+//	vmMacAddress := req.VmMacAddress
+//	vmUniqueName := req.VmUniqueName
+//	vmTemplateName := req.VmTemplate
+//	vmCpu := req.VmCpu
+//	vmMemorySize := req.VmMemorySize
+//	vmDiskSize := req.VmDiskSize
+//	vmBackingPath = req.VmBacking
+//
+//	if removeSameName {
+//		s.DestroyVmByName(vmUniqueName, true)
+//	}
+//
+//	// gen tmpl xml definition
+//	tmplXml := s.GetVmDef(vmTemplateName)
+//	tmplDomCfg := &libvirtxml.Domain{}
+//	err = tmplDomCfg.Unmarshal(tmplXml)
+//	if tmplXml == "" || err != nil {
+//		err = errors.New(fmt.Sprintf("get tmpl %s err", vmTemplateName))
+//		return
+//	}
+//
+//	// get BackingPath
+//	if vmBackingPath == "" {
+//		// use tmpl vm's image as backing path
+//		mainDiskIndex := s.QemuService.GetMainDiskIndex(tmplDomCfg)
+//		vmBackingPath = tmplDomCfg.Devices.Disks[mainDiskIndex].Source.File.File
+//	} else {
+//		vmBackingPath = filepath.Join(agentConf.Inst.DirKvm, vmBackingPath)
+//	}
+//
+//	vmXml := ""
+//	vmXml, vmRawPath, _ = s.QemuService.GenVmDef(tmplXml, vmMacAddress, vmUniqueName, vmBackingPath, vmCpu, vmMemorySize)
+//	if err != nil {
+//		_logUtils.Errorf("err gen vm xml, err %s", err.Error())
+//		return
+//	}
+//
+//	err = s.QemuService.createDiskFile(vmBackingPath, vmRawPath, vmDiskSize)
+//	if err != nil {
+//		_logUtils.Errorf(err.Error())
+//		return
+//	}
+//
+//	dom, err = s.LibvirtConn.DomainCreateXML(vmXml, libvirt.DOMAIN_NONE)
+//	if err != nil {
+//		_logUtils.Errorf(err.Error())
+//		return
+//	}
+//
+//	// get new vm info
+//	newXml, _ := dom.GetXMLDesc(0)
+//	newDomCfg := &libvirtxml.Domain{}
+//	newDomCfg.Unmarshal(newXml)
+//
+//	vmMacAddress = newDomCfg.Devices.Interfaces[0].MAC.Address
+//	vmVncPortMapped = newDomCfg.Devices.Graphics[0].VNC.Port
+//
+//	return
+//}
 
 func (s *LibvirtService) CloneVm(req *v1.KvmReqClone, removeSameName bool) (dom *libvirt.Domain,
 	vmIp string, vmVncPort, vmAgentPortMapped int, vmRawPath, vmBackingPath string, err error) {

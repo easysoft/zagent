@@ -1,15 +1,21 @@
 package kvmService
 
 import (
+	"fmt"
+	v1 "github.com/easysoft/zv/cmd/host/router/v1"
+	agentConf "github.com/easysoft/zv/internal/pkg/conf"
 	"github.com/easysoft/zv/internal/pkg/const"
 	"github.com/easysoft/zv/internal/pkg/domain"
 	natHelper "github.com/easysoft/zv/internal/pkg/utils/nat"
 	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
 	"github.com/libvirt/libvirt-go"
 	libvirtxml "github.com/libvirt/libvirt-go-xml"
+	"path/filepath"
 	"strings"
 	"time"
 )
+
+const ()
 
 type KvmService struct {
 	VmMapVar  map[string]domain.Vm
@@ -24,6 +30,45 @@ func NewVmService() *KvmService {
 	s.VmMapVar = map[string]domain.Vm{}
 
 	return &s
+}
+
+func (s *KvmService) CreateVmFromImage(req *v1.KvmReq, removeSameName bool) (
+	dom *libvirt.Domain, vmMacAddress string, vmVncPort, vmAgentPortMapped int, imageFile string, err error) {
+
+	vmName := req.VmUniqueName
+	imageFile = filepath.Join(agentConf.Inst.DirImage, vmName+".qcow2")
+	backingFile := req.VmBacking
+	vCpus := req.VmCpu
+	ramSize := req.VmMemorySize
+	diskSize := req.VmDiskSize
+
+	if removeSameName {
+		s.LibvirtService.DestroyVmByName(vmName, true)
+	}
+
+	cmdCreateImage := fmt.Sprintf(consts.CreateImage, backingFile, imageFile)
+	_shellUtils.ExeShell(cmdCreateImage)
+
+	cmdCreateVm := fmt.Sprintf(consts.CreateVm, vmName, vCpus, ramSize, diskSize)
+	_shellUtils.ExeShell(cmdCreateVm)
+
+	cmdStartVm := fmt.Sprintf(consts.StartVm, vmName)
+	_shellUtils.ExeShell(cmdStartVm)
+
+	dom, err = s.LibvirtService.GetVm(vmName)
+	if err != nil {
+		return
+	}
+
+	// get new vm info
+	newXml, _ := dom.GetXMLDesc(0)
+	newDomCfg := &libvirtxml.Domain{}
+	newDomCfg.Unmarshal(newXml)
+
+	vmMacAddress = newDomCfg.Devices.Interfaces[0].MAC.Address
+	vmVncPort = newDomCfg.Devices.Graphics[0].VNC.Port
+
+	return
 }
 
 func (s *KvmService) GetVms() (vms []domain.Vm) {
@@ -55,12 +100,18 @@ func (s *KvmService) GetVms() (vms []domain.Vm) {
 
 		if vm.Status == consts.VmRunning && vm.Ip != "" {
 			vm.AgentPortOnHost, _, _ = natHelper.ForwardPortIfNeeded(vm.Ip, consts.AgentServicePost, consts.Http)
+			vm.SshPortOnHost, _, _ = natHelper.ForwardPortIfNeeded(vm.Ip, consts.SshServicePost, consts.Stream)
 		}
 
 		vms = append(vms, vm)
 	}
 
 	return vms
+}
+
+func (s *KvmService) ExportAsTmpl(vmName string) (err error) {
+
+	return
 }
 
 func (s *KvmService) UpdateVmMapAndDestroyTimeout(vms []domain.Vm) {

@@ -45,6 +45,7 @@ const (
 
 	KvmHostIpInNatNetwork = "192.168.122.1"
 	AgentServicePost      = 8086
+	SshServicePost        = 22
 
 	ConfigVer = 1
 
