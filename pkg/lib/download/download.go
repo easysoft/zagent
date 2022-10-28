@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-func Start(task agentModel.Task, ch chan int) (pth string, status consts.DownloadStatus) {
+func Start(task agentModel.Task, ch chan int) (pth string, status consts.TaskStatus) {
 	fmt.Printf("Start to download %s ...\n", task.Url)
 
 	targetDir := consts.FolderDownload

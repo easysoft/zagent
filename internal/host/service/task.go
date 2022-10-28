@@ -55,8 +55,8 @@ func (s *TaskService) CheckTask() (err error) {
 	return
 }
 
-func (s *TaskService) ListTask() (ret map[consts.DownloadStatus][]agentModel.Task, err error) {
-	ret = map[consts.DownloadStatus][]agentModel.Task{}
+func (s *TaskService) ListTask() (ret map[consts.TaskStatus][]agentModel.Task, err error) {
+	ret = map[consts.TaskStatus][]agentModel.Task{}
 
 	pos, _ := s.TaskRepo.Query()
 
@@ -74,16 +74,30 @@ func (s *TaskService) ListTask() (ret map[consts.DownloadStatus][]agentModel.Tas
 
 func (s *TaskService) SubmitResult(task agentModel.Task) (err error) {
 	// only submit vm task
-	if task.TaskType == consts.ExportVm {
-		url := requestUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/host/heartbeat")
+	if task.TaskType == consts.DownloadImage {
+		url := requestUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/host/submitResult")
 
 		data := v1.ExportVmResp{
 			Backing:    task.Backing,
 			Xml:        task.Xml,
+			Status:     task.Status,
 			ZentaoTask: task.ZentaoTask,
 		}
 
 		_, err = _httpUtils.Post(url, data)
+
+	} else if task.TaskType == consts.ExportVm {
+		url := requestUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/host/submitResult")
+
+		data := v1.ExportVmResp{
+			Backing:    task.Backing,
+			Xml:        task.Xml,
+			Status:     task.Status,
+			ZentaoTask: task.ZentaoTask,
+		}
+
+		_, err = _httpUtils.Post(url, data)
+
 	}
 
 	return

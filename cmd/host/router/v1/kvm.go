@@ -25,13 +25,14 @@ type CreateVmResp struct {
 type ExportVmReq struct {
 	Vm         string `json:"vm"`
 	Backing    string `json:"backing"`
-	ZentaoTask int    `json:"taskId"`
+	ZentaoTask int    `json:"zentaoTask"`
 }
 
 type ExportVmResp struct {
-	Backing    string `json:"backing"`
-	Xml        string `json:"xml"`
-	ZentaoTask int    `json:"zentaoTask"`
+	Backing    string            `json:"backing"`
+	Xml        string            `json:"xml"`
+	Status     consts.TaskStatus `json:"status"`
+	ZentaoTask int               `json:"zentaoTask"`
 }
 
 type KvmReq struct {

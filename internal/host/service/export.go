@@ -39,7 +39,7 @@ func (s *ExportService) StartTask(po agentModel.Task) {
 	}()
 }
 
-func (s *ExportService) ExportVm(po agentModel.Task) (pth, xml string, status consts.DownloadStatus) {
+func (s *ExportService) ExportVm(po agentModel.Task) (pth, xml string, status consts.TaskStatus) {
 	vmName := po.Vm
 
 	dom, err := s.LibvirtService.GetVm(vmName)

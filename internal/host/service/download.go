@@ -25,6 +25,8 @@ var (
 )
 
 type DownloadService struct {
+	TaskService *TaskService `inject:""`
+
 	TaskRepo *hostRepo.TaskRepo `inject:""`
 }
 
@@ -35,8 +37,9 @@ func NewDownloadService() *DownloadService {
 func (s *DownloadService) AddTasks(req v1.DownloadReq) (err error) {
 	for _, item := range req.Urls {
 		po := agentModel.Task{
-			Url:      item,
-			TaskType: consts.DownloadImage,
+			Url:        item,
+			ZentaoTask: req.ZentaoTask,
+			TaskType:   consts.DownloadImage,
 		}
 
 		s.TaskRepo.Save(&po)
@@ -52,6 +55,9 @@ func (s *DownloadService) StartTask(po agentModel.Task) {
 	go func() {
 		filePath, finalStatus := downloadUtils.Start(po, ch)
 		s.TaskRepo.UpdateStatus(po.ID, filePath, "", finalStatus)
+
+		po = s.TaskRepo.Get(po.ID)
+		s.TaskService.SubmitResult(po)
 
 		if ch != nil {
 			close(ch)
@@ -89,7 +95,7 @@ func (s *DownloadService) RestartTask(po agentModel.Task) (ret bool) {
 }
 
 func (s *DownloadService) RemoveTask(req v1.DownloadReq) {
-	s.TaskRepo.Delete(uint(req.TaskId))
+	s.TaskRepo.Delete(uint(req.ZentaoTask))
 
 	return
 }
