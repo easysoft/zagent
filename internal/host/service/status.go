@@ -5,6 +5,7 @@ import (
 	"fmt"
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
 	kvmService "github.com/easysoft/zv/internal/host/service/kvm"
+	agentConf "github.com/easysoft/zv/internal/pkg/conf"
 	consts "github.com/easysoft/zv/internal/pkg/const"
 	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
@@ -36,7 +37,7 @@ func (s *StatusService) Check(req v1.ServiceReq) (ret v1.CheckResp, err error) {
 	} else if _stringUtils.StrInArr(consts.ServiceAll.ToString(), services) ||
 		_stringUtils.StrInArr(consts.ServiceNovnc.ToString(), services) {
 
-		s.CheckNoVnc(&ret)
+		s.CheckNovnc(&ret)
 
 	} else if _stringUtils.StrInArr(consts.ServiceAll.ToString(), services) ||
 		_stringUtils.StrInArr(consts.ServiceWebsockify.ToString(), services) {
@@ -72,12 +73,13 @@ func (s *StatusService) CheckKvm(ret *v1.CheckResp) (err error) {
 	return
 }
 
-func (s *StatusService) CheckNoVnc(ret *v1.CheckResp) (err error) {
+func (s *StatusService) CheckNovnc(ret *v1.CheckResp) (err error) {
 	ret.Novnc = consts.HostServiceNotAvailable
 
+	// get :agentConf.Inst.NodePort/novnc
 	timeout := time.Second
 
-	address := net.JoinHostPort(consts.Localhost, strconv.Itoa(consts.NoVncPort))
+	address := net.JoinHostPort(consts.Localhost, strconv.Itoa(agentConf.Inst.NodePort))
 	conn, err := net.DialTimeout("tcp", address, timeout)
 	if err != nil {
 		_logUtils.Infof("tcp connect to %s error: %s", address, err)
@@ -88,7 +90,7 @@ func (s *StatusService) CheckNoVnc(ret *v1.CheckResp) (err error) {
 		defer conn.Close()
 
 	} else {
-		pth := filepath.Join(consts.NovncDir, "vnc.html")
+		pth := filepath.Join(consts.NovncDir, "index.html")
 		found := _fileUtils.FileExist(pth)
 
 		if !found {
