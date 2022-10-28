@@ -7,6 +7,6 @@ import (
 )
 
 func main() {
-	port, err := natHelper.GetUsedPortByKw("ssh")
+	port, err := natHelper.GetUsedPortByKeyword("ssh")
 	fmt.Println(port, err)
 }

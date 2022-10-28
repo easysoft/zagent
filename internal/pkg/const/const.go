@@ -7,8 +7,9 @@ const (
 	AppNameAgentHost = "host"
 	AppNameAgentVm   = "vm"
 
-	ServerPort = 8085
-	AgentPort  = 8086
+	AgentPort      = 8086
+	WebsockifyPort = 8087
+	NoVncPath      = "/novnc"
 
 	NatPortStart = 51602
 	NatPortEnd   = 51799
@@ -69,10 +70,4 @@ const (
 	FolderWebsockify = "websockify"
 
 	Localhost = "127.0.0.1"
-)
-
-var (
-	WebsockifyPort = 51600
-	NoVncPort      = 51600
-	NoVncPath      = "/novnc"
 )

@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+var ()
+
 var (
 	ConfigFile     = filepath.Join("conf", AppNameAgent+".yaml")
 	LogDir         = fmt.Sprintf("log%s", _const.PthSep)

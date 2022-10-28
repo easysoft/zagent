@@ -2,6 +2,7 @@ package agentConf
 
 import (
 	consts "github.com/easysoft/zv/internal/pkg/const"
+	natHelper "github.com/easysoft/zv/internal/pkg/utils/nat"
 	_const "github.com/easysoft/zv/pkg/const"
 	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
 	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
@@ -29,6 +30,8 @@ func Init(app string) {
 		Inst.NodeIp = ip.String()
 	}
 
+	Inst.WebsockifyPort, _ = natHelper.GetUsedPortByKeyword("websockify", consts.WebsockifyPort)
+
 	home, _ := _fileUtils.GetUserHome()
 	Inst.WorkDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(home, consts.AppName))
 
@@ -55,11 +58,12 @@ type Config struct {
 	Host string
 	User string
 
-	RunMode    consts.RunMode `yaml:"runMode"`
-	Server     string         `yaml:"Server"`
-	NodeIp     string         `yaml:"ip"`
-	NodePort   int            `yaml:"port"`
-	MacAddress string
+	RunMode        consts.RunMode
+	Server         string
+	NodeIp         string
+	NodePort       int
+	WebsockifyPort int
+	MacAddress     string
 
 	Secret   string
 	Language string
