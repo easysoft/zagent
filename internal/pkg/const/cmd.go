@@ -1,12 +1,12 @@
 package consts
 
 const (
-	CreateImage = `qemu-img create -f qcow2 \
+	CmdCreateImage = `qemu-img create -f qcow2 \
 		-o cluster_size=2M,backing_file=%s \
 		%s 60G
 	`
 
-	CreateVm = `virt-install \
+	CmdCreateVm = `virt-install \
 		--connect qemu:///system \
 		--virt-type kvm \
 		--name %s \
@@ -21,7 +21,9 @@ const (
 		--force 
 	`
 
-	StartVm = `virsh --connect qemu:///system start %s`
+	CmdStartVm = `virsh --connect qemu:///system start %s`
+
+	CmdExportVm = `qemu-img convert -f qcow2 -O qcow2 %s.qcow2 %s.qcow2`
 )
 
 var ()

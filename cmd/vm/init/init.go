@@ -6,7 +6,6 @@ import (
 	vmRouter "github.com/easysoft/zv/cmd/vm/router"
 	agentConf "github.com/easysoft/zv/internal/pkg/conf"
 	consts "github.com/easysoft/zv/internal/pkg/const"
-	serverConf "github.com/easysoft/zv/internal/server/conf"
 	_db "github.com/easysoft/zv/pkg/db"
 	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
 	"github.com/facebookgo/inject"
@@ -20,7 +19,7 @@ func Init() {
 	agentConf.Init(consts.AppNameAgentVm)
 
 	irisServer := NewServer(nil)
-	irisServer.App.Logger().SetLevel(serverConf.Inst.LogLevel)
+	irisServer.App.Logger().SetLevel("info")
 
 	router := vmRouter.NewRouter(irisServer.App)
 	injectObj(router)

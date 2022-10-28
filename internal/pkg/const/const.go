@@ -15,6 +15,8 @@ const (
 	VncPortStart = 5901
 	VncPortEnd   = 5999
 
+	UploadMaxSize = 100000
+
 	AgentCheckExecutionInterval = 15          // sec
 	AgentCheckDownloadInterval  = 15          // sec
 	WebCheckInterval            = 60          // sec
