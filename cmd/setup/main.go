@@ -2,11 +2,10 @@ package main
 
 import (
 	"fmt"
-
-	natHelper "github.com/easysoft/zv/internal/pkg/utils/nat"
+	netUtils "github.com/easysoft/zv/internal/pkg/utils/net"
 )
 
 func main() {
-	port, err := natHelper.GetUsedPortByKeyword("ssh")
+	port, err := netUtils.GetUsedPortByKeyword("ssh", 22)
 	fmt.Println(port, err)
 }

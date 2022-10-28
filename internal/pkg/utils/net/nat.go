@@ -1,4 +1,4 @@
-package natHelper
+package netUtils
 
 import (
 	"errors"
@@ -162,26 +162,4 @@ func getNginxHotLoadingConf(vmIp string, vmPort int, hostPort int, typ consts.Na
 func reloadNginx() {
 	cmd := fmt.Sprintf(`nginx -s reload`)
 	_shellUtils.ExeSysCmd(cmd)
-}
-
-func GetUsedPortByKeyword(kw string, defaultVal int) (port int, err error) {
-	cmd := fmt.Sprintf(`ss -tnlp | grep %s | awk '{ print $4 }'`, kw)
-	output, _ := _shellUtils.ExeSysCmd(cmd)
-	output = strings.TrimSpace(output)
-
-	if output == "" {
-		return port, fmt.Errorf("%s not found", kw)
-	}
-
-	list := strings.Split(output, "\n")
-	lastInfo := list[len(list)-1]
-	lastInfo = strings.TrimSpace(lastInfo)
-	info := strings.Split(lastInfo, ":")
-	port, err = strconv.Atoi(info[len(info)-1])
-
-	if port == 0 {
-		port = defaultVal
-	}
-
-	return
 }

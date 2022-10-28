@@ -2,7 +2,7 @@ package agentConf
 
 import (
 	consts "github.com/easysoft/zv/internal/pkg/const"
-	natHelper "github.com/easysoft/zv/internal/pkg/utils/nat"
+	netUtils "github.com/easysoft/zv/internal/pkg/utils/net"
 	_const "github.com/easysoft/zv/pkg/const"
 	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
 	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
@@ -30,7 +30,7 @@ func Init(app string) {
 		Inst.NodeIp = ip.String()
 	}
 
-	Inst.WebsockifyPort, _ = natHelper.GetUsedPortByKeyword("websockify", consts.WebsockifyPort)
+	Inst.WebsockifyPort, _ = netUtils.GetUsedPortByKeyword("websockify", consts.WebsockifyPort)
 
 	home, _ := _fileUtils.GetUserHome()
 	Inst.WorkDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(home, consts.AppName))

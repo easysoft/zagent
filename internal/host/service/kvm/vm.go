@@ -8,7 +8,7 @@ import (
 	agentConf "github.com/easysoft/zv/internal/pkg/conf"
 	"github.com/easysoft/zv/internal/pkg/const"
 	"github.com/easysoft/zv/internal/pkg/domain"
-	natHelper "github.com/easysoft/zv/internal/pkg/utils/nat"
+	natHelper "github.com/easysoft/zv/internal/pkg/utils/net"
 	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
 	"github.com/libvirt/libvirt-go"
 	libvirtxml "github.com/libvirt/libvirt-go-xml"
