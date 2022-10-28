@@ -9,6 +9,8 @@ import (
 )
 
 type DownloadCtrl struct {
+	TaskService *hostAgentService.TaskService `inject:""`
+
 	DownloadService *hostAgentService.DownloadService `inject:""`
 }
 
@@ -17,7 +19,7 @@ func NewDownloadCtrl() *DownloadCtrl {
 }
 
 func (c *DownloadCtrl) ListTask(ctx iris.Context) {
-	data, _ := c.DownloadService.ListTask()
+	data, _ := c.TaskService.ListTask()
 
 	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success", data))
 

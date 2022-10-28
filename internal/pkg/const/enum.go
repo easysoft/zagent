@@ -190,7 +190,7 @@ type TaskType string
 
 const (
 	DownloadImage TaskType = "downloadImage"
-	ConvertImage  TaskType = "convertImage"
+	ExportVm      TaskType = "exportVm"
 )
 
 func (e TaskType) ToString() string {

@@ -3,6 +3,8 @@ package kvmService
 import (
 	"fmt"
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
+	agentModel "github.com/easysoft/zv/internal/host/model"
+	hostRepo "github.com/easysoft/zv/internal/host/repo"
 	agentConf "github.com/easysoft/zv/internal/pkg/conf"
 	"github.com/easysoft/zv/internal/pkg/const"
 	"github.com/easysoft/zv/internal/pkg/domain"
@@ -22,6 +24,9 @@ type KvmService struct {
 	TimeStamp int64
 
 	LibvirtService *LibvirtService `inject:""`
+	QemuService    *QemuService    `inject:""`
+
+	TaskRepo *hostRepo.TaskRepo `inject:""`
 }
 
 func NewVmService() *KvmService {
@@ -46,13 +51,13 @@ func (s *KvmService) CreateVmFromImage(req *v1.CreateVmReq, removeSameName bool)
 		s.LibvirtService.DestroyVmByName(vmName, true)
 	}
 
-	cmdCreateImage := fmt.Sprintf(consts.CreateImage, targetBacking, srcFile)
+	cmdCreateImage := fmt.Sprintf(consts.CmdCreateImage, targetBacking, srcFile)
 	_shellUtils.ExeShell(cmdCreateImage)
 
-	cmdCreateVm := fmt.Sprintf(consts.CreateVm, vmName, cpuCores, ramSize, diskSize)
+	cmdCreateVm := fmt.Sprintf(consts.CmdCreateVm, vmName, cpuCores, ramSize, diskSize)
 	_shellUtils.ExeShell(cmdCreateVm)
 
-	cmdStartVm := fmt.Sprintf(consts.StartVm, vmName)
+	cmdStartVm := fmt.Sprintf(consts.CmdStartVm, vmName)
 	_shellUtils.ExeShell(cmdStartVm)
 
 	dom, err = s.LibvirtService.GetVm(vmName)
@@ -109,7 +114,16 @@ func (s *KvmService) GetVms() (vms []domain.Vm) {
 	return vms
 }
 
-func (s *KvmService) ExportAsTmpl(req v1.ExportVmReq) (resp v1.ExportVmReq, err error) {
+func (s *KvmService) AddExportVmTask(req v1.ExportVmReq) (resp v1.ExportVmReq, err error) {
+	po := agentModel.Task{
+		Vm:      req.Vm,
+		Backing: req.Backing,
+
+		ZentaoTask: req.ZentaoTask,
+		TaskType:   consts.ExportVm,
+	}
+
+	s.TaskRepo.Save(&po)
 
 	return
 }

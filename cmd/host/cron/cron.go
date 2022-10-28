@@ -14,7 +14,7 @@ type CronService struct {
 	syncMap     sync.Map
 	HostService *hostAgentService.HostService `inject:""`
 
-	DownloadService *hostAgentService.DownloadService `inject:""`
+	TaskService *hostAgentService.TaskService `inject:""`
 }
 
 func NewAgentCron() *CronService {
@@ -42,7 +42,6 @@ func (s *CronService) Init() {
 
 			//
 			s.HostService.Check()
-			s.DownloadService.CheckTask()
 
 			s.syncMap.Store("isRunning", false)
 			s.syncMap.Store("lastCompletedTime", time.Now().Unix())
@@ -53,7 +52,7 @@ func (s *CronService) Init() {
 		"download",
 		fmt.Sprintf("@every %ds", consts.AgentCheckDownloadInterval),
 		func() {
-			s.DownloadService.CheckTask()
+			s.TaskService.CheckTask()
 		},
 	)
 

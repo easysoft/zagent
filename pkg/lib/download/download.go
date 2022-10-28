@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-func Start(task agentModel.Download, ch chan int) (pth string, status consts.DownloadStatus) {
+func Start(task agentModel.Task, ch chan int) (pth string, status consts.DownloadStatus) {
 	fmt.Printf("Start to download %s ...\n", task.Url)
 
 	targetDir := consts.FolderDownload
@@ -117,7 +117,7 @@ ExitDownload:
 	return
 }
 
-func checkMd5(task agentModel.Download) bool {
+func checkMd5(task agentModel.Task) bool {
 	expectVal := task.Md5
 
 	cmdStr := ""
@@ -140,7 +140,7 @@ func checkMd5(task agentModel.Download) bool {
 	return pass
 }
 
-func getMd5FromRemote(task *agentModel.Download, dir string) (err error) {
+func getMd5FromRemote(task *agentModel.Task, dir string) (err error) {
 	index := strings.LastIndex(task.Url, ".")
 	md5FileUrl := task.Url[:index] + ".md5"
 
@@ -157,7 +157,7 @@ func getMd5FromRemote(task *agentModel.Download, dir string) (err error) {
 	return
 }
 
-func findSameFile(task agentModel.Download, dir string) (pth string) {
+func findSameFile(task agentModel.Task, dir string) (pth string) {
 	files, _ := ioutil.ReadDir(dir)
 
 	for _, fi := range files {

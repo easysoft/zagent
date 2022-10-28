@@ -32,8 +32,17 @@ func (s *StatusService) Check(req v1.ServiceReq) (ret v1.CheckResp, err error) {
 		_stringUtils.StrInArr(consts.ServiceKvm.ToString(), services) {
 
 		s.CheckKvm(&ret)
+
+	} else if _stringUtils.StrInArr(consts.ServiceAll.ToString(), services) ||
+		_stringUtils.StrInArr(consts.ServiceNovnc.ToString(), services) {
+
 		s.CheckNoVnc(&ret)
+
+	} else if _stringUtils.StrInArr(consts.ServiceAll.ToString(), services) ||
+		_stringUtils.StrInArr(consts.ServiceWebsockify.ToString(), services) {
+
 		s.CheckWebsockify(&ret)
+
 	}
 
 	return

@@ -213,14 +213,14 @@ func (c *KvmCtrl) Resume(ctx iris.Context) {
 	return
 }
 
-func (c *KvmCtrl) ExportAsTmpl(ctx iris.Context) {
+func (c *KvmCtrl) AddExportVmTask(ctx iris.Context) {
 	req := v1.ExportVmReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
 		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 		return
 	}
 
-	resp, err := c.KvmService.ExportAsTmpl(req)
+	resp, err := c.KvmService.AddExportVmTask(req)
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 		return

@@ -9,14 +9,13 @@ import (
 	"github.com/easysoft/zv/internal/pkg/domain"
 	agentService "github.com/easysoft/zv/internal/pkg/service"
 	agentTestingService "github.com/easysoft/zv/internal/pkg/service/testing"
-	agentZentaoService "github.com/easysoft/zv/internal/pkg/service/zentao"
+	requestUtils "github.com/easysoft/zv/internal/pkg/utils/request"
 	_domain "github.com/easysoft/zv/pkg/domain"
 	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
 	_dateUtils "github.com/easysoft/zv/pkg/lib/date"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	_i118Utils "github.com/easysoft/zv/pkg/lib/i118"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
-	"strings"
 	"time"
 )
 
@@ -27,8 +26,6 @@ type VmService struct {
 	VmService   *VmService                      `inject:""`
 	JobService  *agentService.JobService        `inject:""`
 	TestService *agentTestingService.RunService `inject:""`
-
-	ZentaoService *agentZentaoService.ZentaoService `inject:""`
 }
 
 func NewVmService() *VmService {
@@ -112,14 +109,7 @@ func (s *VmService) Register(isBusy bool) (ok bool) {
 }
 
 func (s *VmService) register(host interface{}) (resp []byte, ok bool) {
-	var url string
-	if strings.Index(agentConf.Inst.Server, ":8085") > -1 {
-		uri := "client/vm/register"
-		url = _httpUtils.GenUrl(agentConf.Inst.Server, uri)
-	} else {
-		uri := "api.php/v1/executionNode/heartbeat"
-		url = s.ZentaoService.GenUrl(agentConf.Inst.Server, uri)
-	}
+	url := requestUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/executionNode/heartbeat")
 
 	resp, err := _httpUtils.Post(url, host)
 	ok = err == nil

@@ -18,6 +18,6 @@ type BaseModel struct {
 
 var (
 	Models = []interface{}{
-		&Download{},
+		&Task{},
 	}
 )

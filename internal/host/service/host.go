@@ -8,7 +8,7 @@ import (
 	"github.com/easysoft/zv/internal/pkg/domain"
 	agentService "github.com/easysoft/zv/internal/pkg/service"
 	agentTestingService "github.com/easysoft/zv/internal/pkg/service/testing"
-	agentZentaoService "github.com/easysoft/zv/internal/pkg/service/zentao"
+	requestUtils "github.com/easysoft/zv/internal/pkg/utils/request"
 	_dateUtils "github.com/easysoft/zv/pkg/lib/date"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	_i118Utils "github.com/easysoft/zv/pkg/lib/i118"
@@ -22,8 +22,6 @@ type HostService struct {
 
 	JobService  *agentService.JobService        `inject:""`
 	TestService *agentTestingService.RunService `inject:""`
-
-	ZentaoService *agentZentaoService.ZentaoService `inject:""`
 }
 
 func NewHostService() *HostService {
@@ -103,14 +101,7 @@ func (s *HostService) Register(isBusy bool) {
 }
 
 func (s *HostService) register(host interface{}) (resp []byte, ok bool) {
-	var url string
-	if strings.Index(agentConf.Inst.Server, ":8085") > -1 {
-		uri := "client/host/register"
-		url = _httpUtils.GenUrl(agentConf.Inst.Server, uri)
-	} else {
-		uri := "api.php/v1/host/heartbeat"
-		url = s.ZentaoService.GenUrl(agentConf.Inst.Server, uri)
-	}
+	url := requestUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/host/submitTaskResult")
 
 	resp, err := _httpUtils.Post(url, host)
 	ok = err == nil
