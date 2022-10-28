@@ -164,7 +164,7 @@ func reloadNginx() {
 	_shellUtils.ExeSysCmd(cmd)
 }
 
-func GetThreadPort(kw string) (hostPort int, err error) {
+func GetUsedPortByKw(kw string) (hostPort int, err error) {
 	cmd := fmt.Sprintf(`ss -tnlp | grep %s | awk '{ print $4 }'`, kw)
 	output, _ := _shellUtils.ExeSysCmd(cmd)
 	output = strings.TrimSpace(output)
