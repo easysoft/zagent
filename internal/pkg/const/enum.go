@@ -3,17 +3,17 @@ package consts
 type ResultCode string
 
 const (
-	ResultPass ResultCode = "SUCCESS"
-	ResultFail ResultCode = "FALL"
+	ResultPass ResultCode = "success"
+	ResultFail ResultCode = "fail"
 
 	ResultUnauthorized ResultCode = "unauthorized"
 
-	BizVmNotExist    ResultCode = "BIZ_VM_NOT_EXIST"
-	BizImageNotExist ResultCode = "BIZ_IMAGE_NOT_EXIST"
+	BizVmNotExist    ResultCode = "biz_vm_not_exist"
+	BizImageNotExist ResultCode = "biz_image_not_exist"
 
-	BizReady               ResultCode = "BIZ_READY"
-	BizNotInstall          ResultCode = "BIZ_NOT_INSTALL"
-	BizServiceNotAvailable ResultCode = "BIZ_SERVICE_NOT_AVAILABLE"
+	BizReady               ResultCode = "biz_ready"
+	BizNotInstall          ResultCode = "biz_not_install"
+	BizServiceNotAvailable ResultCode = "biz_service_not_available"
 )
 
 func (c ResultCode) String() string {
@@ -171,13 +171,15 @@ type DownloadStatus string
 const (
 	Created    DownloadStatus = "created"
 	InProgress DownloadStatus = "in_progress"
-	Completed  DownloadStatus = "completed"
 
-	Error DownloadStatus = "error"
+	// temp status
+	Timeout DownloadStatus = "timeout"
+	Error   DownloadStatus = "error"
 
 	// final status
-	Canceled DownloadStatus = "canceled"
-	Failed   DownloadStatus = "failed"
+	Canceled  DownloadStatus = "canceled"
+	Completed DownloadStatus = "completed"
+	Failed    DownloadStatus = "failed"
 )
 
 func (e DownloadStatus) ToString() string {

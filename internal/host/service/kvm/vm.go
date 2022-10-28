@@ -32,24 +32,24 @@ func NewVmService() *KvmService {
 	return &s
 }
 
-func (s *KvmService) CreateVmFromImage(req *v1.KvmReq, removeSameName bool) (
-	dom *libvirt.Domain, vmMacAddress string, vmVncPort, vmAgentPortMapped int, imageFile string, err error) {
+func (s *KvmService) CreateVmFromImage(req *v1.CreateVmReq, removeSameName bool) (
+	dom *libvirt.Domain, vmMacAddress string, vmVncPort int, err error) {
 
-	vmName := req.VmUniqueName
-	imageFile = filepath.Join(agentConf.Inst.DirImage, vmName+".qcow2")
-	backingFile := req.VmBacking
-	vCpus := req.VmCpu
-	ramSize := req.VmMemorySize
-	diskSize := req.VmDiskSize
+	vmName := req.Name
+	srcFile := filepath.Join(agentConf.Inst.DirImage, vmName+".qcow2")
+	targetBacking := req.Path
+	cpuCores := req.Cpu
+	ramSize := req.Memory
+	diskSize := req.Disk
 
 	if removeSameName {
 		s.LibvirtService.DestroyVmByName(vmName, true)
 	}
 
-	cmdCreateImage := fmt.Sprintf(consts.CreateImage, backingFile, imageFile)
+	cmdCreateImage := fmt.Sprintf(consts.CreateImage, targetBacking, srcFile)
 	_shellUtils.ExeShell(cmdCreateImage)
 
-	cmdCreateVm := fmt.Sprintf(consts.CreateVm, vmName, vCpus, ramSize, diskSize)
+	cmdCreateVm := fmt.Sprintf(consts.CreateVm, vmName, cpuCores, ramSize, diskSize)
 	_shellUtils.ExeShell(cmdCreateVm)
 
 	cmdStartVm := fmt.Sprintf(consts.StartVm, vmName)
@@ -109,7 +109,7 @@ func (s *KvmService) GetVms() (vms []domain.Vm) {
 	return vms
 }
 
-func (s *KvmService) ExportAsTmpl(vmName string) (err error) {
+func (s *KvmService) ExportAsTmpl(req v1.ExportVmReq) (resp v1.ExportVmReq, err error) {
 
 	return
 }

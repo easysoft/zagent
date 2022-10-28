@@ -33,7 +33,7 @@ func (c *VmWareCtrl) Create(ctx iris.Context) {
 		VmId: id,
 		Name: req.VmUniqueName,
 		Mac:  macAddress,
-		//VncPort:  strconv.Itoa(VmWareVncPort),
+		//Vnc:  strconv.Itoa(VmWareVncPort),
 	}
 
 	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to create VmWare vm", vm))

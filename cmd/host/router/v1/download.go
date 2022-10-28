@@ -5,3 +5,7 @@ type DownloadReq struct {
 
 	TaskId int `json:"taskId"`
 }
+
+type DownloadCancelReq struct {
+	Url string `json:"url"`
+}

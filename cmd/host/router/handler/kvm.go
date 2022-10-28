@@ -44,31 +44,24 @@ func (c *KvmCtrl) ListTmpl(ctx iris.Context) {
 // @Success 200 {object} _domain.Response{data=v1.KvmResp} "code = success? 1 : 0"
 // @Router /api/v1/kvm/create [post]
 func (c *KvmCtrl) Create(ctx iris.Context) {
-	req := v1.KvmReq{}
+	req := v1.CreateVmReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
 		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 		return
 	}
 
-	dom, macAddress, vmVncPort, vmAgentPortMapped, vmRawPath, err :=
+	dom, macAddress, vmVncPort, err :=
 		c.KvmService.CreateVmFromImage(&req, true)
 
-	vmName := req.VmUniqueName
 	vmStatus := consts.VmLaunch
 	if err != nil || dom == nil {
 		vmStatus = consts.VmFailCreate
-	} else {
-		vmName, _ = dom.GetName()
 	}
 
-	vm := v1.KvmResp{
-		Name:        vmName,
-		MacAddress:  macAddress,
-		AgentPort:   vmAgentPortMapped,
-		VncPort:     vmVncPort,
-		ImagePath:   vmRawPath,
-		BackingPath: req.VmBacking,
-		Status:      vmStatus,
+	vm := v1.CreateVmResp{
+		Mac:    macAddress,
+		Vnc:    vmVncPort,
+		Status: vmStatus,
 	}
 
 	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to create vm", vm))
@@ -138,13 +131,13 @@ func (c *KvmCtrl) Clone(ctx iris.Context) {
 
 	vmName, _ := dom.GetName()
 	vm := v1.KvmResp{
-		Name:        vmName,
-		IpAddress:   vmIp,
-		MacAddress:  req.VmMacAddress,
-		AgentPort:   vmAgentPortMapped,
-		VncPort:     vmVncPort,
-		ImagePath:   vmRawPath,
-		BackingPath: vmBackingPath,
+		Name:    vmName,
+		Ip:      vmIp,
+		Mac:     req.VmMacAddress,
+		Agent:   vmAgentPortMapped,
+		Vnc:     vmVncPort,
+		Image:   vmRawPath,
+		Backing: vmBackingPath,
 	}
 
 	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to create vm", vm))
@@ -221,19 +214,19 @@ func (c *KvmCtrl) Resume(ctx iris.Context) {
 }
 
 func (c *KvmCtrl) ExportAsTmpl(ctx iris.Context) {
-	req := v1.KvmReq{}
+	req := v1.ExportVmReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
 		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 		return
 	}
 
-	err := c.KvmService.ExportAsTmpl(req.VmUniqueName)
+	resp, err := c.KvmService.ExportAsTmpl(req)
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 		return
 	}
 
-	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to export vm as template", nil))
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to export vm as template", resp))
 	return
 }
 

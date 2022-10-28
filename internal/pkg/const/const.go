@@ -10,12 +10,10 @@ const (
 	ServerPort = 8085
 	AgentPort  = 8086
 
-	WebsockifyPort = 51600
-	NoVncPort      = 51601
-	NatPortStart   = 51602
-	NatPortEnd     = 51799
-	VncPortStart   = 5901
-	VncPortEnd     = 5999
+	NatPortStart = 51602
+	NatPortEnd   = 51799
+	VncPortStart = 5901
+	VncPortEnd   = 5999
 
 	AgentCheckExecutionInterval = 15          // sec
 	AgentCheckDownloadInterval  = 15          // sec
@@ -71,4 +69,8 @@ const (
 	Localhost = "127.0.0.1"
 )
 
-var ()
+var (
+	WebsockifyPort = 51600
+	NoVncPort      = 51600
+	NoVncPath      = "/novnc"
+)

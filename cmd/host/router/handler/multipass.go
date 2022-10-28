@@ -51,7 +51,7 @@ func (c *MultiPassCtrl) Create(ctx iris.Context) {
 	}
 
 	vm := v1.MultiPassResp{
-		Name: domains.Name, //VncPort:  strconv.Itoa(MultiPassVncPort),
+		Name: domains.Name, //Vnc:  strconv.Itoa(MultiPassVncPort),
 	}
 
 	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to create MultiPass vm", vm))

@@ -35,10 +35,15 @@ func (r *TaskRepo) Get(id uint) (po agentModel.Download) {
 	return
 }
 func (r *TaskRepo) GetDetail(id uint) (po agentModel.Download) {
-	r.DB.Model(&agentModel.Download{}).
-		Preload("Environments", "NOT deleted").
-		Preload("Histories", "NOT deleted").
+	r.DB.Model(&po).
 		Where("id = ?", id).First(&po)
+
+	return
+}
+
+func (r *TaskRepo) GetByUrl(url string) (po agentModel.Download, err error) {
+	r.DB.Model(&po).
+		Where("url = ?", url).First(&po)
 
 	return
 }

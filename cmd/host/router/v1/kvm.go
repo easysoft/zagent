@@ -4,6 +4,38 @@ import (
 	consts "github.com/easysoft/zv/internal/pkg/const"
 )
 
+type CreateVmReq struct {
+	Path string `json:"path"`
+	Name string `json:"name"`
+	Os   string `json:"os"`
+
+	Cpu    int `json:"cpu"`
+	Memory int `json:"memory"`
+	Disk   int `json:"disk"`
+
+	TaskId string `json:"taskId"`
+}
+
+type CreateVmResp struct {
+	Mac    string          `json:"mac"`
+	Vnc    int             `json:"vnc"`
+	Status consts.VmStatus `json:"status"`
+}
+
+type ExportVmReq struct {
+	Vm      string `json:"vm"`
+	Backing string `json:"backing"`
+	TaskId  string `json:"taskId"`
+}
+
+type ExportVmResp struct {
+	Backing string `json:"backing"`
+	Cpu     int    `json:"cpu"`
+	Memory  int    `json:"memory"`
+	Disk    int    `json:"disk"`
+	Xml     string `json:"xml"`
+}
+
 type KvmReq struct {
 	VmMacAddress string `json:"vmMacAddress"`
 	VmTemplate   string `json:"vmTemplate"`
@@ -37,15 +69,15 @@ type KvmReqClone struct {
 }
 
 type KvmResp struct {
-	Name        string          `json:"name"`
-	IpAddress   string          `json:"macAddress"`
-	MacAddress  string          `json:"macAddress"`
-	AgentPort   int             `json:"agentPort"`
-	VncPort     int             `json:"vncPort"`
-	VncUrl      string          `json:"vncUrl"`
-	ImagePath   string          `json:"imagePath"`
-	BackingPath string          `json:"backingPath"`
-	Status      consts.VmStatus `json:"status"`
+	Name    string          `json:"name"`
+	Ip      string          `json:"ip"`
+	Mac     string          `json:"mac"`
+	Agent   int             `json:"agent"`
+	Vnc     int             `json:"vnc"`
+	VncUrl  string          `json:"vncUrl"`
+	Image   string          `json:"image"`
+	Backing string          `json:"backing"`
+	Status  consts.VmStatus `json:"status"`
 }
 type KvmRespTempl struct {
 	Name string `json:"name"`

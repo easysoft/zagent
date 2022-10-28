@@ -41,7 +41,7 @@ func (r *Router) App() {
 			//v1.Use(core.Auth())
 
 			v1.PartyFunc("/download", func(client iris.Party) {
-				client.Post("/listTask", r.DownloadCtrl.ListTask).Name = "按状态列出下载任务"
+				client.Post("/status", r.DownloadCtrl.ListTask).Name = "按状态列出下载任务"
 				client.Post("/addTasks", r.DownloadCtrl.AddTasks).Name = "添加下载任务"
 				client.Post("/cancelTask", r.DownloadCtrl.CancelTask).Name = "强制终止下载任务"
 			})

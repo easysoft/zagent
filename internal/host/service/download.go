@@ -6,6 +6,7 @@ import (
 	hostRepo "github.com/easysoft/zv/internal/host/repo"
 	consts "github.com/easysoft/zv/internal/pkg/const"
 	downloadUtils "github.com/easysoft/zv/pkg/lib/download"
+	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	"sync"
 	"time"
 )
@@ -64,13 +65,12 @@ func (s *DownloadService) ListTask() (ret map[consts.DownloadStatus][]agentModel
 	pos, _ := s.TaskRepo.Query()
 
 	for _, po := range pos {
-		//_, ok := ret[po.Status]
-		//
-		//if !ok {
-		//	ret[po.Status] = make([]agentModel.Start, 0)
-		//}
+		status := po.Status
+		if status == consts.Timeout || status == consts.Error {
+			status = consts.InProgress
+		}
 
-		ret[po.Status] = append(ret[po.Status], po)
+		ret[status] = append(ret[status], po)
 	}
 
 	return
@@ -94,7 +94,6 @@ func (s *DownloadService) StartTask(po agentModel.Download) {
 
 	go func() {
 		filePath, finalStatus := downloadUtils.Start(po, ch)
-
 		s.TaskRepo.UpdateStatus(po.ID, finalStatus, filePath)
 
 		if ch != nil {
@@ -103,8 +102,14 @@ func (s *DownloadService) StartTask(po agentModel.Download) {
 	}()
 }
 
-func (s *DownloadService) CancelTask(taskId int) {
-	chVal, ok := syncMap.Load(taskId)
+func (s *DownloadService) CancelTask(url string) {
+	task, err := s.TaskRepo.GetByUrl(url)
+	if err != nil {
+		_logUtils.Infof("can not find task %s to cancel.")
+		return
+	}
+
+	chVal, ok := syncMap.Load(task.ID)
 
 	if !ok || chVal == nil {
 		return
@@ -120,7 +125,7 @@ func (s *DownloadService) CancelTask(taskId int) {
 }
 
 func (s *DownloadService) RestartTask(po agentModel.Download) (ret bool) {
-	s.CancelTask(po.TaskId)
+	s.CancelTask(po.Url)
 	s.StartTask(po)
 
 	return

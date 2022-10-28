@@ -69,7 +69,7 @@ func NewLibvirtService() *LibvirtService {
 //		return
 //	}
 //
-//	// get BackingPath
+//	// get Backing
 //	if vmBackingPath == "" {
 //		// use tmpl vm's image as backing path
 //		mainDiskIndex := s.QemuService.GetMainDiskIndex(tmplDomCfg)
@@ -140,7 +140,7 @@ func (s *LibvirtService) CloneVm(req *v1.KvmReqClone, removeSameName bool) (dom 
 		vmCpu = srcDomCfg.Memory.Value
 	}
 
-	// get BackingPath
+	// get Backing
 	mainDiskIndex := s.QemuService.GetMainDiskIndex(srcDomCfg)
 	if vmBackingPath == "" {
 		// try to use the src vm's backing file
