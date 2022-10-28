@@ -311,43 +311,6 @@ install()
     echo -e "\033[32m Install ${soft} success \033[0m"
 }
 
-check_status()
-{
-    zagent_status="\033[31m Zagent Not Installed \033[0m"
-    nginx_status="\033[31m Nginx Not Installed \033[0m"
-    kvm_status="\033[31m Libvirtd Not Installed \033[0m"
-    novnc_status="\033[31m Novnc Not Installed \033[0m"
-    websockify_status="\033[31m Websockify Not Installed \033[0m"
-    if [ -f ${HOME}/zagent/zagent/ztf ];then
-        zagent_status="Zagent Installed"
-    fi
-    echo -e ${zagent_status}
-    if command_exist nginx;then
-        nginx_status="Nginx Installed,not available"
-        if is_active nginx;then
-            nginx_status="Nginx Installed,available"
-        fi
-    fi
-    echo -e ${nginx_status}
-    
-    if command_exist libvirtd;then
-        kvm_status="Libvirtd Installed,not available"
-        if is_active libvirtd;then
-            kvm_status="Libvirtd Installed,available"
-        fi
-    fi
-    echo -e ${kvm_status}
-    if [ -f ${HOME}/zagent/novnc/vnc.html ];then
-        novnc_status="Novnc Installed"
-    fi
-    echo -e ${novnc_status}
-    if [ -f ${HOME}/zagent/websockify/run ];then
-        websockify_status="Websockify Installed"
-    fi
-    echo -e ${websockify_status}
-}
-
-
 if [ ! -n "$(egrep -o "(vmx|svm)" /proc/cpuinfo)" ];then
     echo -e "\033[31m Not support virtualization \033[0m"
     exit 1
@@ -365,9 +328,8 @@ is_install_kvm=true
 is_install_novnc=true
 is_install_websockify=true
 soft="zagent,nginx,kvm,novnc,websockify"
-action="install"
 force=false
-while getopts ":s:rc" optname
+while getopts ":s:r" optname
 do
     case "$optname" in
         "s")
@@ -393,16 +355,10 @@ do
                 if [[ $OPTARG =~ websockify ]];then
                     is_install_websockify=true
                 fi
-                action="install"
             fi
         ;;
-        "c")
-            action="check"
-        ;;
         "r")
-            action="install"
             force=true
-            echo "force force"
         ;;
         *)
             echo "Unknown error while processing options"
@@ -412,10 +368,5 @@ done
 
 HOME="`cat /etc/passwd |grep ^${SUDO_USER:-$(id -un)}: | cut -d: -f 6`"
 HOME=${HOME:-$HOME}
-if [ ${action} == "install" ];then
-    install
-fi
-if [ ${action} == "check" ];then
-    check_status
-fi
 
+install
