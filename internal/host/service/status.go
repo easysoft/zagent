@@ -3,6 +3,12 @@ package hostAgentService
 import (
 	"errors"
 	"fmt"
+	"net"
+	"path/filepath"
+	"strconv"
+	"strings"
+	"time"
+
 	v1 "github.com/easysoft/zv/cmd/host/router/v1"
 	kvmService "github.com/easysoft/zv/internal/host/service/kvm"
 	agentConf "github.com/easysoft/zv/internal/pkg/conf"
@@ -11,11 +17,6 @@ import (
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
 	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
-	"net"
-	"path/filepath"
-	"strconv"
-	"strings"
-	"time"
 )
 
 type StatusService struct {
@@ -124,8 +125,6 @@ func (s *StatusService) CheckWebsockify(ret *v1.CheckResp) (err error) {
 			ret.Websockify = consts.HostServiceNotInstall
 		}
 	}
-
-	return
 
 	return
 }

@@ -130,6 +130,7 @@ install_novnc()
         unzip -o -d ./novnc ./novnc.zip
         ck_ok "unZip novnc"
     fi
+    /usr/bin/mv ${HOME}/zagent/vnc_lite.html ${HOME}/zagent/index.html
     /usr/bin/rm ${HOME}/zagent/novnc.zip
 }
 download_nginx()
@@ -182,7 +183,7 @@ install_nginx()
     do
         if ! dpkg -l $pkg >/dev/null 2>&1
         then
-            sudo apt install -y $pkg
+            sudo apt reinstall -y $pkg
             ck_ok "apt install $pkg"
         else
             echo "$pkg already installed"
@@ -242,9 +243,9 @@ install_kvm()
             return
         fi
     fi
-    echo "Install qemu-kvm libvirt-daemon-system"
-    sudo apt install -y qemu-kvm libvirt-daemon-system libvirt-clients libvirt-dev qemu virt-manager bridge-utils libosinfo-bin
-    ck_ok "Install qemu-kvm,libvirt"
+    echo "Install kvm"
+    sudo apt reinstall -y qemu-kvm libvirt-daemon-system libvirt-clients libvirt-dev qemu virt-manager bridge-utils libosinfo-bin
+    ck_ok "Install kvm"
     
     sudo service libvirtd restart
     ck_ok "Start libvirtd"
