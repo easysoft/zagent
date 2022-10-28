@@ -3,14 +3,15 @@ package natHelper
 import (
 	"errors"
 	"fmt"
-	consts "github.com/easysoft/zv/internal/pkg/const"
-	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
-	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
-	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
 	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
+
+	consts "github.com/easysoft/zv/internal/pkg/const"
+	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
+	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
+	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
 )
 
 const (
@@ -161,4 +162,19 @@ func getNginxHotLoadingConf(vmIp string, vmPort int, hostPort int, typ consts.Na
 func reloadNginx() {
 	cmd := fmt.Sprintf(`nginx -s reload`)
 	_shellUtils.ExeSysCmd(cmd)
+}
+
+func GetThreadPort(kw string) (hostPort int, err error) {
+	cmd := fmt.Sprintf(`ss -tnlp | grep %s | awk '{ print $4 }'`, kw)
+	output, _ := _shellUtils.ExeSysCmd(cmd)
+	output = strings.TrimSpace(output)
+	if output == "" {
+		return hostPort, fmt.Errorf("%s not found", kw)
+	}
+	list := strings.Split(output, "\n")
+	lastInfo := list[len(list)-1]
+	lastInfo = strings.TrimSpace(lastInfo)
+	info := strings.Split(lastInfo, ":")
+	hostPort, err = strconv.Atoi(info[len(info)-1])
+	return
 }
