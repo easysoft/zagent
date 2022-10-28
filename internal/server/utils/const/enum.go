@@ -1,3 +1,0 @@
-package serverConst
-
-const ()

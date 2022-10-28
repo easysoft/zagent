@@ -3,7 +3,7 @@ package hostRouter
 import (
 	hostHandler "github.com/easysoft/zv/cmd/host/router/handler"
 	hostService "github.com/easysoft/zv/internal/host/service"
-	serverConf "github.com/easysoft/zv/internal/server/conf"
+	consts "github.com/easysoft/zv/internal/pkg/const"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	"github.com/kataras/iris/v12"
 )
@@ -31,7 +31,7 @@ func NewRouter(app *iris.Application) *Router {
 }
 
 func (r *Router) App() {
-	iris.LimitRequestBodySize(serverConf.Inst.Options.UploadMaxSize)
+	iris.LimitRequestBodySize(consts.UploadMaxSize)
 	r.api.UseRouter(_httpUtils.CrsAuth())
 
 	app := r.api.Party("/api").AllowMethods(iris.MethodOptions)
@@ -66,7 +66,7 @@ func (r *Router) App() {
 				client.Get("/listTmpl", r.KvmCtrl.ListTmpl).Name = "克隆虚机"
 				client.Post("/create", r.KvmCtrl.Create).Name = "创建虚机"
 				client.Post("/clone", r.KvmCtrl.Clone).Name = "克隆虚机"
-				client.Post("/exportAsTmpl", r.KvmCtrl.ExportAsTmpl).Name = "导出为模板镜像"
+				client.Post("/addExportVmTask", r.KvmCtrl.AddExportVmTask).Name = "导出为模板镜像"
 
 				client.Post("/{name:string}/destroy", r.KvmCtrl.Destroy).Name = "摧毁虚机"
 				client.Post("/{name:string}/reboot", r.KvmCtrl.Reboot).Name = "重启虚机"

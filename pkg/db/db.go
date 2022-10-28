@@ -1,13 +1,9 @@
 package _db
 
 import (
-	"fmt"
 	agentConf "github.com/easysoft/zv/internal/pkg/conf"
-	serverConf "github.com/easysoft/zv/internal/server/conf"
 	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
 	_logUtils "github.com/easysoft/zv/pkg/lib/log"
-	"gorm.io/driver/mysql"
-	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
@@ -33,19 +29,9 @@ func GetInst() *Instance {
 func InitDB(mode string) {
 	var dialector gorm.Dialector
 
-	if mode == "agent" || serverConf.Inst.DB.Adapter == "sqlite3" {
+	if mode == "agent" {
 		conn := DBFile(mode)
 		dialector = sqlite.Open(conn)
-
-	} else if serverConf.Inst.DB.Adapter == "mysql" {
-		conn := fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?parseTime=True&loc=Local",
-			serverConf.Inst.DB.User, serverConf.Inst.DB.Password, serverConf.Inst.DB.Host, serverConf.Inst.DB.Port, serverConf.Inst.DB.Name)
-		dialector = mysql.Open(conn)
-
-	} else if serverConf.Inst.DB.Adapter == "postgres" {
-		conn := fmt.Sprintf("postgres://%v:%v@%v/%v?sslmode=disable",
-			serverConf.Inst.DB.User, serverConf.Inst.DB.Password, serverConf.Inst.DB.Host, serverConf.Inst.DB.Name)
-		dialector = postgres.Open(conn)
 
 	} else {
 		_logUtils.Info("not supported database adapter")
@@ -54,8 +40,6 @@ func InitDB(mode string) {
 	prefix := ""
 	if mode == "agent" {
 		prefix = agentConf.Inst.DB.Prefix
-	} else {
-		prefix = serverConf.Inst.DB.Prefix
 	}
 
 	DB, err := gorm.Open(dialector, &gorm.Config{
@@ -105,9 +89,6 @@ func (i *Instance) Close() error {
 
 func DBFile(mode string) string {
 	dbName := "agent"
-	if mode != "agent" {
-		dbName = serverConf.Inst.DB.Name
-	}
 
 	path := filepath.Join(_fileUtils.GetExeDir(), strings.ToLower(dbName+".db"))
 	return path

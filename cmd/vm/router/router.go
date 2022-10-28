@@ -2,7 +2,7 @@ package vmRouter
 
 import (
 	vmHandler "github.com/easysoft/zv/cmd/vm/router/handler"
-	serverConf "github.com/easysoft/zv/internal/server/conf"
+	consts "github.com/easysoft/zv/internal/pkg/const"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	"github.com/kataras/iris/v12"
 )
@@ -20,7 +20,7 @@ func NewRouter(app *iris.Application) *Router {
 }
 
 func (r *Router) App() {
-	iris.LimitRequestBodySize(serverConf.Inst.Options.UploadMaxSize)
+	iris.LimitRequestBodySize(consts.UploadMaxSize)
 	r.api.UseRouter(_httpUtils.CrsAuth())
 
 	app := r.api.Party("/api").AllowMethods(iris.MethodOptions)
