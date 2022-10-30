@@ -2,8 +2,8 @@ package _fileUtils
 
 import (
 	"bytes"
-	_i118Utils "github.com/easysoft/zv/pkg/lib/i118"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
+	_i118Utils "github.com/easysoft/zagent/pkg/lib/i118"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"io"
 	"io/ioutil"
 	"mime/multipart"

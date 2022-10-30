@@ -1,9 +1,9 @@
 package hostRepo
 
 import (
-	agentModel "github.com/easysoft/zv/internal/host/model"
-	"github.com/easysoft/zv/internal/pkg/const"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
+	agentModel "github.com/easysoft/zagent/internal/host/model"
+	"github.com/easysoft/zagent/internal/pkg/const"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"gorm.io/gorm"
 	"time"
 )

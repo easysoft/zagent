@@ -1,8 +1,8 @@
 package vmHandler
 
 import (
-	consts "github.com/easysoft/zv/internal/pkg/const"
-	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
 	"github.com/kataras/iris/v12"
 )
 

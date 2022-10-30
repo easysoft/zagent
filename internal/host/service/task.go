@@ -1,13 +1,13 @@
 package hostAgentService
 
 import (
-	v1 "github.com/easysoft/zv/cmd/host/router/v1"
-	agentModel "github.com/easysoft/zv/internal/host/model"
-	hostRepo "github.com/easysoft/zv/internal/host/repo"
-	agentConf "github.com/easysoft/zv/internal/pkg/conf"
-	consts "github.com/easysoft/zv/internal/pkg/const"
-	requestUtils "github.com/easysoft/zv/internal/pkg/utils/request"
-	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
+	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
+	agentModel "github.com/easysoft/zagent/internal/host/model"
+	hostRepo "github.com/easysoft/zagent/internal/host/repo"
+	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	requestUtils "github.com/easysoft/zagent/internal/pkg/utils/request"
+	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
 	"time"
 )
 

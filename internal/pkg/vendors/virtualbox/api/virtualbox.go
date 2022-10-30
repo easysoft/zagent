@@ -2,7 +2,7 @@ package virtualboxapi
 
 import (
 	"errors"
-	virtualboxsrv "github.com/easysoft/zv/internal/pkg/vendors/virtualbox/srv"
+	virtualboxsrv "github.com/easysoft/zagent/internal/pkg/vendors/virtualbox/srv"
 	"log"
 )
 

@@ -2,9 +2,9 @@ package hostCron
 
 import (
 	"fmt"
-	hostAgentService "github.com/easysoft/zv/internal/host/service"
-	consts "github.com/easysoft/zv/internal/pkg/const"
-	_cronUtils "github.com/easysoft/zv/pkg/lib/cron"
+	hostAgentService "github.com/easysoft/zagent/internal/host/service"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	_cronUtils "github.com/easysoft/zagent/pkg/lib/cron"
 	"github.com/kataras/iris/v12"
 	"sync"
 	"time"

@@ -2,10 +2,10 @@ package aliyun
 
 import (
 	"fmt"
-	testconst "github.com/easysoft/zv/cmd/test/_const"
-	"github.com/easysoft/zv/internal/pkg/const"
-	"github.com/easysoft/zv/internal/pkg/vendors/aliyun"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
+	testconst "github.com/easysoft/zagent/cmd/test/_const"
+	"github.com/easysoft/zagent/internal/pkg/const"
+	"github.com/easysoft/zagent/internal/pkg/vendors/aliyun"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"testing"
 	"time"
 )

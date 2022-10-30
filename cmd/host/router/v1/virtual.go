@@ -1,6 +1,6 @@
 package v1
 
-import consts "github.com/easysoft/zv/internal/pkg/const"
+import consts "github.com/easysoft/zagent/internal/pkg/const"
 
 type DestroyVmReq struct {
 	Ip string `json:"ip"`

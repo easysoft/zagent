@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
+	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 )
 
 func GetUsedPortByKeyword(keyword string, defaultVal int) (port int, err error) {

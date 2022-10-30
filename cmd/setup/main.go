@@ -4,9 +4,9 @@ import (
 	"flag"
 	"fmt"
 
-	_const "github.com/easysoft/zv/pkg/const"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
-	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
+	_const "github.com/easysoft/zagent/pkg/const"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
+	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 )
 
 var (

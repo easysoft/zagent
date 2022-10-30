@@ -9,14 +9,14 @@ import (
 	"strings"
 	"time"
 
-	v1 "github.com/easysoft/zv/cmd/host/router/v1"
-	kvmService "github.com/easysoft/zv/internal/host/service/kvm"
-	agentConf "github.com/easysoft/zv/internal/pkg/conf"
-	consts "github.com/easysoft/zv/internal/pkg/const"
-	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
-	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
-	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
+	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
+	kvmService "github.com/easysoft/zagent/internal/host/service/kvm"
+	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	_fileUtils "github.com/easysoft/zagent/pkg/lib/file"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
+	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
+	_stringUtils "github.com/easysoft/zagent/pkg/lib/string"
 )
 
 type StatusService struct {

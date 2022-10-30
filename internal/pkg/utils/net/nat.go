@@ -8,10 +8,10 @@ import (
 	"strconv"
 	"strings"
 
-	consts "github.com/easysoft/zv/internal/pkg/const"
-	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
-	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
-	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	_fileUtils "github.com/easysoft/zagent/pkg/lib/file"
+	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
+	_stringUtils "github.com/easysoft/zagent/pkg/lib/string"
 )
 
 const (

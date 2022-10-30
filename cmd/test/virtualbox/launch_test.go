@@ -1,7 +1,7 @@
 package main
 
 import (
-	virtualboxapi "github.com/easysoft/zv/internal/pkg/vendors/virtualbox/api"
+	virtualboxapi "github.com/easysoft/zagent/internal/pkg/vendors/virtualbox/api"
 	"log"
 	"testing"
 )

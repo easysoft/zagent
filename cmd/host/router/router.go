@@ -1,10 +1,10 @@
 package hostRouter
 
 import (
-	hostHandler "github.com/easysoft/zv/cmd/host/router/handler"
-	hostService "github.com/easysoft/zv/internal/host/service"
-	consts "github.com/easysoft/zv/internal/pkg/const"
-	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
+	hostHandler "github.com/easysoft/zagent/cmd/host/router/handler"
+	hostService "github.com/easysoft/zagent/internal/host/service"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
 	"github.com/kataras/iris/v12"
 )
 

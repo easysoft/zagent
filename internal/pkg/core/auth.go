@@ -1,10 +1,10 @@
 package core
 
 import (
-	consts "github.com/easysoft/zv/internal/pkg/const"
-	commonUtils "github.com/easysoft/zv/internal/pkg/utils/common"
-	_const "github.com/easysoft/zv/pkg/const"
-	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	commonUtils "github.com/easysoft/zagent/internal/pkg/utils/common"
+	_const "github.com/easysoft/zagent/pkg/const"
+	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
 	"net/http"
 
 	"github.com/kataras/iris/v12"
