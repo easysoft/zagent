@@ -41,8 +41,8 @@ rm -rf res/vm/docs && swag init --parseDependency --parseInternal --parseDepth 5
 # 服务器上启动go-swagger服务。 https://github.com/go-swagger/go-swagger
 ps -ef | grep swagger | grep -v grep | awk '{print $2}' | xargs kill -9
 
-nohup swagger serve --no-open -p 50001 https://raw.githubusercontent.com/easysoft/zenagent/main/res/host/docs/swagger.json > vm.log 2>&1 &
-nohup swagger serve --no-open -p 50002 https://raw.githubusercontent.com/easysoft/zenagent/main/res/vm/docs/swagger.json > vm.log 2>&1 &
+nohup swagger serve --no-open -p 50002 https://raw.githubusercontent.com/easysoft/zenagent/main/res/host/docs/swagger.json > vm.log 2>&1 &
+nohup swagger serve --no-open -p 50003 https://raw.githubusercontent.com/easysoft/zenagent/main/res/vm/docs/swagger.json > vm.log 2>&1 &
 
 qemu-img create -f qcow2 \
     -o cluster_size=2M,backing_file=/home/aaron/zagent/kvm/download/win10.qcow2 \
