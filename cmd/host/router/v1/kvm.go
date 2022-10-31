@@ -19,7 +19,7 @@ type CreateVmReq struct {
 type CreateVmResp struct {
 	Mac    string          `json:"mac"`
 	Vnc    int             `json:"vnc"`
-	Status consts.VmStatus `json:"status"`
+	Status consts.VmStatus `json:"status"` // Enums consts.VmStatus
 }
 
 type ExportVmReq struct {
@@ -31,7 +31,7 @@ type ExportVmReq struct {
 type ExportVmResp struct {
 	Backing    string            `json:"backing"`
 	Xml        string            `json:"xml"`
-	Status     consts.TaskStatus `json:"status"`
+	Status     consts.TaskStatus `json:"status"` // Enums consts.TaskStatus
 	ZentaoTask int               `json:"zentaoTask"`
 }
 
@@ -76,7 +76,7 @@ type KvmResp struct {
 	VncUrl  string          `json:"vncUrl"`
 	Image   string          `json:"image"`
 	Backing string          `json:"backing"`
-	Status  consts.VmStatus `json:"status"`
+	Status  consts.VmStatus `json:"status"` // Enums consts.VmStatus
 }
 type KvmRespTempl struct {
 	Name string `json:"name"`

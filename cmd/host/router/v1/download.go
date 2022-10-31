@@ -10,7 +10,7 @@ type DownloadReq struct {
 
 type DownloadResp struct {
 	Path       string            `json:"path"`
-	Status     consts.TaskStatus `json:"status"`
+	Status     consts.TaskStatus `json:"status"` // Enums consts.TaskStatus
 	ZentaoTask int               `json:"zentaoTask"`
 }
 

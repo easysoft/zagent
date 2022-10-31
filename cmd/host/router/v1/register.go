@@ -21,7 +21,7 @@ type VmRegisterReq struct {
 	MacAddress      string          `json:"macAddress"`
 	Ip              string          `json:"ip"`
 	AgentPortOnHost int             `json:"agentPortOnHost"`
-	Status          consts.VmStatus `json:"status"`
+	Status          consts.VmStatus `json:"status"` // Enums consts.VmStatus
 }
 
 type RegisterResp struct {

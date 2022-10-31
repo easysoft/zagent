@@ -9,13 +9,13 @@ type DestroyVmReq struct {
 type VmPortMapReq struct {
 	VmIp   string                `json:"vmIp"`
 	VmPort int                   `json:"vmPort"`
-	Type   consts.NatForwardType `json:"type"`
+	Type   consts.NatForwardType `json:"type"` // Enums consts.NatForwardType
 }
 
 type VmPortMapResp struct {
 	VmIp   string                `json:"vmIp"`
 	VmPort int                   `json:"vmPort"`
-	Type   consts.NatForwardType `json:"type"`
+	Type   consts.NatForwardType `json:"type"` // Enums consts.NatForwardType
 
 	HostPort      int  `json:"hostPort"`
 	AlreadyMapped bool `json:"alreadyMapped"`
