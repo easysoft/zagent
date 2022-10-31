@@ -3,7 +3,7 @@ package _fileUtils
 import (
 	"archive/zip"
 	"fmt"
-	_errUtils "github.com/easysoft/zv/pkg/lib/err"
+	_errUtils "github.com/easysoft/zagent/pkg/lib/err"
 	"github.com/mholt/archiver/v3"
 	"strings"
 )

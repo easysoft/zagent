@@ -2,11 +2,11 @@ package hostAgentService
 
 import (
 	"fmt"
-	agentModel "github.com/easysoft/zv/internal/host/model"
-	hostRepo "github.com/easysoft/zv/internal/host/repo"
-	kvmService "github.com/easysoft/zv/internal/host/service/kvm"
-	consts "github.com/easysoft/zv/internal/pkg/const"
-	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
+	agentModel "github.com/easysoft/zagent/internal/host/model"
+	hostRepo "github.com/easysoft/zagent/internal/host/repo"
+	kvmService "github.com/easysoft/zagent/internal/host/service/kvm"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 	"path/filepath"
 )
 
@@ -39,7 +39,7 @@ func (s *ExportService) StartTask(po agentModel.Task) {
 	}()
 }
 
-func (s *ExportService) ExportVm(po agentModel.Task) (pth, xml string, status consts.DownloadStatus) {
+func (s *ExportService) ExportVm(po agentModel.Task) (pth, xml string, status consts.TaskStatus) {
 	vmName := po.Vm
 
 	dom, err := s.LibvirtService.GetVm(vmName)

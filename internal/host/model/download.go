@@ -1,7 +1,7 @@
 package agentModel
 
 import (
-	consts "github.com/easysoft/zv/internal/pkg/const"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
 	"time"
 )
 
@@ -12,11 +12,11 @@ type Task struct {
 	Desc string `json:"desc"`
 
 	// for download
-	Url    string                `json:"url"`
-	Md5    string                `json:"md5"`
-	Path   string                `json:"path"`
-	Status consts.DownloadStatus `json:"status"`
-	Retry  int                   `json:"retry"`
+	Url    string            `json:"url"`
+	Md5    string            `json:"md5"`
+	Path   string            `json:"path"`
+	Status consts.TaskStatus `json:"status"`
+	Retry  int               `json:"retry"`
 
 	// for export vm
 	Vm      string `json:"vm"`

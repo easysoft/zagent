@@ -1,7 +1,7 @@
 package other
 
 import (
-	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
+	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 	"log"
 	"os"
 	"testing"

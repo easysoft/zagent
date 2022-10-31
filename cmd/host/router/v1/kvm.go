@@ -1,7 +1,7 @@
 package v1
 
 import (
-	consts "github.com/easysoft/zv/internal/pkg/const"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
 )
 
 type CreateVmReq struct {
@@ -19,19 +19,20 @@ type CreateVmReq struct {
 type CreateVmResp struct {
 	Mac    string          `json:"mac"`
 	Vnc    int             `json:"vnc"`
-	Status consts.VmStatus `json:"status"`
+	Status consts.VmStatus `json:"status"` // Enums consts.VmStatus
 }
 
 type ExportVmReq struct {
 	Vm         string `json:"vm"`
 	Backing    string `json:"backing"`
-	ZentaoTask int    `json:"taskId"`
+	ZentaoTask int    `json:"zentaoTask"`
 }
 
 type ExportVmResp struct {
-	Backing    string `json:"backing"`
-	Xml        string `json:"xml"`
-	ZentaoTask int    `json:"zentaoTask"`
+	Backing    string            `json:"backing"`
+	Xml        string            `json:"xml"`
+	Status     consts.TaskStatus `json:"status"` // Enums consts.TaskStatus
+	ZentaoTask int               `json:"zentaoTask"`
 }
 
 type KvmReq struct {
@@ -75,7 +76,7 @@ type KvmResp struct {
 	VncUrl  string          `json:"vncUrl"`
 	Image   string          `json:"image"`
 	Backing string          `json:"backing"`
-	Status  consts.VmStatus `json:"status"`
+	Status  consts.VmStatus `json:"status"` // Enums consts.VmStatus
 }
 type KvmRespTempl struct {
 	Name string `json:"name"`

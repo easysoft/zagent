@@ -2,11 +2,13 @@ package consts
 
 import (
 	"fmt"
-	_const "github.com/easysoft/zv/pkg/const"
+	_const "github.com/easysoft/zagent/pkg/const"
 	"path/filepath"
 	"sync"
 	"time"
 )
+
+var ()
 
 var (
 	ConfigFile     = filepath.Join("conf", AppNameAgent+".yaml")

@@ -2,11 +2,11 @@ package main
 
 import (
 	"flag"
-	hostInit "github.com/easysoft/zv/cmd/host/init"
-	agentConf "github.com/easysoft/zv/internal/pkg/conf"
-	consts "github.com/easysoft/zv/internal/pkg/const"
-	agentUtils "github.com/easysoft/zv/internal/pkg/utils/common"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
+	hostInit "github.com/easysoft/zagent/cmd/host/init"
+	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	agentUtils "github.com/easysoft/zagent/internal/pkg/utils/common"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"github.com/fatih/color"
 	"os"
 	"os/signal"
@@ -21,9 +21,9 @@ var (
 
 // @title ZAgent宿主机API文档
 // @version 1.0
-// @contact.name API Support
-// @contact.url https://github.com/easysoft/zv/issues
+// @contact.name Support
 // @contact.email 462626@qq.com
+// @contact.url https://github.com/easysoft/zv/issues
 func main() {
 	channel := make(chan os.Signal)
 	signal.Notify(channel, os.Interrupt, syscall.SIGTERM)
@@ -38,8 +38,10 @@ func main() {
 	flagSet.StringVar(&runMode, "t", consts.RunModeHost.ToString(), "")
 	flagSet.StringVar(&agentConf.Inst.Server, "s", "http://127.0.0.1:8085", "")
 	flagSet.StringVar(&agentConf.Inst.NodeName, "n", "", "")
+
 	flagSet.StringVar(&agentConf.Inst.NodeIp, "i", "127.0.0.1", "")
-	flagSet.IntVar(&agentConf.Inst.NodePort, "p", 8086, "")
+	flagSet.IntVar(&agentConf.Inst.NodePort, "p", consts.AgentPort, "")
+
 	flagSet.StringVar(&agentConf.Inst.Secret, "secret", "", "")
 	flagSet.StringVar(&agentConf.Inst.Language, "l", "zh", "")
 

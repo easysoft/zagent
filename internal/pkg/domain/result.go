@@ -1,6 +1,6 @@
 package domain
 
-import consts "github.com/easysoft/zv/internal/pkg/const"
+import consts "github.com/easysoft/zagent/internal/pkg/const"
 
 type Result struct {
 	Code    string      `json:"code"`

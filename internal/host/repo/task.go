@@ -1,9 +1,9 @@
 package hostRepo
 
 import (
-	agentModel "github.com/easysoft/zv/internal/host/model"
-	"github.com/easysoft/zv/internal/pkg/const"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
+	agentModel "github.com/easysoft/zagent/internal/host/model"
+	"github.com/easysoft/zagent/internal/pkg/const"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"gorm.io/gorm"
 	"time"
 )
@@ -58,7 +58,7 @@ func (r *TaskRepo) Update(po *agentModel.Task) (err error) {
 	return
 }
 
-func (r *TaskRepo) UpdateStatus(id uint, filePath, xmlDesc string, status consts.DownloadStatus) (err error) {
+func (r *TaskRepo) UpdateStatus(id uint, filePath, xmlDesc string, status consts.TaskStatus) (err error) {
 	err = r.DB.Model(&agentModel.Task{}).Where("id = ?", id).
 		Updates(map[string]interface{}{"status": status, "end_time": time.Now()}).Error
 

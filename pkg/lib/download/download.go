@@ -3,11 +3,11 @@ package downloadUtils
 import (
 	"fmt"
 	"github.com/cavaliergopher/grab/v3"
-	agentModel "github.com/easysoft/zv/internal/host/model"
-	consts "github.com/easysoft/zv/internal/pkg/const"
-	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
-	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
-	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
+	agentModel "github.com/easysoft/zagent/internal/host/model"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
+	_fileUtils "github.com/easysoft/zagent/pkg/lib/file"
+	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-func Start(task agentModel.Task, ch chan int) (pth string, status consts.DownloadStatus) {
+func Start(task agentModel.Task, ch chan int) (pth string, status consts.TaskStatus) {
 	fmt.Printf("Start to download %s ...\n", task.Url)
 
 	targetDir := consts.FolderDownload

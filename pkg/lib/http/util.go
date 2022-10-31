@@ -1,9 +1,9 @@
 package _httpUtils
 
 import (
-	consts "github.com/easysoft/zv/internal/pkg/const"
-	"github.com/easysoft/zv/internal/pkg/domain"
-	_domain "github.com/easysoft/zv/pkg/domain"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	"github.com/easysoft/zagent/internal/pkg/domain"
+	_domain "github.com/easysoft/zagent/pkg/domain"
 )
 
 func RespData(code consts.ResultCode, msg string, objects interface{}) (r *_domain.Response) {

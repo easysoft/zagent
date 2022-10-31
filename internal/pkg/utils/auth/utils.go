@@ -2,8 +2,8 @@ package authUtils
 
 import (
 	"fmt"
-	consts "github.com/easysoft/zv/internal/pkg/const"
-	_const "github.com/easysoft/zv/pkg/const"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	_const "github.com/easysoft/zagent/pkg/const"
 	"net/http"
 	"strings"
 )

@@ -1,9 +1,9 @@
 package kvm
 
 import (
-	agentConf "github.com/easysoft/zv/internal/pkg/conf"
-	"github.com/easysoft/zv/internal/pkg/const"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
+	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
+	"github.com/easysoft/zagent/internal/pkg/const"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"testing"
 )
 

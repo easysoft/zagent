@@ -1,13 +1,12 @@
 package hostHandler
 
 import (
-	v1 "github.com/easysoft/zv/cmd/host/router/v1"
-	kvmService "github.com/easysoft/zv/internal/host/service/kvm"
-	virtualService "github.com/easysoft/zv/internal/host/service/virtual"
-	agentConf "github.com/easysoft/zv/internal/pkg/conf"
-	consts "github.com/easysoft/zv/internal/pkg/const"
-	"github.com/easysoft/zv/internal/pkg/domain"
-	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
+	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
+	kvmService "github.com/easysoft/zagent/internal/host/service/kvm"
+	virtualService "github.com/easysoft/zagent/internal/host/service/virtual"
+	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
 	"github.com/kataras/iris/v12"
 	"sync"
 )
@@ -26,14 +25,20 @@ func NewVirtualCtrl() *VirtualCtrl {
 	return &VirtualCtrl{}
 }
 
+// @summary 虚拟机请求安全码
+// @Accept json
+// @Produce json
+// @Param VmNotifyReq body v1.VmNotifyReq true "Vm Notify Request Object"
+// @Success 200 {object} _domain.Response{data=v1.VmNotifyResp} "code = success | fail"
+// @Router /api/v1/virtual/notifyHost [post]
 func (c *VirtualCtrl) NotifyHost(ctx iris.Context) {
-	req := domain.VmNotifyReq{}
+	req := v1.VmNotifyReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
 		ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 		return
 	}
 
-	data := domain.VmNotifyResp{
+	data := v1.VmNotifyResp{
 		Secret: agentConf.Inst.Secret,
 	}
 
@@ -66,8 +71,8 @@ func (c *VirtualCtrl) NotifyHost(ctx iris.Context) {
 // @summary 新增虚拟机到宿主机端口的映射
 // @Accept json
 // @Produce json
-// @Param VmPortMapReq body v1.KvmReq true "Kvm Request Object"
-// @Success 200 {object} _domain.Response{data=v1.VmPortMapResp} "code = success? 1 : 0"
+// @Param VmPortMapReq body v1.VmPortMapReq true "Vm Port Map Request Object"
+// @Success 200 {object} _domain.Response{data=v1.VmPortMapResp} "code = success | fail"
 // @Router /api/v1/virtual/addVmPortMap [post]
 func (c *VirtualCtrl) AddVmPortMap(ctx iris.Context) {
 	req := v1.VmPortMapReq{}
@@ -85,11 +90,11 @@ func (c *VirtualCtrl) AddVmPortMap(ctx iris.Context) {
 	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success", resp))
 }
 
-// @summary 删除虚拟机到宿主机的端口映射
+// @summary 移除虚拟机到宿主机的端口映射
 // @Accept json
 // @Produce json
-// @Param VmPortMapReq body v1.KvmReq true "Kvm Request Object"
-// @Success 200 {object} _domain.Response "code = success? 1 : 0"
+// @Param VmPortMapReq body v1.VmPortMapReq true "Vm Port Map Request Object"
+// @Success 200 {object} _domain.Response "code = success | fail"
 // @Router /api/v1/virtual/removeVmPortMap [post]
 func (c *VirtualCtrl) RemoveVmPortMap(ctx iris.Context) {
 	req := v1.VmPortMapReq{}
@@ -111,8 +116,8 @@ func (c *VirtualCtrl) RemoveVmPortMap(ctx iris.Context) {
 // @Accept json
 // @Produce json
 // @Param port query string true "VNC Port"
-// @Success 200 {object} _domain.Response{data=v1.VncTokenResp} "code = success? 1 : 0"
-// @Router /api/v1/virtual/getToken [get]
+// @Success 200 {object} _domain.Response{data=v1.VncTokenResp} "code = success | fail"
+// @Router /api/v1/virtual/getVncToken [get]
 func (c *VirtualCtrl) GetToken(ctx iris.Context) {
 	port := ctx.URLParam("port")
 

@@ -4,18 +4,19 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	agentConf "github.com/easysoft/zv/internal/pkg/conf"
-	"github.com/easysoft/zv/internal/pkg/const"
-	"github.com/easysoft/zv/internal/pkg/domain"
-	agentService "github.com/easysoft/zv/internal/pkg/service"
-	agentTestingService "github.com/easysoft/zv/internal/pkg/service/testing"
-	requestUtils "github.com/easysoft/zv/internal/pkg/utils/request"
-	_domain "github.com/easysoft/zv/pkg/domain"
-	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
-	_dateUtils "github.com/easysoft/zv/pkg/lib/date"
-	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
-	_i118Utils "github.com/easysoft/zv/pkg/lib/i118"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
+	"github.com/easysoft/zagent/cmd/host/router/v1"
+	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
+	"github.com/easysoft/zagent/internal/pkg/const"
+	"github.com/easysoft/zagent/internal/pkg/domain"
+	agentService "github.com/easysoft/zagent/internal/pkg/service"
+	agentTestingService "github.com/easysoft/zagent/internal/pkg/service/testing"
+	requestUtils "github.com/easysoft/zagent/internal/pkg/utils/request"
+	_domain "github.com/easysoft/zagent/pkg/domain"
+	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
+	_dateUtils "github.com/easysoft/zagent/pkg/lib/date"
+	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
+	_i118Utils "github.com/easysoft/zagent/pkg/lib/i118"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"time"
 )
 
@@ -61,7 +62,7 @@ func (s *VmService) Check() {
 }
 
 func (s *VmService) Register(isBusy bool) (ok bool) {
-	vm := domain.VmRegisterReq{
+	vm := v1.VmRegisterReq{
 		MacAddress: agentConf.Inst.MacAddress,
 		Ip:         agentConf.Inst.NodeIp,
 	}
@@ -86,7 +87,7 @@ func (s *VmService) Register(isBusy bool) (ok bool) {
 	respBytes, ok := s.register(vm)
 
 	if ok {
-		respObj := domain.RegisterResp{}
+		respObj := v1.RegisterResp{}
 		err := json.Unmarshal(respBytes, &respObj)
 		if err == nil && respObj.Token != "" {
 			respObj.ExpiredDate, _ = _dateUtils.UnitToDate(respObj.ExpiredTimeUnix)
@@ -120,11 +121,11 @@ func (s *VmService) register(host interface{}) (resp []byte, ok bool) {
 func (s *VmService) notifyHost() (secret, ip string, agentPortOnHost int, err error) {
 	uri := "virtual/notifyHost"
 	url := _httpUtils.GenUrl(
-		fmt.Sprintf("http://%s:%d/", consts.KvmHostIpInNatNetwork, consts.AgentPort),
+		fmt.Sprintf("http://%s:%d/", consts.KvmHostIpInNatNetwork, agentConf.Inst.NodePort),
 		uri)
 
 	_, macObj := _commonUtils.GetIp()
-	reqData := domain.VmNotifyReq{
+	reqData := v1.VmNotifyReq{
 		MacAddress: macObj.String(),
 	}
 
@@ -140,7 +141,7 @@ func (s *VmService) notifyHost() (secret, ip string, agentPortOnHost int, err er
 	}
 
 	respDataBytes, _ := json.Marshal(resp.Data)
-	respData := domain.VmNotifyResp{}
+	respData := v1.VmNotifyResp{}
 	err = json.Unmarshal(respDataBytes, &respData)
 	if err != nil {
 		return

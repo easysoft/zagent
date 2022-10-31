@@ -2,9 +2,9 @@ package aliyun
 
 import (
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
-	"github.com/easysoft/zv/cmd/test/_const"
-	"github.com/easysoft/zv/internal/pkg/const"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
+	"github.com/easysoft/zagent/cmd/test/_const"
+	"github.com/easysoft/zagent/internal/pkg/const"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"os"
 	"testing"
 )

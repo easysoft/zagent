@@ -1,11 +1,11 @@
 package aliyun
 
 import (
-	"github.com/easysoft/zv/cmd/test/_const"
-	consts "github.com/easysoft/zv/internal/pkg/const"
-	"github.com/easysoft/zv/internal/pkg/vendors/huaweicloud"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
-	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
+	"github.com/easysoft/zagent/cmd/test/_const"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	"github.com/easysoft/zagent/internal/pkg/vendors/huaweicloud"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
+	_stringUtils "github.com/easysoft/zagent/pkg/lib/string"
 	"strings"
 	"testing"
 )

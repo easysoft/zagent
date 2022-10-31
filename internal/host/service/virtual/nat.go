@@ -1,8 +1,8 @@
 package virtualService
 
 import (
-	v1 "github.com/easysoft/zv/cmd/host/router/v1"
-	natHelper "github.com/easysoft/zv/internal/pkg/utils/nat"
+	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
+	natHelper "github.com/easysoft/zagent/internal/pkg/utils/net"
 	"github.com/jinzhu/copier"
 	"sync"
 )

@@ -2,14 +2,14 @@ package kvmService
 
 import (
 	"fmt"
-	v1 "github.com/easysoft/zv/cmd/host/router/v1"
-	agentModel "github.com/easysoft/zv/internal/host/model"
-	hostRepo "github.com/easysoft/zv/internal/host/repo"
-	agentConf "github.com/easysoft/zv/internal/pkg/conf"
-	"github.com/easysoft/zv/internal/pkg/const"
-	"github.com/easysoft/zv/internal/pkg/domain"
-	natHelper "github.com/easysoft/zv/internal/pkg/utils/nat"
-	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
+	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
+	agentModel "github.com/easysoft/zagent/internal/host/model"
+	hostRepo "github.com/easysoft/zagent/internal/host/repo"
+	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
+	"github.com/easysoft/zagent/internal/pkg/const"
+	"github.com/easysoft/zagent/internal/pkg/domain"
+	natHelper "github.com/easysoft/zagent/internal/pkg/utils/net"
+	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 	"github.com/libvirt/libvirt-go"
 	libvirtxml "github.com/libvirt/libvirt-go-xml"
 	"path/filepath"
@@ -114,7 +114,7 @@ func (s *KvmService) GetVms() (vms []domain.Vm) {
 	return vms
 }
 
-func (s *KvmService) AddExportVmTask(req v1.ExportVmReq) (resp v1.ExportVmReq, err error) {
+func (s *KvmService) AddExportVmTask(req v1.ExportVmReq) (err error) {
 	po := agentModel.Task{
 		Vm:      req.Vm,
 		Backing: req.Backing,

@@ -1,9 +1,9 @@
 package _db
 
 import (
-	agentConf "github.com/easysoft/zv/internal/pkg/conf"
-	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
+	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
+	_fileUtils "github.com/easysoft/zagent/pkg/lib/file"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
