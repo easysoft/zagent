@@ -12,7 +12,12 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
+)
+
+var (
+	TaskMap sync.Map
 )
 
 func Start(task agentModel.Task, ch chan int) (pth string, status consts.TaskStatus) {
@@ -75,6 +80,8 @@ func Start(task agentModel.Task, ch chan int) (pth string, status consts.TaskSta
 					if resp.Err() != nil && resp.HTTPResponse.StatusCode != 416 {
 						fmt.Fprintf(os.Stderr, "Error download %s: %v\n", resp.Request.URL(), resp.Err())
 					} else {
+						TaskMap.Store(task.ID, resp.Progress())
+
 						fmt.Printf("Finish %s %d / %d bytes (%d%%)\n", resp.Filename, resp.BytesComplete(), resp.Size(), int(100*resp.Progress()))
 					}
 
@@ -89,6 +96,9 @@ func Start(task agentModel.Task, ch chan int) (pth string, status consts.TaskSta
 			for _, resp := range responses {
 				if resp != nil {
 					inProgress++
+
+					TaskMap.Store(task.ID, resp.Progress())
+
 					fmt.Printf("Downloading %s %d / %d bytes (%d%%)\u001B[K\n", resp.Filename, resp.BytesComplete(), resp.Size(), int(100*resp.Progress()))
 				}
 			}

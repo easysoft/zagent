@@ -15,7 +15,7 @@ func NewTaskCtrl() *TaskCtrl {
 	return &TaskCtrl{}
 }
 
-// @summary 按状态列出任务
+// @summary 获取任务状态
 // @Accept json
 // @Produce json
 // @Success 200 {object} _domain.Response{data=v1.ListTaskResp} "code = success | fail"

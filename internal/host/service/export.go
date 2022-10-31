@@ -24,7 +24,7 @@ func NewExportService() *ExportService {
 
 func (s *ExportService) StartTask(po agentModel.Task) {
 	ch := make(chan int, 1)
-	syncMap.Store(int(po.ID), ch)
+	channelMap.Store(int(po.ID), ch)
 
 	go func() {
 		filePath, xmlDesc, finalStatus := s.ExportVm(po)

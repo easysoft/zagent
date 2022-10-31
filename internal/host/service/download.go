@@ -10,18 +10,8 @@ import (
 	"sync"
 )
 
-const (
-	key = "urls"
-)
-
-const (
-	keyNotStart   = "not_start"
-	keyInProgress = "in_progress"
-	keyCompleted  = "completed"
-)
-
 var (
-	syncMap sync.Map
+	channelMap sync.Map
 )
 
 type DownloadService struct {
@@ -50,14 +40,17 @@ func (s *DownloadService) AddTasks(req v1.DownloadReq) (err error) {
 
 func (s *DownloadService) StartTask(po agentModel.Task) {
 	ch := make(chan int, 1)
-	syncMap.Store(int(po.ID), ch)
+	channelMap.Store(int(po.ID), ch)
 
 	go func() {
 		filePath, finalStatus := downloadUtils.Start(po, ch)
+
 		s.TaskRepo.UpdateStatus(po.ID, filePath, "", finalStatus)
 
 		po = s.TaskRepo.Get(po.ID)
 		s.TaskService.SubmitResult(po)
+
+		downloadUtils.TaskMap.Delete(po.ID)
 
 		if ch != nil {
 			close(ch)
@@ -72,7 +65,7 @@ func (s *DownloadService) CancelTask(url string) {
 		return
 	}
 
-	chVal, ok := syncMap.Load(task.ID)
+	chVal, ok := channelMap.Load(task.ID)
 
 	if !ok || chVal == nil {
 		return

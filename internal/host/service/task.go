@@ -7,6 +7,7 @@ import (
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	requestUtils "github.com/easysoft/zagent/internal/pkg/utils/request"
+	downloadUtils "github.com/easysoft/zagent/pkg/lib/download"
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
 	"time"
 )
@@ -64,6 +65,11 @@ func (s *TaskService) ListTask() (ret v1.ListTaskResp, err error) {
 		status := po.Status
 		if status == consts.Timeout || status == consts.Error {
 			status = consts.InProgress
+		}
+
+		rate, ok := downloadUtils.TaskMap.Load(po.ID)
+		if ok {
+			po.CompletionRate = rate.(float64)
 		}
 
 		if status == "created" {
