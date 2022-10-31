@@ -77,6 +77,7 @@ definitions:
       mac:
         type: string
       status:
+        description: Enums consts.VmStatus
         type: string
       vnc:
         type: integer
@@ -139,6 +140,7 @@ definitions:
       name:
         type: string
       status:
+        description: Enums consts.VmStatus
         type: string
       vnc:
         type: integer
@@ -178,10 +180,13 @@ definitions:
       code:
         type: string
       kvm:
+        description: Enums consts.HostServiceStatus
         type: string
       novnc:
+        description: Enums consts.HostServiceStatus
         type: string
       websockify:
+        description: Enums consts.HostServiceStatus
         type: string
     type: object
   v1.VmNotifyReq:
@@ -201,6 +206,7 @@ definitions:
   v1.VmPortMapReq:
     properties:
       type:
+        description: Enums consts.NatForwardType
         type: string
       vmIp:
         type: string
@@ -214,6 +220,7 @@ definitions:
       hostPort:
         type: integer
       type:
+        description: Enums consts.NatForwardType
         type: string
       vmIp:
         type: string

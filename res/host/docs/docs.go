@@ -696,6 +696,7 @@ var doc = `{
                     "type": "string"
                 },
                 "status": {
+                    "description": "Enums consts.VmStatus",
                     "type": "string"
                 },
                 "vnc": {
@@ -789,6 +790,7 @@ var doc = `{
                     "type": "string"
                 },
                 "status": {
+                    "description": "Enums consts.VmStatus",
                     "type": "string"
                 },
                 "vnc": {
@@ -849,12 +851,15 @@ var doc = `{
                     "type": "string"
                 },
                 "kvm": {
+                    "description": "Enums consts.HostServiceStatus",
                     "type": "string"
                 },
                 "novnc": {
+                    "description": "Enums consts.HostServiceStatus",
                     "type": "string"
                 },
                 "websockify": {
+                    "description": "Enums consts.HostServiceStatus",
                     "type": "string"
                 }
             }
@@ -885,6 +890,7 @@ var doc = `{
             "type": "object",
             "properties": {
                 "type": {
+                    "description": "Enums consts.NatForwardType",
                     "type": "string"
                 },
                 "vmIp": {
@@ -905,6 +911,7 @@ var doc = `{
                     "type": "integer"
                 },
                 "type": {
+                    "description": "Enums consts.NatForwardType",
                     "type": "string"
                 },
                 "vmIp": {

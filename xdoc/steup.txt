@@ -38,7 +38,6 @@ rm -rf res/vm/docs && swag init --parseDependency --parseInternal --parseDepth 5
 
 # 服务器上启动go-swagger服务。 https://github.com/go-swagger/go-swagger
 ps -ef | grep swagger | grep -v grep | awk '{print $2}' | xargs kill -9
-
 nohup swagger serve --no-open -p 50002 https://gitee.com/aaronchen2k/zagent/raw/main/res/host/docs/swagger.json > host.log 2>&1 &
 nohup swagger serve --no-open -p 50003 https://gitee.com/aaronchen2k/zagent/raw/main/res/vm/docs/swagger.json > vm.log 2>&1 &
 
