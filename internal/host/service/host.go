@@ -2,6 +2,7 @@ package hostAgentService
 
 import (
 	"encoding/json"
+	"github.com/easysoft/zagent/cmd/host/router/v1"
 	hostKvmService "github.com/easysoft/zagent/internal/host/service/kvm"
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	"github.com/easysoft/zagent/internal/pkg/const"
@@ -80,7 +81,7 @@ func (s *HostService) Register(isBusy bool) {
 	_logUtils.Info(string(hostBytes))
 
 	if ok {
-		respObj := domain.RegisterResp{}
+		respObj := v1.RegisterResp{}
 		err := json.Unmarshal(respBytes, &respObj)
 		if err == nil && respObj.Token != "" {
 			respObj.ExpiredDate, _ = _dateUtils.UnitToDate(respObj.ExpiredTimeUnix)

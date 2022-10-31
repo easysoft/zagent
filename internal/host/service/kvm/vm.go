@@ -114,7 +114,7 @@ func (s *KvmService) GetVms() (vms []domain.Vm) {
 	return vms
 }
 
-func (s *KvmService) AddExportVmTask(req v1.ExportVmReq) (resp v1.ExportVmReq, err error) {
+func (s *KvmService) AddExportVmTask(req v1.ExportVmReq) (err error) {
 	po := agentModel.Task{
 		Vm:      req.Vm,
 		Backing: req.Backing,

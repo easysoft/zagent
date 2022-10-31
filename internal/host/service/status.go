@@ -27,7 +27,7 @@ func NewStatusService() *StatusService {
 	return &StatusService{}
 }
 
-func (s *StatusService) Check(req v1.ServiceReq) (ret v1.CheckResp, err error) {
+func (s *StatusService) Check(req v1.ServiceCheckReq) (ret v1.ServiceCheckResp, err error) {
 	services := strings.Split(req.Services, ",")
 
 	if _stringUtils.StrInArr(consts.ServiceAll.ToString(), services) ||
@@ -50,7 +50,7 @@ func (s *StatusService) Check(req v1.ServiceReq) (ret v1.CheckResp, err error) {
 	return
 }
 
-func (s *StatusService) CheckKvm(ret *v1.CheckResp) (err error) {
+func (s *StatusService) CheckKvm(ret *v1.ServiceCheckResp) (err error) {
 	ret.Kvm = consts.HostServiceNotAvailable
 
 	defer func() {
@@ -74,7 +74,7 @@ func (s *StatusService) CheckKvm(ret *v1.CheckResp) (err error) {
 	return
 }
 
-func (s *StatusService) CheckNovnc(ret *v1.CheckResp) (err error) {
+func (s *StatusService) CheckNovnc(ret *v1.ServiceCheckResp) (err error) {
 	ret.Novnc = consts.HostServiceNotAvailable
 
 	// get :agentConf.Inst.NodePort/novnc
@@ -102,7 +102,7 @@ func (s *StatusService) CheckNovnc(ret *v1.CheckResp) (err error) {
 	return
 }
 
-func (s *StatusService) CheckWebsockify(ret *v1.CheckResp) (err error) {
+func (s *StatusService) CheckWebsockify(ret *v1.ServiceCheckResp) (err error) {
 	ret.Websockify = consts.HostServiceNotAvailable
 
 	timeout := time.Second

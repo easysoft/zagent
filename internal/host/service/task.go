@@ -26,8 +26,8 @@ func (s *TaskService) CheckTask() (err error) {
 	taskMap, _ := s.ListTask()
 
 	toStartNewTask := false
-	if len(taskMap[consts.InProgress]) > 0 {
-		runningTask := taskMap[consts.InProgress][0]
+	if len(taskMap.InProgress) > 0 {
+		runningTask := taskMap.InProgress[0]
 
 		if runningTask.TaskType == consts.DownloadImage &&
 			(s.IsError(runningTask) || s.IsTimeout(runningTask) && s.NeedRetry(runningTask)) {
@@ -41,8 +41,8 @@ func (s *TaskService) CheckTask() (err error) {
 		toStartNewTask = true
 	}
 
-	if toStartNewTask && len(taskMap[consts.Created]) > 0 {
-		newTask := taskMap[consts.Created][0]
+	if toStartNewTask && len(taskMap.Created) > 0 {
+		newTask := taskMap.Created[0]
 
 		if newTask.TaskType == consts.DownloadImage {
 			s.DownloadService.StartTask(newTask)
@@ -55,8 +55,8 @@ func (s *TaskService) CheckTask() (err error) {
 	return
 }
 
-func (s *TaskService) ListTask() (ret map[consts.TaskStatus][]agentModel.Task, err error) {
-	ret = map[consts.TaskStatus][]agentModel.Task{}
+func (s *TaskService) ListTask() (ret v1.ListTaskResp, err error) {
+	ret = v1.ListTaskResp{}
 
 	pos, _ := s.TaskRepo.Query()
 
@@ -66,7 +66,17 @@ func (s *TaskService) ListTask() (ret map[consts.TaskStatus][]agentModel.Task, e
 			status = consts.InProgress
 		}
 
-		ret[status] = append(ret[status], po)
+		if status == "created" {
+			ret.Created = append(ret.Created, po)
+		} else if status == "inProgress" {
+			ret.InProgress = append(ret.InProgress, po)
+		} else if status == "canceled" {
+			ret.Canceled = append(ret.Canceled, po)
+		} else if status == "completed" {
+			ret.Completed = append(ret.Completed, po)
+		} else if status == "failed" {
+			ret.Failed = append(ret.Failed, po)
+		}
 	}
 
 	return

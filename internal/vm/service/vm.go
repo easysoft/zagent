@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/easysoft/zagent/cmd/host/router/v1"
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	"github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/domain"
@@ -61,7 +62,7 @@ func (s *VmService) Check() {
 }
 
 func (s *VmService) Register(isBusy bool) (ok bool) {
-	vm := domain.VmRegisterReq{
+	vm := v1.VmRegisterReq{
 		MacAddress: agentConf.Inst.MacAddress,
 		Ip:         agentConf.Inst.NodeIp,
 	}
@@ -86,7 +87,7 @@ func (s *VmService) Register(isBusy bool) (ok bool) {
 	respBytes, ok := s.register(vm)
 
 	if ok {
-		respObj := domain.RegisterResp{}
+		respObj := v1.RegisterResp{}
 		err := json.Unmarshal(respBytes, &respObj)
 		if err == nil && respObj.Token != "" {
 			respObj.ExpiredDate, _ = _dateUtils.UnitToDate(respObj.ExpiredTimeUnix)
@@ -124,7 +125,7 @@ func (s *VmService) notifyHost() (secret, ip string, agentPortOnHost int, err er
 		uri)
 
 	_, macObj := _commonUtils.GetIp()
-	reqData := domain.VmNotifyReq{
+	reqData := v1.VmNotifyReq{
 		MacAddress: macObj.String(),
 	}
 
@@ -140,7 +141,7 @@ func (s *VmService) notifyHost() (secret, ip string, agentPortOnHost int, err er
 	}
 
 	respDataBytes, _ := json.Marshal(resp.Data)
-	respData := domain.VmNotifyResp{}
+	respData := v1.VmNotifyResp{}
 	err = json.Unmarshal(respDataBytes, &respData)
 	if err != nil {
 		return

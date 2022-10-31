@@ -114,7 +114,10 @@ func RemoveForward(vmIp string, vmPort int, typ consts.NatForwardType) (err erro
 	pth := filepath.Join(dir, name)
 
 	cmd := fmt.Sprintf("rm -rf %s", pth)
-	_shellUtils.ExeSysCmd(cmd)
+	out, err := _shellUtils.ExeSysCmd(cmd)
+	if err != nil {
+		err = errors.New(fmt.Sprintf("%s, error %s", out, err.Error()))
+	}
 
 	reloadNginx()
 

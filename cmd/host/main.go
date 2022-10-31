@@ -21,9 +21,9 @@ var (
 
 // @title ZAgent宿主机API文档
 // @version 1.0
-// @contact.name API Support
-// @contact.url https://github.com/easysoft/zv/issues
+// @contact.name Support
 // @contact.email 462626@qq.com
+// @contact.url https://github.com/easysoft/zv/issues
 func main() {
 	channel := make(chan os.Signal)
 	signal.Notify(channel, os.Interrupt, syscall.SIGTERM)

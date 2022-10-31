@@ -18,15 +18,13 @@ func NewDownloadCtrl() *DownloadCtrl {
 	return &DownloadCtrl{}
 }
 
-func (c *DownloadCtrl) ListTask(ctx iris.Context) {
-	data, _ := c.TaskService.ListTask()
-
-	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success", data))
-
-	return
-}
-
-func (c *DownloadCtrl) AddTasks(ctx iris.Context) {
+// @summary 添加下载任务
+// @Accept json
+// @Produce json
+// @Param DownloadReq body v1.DownloadReq true "Download Request Object"
+// @Success 200 {object} _domain.Response "code = success | fail"
+// @Router /api/v1/download/add [post]
+func (c *DownloadCtrl) Add(ctx iris.Context) {
 	req := v1.DownloadReq{}
 	err := ctx.ReadJSON(&req)
 	if err != nil {
@@ -40,7 +38,13 @@ func (c *DownloadCtrl) AddTasks(ctx iris.Context) {
 	return
 }
 
-func (c *DownloadCtrl) CancelTask(ctx iris.Context) {
+// @summary 强制终止下载任务
+// @Accept json
+// @Produce json
+// @Param DownloadCancelReq body v1.DownloadCancelReq true "Cancel Download Request Object"
+// @Success 200 {object} _domain.Response "code = success | fail"
+// @Router /api/v1/download/cancel [post]
+func (c *DownloadCtrl) Cancel(ctx iris.Context) {
 	req := v1.DownloadCancelReq{}
 	err := ctx.ReadJSON(&req)
 	if err != nil {
