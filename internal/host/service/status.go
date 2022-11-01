@@ -35,12 +35,16 @@ func (s *StatusService) Check(req v1.ServiceCheckReq) (ret v1.ServiceCheckResp, 
 
 		s.CheckKvm(&ret)
 
-	} else if _stringUtils.StrInArr(consts.ServiceAll.ToString(), services) ||
+	}
+
+	if _stringUtils.StrInArr(consts.ServiceAll.ToString(), services) ||
 		_stringUtils.StrInArr(consts.ServiceNovnc.ToString(), services) {
 
 		s.CheckNovnc(&ret)
 
-	} else if _stringUtils.StrInArr(consts.ServiceAll.ToString(), services) ||
+	}
+
+	if _stringUtils.StrInArr(consts.ServiceAll.ToString(), services) ||
 		_stringUtils.StrInArr(consts.ServiceWebsockify.ToString(), services) {
 
 		s.CheckWebsockify(&ret)
