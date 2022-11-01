@@ -1,6 +1,8 @@
 package agentConf
 
 import (
+	"path/filepath"
+
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	netUtils "github.com/easysoft/zagent/internal/pkg/utils/net"
 	_const "github.com/easysoft/zagent/pkg/const"
@@ -8,7 +10,6 @@ import (
 	_fileUtils "github.com/easysoft/zagent/pkg/lib/file"
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
 	_i118Utils "github.com/easysoft/zagent/pkg/lib/i118"
-	"path/filepath"
 )
 
 var (
@@ -36,6 +37,7 @@ func Init(app string) {
 	Inst.WorkDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(home, consts.AppName))
 
 	if Inst.RunMode == consts.RunModeHost {
+		consts.WorkDir = Inst.WorkDir
 		consts.DownloadDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.WorkDir, consts.FolderDownload))
 		consts.NovncDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.WorkDir, consts.FolderNovnc))
 		consts.WebsockifyDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.WorkDir, consts.FolderWebsockify))

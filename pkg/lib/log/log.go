@@ -2,16 +2,17 @@ package _logUtils
 
 import (
 	"fmt"
-	consts "github.com/easysoft/zagent/internal/pkg/const"
-	_const "github.com/easysoft/zagent/pkg/const"
-	_var "github.com/easysoft/zagent/pkg/var"
-	"github.com/rifflock/lfshook"
-	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"os"
 	"os/user"
 	"path/filepath"
 	"strings"
+
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	_const "github.com/easysoft/zagent/pkg/const"
+	_var "github.com/easysoft/zagent/pkg/var"
+	"github.com/rifflock/lfshook"
+	"github.com/sirupsen/logrus"
 )
 
 var logger *logrus.Logger
@@ -22,12 +23,16 @@ func Init(app string) {
 	}
 
 	usr, _ := user.Current()
-	fmt.Println("RunRemote as user " + usr.Username)
+	if consts.PrintLog {
+		fmt.Println("RunRemote as user " + usr.Username)
+	}
 
 	_var.WorkDir = addPathSepIfNeeded(filepath.Join(usr.HomeDir, consts.AppName))
 	logDir := addPathSepIfNeeded("log")
 	MkDirIfNeeded(logDir)
-	fmt.Println("Log dir is " + logDir)
+	if consts.PrintLog {
+		fmt.Println("Log dir is " + logDir)
+	}
 
 	logger = logrus.New()
 	logger.Out = ioutil.Discard
