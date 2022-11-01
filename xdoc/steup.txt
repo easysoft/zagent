@@ -41,6 +41,8 @@ ps -ef | grep swagger | grep -v grep | awk '{print $2}' | xargs kill -9
 nohup swagger serve --no-open -p 50002 https://gitee.com/aaronchen2k/zagent/raw/main/res/host/docs/swagger.json > host.log 2>&1 &
 nohup swagger serve --no-open -p 50003 https://gitee.com/aaronchen2k/zagent/raw/main/res/vm/docs/swagger.json > vm.log 2>&1 &
 
+qemu-img convert -O qcow2 download/jammy-server-cloudimg-amd64-disk-kvm.img download/jammy-server-cloudimg-amd64-disk-kvm.qcow2
+
 qemu-img create -f qcow2 \
     -o cluster_size=2M,backing_file=/home/aaron/zagent/kvm/download/win10.qcow2 \
     /home/aaron/zagent/kvm/image/test-1.qcow2 60G

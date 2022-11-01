@@ -109,7 +109,7 @@ func (s *TaskService) SubmitResult(task agentModel.Task) (err error) {
 			ZentaoTask: task.ZentaoTask,
 		}
 
-		_, err = _httpUtils.Post(url, data)
+		_, err = _httpUtils.Put(url, data)
 
 	} else if task.TaskType == consts.ExportVm {
 		url := requestUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/host/submitResult")
@@ -134,8 +134,8 @@ func (s *TaskService) IsError(po agentModel.Task) bool {
 
 func (s *TaskService) IsTimeout(po agentModel.Task) bool {
 	dur := time.Now().Unix() - po.StartTime.Unix()
-	return dur > 3
-	//return dur > consts.DownloadTimeout
+	//return dur > 3
+	return dur > consts.DownloadTimeout
 }
 
 func (s *TaskService) NeedRetry(po agentModel.Task) bool {

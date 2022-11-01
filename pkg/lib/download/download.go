@@ -20,7 +20,7 @@ var (
 	TaskMap sync.Map
 )
 
-func Start(task agentModel.Task, pth string, ch chan int) (status consts.TaskStatus, existFile string) {
+func Start(task agentModel.Task, filePath string, ch chan int) (status consts.TaskStatus, existFile string) {
 	fmt.Printf("Start to download %s ...\n", task.Url)
 
 	targetDir := consts.DownloadDir
@@ -126,17 +126,18 @@ ExitDownload:
 		status = consts.Canceled
 		fmt.Printf("Force to terminate download %s.\n", task.Url)
 	} else {
+		task.Path = filePath
+
 		if checkMd5(task) {
 			status = consts.Completed
-			pth = responses[0].Filename
 
 			if task.Md5 != "" {
 				saveMd5FromRequest(&task, targetDir)
 			}
 
-			fmt.Printf("Successfully download %s to %s.\n", task.Url, pth)
+			fmt.Printf("Successfully download %s to %s.\n", task.Url, task.Path)
 		} else {
-			status = consts.Failed
+			status = consts.Error
 			fmt.Printf("Failed to download %s.\n", task.Url)
 		}
 	}
@@ -193,7 +194,7 @@ func saveMd5FromRequest(task *agentModel.Task, dir string) (err error) {
 	return
 }
 
-func findSameFile(task agentModel.Task, dir string) (pth string) {
+func findSameFile(task agentModel.Task, dir string) (existFile string) {
 	files, _ := ioutil.ReadDir(dir)
 
 	for _, fi := range files {
@@ -207,7 +208,7 @@ func findSameFile(task agentModel.Task, dir string) (pth string) {
 		md5 := _fileUtils.ReadFile(md5FilePath)
 
 		if md5 == task.Md5 {
-			pth = md5FilePath
+			existFile = strings.Replace(md5FilePath, ".md5", "", -1)
 			return
 		}
 	}
