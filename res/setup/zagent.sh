@@ -1,8 +1,29 @@
 #!/bin/bash
 ck_ok(){
     if [ $? -ne 0 ];then
+        print_res
         echo -e "\033[31m $1 error. \033[0m"
         exit 1
+    fi
+}
+print_res(){
+    if $is_install_zagent && $is_success_zagent;then
+        echo -e "\033[32m Install zagent success \033[0m"
+        if [ -z $secret ];then
+            echo -e "\033[31m Secret is empty, zagent start fail \033[0m"
+        fi
+    fi
+    if $is_install_nginx && $is_success_nginx;then
+        echo -e "\033[32m Install nginx success \033[0m"
+    fi
+    if $is_install_kvm && $is_success_kvm;then
+        echo -e "\033[32m Install kvm success \033[0m"
+    fi
+    if $is_install_novnc && $is_success_novnc;then
+        echo -e "\033[32m Install novnc success \033[0m"
+    fi
+    if $is_install_websockify && $is_success_websockify;then
+        echo -e "\033[32m Install websockify success \033[0m"
     fi
 }
 command_exist(){
@@ -315,6 +336,7 @@ install()
         create_dir ${HOME}/zagent
         create_dir ${HOME}/zagent/zagent
         install_zagent
+        is_success_zagent=true
     fi
     
     if $is_install_nginx;then
@@ -322,28 +344,46 @@ install()
         create_dir ${HOME}/zagent/nginx/conf.http.d
         create_dir ${HOME}/zagent/nginx/conf.stream.d
         install_nginx
+        is_success_nginx=true
     fi
     
     if $is_install_kvm;then
         create_dir ${HOME}/zagent/kvm
         create_dir ${HOME}/zagent/token
         install_kvm
+        is_success_kvm=true
     fi
     
     if $is_install_novnc;then
         install_novnc
+        is_success_novnc=true
     fi
     
     if $is_install_websockify;then
         create_dir ${HOME}/zagent/websockify
         install_websockify
+        is_success_websockify=true
     fi
     
-    echo -e "\033[32m Install ${soft} success \033[0m"
-
-    if [ -z $secret ];then
-        echo -e "\033[31m Secret is empty, zagent start fail \033[0m"
-    fi
+    print_res
+    # if $is_install_zagent;then
+    #     echo -e "\033[32m Install zagent success \033[0m"
+    #     if [ -z $secret ];then
+    #         echo -e "\033[31m Secret is empty, zagent start fail \033[0m"
+    #     fi
+    # fi
+    # if $is_install_nginx;then
+    #     echo -e "\033[32m Install nginx success \033[0m"
+    # fi
+    # if $is_install_kvm;then
+    #     echo -e "\033[32m Install kvm success \033[0m"
+    # fi
+    # if $is_install_novnc;then
+    #     echo -e "\033[32m Install novnc success \033[0m"
+    # fi
+    # if $is_install_websockify;then
+    #     echo -e "\033[32m Install websockify success \033[0m"
+    # fi
 }
 
 if [ ! -n "$(egrep -o "(vmx|svm)" /proc/cpuinfo)" ];then
@@ -363,6 +403,13 @@ is_install_nginx=true
 is_install_kvm=true
 is_install_novnc=true
 is_install_websockify=true
+
+is_success_zagent=false
+is_success_nginx=false
+is_success_kvm=false
+is_success_novnc=false
+is_success_websockify=false
+
 soft="zagent,nginx,kvm,novnc,websockify"
 force=false
 secret=""
