@@ -297,7 +297,7 @@ install_websockify()
     
     ck_ok "Install websockify"
     
-    nohup ./run --token-plugin TokenFile --token-source ../token/ 6080 > /dev/null 2>&1 &
+    nohup ${HOME}/zagent/websockify/run --token-plugin TokenFile --token-source ../token/ 6080 > /dev/null 2>&1 &
 }
 
 
