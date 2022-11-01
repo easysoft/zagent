@@ -9,6 +9,7 @@ import (
 	"github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/domain"
 	natHelper "github.com/easysoft/zagent/internal/pkg/utils/net"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 	"github.com/libvirt/libvirt-go"
 	libvirtxml "github.com/libvirt/libvirt-go-xml"
@@ -52,13 +53,25 @@ func (s *KvmService) CreateVmFromImage(req *v1.CreateVmReq, removeSameName bool)
 	}
 
 	cmdCreateImage := fmt.Sprintf(consts.CmdCreateImage, targetBacking, srcFile)
-	_shellUtils.ExeShell(cmdCreateImage)
+	out, err := _shellUtils.ExeShell(cmdCreateImage)
+	if err != nil {
+		_logUtils.Infof("exec cmd '%s' err, output %s, error %s", cmdCreateImage, out, err.Error())
+		return
+	}
 
-	cmdCreateVm := fmt.Sprintf(consts.CmdCreateVm, vmName, cpuCores, ramSize, diskSize)
-	_shellUtils.ExeShell(cmdCreateVm)
+	cmdCreateVm := fmt.Sprintf(consts.CmdCreateVm, vmName, cpuCores, ramSize, srcFile, diskSize)
+	out, err = _shellUtils.ExeShell(cmdCreateVm)
+	if err != nil {
+		_logUtils.Infof("exec cmd '%s' err, output %s, error %s", cmdCreateVm, out, err.Error())
+		return
+	}
 
 	cmdStartVm := fmt.Sprintf(consts.CmdStartVm, vmName)
-	_shellUtils.ExeShell(cmdStartVm)
+	out, err = _shellUtils.ExeShell(cmdStartVm)
+	if err != nil {
+		_logUtils.Infof("exec cmd '%s' err, output %s, error %s", cmdStartVm, out, err.Error())
+		return
+	}
 
 	dom, err = s.LibvirtService.GetVm(vmName)
 	if err != nil {
