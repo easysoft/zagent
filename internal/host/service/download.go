@@ -6,7 +6,6 @@ import (
 	hostRepo "github.com/easysoft/zagent/internal/host/repo"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	downloadUtils "github.com/easysoft/zagent/pkg/lib/download"
-	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"sync"
 )
 
@@ -42,7 +41,7 @@ func (s *DownloadService) AddTasks(req []v1.DownloadReq) (err error) {
 
 func (s *DownloadService) StartTask(po agentModel.Task) {
 	ch := make(chan int, 1)
-	channelMap.Store(int(po.ID), ch)
+	channelMap.Store(po.ID, ch)
 
 	go func() {
 		filePath := downloadUtils.GetPath(po)
@@ -56,7 +55,7 @@ func (s *DownloadService) StartTask(po agentModel.Task) {
 
 		s.TaskRepo.UpdateStatus(po.ID, filePath, 1, "", finalStatus, false, true)
 
-		po = s.TaskRepo.Get(po.ID)
+		po, _ = s.TaskRepo.Get(po.ID)
 		s.TaskService.SubmitResult(po)
 
 		downloadUtils.TaskMap.Delete(po.ID)
@@ -67,14 +66,8 @@ func (s *DownloadService) StartTask(po agentModel.Task) {
 	}()
 }
 
-func (s *DownloadService) CancelTask(url string) {
-	task, err := s.TaskRepo.GetByUrl(url)
-	if err != nil {
-		_logUtils.Infof("can not find task %s to cancel.")
-		return
-	}
-
-	chVal, ok := channelMap.Load(task.ID)
+func (s *DownloadService) CancelTask(taskId uint) {
+	chVal, ok := channelMap.Load(taskId)
 
 	if !ok || chVal == nil {
 		return
@@ -90,8 +83,11 @@ func (s *DownloadService) CancelTask(url string) {
 }
 
 func (s *DownloadService) RestartTask(po agentModel.Task) (ret bool) {
-	s.CancelTask(po.Url)
+	s.CancelTask(po.ID)
+
 	s.StartTask(po)
+
+	s.TaskRepo.AddRetry(po)
 
 	return
 }

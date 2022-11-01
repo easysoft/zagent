@@ -52,7 +52,7 @@ func (c *DownloadCtrl) Cancel(ctx iris.Context) {
 		return
 	}
 
-	c.DownloadService.CancelTask(req.Url)
+	c.DownloadService.CancelTask(uint(req.Id))
 
 	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success", nil))
 	return

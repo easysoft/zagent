@@ -15,5 +15,5 @@ type DownloadResp struct {
 }
 
 type DownloadCancelReq struct {
-	Url string `json:"url"`
+	Id int `json:"id"`
 }

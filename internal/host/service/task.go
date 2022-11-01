@@ -30,12 +30,15 @@ func (s *TaskService) CheckTask() (err error) {
 	if len(taskMap.InProgress) > 0 {
 		runningTask := taskMap.InProgress[0]
 
-		if runningTask.TaskType == consts.DownloadImage &&
-			(s.IsError(runningTask) || s.IsTimeout(runningTask) && s.NeedRetry(runningTask)) {
-			s.DownloadService.RestartTask(runningTask)
-		} else {
-			s.TaskRepo.SetFailed(runningTask)
-			toStartNewTask = true
+		if runningTask.TaskType == consts.DownloadImage {
+			if s.IsError(runningTask) || s.IsTimeout(runningTask) {
+				if s.NeedRetry(runningTask) {
+					s.DownloadService.RestartTask(runningTask)
+				} else {
+					s.TaskRepo.SetFailed(runningTask)
+					toStartNewTask = true
+				}
+			}
 		}
 
 	} else {
@@ -130,7 +133,8 @@ func (s *TaskService) IsError(po agentModel.Task) bool {
 }
 
 func (s *TaskService) IsTimeout(po agentModel.Task) bool {
-	return time.Now().Unix()-po.StartTime.Unix() > consts.DownloadTimeout
+	dur := time.Now().Unix() - po.StartTime.Unix()
+	return dur > 3 // consts.DownloadTimeout
 }
 
 func (s *TaskService) NeedRetry(po agentModel.Task) bool {

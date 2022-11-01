@@ -58,6 +58,7 @@ func Start(task agentModel.Task, pth string, ch chan int) (status consts.TaskSta
 		case <-ch:
 			isCanceled = true
 			goto ExitDownload
+
 		default:
 		}
 
@@ -116,6 +117,9 @@ ExitDownload:
 	t.Stop()
 
 	if isCanceled {
+		responses[0] = nil
+		completed++
+
 		status = consts.Canceled
 		fmt.Printf("Force to terminate download %s.\n", task.Url)
 	} else {

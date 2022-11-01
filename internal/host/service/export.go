@@ -24,7 +24,6 @@ func NewExportService() *ExportService {
 
 func (s *ExportService) StartTask(po agentModel.Task) {
 	ch := make(chan int, 1)
-	channelMap.Store(int(po.ID), ch)
 
 	go func() {
 		filePath := filepath.Join(consts.FolderBacking, po.Name)
@@ -35,7 +34,7 @@ func (s *ExportService) StartTask(po agentModel.Task) {
 
 		s.TaskRepo.UpdateStatus(po.ID, filePath, 0, xmlDesc, finalStatus, false, true)
 
-		po = s.TaskRepo.Get(po.ID)
+		po, _ = s.TaskRepo.Get(po.ID)
 		s.TaskService.SubmitResult(po)
 
 		if ch != nil {

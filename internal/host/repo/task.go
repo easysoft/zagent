@@ -28,12 +28,12 @@ func (r *TaskRepo) Query() (pos []agentModel.Task, err error) {
 	return
 }
 
-func (r *TaskRepo) Get(id uint) (po agentModel.Task) {
+func (r *TaskRepo) Get(id uint) (po agentModel.Task, err error) {
 	r.DB.Model(&agentModel.Task{}).Preload("Environments", "NOT deleted").Where("id = ?", id).First(&po)
 
 	return
 }
-func (r *TaskRepo) GetDetail(id uint) (po agentModel.Task) {
+func (r *TaskRepo) GetDetail(id uint) (po agentModel.Task, err error) {
 	r.DB.Model(&po).
 		Where("id = ?", id).First(&po)
 
@@ -94,5 +94,11 @@ func (r *TaskRepo) Delete(id uint) (err error) {
 func (r *TaskRepo) SetFailed(po agentModel.Task) (err error) {
 	r.DB.Model(&agentModel.Task{}).Where("id=?", po.ID).Updates(
 		map[string]interface{}{"status": consts.Failed, "timeout_time": time.Now()})
+	return
+}
+
+func (r *TaskRepo) AddRetry(po agentModel.Task) (err error) {
+	r.DB.Model(&agentModel.Task{}).Where("id=?", po.ID).Updates(
+		map[string]interface{}{"retry": gorm.Expr("retry + ?", 1)})
 	return
 }
