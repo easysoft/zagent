@@ -67,9 +67,9 @@ func (r *Router) App() {
 			})
 
 			v1.PartyFunc("/kvm", func(client iris.Party) {
-				//client.Get("/listTmpl", r.KvmCtrl.ListTmpl).Name = "列出KVM虚拟机镜像"
 				client.Post("/create", r.KvmCtrl.Create).Name = "创建KVM虚拟机"
-				client.Post("/clone", r.KvmCtrl.Clone).Name = "克隆KVM虚拟机"
+				//client.Post("/clone", r.KvmCtrl.Clone).Name = "克隆KVM虚拟机"
+				//client.Get("/listTmpl", r.KvmCtrl.ListTmpl).Name = "列出KVM虚拟机镜像"
 
 				client.Post("/{name:string}/destroy", r.KvmCtrl.Destroy).Name = "摧毁KVM虚拟机"
 				client.Post("/{name:string}/reboot", r.KvmCtrl.Reboot).Name = "重启KVM虚拟机"

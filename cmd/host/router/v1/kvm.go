@@ -10,8 +10,8 @@ type CreateVmReq struct {
 	Os   string `json:"os" enums:"win10,ubuntu20.04"` // From 'osinfo-query os' command
 
 	Cpu    int `json:"cpu"`
-	Memory int `json:"memory"`
-	Disk   int `json:"disk"`
+	Memory int `json:"memory"` // Unit G
+	Disk   int `json:"disk"`   // Unit G
 
 	TaskId string `json:"taskId"`
 }
@@ -41,8 +41,8 @@ type CloneVmReq struct {
 	VmSrc        string `json:"vmSrc" example:"test-win10-x64-pro-zh_cn"`
 
 	VmCpu        uint `json:"vmCpu" example:"3"`
-	VmMemorySize uint `json:"vmMemorySize" example:"5120000"`
-	VmDiskSize   uint `json:"vmDiskSize" example:"30000"`
+	VmMemorySize uint `json:"vmMemorySize" example:"5"` // Unit G
+	VmDiskSize   uint `json:"vmDiskSize" example:"60"`  // Unit G
 
 	//StartAfterCreated bool `json:"startAfterCreated"`
 }

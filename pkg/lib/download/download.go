@@ -20,7 +20,7 @@ var (
 	TaskMap sync.Map
 )
 
-func Start(task agentModel.Task, pth string, ch chan int) (status consts.TaskStatus, existFile string) {
+func Start(task agentModel.Task, filePath string, ch chan int) (status consts.TaskStatus, existFile string) {
 	fmt.Printf("Start to download %s ...\n", task.Url)
 
 	targetDir := consts.DownloadDir
@@ -126,15 +126,16 @@ ExitDownload:
 		status = consts.Canceled
 		fmt.Printf("Force to terminate download %s.\n", task.Url)
 	} else {
+		task.Path = filePath
+
 		if checkMd5(task) {
 			status = consts.Completed
-			pth = responses[0].Filename
 
 			if task.Md5 != "" {
 				saveMd5FromRequest(&task, targetDir)
 			}
 
-			fmt.Printf("Successfully download %s to %s.\n", task.Url, pth)
+			fmt.Printf("Successfully download %s to %s.\n", task.Url, task.Path)
 		} else {
 			status = consts.Failed
 			fmt.Printf("Failed to download %s.\n", task.Url)

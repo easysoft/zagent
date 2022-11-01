@@ -69,48 +69,48 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 	return
 }
 
-// Clone
-// @summary 克隆KVM虚拟机
-// @Accept json
-// @Produce json
-// @Param CloneVmReq body v1.CloneVmReq true "Kvm Clone Request Object"
-// @Success 200 {object} _domain.Response{data=v1.KvmResp} "code = success | fail"
-// @Router /api/v1/kvm/clone [post]
-func (c *KvmCtrl) Clone(ctx iris.Context) {
-	req := v1.CloneVmReq{}
-	err := ctx.ReadJSON(&req)
-	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
-		return
-	}
-
-	if req.VmSrc == "" {
-		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, "request vmSrc field can not be empty.", nil))
-		return
-	}
-
-	dom, vmIp, vmVncPort, vmAgentPortMapped, vmRawPath, vmBackingPath, err := c.LibvirtService.CloneVm(&req, true)
-
-	if err != nil {
-		ctx.JSON(_httpUtils.RespData(consts.ResultFail, "fail to clone vm", err))
-		return
-	}
-
-	vmName, _ := dom.GetName()
-	vm := v1.KvmResp{
-		Name:    vmName,
-		Ip:      vmIp,
-		Mac:     req.VmMacAddress,
-		Agent:   vmAgentPortMapped,
-		Vnc:     vmVncPort,
-		Image:   vmRawPath,
-		Backing: vmBackingPath,
-	}
-
-	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to clone vm", vm))
-
-	return
-}
+//// Clone
+//// @summary 克隆KVM虚拟机
+//// @Accept json
+//// @Produce json
+//// @Param CloneVmReq body v1.CloneVmReq true "Kvm Clone Request Object"
+//// @Success 200 {object} _domain.Response{data=v1.KvmResp} "code = success | fail"
+//// @Router /api/v1/kvm/clone [post]
+//func (c *KvmCtrl) Clone(ctx iris.Context) {
+//	req := v1.CloneVmReq{}
+//	err := ctx.ReadJSON(&req)
+//	if err != nil {
+//		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+//		return
+//	}
+//
+//	if req.VmSrc == "" {
+//		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, "request vmSrc field can not be empty.", nil))
+//		return
+//	}
+//
+//	dom, vmIp, vmVncPort, vmAgentPortMapped, vmRawPath, vmBackingPath, err := c.LibvirtService.CloneVm(&req, true)
+//
+//	if err != nil {
+//		ctx.JSON(_httpUtils.RespData(consts.ResultFail, "fail to clone vm", err))
+//		return
+//	}
+//
+//	vmName, _ := dom.GetName()
+//	vm := v1.KvmResp{
+//		Name:    vmName,
+//		Ip:      vmIp,
+//		Mac:     req.VmMacAddress,
+//		Agent:   vmAgentPortMapped,
+//		Vnc:     vmVncPort,
+//		Image:   vmRawPath,
+//		Backing: vmBackingPath,
+//	}
+//
+//	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to clone vm", vm))
+//
+//	return
+//}
 
 // Destroy
 // @summary 摧毁KVM虚拟机
