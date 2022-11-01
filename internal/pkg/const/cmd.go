@@ -17,6 +17,7 @@ const (
 --boot hd \
 --graphics vnc \
 --os-variant generic \
+--noautoconsole \
 --noreboot \
 --wait -1 \
 --force 
