@@ -47,6 +47,8 @@ func Init(app string) {
 		Inst.DirBaking = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, consts.AppName, consts.FolderBacking))
 		Inst.DirImage = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, consts.AppName, consts.FolderImage))
 
+		_fileUtils.MkDirIfNeeded(consts.DownloadDir)
+
 		_fileUtils.MkDirIfNeeded(Inst.DirToken)
 		_fileUtils.MkDirIfNeeded(Inst.DirIso)
 		_fileUtils.MkDirIfNeeded(Inst.DirBaking)
