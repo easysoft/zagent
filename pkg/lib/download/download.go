@@ -137,7 +137,7 @@ ExitDownload:
 
 			fmt.Printf("Successfully download %s to %s.\n", task.Url, task.Path)
 		} else {
-			status = consts.Failed
+			status = consts.Error
 			fmt.Printf("Failed to download %s.\n", task.Url)
 		}
 	}
@@ -194,7 +194,7 @@ func saveMd5FromRequest(task *agentModel.Task, dir string) (err error) {
 	return
 }
 
-func findSameFile(task agentModel.Task, dir string) (pth string) {
+func findSameFile(task agentModel.Task, dir string) (existFile string) {
 	files, _ := ioutil.ReadDir(dir)
 
 	for _, fi := range files {
@@ -208,7 +208,7 @@ func findSameFile(task agentModel.Task, dir string) (pth string) {
 		md5 := _fileUtils.ReadFile(md5FilePath)
 
 		if md5 == task.Md5 {
-			pth = md5FilePath
+			existFile = strings.Replace(md5FilePath, ".md5", "", -1)
 			return
 		}
 	}
