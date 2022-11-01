@@ -1,6 +1,8 @@
 package agentConf
 
 import (
+	"path/filepath"
+
 	consts "github.com/easysoft/zv/internal/pkg/const"
 	netUtils "github.com/easysoft/zv/internal/pkg/utils/net"
 	_const "github.com/easysoft/zv/pkg/const"
@@ -8,7 +10,6 @@ import (
 	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
 	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
 	_i118Utils "github.com/easysoft/zv/pkg/lib/i118"
-	"path/filepath"
 )
 
 var (
@@ -36,6 +37,7 @@ func Init(app string) {
 	Inst.WorkDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(home, consts.AppName))
 
 	if Inst.RunMode == consts.RunModeHost {
+		consts.WorkDir = Inst.WorkDir
 		consts.NovncDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.WorkDir, consts.FolderNovnc))
 		consts.WebsockifyDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.WorkDir, consts.FolderWebsockify))
 

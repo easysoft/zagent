@@ -3,36 +3,50 @@ package _logUtils
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/fatih/color"
 	"log"
 	"strings"
+
+	consts "github.com/easysoft/zv/internal/pkg/const"
+	"github.com/fatih/color"
 )
 
 func Info(str string) {
 	logger.Infoln(str)
-	log.Println(str)
+	if consts.PrintLog {
+		log.Println(str)
+	}
 }
 func Infof(str string, args ...interface{}) {
 	logger.Infof(str, args...)
-	log.Printf(str+"\n", args...)
+	if consts.PrintLog {
+		log.Printf(str+"\n", args...)
+	}
 }
 
 func Warn(str string) {
 	logger.Warnln(str)
-	log.Println(str)
+	if consts.PrintLog {
+		log.Println(str)
+	}
 }
 func Warnf(str string, args ...interface{}) {
 	logger.Warnf(str, args...)
-	log.Printf(str+"\n", args...)
+	if consts.PrintLog {
+		log.Printf(str+"\n", args...)
+	}
 }
 
 func Error(str string) {
 	logger.Errorln(str)
-	log.Println(str)
+	if consts.PrintLog {
+		log.Println(str)
+	}
 }
 func Errorf(str string, args ...interface{}) {
 	logger.Errorf(str, args...)
-	log.Printf(str+"\n", args...)
+	if consts.PrintLog {
+		log.Printf(str+"\n", args...)
+	}
 }
 
 func Print(str string) {

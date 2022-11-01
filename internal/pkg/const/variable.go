@@ -2,10 +2,11 @@ package consts
 
 import (
 	"fmt"
-	_const "github.com/easysoft/zv/pkg/const"
 	"path/filepath"
 	"sync"
 	"time"
+
+	_const "github.com/easysoft/zv/pkg/const"
 )
 
 var ()
@@ -17,6 +18,7 @@ var (
 
 	NovncDir      = ""
 	WebsockifyDir = ""
+	WorkDir       = ""
 
 	AuthSecret  = ""
 	AuthToken   = ""
@@ -26,4 +28,6 @@ var (
 	ExistVncPortMap  = sync.Map{}
 	ExistHttpPortMap = sync.Map{}
 	ExistSshPortMap  = sync.Map{}
+
+	PrintLog = true
 )

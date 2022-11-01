@@ -81,10 +81,10 @@ install_zagent()
         echo "unZip zagent"
         unzip -d ./zagent -o ./agent.zip
         ck_ok "unZip Zagent"
-        cd zagent
-        nohup ./ztf -P 8085 &
+        cp ./zagent/ztf zagent-host
+        nohup ./zagent-host -P 8085 &
     fi
-    /usr/bin/rm ${HOME}/zagent/agent.zip
+    /usr/bin/rm -rf ${HOME}/zagent
 }
 
 download_novnc()
