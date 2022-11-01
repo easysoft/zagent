@@ -14,6 +14,7 @@ command_exist(){
 }
 is_active(){
     check_command=`sudo systemctl is-active $1`
+    
     if [ ${check_command} == 'active' ]; then
         return 0
     else
@@ -24,6 +25,7 @@ create_dir(){
     if [ ! -d $1 ];then
         mkdir $1
     fi
+    
     if [ ! -d $1 ];then
         echo "mkdir $1 error."
         exit 1
@@ -42,6 +44,7 @@ create_all_dir(){
 download_zagent()
 {
     cd  ${HOME}/zagent
+    
     if [ -f agent.zip ]
     then
         echo "agent.zip already exist"
@@ -59,10 +62,12 @@ download_zagent()
     ck_ok "download zagent"
     echo "Check md5"
     zip_md5=`md5sum agent.zip|awk '{print $1}'`
+    
     if [ ${zip_md5} == '2b3bd1cb0bedb5abe150220cc1895e5d' ]
     then
         return 0
     fi
+    
     return 1
 }
 install_zagent()
@@ -73,23 +78,29 @@ install_zagent()
             return
         fi
     fi
+    
     download_zagent
     ck_ok "download Zagent"
     cd  ${HOME}/zagent
+    
     if [ -f agent.zip ]
     then
         echo "unZip zagent"
         unzip -d ./zagent -o ./agent.zip
         ck_ok "unZip Zagent"
         cp ./zagent/ztf zagent-host
-        nohup ./zagent-host -P 8085 &
+        if [[ -n $secret ]];then
+            nohup ./zagent-host -P 8085 -secret $secret &
+        fi
     fi
-    /usr/bin/rm -rf ${HOME}/zagent
+    
+    /usr/bin/rm -rf ${HOME}/zagent/zagent
 }
 
 download_novnc()
 {
     cd  ${HOME}/zagent
+    
     if [ -f novnc.zip ]
     then
         echo "novnc.zip already exist"
@@ -107,10 +118,12 @@ download_novnc()
     ck_ok "download novnc"
     echo "Check md5"
     zip_md5=`md5sum novnc.zip|awk '{print $1}'`
+    
     if [ ${zip_md5} == '2b3bd1cb0bedb5abe150220cc1895e5d' ]
     then
         return 0
     fi
+    
     return 1
 }
 install_novnc()
@@ -121,21 +134,25 @@ install_novnc()
             return
         fi
     fi
+    
     download_novnc
     ck_ok "download novnc"
     cd  ${HOME}/zagent
+    
     if [ -f novnc.zip ]
     then
         echo "unZip novnc"
         unzip -o -d ./novnc ./novnc.zip
         ck_ok "unZip novnc"
     fi
+    
     /usr/bin/mv ${HOME}/zagent/vnc_lite.html ${HOME}/zagent/index.html
     /usr/bin/rm ${HOME}/zagent/novnc.zip
 }
 download_nginx()
 {
     cd  /usr/local/src
+    
     if [ -f nginx-1.23.0.tar.gz ]
     then
         echo "nginx-1.23.0.tar.gz already exist"
@@ -153,6 +170,7 @@ download_nginx()
     ck_ok "download Nginx"
     echo "check md5"
     zip_md5=`md5sum nginx-1.23.0.tar.gz|awk '{print $1}'`
+    
     if [ ${zip_md5} == 'e8768e388f26fb3d56a3c88055345219' ]
     then
         return 0
@@ -169,13 +187,13 @@ install_nginx()
             return
         fi
     fi
+    
     download_nginx
     cd /usr/local/src
     echo "Unzip Nginx"
     sudo tar zxf nginx-1.23.0.tar.gz
     ck_ok "Zip Nginx"
     cd nginx-1.23.0
-    
     
     echo "Install depends"
     ##ubuntu
@@ -194,14 +212,11 @@ install_nginx()
     sudo ./configure --prefix=/usr/local/nginx  --with-http_ssl_module --with-http_stub_status_module --with-stream
     ck_ok "Configure Nginx"
     
-    
     echo "Make&install"
     sudo make && sudo make install
     ck_ok "Make&install"
     
-    
     echo "Edit systemd config"
-    
     
 cat > /tmp/nginx.service <<EOF
 [Unit]
@@ -225,13 +240,16 @@ EOF
     ck_ok "edit nginx.service"
     
     sudo ln -s /usr/local/nginx/sbin/nginx /usr/local/bin/
+    
     echo "Load service"
     sudo systemctl unmask nginx.service
     sudo  systemctl daemon-reload
     sudo systemctl enable nginx
+    
     echo "Start Nginx"
     sudo systemctl start nginx
     ck_ok "Start Nginx"
+    
     sudo /usr/bin/rm /usr/local/src/nginx-1.23.0.tar.gz
 }
 
@@ -243,6 +261,7 @@ install_kvm()
             return
         fi
     fi
+    
     echo "Install kvm"
     sudo apt reinstall -y qemu-kvm libvirt-daemon-system libvirt-clients libvirt-dev qemu virt-manager bridge-utils libosinfo-bin
     ck_ok "Install kvm"
@@ -259,19 +278,25 @@ install_websockify()
             return
         fi
     fi
+    
     echo "Install websockify"
+    
     if ! command_exist git;then
         echo "Install git"
         sudo apt install  -y git
         ck_ok "apt install git"
     fi
+    
     cd ${HOME}/zagent/websockify
+    
     if [ "`ls -A ${HOME}/zagent/websockify`" = "" ]; then
         git clone https://github.com/novnc/websockify.git ./
     else
         git pull
     fi
+    
     ck_ok "Install websockify"
+    
     nohup ./run --token-plugin TokenFile --token-source ../token/ 6080 &
 }
 
@@ -291,25 +316,34 @@ install()
         create_dir ${HOME}/zagent/zagent
         install_zagent
     fi
+    
     if $is_install_nginx;then
         create_dir ${HOME}/zagent/nginx
         create_dir ${HOME}/zagent/nginx/conf.http.d
         create_dir ${HOME}/zagent/nginx/conf.stream.d
         install_nginx
     fi
+    
     if $is_install_kvm;then
         create_dir ${HOME}/zagent/kvm
         create_dir ${HOME}/zagent/token
         install_kvm
     fi
+    
     if $is_install_novnc;then
         install_novnc
     fi
+    
     if $is_install_websockify;then
         create_dir ${HOME}/zagent/websockify
         install_websockify
     fi
+    
     echo -e "\033[32m Install ${soft} success \033[0m"
+
+    if [ -z $secret ];then
+        echo -e "\033[31m Secret is empty, zagent start fail \033[0m"
+    fi
 }
 
 if [ ! -n "$(egrep -o "(vmx|svm)" /proc/cpuinfo)" ];then
@@ -318,6 +352,7 @@ if [ ! -n "$(egrep -o "(vmx|svm)" /proc/cpuinfo)" ];then
 fi
 
 source /etc/os-release
+
 if [ ${ID} != "ubuntu" ];then
     echo -e "\033[31m Not support os \033[0m"
     exit 1
@@ -330,7 +365,9 @@ is_install_novnc=true
 is_install_websockify=true
 soft="zagent,nginx,kvm,novnc,websockify"
 force=false
-while getopts ":s:r" optname
+secret=""
+
+while getopts ":k:s:r" optname
 do
     case "$optname" in
         "s")
@@ -360,6 +397,9 @@ do
         ;;
         "r")
             force=true
+        ;;
+        "k")
+            secret=$OPTARG
         ;;
         *)
             echo "Unknown error while processing options"

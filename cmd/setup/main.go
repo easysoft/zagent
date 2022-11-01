@@ -15,6 +15,7 @@ var (
 	softList     string
 	forceInstall bool
 	check        bool
+	secret       string
 )
 
 func main() {
@@ -22,6 +23,7 @@ func main() {
 	flag.StringVar(&softList, "s", "", "")
 	flag.BoolVar(&forceInstall, "r", false, "")
 	flag.BoolVar(&check, "c", false, "")
+	flag.StringVar(&secret, "secret", "", "")
 	flag.Parse()
 
 	consts.PrintLog = false
@@ -42,19 +44,19 @@ func main() {
 		_checkUtils.CheckPrint("websockify", status)
 	} else if softList != "" {
 		consts.PrintLog = true
-		cmd := fmt.Sprintf(`/usr/bin/bash <(curl -s -S -L %s) -s %s`, "https://raw.githubusercontent.com/easysoft/zenagent/main/res/setup/zagent.sh", softList)
+		cmd := fmt.Sprintf(`/usr/bin/bash <(curl -s -S -L %s) -s %s -secret %s`, "https://raw.githubusercontent.com/easysoft/zenagent/main/res/setup/zagent.sh", softList, secret)
 
 		if forceInstall {
-			cmd = fmt.Sprintf(`/usr/bin/bash <(curl -s -S -L %s) -s %s -r`, "https://raw.githubusercontent.com/easysoft/zenagent/main/res/setup/zagent.sh", softList)
+			cmd = fmt.Sprintf(`/usr/bin/bash <(curl -s -S -L %s) -s %s -r -secret %s`, "https://raw.githubusercontent.com/easysoft/zenagent/main/res/setup/zagent.sh", softList, secret)
 		}
 
 		_shellUtils.ExeShellWithOutput(cmd)
 	} else {
 		consts.PrintLog = true
-		cmd := fmt.Sprintf(`/usr/bin/bash <(curl -s -S -L %s)`, "https://raw.githubusercontent.com/easysoft/zenagent/main/res/setup/zagent.sh")
+		cmd := fmt.Sprintf(`/usr/bin/bash <(curl -s -S -L %s) -secret %s`, "https://raw.githubusercontent.com/easysoft/zenagent/main/res/setup/zagent.sh", secret)
 
 		if forceInstall {
-			cmd = fmt.Sprintf(`/usr/bin/bash <(curl -s -S -L %s) -r`, "https://raw.githubusercontent.com/easysoft/zenagent/main/res/setup/zagent.sh")
+			cmd = fmt.Sprintf(`/usr/bin/bash <(curl -s -S -L %s) -r -secret %s`, "https://raw.githubusercontent.com/easysoft/zenagent/main/res/setup/zagent.sh", secret)
 		}
 
 		_shellUtils.ExeShellWithOutput(cmd)
