@@ -52,6 +52,7 @@ func (s *KvmService) CreateVmFromImage(req *v1.CreateVmReq, removeSameName bool)
 		s.LibvirtService.DestroyVmByName(vmName, true)
 	}
 
+	// create image
 	cmdCreateImage := fmt.Sprintf(consts.CmdCreateImage, targetBacking, srcFile)
 	out, err := _shellUtils.ExeShell(cmdCreateImage)
 	if err != nil {
@@ -59,6 +60,7 @@ func (s *KvmService) CreateVmFromImage(req *v1.CreateVmReq, removeSameName bool)
 		return
 	}
 
+	// create vm
 	cmdCreateVm := fmt.Sprintf(consts.CmdCreateVm, vmName, cpuCores, ramSize*1000, srcFile, diskSize*1000)
 	out, err = _shellUtils.ExeShell(cmdCreateVm)
 	if err != nil {
@@ -66,6 +68,7 @@ func (s *KvmService) CreateVmFromImage(req *v1.CreateVmReq, removeSameName bool)
 		return
 	}
 
+	// start vm
 	cmdStartVm := fmt.Sprintf(consts.CmdStartVm, vmName)
 	out, err = _shellUtils.ExeShell(cmdStartVm)
 	if err != nil {
@@ -73,12 +76,12 @@ func (s *KvmService) CreateVmFromImage(req *v1.CreateVmReq, removeSameName bool)
 		return
 	}
 
+	// get new vm info
 	dom, err = s.LibvirtService.GetVm(vmName)
 	if err != nil {
 		return
 	}
 
-	// get new vm info
 	newXml, _ := dom.GetXMLDesc(0)
 	newDomCfg := &libvirtxml.Domain{}
 	newDomCfg.Unmarshal(newXml)
