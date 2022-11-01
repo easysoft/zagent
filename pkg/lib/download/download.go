@@ -117,7 +117,10 @@ ExitDownload:
 	t.Stop()
 
 	if isCanceled {
-		responses[0] = nil
+		if len(responses) > 0 {
+			responses[0] = nil
+		}
+
 		completed++
 
 		status = consts.Canceled

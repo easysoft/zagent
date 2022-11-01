@@ -138,5 +138,5 @@ func (s *TaskService) IsTimeout(po agentModel.Task) bool {
 }
 
 func (s *TaskService) NeedRetry(po agentModel.Task) bool {
-	return po.Retry <= consts.DownloadRetry
+	return po.Retry < consts.DownloadRetry
 }
