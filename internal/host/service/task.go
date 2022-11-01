@@ -78,15 +78,15 @@ func (s *TaskService) ListTask() (ret v1.ListTaskResp, err error) {
 			po.CompletionRate = rate.(float64)
 		}
 
-		if status == "created" {
+		if status == consts.Created {
 			ret.Created = append(ret.Created, po)
-		} else if status == "inProgress" {
+		} else if status == consts.InProgress {
 			ret.InProgress = append(ret.InProgress, po)
-		} else if status == "canceled" {
+		} else if status == consts.Canceled {
 			ret.Canceled = append(ret.Canceled, po)
-		} else if status == "completed" {
+		} else if status == consts.Completed {
 			ret.Completed = append(ret.Completed, po)
-		} else if status == "failed" {
+		} else if status == consts.Failed {
 			ret.Failed = append(ret.Failed, po)
 		}
 	}

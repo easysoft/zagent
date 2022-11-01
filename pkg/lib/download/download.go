@@ -26,8 +26,6 @@ func Start(task agentModel.Task, pth string, ch chan int) (status consts.TaskSta
 	targetDir := consts.DownloadDir
 	if task.Md5 == "" {
 		getMd5FromRemote(&task, targetDir)
-	} else {
-		saveMd5FromRequest(&task, targetDir)
 	}
 
 	existFile = findSameFile(task, targetDir)
@@ -35,6 +33,8 @@ func Start(task agentModel.Task, pth string, ch chan int) (status consts.TaskSta
 		status = consts.Completed
 		return
 	}
+
+	TaskMap.Store(task.ID, float64(0))
 
 	// start file downloads, 3 at a time
 	respCh, err := grab.GetBatch(3, targetDir, task.Url)
@@ -99,9 +99,13 @@ func Start(task agentModel.Task, pth string, ch chan int) (status consts.TaskSta
 				if resp != nil {
 					inProgress++
 
-					TaskMap.Store(task.ID, resp.Progress())
+					rate := resp.Progress()
+					storeRate, ok := TaskMap.Load(task.ID)
+					if ok && rate > storeRate.(float64) {
+						TaskMap.Store(task.ID, rate)
+					}
 
-					fmt.Printf("Downloading %s %d / %d bytes (%d%%)\u001B[K\n", resp.Filename, resp.BytesComplete(), resp.Size(), int(100*resp.Progress()))
+					fmt.Printf("Downloading %s %d / %d bytes (%d%%)\u001B[K\n", resp.Filename, resp.BytesComplete(), resp.Size(), int(100*rate))
 				}
 			}
 		}
@@ -118,6 +122,10 @@ ExitDownload:
 		if checkMd5(task) {
 			status = consts.Completed
 			pth = responses[0].Filename
+
+			if task.Md5 != "" {
+				saveMd5FromRequest(&task, targetDir)
+			}
 
 			fmt.Printf("Successfully download %s to %s.\n", task.Url, pth)
 		} else {

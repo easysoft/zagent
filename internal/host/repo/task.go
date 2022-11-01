@@ -58,10 +58,10 @@ func (r *TaskRepo) Update(po *agentModel.Task) (err error) {
 	return
 }
 
-func (r *TaskRepo) UpdateStatus(id uint, filePath string, completionRate int, xmlDesc string,
+func (r *TaskRepo) UpdateStatus(id uint, filePath string, completionRate float64, xmlDesc string,
 	status consts.TaskStatus, isStart, isEnd bool) (err error) {
 
-	updates := map[string]interface{}{"status": status, "xml_desc": xmlDesc}
+	updates := map[string]interface{}{"status": status, "xml": xmlDesc}
 
 	if filePath != "" {
 		updates["path"] = filePath

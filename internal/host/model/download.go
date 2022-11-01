@@ -17,7 +17,7 @@ type Task struct {
 	Path           string            `json:"path,omitempty"`
 	Status         consts.TaskStatus `json:"status"`
 	Retry          int               `json:"retry"`
-	CompletionRate float64           `json:"completionRate" gorm:"-"`
+	CompletionRate float64           `json:"completionRate,omitempty"`
 
 	// for export vm
 	Vm      string `json:"vm,omitempty"`
