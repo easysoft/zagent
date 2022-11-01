@@ -15,7 +15,9 @@ const (
 --disk path=%s,size=%d,sparse \
 --network default \
 --boot hd \
+--graphics vnc \
 --os-variant generic \
+--noautoconsole \
 --noreboot \
 --wait -1 \
 --force 
