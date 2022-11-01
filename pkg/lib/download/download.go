@@ -20,16 +20,18 @@ var (
 	TaskMap sync.Map
 )
 
-func Start(task agentModel.Task, ch chan int) (pth string, status consts.TaskStatus) {
+func Start(task agentModel.Task, pth string, ch chan int) (status consts.TaskStatus, existFile string) {
 	fmt.Printf("Start to download %s ...\n", task.Url)
 
-	targetDir := consts.FolderDownload
+	targetDir := consts.DownloadDir
 	if task.Md5 == "" {
 		getMd5FromRemote(&task, targetDir)
+	} else {
+		saveMd5FromRequest(&task, targetDir)
 	}
 
-	pth = findSameFile(task, targetDir)
-	if pth != "" {
+	existFile = findSameFile(task, targetDir)
+	if existFile != "" {
 		status = consts.Completed
 		return
 	}
@@ -167,6 +169,15 @@ func getMd5FromRemote(task *agentModel.Task, dir string) (err error) {
 	return
 }
 
+func saveMd5FromRequest(task *agentModel.Task, dir string) (err error) {
+	index2 := strings.LastIndex(task.Url, "/")
+	md5FilePath := filepath.Join(dir, task.Url[index2:]+".md5")
+
+	_fileUtils.WriteFile(md5FilePath, task.Md5)
+
+	return
+}
+
 func findSameFile(task agentModel.Task, dir string) (pth string) {
 	files, _ := ioutil.ReadDir(dir)
 
@@ -185,6 +196,15 @@ func findSameFile(task agentModel.Task, dir string) (pth string) {
 			return
 		}
 	}
+
+	return
+}
+
+func GetPath(task agentModel.Task) (pth string) {
+	index := strings.LastIndex(task.Url, "/")
+	name := task.Url[index:]
+
+	pth = filepath.Join(consts.DownloadDir, name)
 
 	return
 }

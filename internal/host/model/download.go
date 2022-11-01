@@ -9,25 +9,25 @@ type Task struct {
 	BaseModel
 
 	Name string `json:"name"`
-	Desc string `json:"desc"`
+	Desc string `json:"desc,omitempty"`
 
 	// for download
-	Url            string            `json:"url"`
-	Md5            string            `json:"md5"`
-	Path           string            `json:"path"`
+	Url            string            `json:"url,omitempty"`
+	Md5            string            `json:"md5,omitempty"`
+	Path           string            `json:"path,omitempty"`
 	Status         consts.TaskStatus `json:"status"`
 	Retry          int               `json:"retry"`
 	CompletionRate float64           `json:"completionRate" gorm:"-"`
 
 	// for export vm
-	Vm      string `json:"vm"`
-	Backing string `json:"backing"`
-	Xml     string `json:"xml"`
-	//Path    string `json:"path"`
+	Vm      string `json:"vm,omitempty"`
+	Backing string `json:"backing,omitempty"`
+	Xml     string `json:"xml,omitempty"`
+	//Path    string `json:"path,omitempty"`
 
 	StartTime   *time.Time `json:"startTime"`
 	EndTime     *time.Time `json:"endTime"`
-	TimeoutTime *time.Time `json:"timeoutTime"`
+	TimeoutTime *time.Time `json:"timeoutTime,omitempty"`
 
 	ZentaoTask int             `json:"zentaoTask"`
 	TaskType   consts.TaskType `json:"taskType"`

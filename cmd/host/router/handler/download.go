@@ -25,7 +25,7 @@ func NewDownloadCtrl() *DownloadCtrl {
 // @Success 200 {object} _domain.Response "code = success | fail"
 // @Router /api/v1/download/add [post]
 func (c *DownloadCtrl) Add(ctx iris.Context) {
-	req := v1.DownloadReq{}
+	req := make([]v1.DownloadReq, 0)
 	err := ctx.ReadJSON(&req)
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))

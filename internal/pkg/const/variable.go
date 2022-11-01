@@ -15,6 +15,7 @@ var (
 	LogDir         = fmt.Sprintf("log%s", _const.PthSep)
 	ControlActions = []string{"start", "stop", "restart", "install", "uninstall"}
 
+	DownloadDir   = ""
 	NovncDir      = ""
 	WebsockifyDir = ""
 

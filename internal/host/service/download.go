@@ -24,12 +24,14 @@ func NewDownloadService() *DownloadService {
 	return &DownloadService{}
 }
 
-func (s *DownloadService) AddTasks(req v1.DownloadReq) (err error) {
-	for _, item := range req.Urls {
+func (s *DownloadService) AddTasks(req []v1.DownloadReq) (err error) {
+	for _, item := range req {
 		po := agentModel.Task{
-			Url:        item,
-			ZentaoTask: req.ZentaoTask,
+			Url:        item.Url,
+			Md5:        item.Md5,
+			ZentaoTask: item.ZentaoTask,
 			TaskType:   consts.DownloadImage,
+			Status:     consts.Created,
 		}
 
 		s.TaskRepo.Save(&po)
@@ -43,9 +45,16 @@ func (s *DownloadService) StartTask(po agentModel.Task) {
 	channelMap.Store(int(po.ID), ch)
 
 	go func() {
-		filePath, finalStatus := downloadUtils.Start(po, ch)
+		filePath := downloadUtils.GetPath(po)
 
-		s.TaskRepo.UpdateStatus(po.ID, filePath, "", finalStatus)
+		s.TaskRepo.UpdateStatus(po.ID, filePath, 0, "", consts.InProgress, true, false)
+
+		finalStatus, existFile := downloadUtils.Start(po, filePath, ch)
+		if existFile != "" {
+			filePath = existFile
+		}
+
+		s.TaskRepo.UpdateStatus(po.ID, filePath, 1, "", finalStatus, false, true)
 
 		po = s.TaskRepo.Get(po.ID)
 		s.TaskService.SubmitResult(po)

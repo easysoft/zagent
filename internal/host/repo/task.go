@@ -58,14 +58,28 @@ func (r *TaskRepo) Update(po *agentModel.Task) (err error) {
 	return
 }
 
-func (r *TaskRepo) UpdateStatus(id uint, filePath, xmlDesc string, status consts.TaskStatus) (err error) {
-	err = r.DB.Model(&agentModel.Task{}).Where("id = ?", id).
-		Updates(map[string]interface{}{"status": status, "end_time": time.Now()}).Error
+func (r *TaskRepo) UpdateStatus(id uint, filePath string, completionRate int, xmlDesc string,
+	status consts.TaskStatus, isStart, isEnd bool) (err error) {
+
+	updates := map[string]interface{}{"status": status, "xml_desc": xmlDesc}
 
 	if filePath != "" {
-		err = r.DB.Model(&agentModel.Task{}).Where("id = ?", id).
-			Updates(map[string]interface{}{"path": filePath}).Error
+		updates["path"] = filePath
 	}
+
+	if completionRate > 0 {
+		updates["completion_rate"] = completionRate
+	}
+
+	if isStart {
+		updates["start_time"] = time.Now()
+	}
+	if isEnd {
+		updates["end_time"] = time.Now()
+	}
+
+	err = r.DB.Model(&agentModel.Task{}).Where("id = ?", id).
+		Updates(updates).Error
 
 	return
 }

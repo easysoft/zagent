@@ -57,7 +57,13 @@ func (s *TaskService) CheckTask() (err error) {
 }
 
 func (s *TaskService) ListTask() (ret v1.ListTaskResp, err error) {
-	ret = v1.ListTaskResp{}
+	ret = v1.ListTaskResp{
+		Created:    make([]agentModel.Task, 0),
+		InProgress: make([]agentModel.Task, 0),
+		Canceled:   make([]agentModel.Task, 0),
+		Completed:  make([]agentModel.Task, 0),
+		Failed:     make([]agentModel.Task, 0),
+	}
 
 	pos, _ := s.TaskRepo.Query()
 

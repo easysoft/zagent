@@ -3,9 +3,9 @@ package v1
 import consts "github.com/easysoft/zagent/internal/pkg/const"
 
 type DownloadReq struct {
-	Urls []string `json:"urls"`
-
-	ZentaoTask int `json:"zentaoTask"`
+	Url        string `json:"url"`
+	Md5        string `json:"md5"`
+	ZentaoTask int    `json:"zentaoTask"`
 }
 
 type DownloadResp struct {

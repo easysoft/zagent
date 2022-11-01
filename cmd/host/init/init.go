@@ -19,7 +19,7 @@ import (
 
 func Init() {
 	agentConf.Init(consts.AppNameAgentHost)
-	_db.InitDB("agent")
+	_db.InitDB("host")
 
 	irisServer := NewServer(nil)
 	irisServer.App.Logger().SetLevel("info")

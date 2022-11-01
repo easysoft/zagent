@@ -36,6 +36,7 @@ func Init(app string) {
 	Inst.WorkDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(home, consts.AppName))
 
 	if Inst.RunMode == consts.RunModeHost {
+		consts.DownloadDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.WorkDir, consts.FolderDownload))
 		consts.NovncDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.WorkDir, consts.FolderNovnc))
 		consts.WebsockifyDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.WorkDir, consts.FolderWebsockify))
 

@@ -27,8 +27,13 @@ func (s *ExportService) StartTask(po agentModel.Task) {
 	channelMap.Store(int(po.ID), ch)
 
 	go func() {
-		filePath, xmlDesc, finalStatus := s.ExportVm(po)
-		s.TaskRepo.UpdateStatus(po.ID, filePath, xmlDesc, finalStatus)
+		filePath := filepath.Join(consts.FolderBacking, po.Name)
+
+		s.TaskRepo.UpdateStatus(po.ID, filePath, 0, "", consts.InProgress, true, false)
+
+		xmlDesc, finalStatus := s.ExportVm(po, filePath)
+
+		s.TaskRepo.UpdateStatus(po.ID, filePath, 0, xmlDesc, finalStatus, false, true)
 
 		po = s.TaskRepo.Get(po.ID)
 		s.TaskService.SubmitResult(po)
@@ -39,7 +44,7 @@ func (s *ExportService) StartTask(po agentModel.Task) {
 	}()
 }
 
-func (s *ExportService) ExportVm(po agentModel.Task) (pth, xml string, status consts.TaskStatus) {
+func (s *ExportService) ExportVm(po agentModel.Task, pth string) (xml string, status consts.TaskStatus) {
 	vmName := po.Vm
 
 	dom, err := s.LibvirtService.GetVm(vmName)
@@ -56,8 +61,6 @@ func (s *ExportService) ExportVm(po agentModel.Task) (pth, xml string, status co
 	if err != nil {
 		return
 	}
-
-	pth = filepath.Join(consts.FolderBacking, vmName)
 
 	s.LibvirtService.ShutdownVmByName(vmName)
 

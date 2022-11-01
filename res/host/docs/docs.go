@@ -100,11 +100,11 @@ var doc = `{
                 "parameters": [
                     {
                         "description": "Kvm Clone Request Object",
-                        "name": "kvmReqClone",
+                        "name": "CloneVmReq",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/v1.KvmReqClone"
+                            "$ref": "#/definitions/v1.CloneVmReq"
                         }
                     }
                 ],
@@ -142,7 +142,7 @@ var doc = `{
                 "parameters": [
                     {
                         "description": "Create Kvm Request Object",
-                        "name": "kvmReq",
+                        "name": "CreateVmReq",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -184,7 +184,7 @@ var doc = `{
                 "parameters": [
                     {
                         "description": "Export Kvm Request Object",
-                        "name": "kvmReqClone",
+                        "name": "ExportVmReq",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -400,7 +400,7 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "按状态列出任务",
+                "summary": "获取任务状态",
                 "responses": {
                     "200": {
                         "description": "code = success | fail",
@@ -599,6 +599,9 @@ var doc = `{
                 "backing": {
                     "type": "string"
                 },
+                "completionRate": {
+                    "type": "number"
+                },
                 "createdAt": {
                     "type": "string"
                 },
@@ -663,6 +666,34 @@ var doc = `{
                 }
             }
         },
+        "v1.CloneVmReq": {
+            "type": "object",
+            "properties": {
+                "vmCpu": {
+                    "type": "integer",
+                    "example": 3
+                },
+                "vmDiskSize": {
+                    "type": "integer",
+                    "example": 30000
+                },
+                "vmMacAddress": {
+                    "type": "string"
+                },
+                "vmMemorySize": {
+                    "type": "integer",
+                    "example": 5120000
+                },
+                "vmSrc": {
+                    "type": "string",
+                    "example": "test-win10-x64-pro-zh_cn"
+                },
+                "vmUniqueName": {
+                    "type": "string",
+                    "example": "test-win10-x64-pro-zh_cn-clone1"
+                }
+            }
+        },
         "v1.CreateVmReq": {
             "type": "object",
             "properties": {
@@ -679,7 +710,12 @@ var doc = `{
                     "type": "string"
                 },
                 "os": {
-                    "type": "string"
+                    "description": "From 'osinfo-query os' command",
+                    "type": "string",
+                    "enum": [
+                        "win10",
+                        "ubuntu20.04"
+                    ]
                 },
                 "path": {
                     "type": "string"
@@ -737,34 +773,6 @@ var doc = `{
                 },
                 "zentaoTask": {
                     "type": "integer"
-                }
-            }
-        },
-        "v1.KvmReqClone": {
-            "type": "object",
-            "properties": {
-                "vmCpu": {
-                    "type": "integer",
-                    "example": 3
-                },
-                "vmDiskSize": {
-                    "type": "integer",
-                    "example": 30000
-                },
-                "vmMacAddress": {
-                    "type": "string"
-                },
-                "vmMemorySize": {
-                    "type": "integer",
-                    "example": 5120000
-                },
-                "vmSrc": {
-                    "type": "string",
-                    "example": "test-win10-x64-pro-zh_cn"
-                },
-                "vmUniqueName": {
-                    "type": "string",
-                    "example": "test-win10-x64-pro-zh_cn-clone1"
                 }
             }
         },

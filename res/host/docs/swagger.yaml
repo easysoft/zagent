@@ -12,6 +12,8 @@ definitions:
     properties:
       backing:
         type: string
+      completionRate:
+        type: number
       createdAt:
         type: string
       deleted:
@@ -55,6 +57,26 @@ definitions:
       zentaoTask:
         type: integer
     type: object
+  v1.CloneVmReq:
+    properties:
+      vmCpu:
+        example: 3
+        type: integer
+      vmDiskSize:
+        example: 30000
+        type: integer
+      vmMacAddress:
+        type: string
+      vmMemorySize:
+        example: 5120000
+        type: integer
+      vmSrc:
+        example: test-win10-x64-pro-zh_cn
+        type: string
+      vmUniqueName:
+        example: test-win10-x64-pro-zh_cn-clone1
+        type: string
+    type: object
   v1.CreateVmReq:
     properties:
       cpu:
@@ -66,6 +88,10 @@ definitions:
       name:
         type: string
       os:
+        description: From 'osinfo-query os' command
+        enum:
+        - win10
+        - ubuntu20.04
         type: string
       path:
         type: string
@@ -104,26 +130,6 @@ definitions:
         type: string
       zentaoTask:
         type: integer
-    type: object
-  v1.KvmReqClone:
-    properties:
-      vmCpu:
-        example: 3
-        type: integer
-      vmDiskSize:
-        example: 30000
-        type: integer
-      vmMacAddress:
-        type: string
-      vmMemorySize:
-        example: 5120000
-        type: integer
-      vmSrc:
-        example: test-win10-x64-pro-zh_cn
-        type: string
-      vmUniqueName:
-        example: test-win10-x64-pro-zh_cn-clone1
-        type: string
     type: object
   v1.KvmResp:
     properties:
@@ -381,10 +387,10 @@ paths:
       parameters:
       - description: Kvm Clone Request Object
         in: body
-        name: kvmReqClone
+        name: CloneVmReq
         required: true
         schema:
-          $ref: '#/definitions/v1.KvmReqClone'
+          $ref: '#/definitions/v1.CloneVmReq'
       produces:
       - application/json
       responses:
@@ -405,7 +411,7 @@ paths:
       parameters:
       - description: Create Kvm Request Object
         in: body
-        name: kvmReq
+        name: CreateVmReq
         required: true
         schema:
           $ref: '#/definitions/v1.CreateVmReq'
@@ -429,7 +435,7 @@ paths:
       parameters:
       - description: Export Kvm Request Object
         in: body
-        name: kvmReqClone
+        name: ExportVmReq
         required: true
         schema:
           $ref: '#/definitions/v1.ExportVmReq'
@@ -476,7 +482,7 @@ paths:
                 data:
                   $ref: '#/definitions/v1.ListTaskResp'
               type: object
-      summary: 按状态列出任务
+      summary: 获取任务状态
   /api/v1/virtual/addVmPortMap:
     post:
       consumes:
