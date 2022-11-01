@@ -90,7 +90,7 @@ install_zagent()
         ck_ok "unZip Zagent"
         cp ./zagent/ztf zagent-host
         if [[ -n $secret ]];then
-            nohup ./zagent-host -P 8085 -secret $secret &
+            nohup ./zagent-host -P 8085 -secret $secret > /dev/null 2>&1 &
         fi
     fi
     
@@ -297,7 +297,7 @@ install_websockify()
     
     ck_ok "Install websockify"
     
-    nohup ./run --token-plugin TokenFile --token-source ../token/ 6080 &
+    nohup ./run --token-plugin TokenFile --token-source ../token/ 6080 > /dev/null 2>&1 &
 }
 
 
