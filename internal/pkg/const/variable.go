@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	_const "github.com/easysoft/zv/pkg/const"
+	_const "github.com/easysoft/zagent/pkg/const"
 )
 
 var ()
@@ -16,6 +16,7 @@ var (
 	LogDir         = fmt.Sprintf("log%s", _const.PthSep)
 	ControlActions = []string{"start", "stop", "restart", "install", "uninstall"}
 
+	DownloadDir   = ""
 	NovncDir      = ""
 	WebsockifyDir = ""
 	WorkDir       = ""

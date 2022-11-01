@@ -4,11 +4,11 @@ import (
 	"flag"
 	"fmt"
 
-	agentConf "github.com/easysoft/zv/internal/pkg/conf"
-	consts "github.com/easysoft/zv/internal/pkg/const"
-	_checkUtils "github.com/easysoft/zv/internal/pkg/utils/check"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
-	_shellUtils "github.com/easysoft/zv/pkg/lib/shell"
+	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	_checkUtils "github.com/easysoft/zagent/internal/pkg/utils/check"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
+	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 )
 
 var (

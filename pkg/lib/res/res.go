@@ -1,8 +1,8 @@
 package _resUtils
 
 import (
-	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
-	agentRes "github.com/easysoft/zv/res/vm"
+	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
+	agentRes "github.com/easysoft/zagent/res/vm"
 	"io/ioutil"
 )
 

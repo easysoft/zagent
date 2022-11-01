@@ -2,17 +2,18 @@ package hostAgentService
 
 import (
 	"encoding/json"
-	hostKvmService "github.com/easysoft/zv/internal/host/service/kvm"
-	agentConf "github.com/easysoft/zv/internal/pkg/conf"
-	"github.com/easysoft/zv/internal/pkg/const"
-	"github.com/easysoft/zv/internal/pkg/domain"
-	agentService "github.com/easysoft/zv/internal/pkg/service"
-	agentTestingService "github.com/easysoft/zv/internal/pkg/service/testing"
-	requestUtils "github.com/easysoft/zv/internal/pkg/utils/request"
-	_dateUtils "github.com/easysoft/zv/pkg/lib/date"
-	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
-	_i118Utils "github.com/easysoft/zv/pkg/lib/i118"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
+	"github.com/easysoft/zagent/cmd/host/router/v1"
+	hostKvmService "github.com/easysoft/zagent/internal/host/service/kvm"
+	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
+	"github.com/easysoft/zagent/internal/pkg/const"
+	"github.com/easysoft/zagent/internal/pkg/domain"
+	agentService "github.com/easysoft/zagent/internal/pkg/service"
+	agentTestingService "github.com/easysoft/zagent/internal/pkg/service/testing"
+	requestUtils "github.com/easysoft/zagent/internal/pkg/utils/request"
+	_dateUtils "github.com/easysoft/zagent/pkg/lib/date"
+	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
+	_i118Utils "github.com/easysoft/zagent/pkg/lib/i118"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"strings"
 	"time"
 )
@@ -80,7 +81,7 @@ func (s *HostService) Register(isBusy bool) {
 	_logUtils.Info(string(hostBytes))
 
 	if ok {
-		respObj := domain.RegisterResp{}
+		respObj := v1.RegisterResp{}
 		err := json.Unmarshal(respBytes, &respObj)
 		if err == nil && respObj.Token != "" {
 			respObj.ExpiredDate, _ = _dateUtils.UnitToDate(respObj.ExpiredTimeUnix)

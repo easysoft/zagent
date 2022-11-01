@@ -4,17 +4,15 @@ import "C"
 import (
 	"encoding/json"
 	"fmt"
-	v1 "github.com/easysoft/zv/cmd/host/router/v1"
-	agentConf "github.com/easysoft/zv/internal/pkg/conf"
-	"github.com/easysoft/zv/internal/pkg/const"
-	"github.com/easysoft/zv/internal/pkg/domain"
-	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
-	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
+	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
+	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
+	"github.com/easysoft/zagent/internal/pkg/const"
+	"github.com/easysoft/zagent/internal/pkg/domain"
+	_fileUtils "github.com/easysoft/zagent/pkg/lib/file"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
+	_stringUtils "github.com/easysoft/zagent/pkg/lib/string"
 	"github.com/libvirt/libvirt-go"
 	libvirtxml "github.com/libvirt/libvirt-go-xml"
-
-	"strings"
 )
 
 const (
@@ -108,7 +106,7 @@ func NewLibvirtService() *LibvirtService {
 //	return
 //}
 
-func (s *LibvirtService) CloneVm(req *v1.KvmReqClone, removeSameName bool) (dom *libvirt.Domain,
+func (s *LibvirtService) CloneVm(req *v1.CloneVmReq, removeSameName bool) (dom *libvirt.Domain,
 	vmIp string, vmVncPort, vmAgentPortMapped int, vmRawPath, vmBackingPath string, err error) {
 
 	reqMsg, err := json.Marshal(req)
@@ -300,66 +298,66 @@ func (s *LibvirtService) UndefineVm(dom *libvirt.Domain) (err error) {
 	return
 }
 
-func (s *LibvirtService) ListTmpl() (ret []v1.KvmRespTempl, err error) {
-	if s.LibvirtConn == nil {
-		return
-	}
-
-	domains, err := s.LibvirtConn.ListAllDomains(0)
-	if err != nil {
-		_logUtils.Errorf(err.Error())
-		return
-	}
-
-	for _, domain := range domains {
-		name, _ := domain.GetName()
-		if strings.Index(name, "tmpl-") > -1 {
-			newXml := ""
-			newXml, err = domain.GetXMLDesc(0)
-			if err != nil {
-				continue
-			}
-
-			domainCfg := &libvirtxml.Domain{}
-			err = domainCfg.Unmarshal(newXml)
-
-			tmpl := v1.KvmRespTempl{
-				Name: domainCfg.Name,
-				Type: domainCfg.Type,
-				UUID: domainCfg.UUID,
-
-				CpuCoreNum:  domainCfg.VCPU.Value,
-				MemoryValue: domainCfg.Memory.Value,
-				MemoryUnit:  domainCfg.Memory.Unit,
-
-				OsArch:     domainCfg.OS.Type.Arch,
-				MacAddress: domainCfg.Devices.Interfaces[0].MAC.Address,
-			}
-
-			if domainCfg.Devices != nil && len(domainCfg.Devices.Graphics) > 0 {
-				for _, item := range domainCfg.Devices.Graphics {
-					if item.VNC != nil {
-						tmpl.VncPost = item.VNC.Port
-						break
-					}
-				}
-			}
-
-			mainDiskIndex := s.QemuService.GetMainDiskIndex(domainCfg)
-			tmpl.DiskFile = domainCfg.Devices.Disks[mainDiskIndex].Source.File.File
-
-			backingStore := domainCfg.Devices.Disks[mainDiskIndex].BackingStore
-			if backingStore != nil && backingStore.Source.File != nil {
-				tmpl.BackingFile = backingStore.Source.File.File
-				tmpl.BackingFormat = backingStore.Format.Type
-			}
-
-			ret = append(ret, tmpl)
-		}
-	}
-
-	return
-}
+//func (s *LibvirtService) ListTmpl() (ret []v1.KvmRespTempl, err error) {
+//	if s.LibvirtConn == nil {
+//		return
+//	}
+//
+//	domains, err := s.LibvirtConn.ListAllDomains(0)
+//	if err != nil {
+//		_logUtils.Errorf(err.Error())
+//		return
+//	}
+//
+//	for _, domain := range domains {
+//		name, _ := domain.GetName()
+//		if strings.Index(name, "tmpl-") > -1 {
+//			newXml := ""
+//			newXml, err = domain.GetXMLDesc(0)
+//			if err != nil {
+//				continue
+//			}
+//
+//			domainCfg := &libvirtxml.Domain{}
+//			err = domainCfg.Unmarshal(newXml)
+//
+//			tmpl := v1.KvmRespTempl{
+//				Name: domainCfg.Name,
+//				Type: domainCfg.Type,
+//				UUID: domainCfg.UUID,
+//
+//				CpuCoreNum:  domainCfg.VCPU.Value,
+//				MemoryValue: domainCfg.Memory.Value,
+//				MemoryUnit:  domainCfg.Memory.Unit,
+//
+//				OsArch:     domainCfg.OS.Type.Arch,
+//				MacAddress: domainCfg.Devices.Interfaces[0].MAC.Address,
+//			}
+//
+//			if domainCfg.Devices != nil && len(domainCfg.Devices.Graphics) > 0 {
+//				for _, item := range domainCfg.Devices.Graphics {
+//					if item.VNC != nil {
+//						tmpl.VncPost = item.VNC.Port
+//						break
+//					}
+//				}
+//			}
+//
+//			mainDiskIndex := s.QemuService.GetMainDiskIndex(domainCfg)
+//			tmpl.DiskFile = domainCfg.Devices.Disks[mainDiskIndex].Source.File.File
+//
+//			backingStore := domainCfg.Devices.Disks[mainDiskIndex].BackingStore
+//			if backingStore != nil && backingStore.Source.File != nil {
+//				tmpl.BackingFile = backingStore.Source.File.File
+//				tmpl.BackingFormat = backingStore.Format.Type
+//			}
+//
+//			ret = append(ret, tmpl)
+//		}
+//	}
+//
+//	return
+//}
 
 func (s *LibvirtService) GetVmDef(name string) (xml string) {
 	dom, err := s.GetVm(name)

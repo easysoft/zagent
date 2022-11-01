@@ -1,15 +1,16 @@
 package _db
 
 import (
-	agentConf "github.com/easysoft/zv/internal/pkg/conf"
-	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
+	"fmt"
+	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	_fileUtils "github.com/easysoft/zagent/pkg/lib/file"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 	"gorm.io/plugin/dbresolver"
 	"path/filepath"
-	"strings"
 	"time"
 
 	_ "gorm.io/driver/sqlite"
@@ -29,18 +30,12 @@ func GetInst() *Instance {
 func InitDB(mode string) {
 	var dialector gorm.Dialector
 
-	if mode == "agent" {
+	if mode == "host" {
 		conn := DBFile(mode)
 		dialector = sqlite.Open(conn)
-
-	} else {
-		_logUtils.Info("not supported database adapter")
 	}
 
-	prefix := ""
-	if mode == "agent" {
-		prefix = agentConf.Inst.DB.Prefix
-	}
+	prefix := agentConf.Inst.DB.Prefix
 
 	DB, err := gorm.Open(dialector, &gorm.Config{
 		SkipDefaultTransaction: false,
@@ -88,8 +83,6 @@ func (i *Instance) Close() error {
 }
 
 func DBFile(mode string) string {
-	dbName := "agent"
-
-	path := filepath.Join(_fileUtils.GetExeDir(), strings.ToLower(dbName+".db"))
+	path := filepath.Join(_fileUtils.GetExeDir(), fmt.Sprintf("%s-%s.db", consts.AppName, mode))
 	return path
 }

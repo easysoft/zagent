@@ -2,7 +2,7 @@ package vmwareService
 
 import (
 	"errors"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 )
 
 type VMWareService struct {

@@ -1,30 +1,21 @@
 package hostAgentService
 
 import (
-	v1 "github.com/easysoft/zv/cmd/host/router/v1"
-	agentModel "github.com/easysoft/zv/internal/host/model"
-	hostRepo "github.com/easysoft/zv/internal/host/repo"
-	consts "github.com/easysoft/zv/internal/pkg/const"
-	downloadUtils "github.com/easysoft/zv/pkg/lib/download"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
+	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
+	agentModel "github.com/easysoft/zagent/internal/host/model"
+	hostRepo "github.com/easysoft/zagent/internal/host/repo"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	downloadUtils "github.com/easysoft/zagent/pkg/lib/download"
 	"sync"
 )
 
-const (
-	key = "urls"
-)
-
-const (
-	keyNotStart   = "not_start"
-	keyInProgress = "in_progress"
-	keyCompleted  = "completed"
-)
-
 var (
-	syncMap sync.Map
+	channelMap sync.Map
 )
 
 type DownloadService struct {
+	TaskService *TaskService `inject:""`
+
 	TaskRepo *hostRepo.TaskRepo `inject:""`
 }
 
@@ -32,11 +23,14 @@ func NewDownloadService() *DownloadService {
 	return &DownloadService{}
 }
 
-func (s *DownloadService) AddTasks(req v1.DownloadReq) (err error) {
-	for _, item := range req.Urls {
+func (s *DownloadService) AddTasks(req []v1.DownloadReq) (err error) {
+	for _, item := range req {
 		po := agentModel.Task{
-			Url:      item,
-			TaskType: consts.DownloadImage,
+			Url:        item.Url,
+			Md5:        item.Md5,
+			ZentaoTask: item.ZentaoTask,
+			TaskType:   consts.DownloadImage,
+			Status:     consts.Created,
 		}
 
 		s.TaskRepo.Save(&po)
@@ -47,11 +41,24 @@ func (s *DownloadService) AddTasks(req v1.DownloadReq) (err error) {
 
 func (s *DownloadService) StartTask(po agentModel.Task) {
 	ch := make(chan int, 1)
-	syncMap.Store(int(po.ID), ch)
+	channelMap.Store(po.ID, ch)
 
 	go func() {
-		filePath, finalStatus := downloadUtils.Start(po, ch)
-		s.TaskRepo.UpdateStatus(po.ID, filePath, "", finalStatus)
+		filePath := downloadUtils.GetPath(po)
+
+		s.TaskRepo.UpdateStatus(po.ID, filePath, 0.01, "", consts.InProgress, true, false)
+
+		finalStatus, existFile := downloadUtils.Start(po, filePath, ch)
+		if existFile != "" {
+			filePath = existFile
+		}
+
+		s.TaskRepo.UpdateStatus(po.ID, filePath, 1, "", finalStatus, false, true)
+
+		po, _ = s.TaskRepo.Get(po.ID)
+		s.TaskService.SubmitResult(po)
+
+		downloadUtils.TaskMap.Delete(po.ID)
 
 		if ch != nil {
 			close(ch)
@@ -59,14 +66,8 @@ func (s *DownloadService) StartTask(po agentModel.Task) {
 	}()
 }
 
-func (s *DownloadService) CancelTask(url string) {
-	task, err := s.TaskRepo.GetByUrl(url)
-	if err != nil {
-		_logUtils.Infof("can not find task %s to cancel.")
-		return
-	}
-
-	chVal, ok := syncMap.Load(task.ID)
+func (s *DownloadService) CancelTask(taskId uint) {
+	chVal, ok := channelMap.Load(taskId)
 
 	if !ok || chVal == nil {
 		return
@@ -82,14 +83,17 @@ func (s *DownloadService) CancelTask(url string) {
 }
 
 func (s *DownloadService) RestartTask(po agentModel.Task) (ret bool) {
-	s.CancelTask(po.Url)
+	s.CancelTask(po.ID)
+
 	s.StartTask(po)
+
+	s.TaskRepo.AddRetry(po)
 
 	return
 }
 
 func (s *DownloadService) RemoveTask(req v1.DownloadReq) {
-	s.TaskRepo.Delete(uint(req.TaskId))
+	s.TaskRepo.Delete(uint(req.ZentaoTask))
 
 	return
 }

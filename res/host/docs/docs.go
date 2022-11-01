@@ -19,7 +19,7 @@ var doc = `{
         "description": "{{.Description}}",
         "title": "{{.Title}}",
         "contact": {
-            "name": "API Support",
+            "name": "Support",
             "url": "https://github.com/easysoft/zv/issues",
             "email": "462626@qq.com"
         },
@@ -28,6 +28,66 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/download/add": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "添加下载任务",
+                "parameters": [
+                    {
+                        "description": "Download Request Object",
+                        "name": "DownloadReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.DownloadReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "$ref": "#/definitions/_domain.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/download/cancel": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "强制终止下载任务",
+                "parameters": [
+                    {
+                        "description": "Cancel Download Request Object",
+                        "name": "DownloadCancelReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.DownloadCancelReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "$ref": "#/definitions/_domain.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/kvm/clone": {
             "post": {
                 "consumes": [
@@ -39,18 +99,18 @@ var doc = `{
                 "summary": "克隆KVM虚拟机",
                 "parameters": [
                     {
-                        "description": "Kvm Request Object",
-                        "name": "kvmReqClone",
+                        "description": "Kvm Clone Request Object",
+                        "name": "CloneVmReq",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/v1.KvmReqClone"
+                            "$ref": "#/definitions/v1.CloneVmReq"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "code = success? 1 : 0",
+                        "description": "code = success | fail",
                         "schema": {
                             "allOf": [
                                 {
@@ -81,18 +141,18 @@ var doc = `{
                 "summary": "创建KVM虚拟机",
                 "parameters": [
                     {
-                        "description": "Kvm Request Object",
-                        "name": "kvmReq",
+                        "description": "Create Kvm Request Object",
+                        "name": "CreateVmReq",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/v1.KvmReq"
+                            "$ref": "#/definitions/v1.CreateVmReq"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "code = success? 1 : 0",
+                        "description": "code = success | fail",
                         "schema": {
                             "allOf": [
                                 {
@@ -102,7 +162,7 @@ var doc = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/v1.KvmResp"
+                                            "$ref": "#/definitions/v1.CreateVmResp"
                                         }
                                     }
                                 }
@@ -112,32 +172,31 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/kvm/listTempl": {
-            "get": {
+        "/api/v1/kvm/exportVm": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "获取KVM虚拟机模板信息",
+                "summary": "导出KVM虚拟机为模板镜像",
+                "parameters": [
+                    {
+                        "description": "Export Kvm Request Object",
+                        "name": "ExportVmReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.ExportVmReq"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "code = success? 1 : 0",
+                        "description": "code = success | fail",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/_domain.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/v1.KvmRespTempl"
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/_domain.Response"
                         }
                     }
                 }
@@ -163,9 +222,21 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "code = success? 1 : 0",
+                        "description": "code = success | fail",
                         "schema": {
-                            "$ref": "#/definitions/_domain.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -191,9 +262,21 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "code = success? 1 : 0",
+                        "description": "code = success | fail",
                         "schema": {
-                            "$ref": "#/definitions/_domain.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -219,9 +302,21 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "code = success? 1 : 0",
+                        "description": "code = success | fail",
                         "schema": {
-                            "$ref": "#/definitions/_domain.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -247,9 +342,82 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "code = success? 1 : 0",
+                        "description": "code = success | fail",
                         "schema": {
-                            "$ref": "#/definitions/_domain.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/service/check": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "检测宿主机服务状态",
+                "parameters": [
+                    {
+                        "description": "Service Check Request Object",
+                        "name": "ServiceCheckReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.ServiceCheckReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "$ref": "#/definitions/v1.ServiceCheckResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/task/status": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "获取任务状态",
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/v1.ListTaskResp"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -266,18 +434,18 @@ var doc = `{
                 "summary": "新增虚拟机到宿主机端口的映射",
                 "parameters": [
                     {
-                        "description": "Kvm Request Object",
+                        "description": "Vm Port Map Request Object",
                         "name": "VmPortMapReq",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/v1.KvmReq"
+                            "$ref": "#/definitions/v1.VmPortMapReq"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "code = success? 1 : 0",
+                        "description": "code = success | fail",
                         "schema": {
                             "allOf": [
                                 {
@@ -297,7 +465,7 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/virtual/getToken": {
+        "/api/v1/virtual/getVncToken": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -317,7 +485,7 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "code = success? 1 : 0",
+                        "description": "code = success | fail",
                         "schema": {
                             "allOf": [
                                 {
@@ -337,6 +505,48 @@ var doc = `{
                 }
             }
         },
+        "/api/v1/virtual/notifyHost": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "虚拟机请求安全码",
+                "parameters": [
+                    {
+                        "description": "Vm Notify Request Object",
+                        "name": "VmNotifyReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.VmNotifyReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/v1.VmNotifyResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/virtual/removeVmPortMap": {
             "post": {
                 "consumes": [
@@ -345,21 +555,21 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "删除虚拟机到宿主机的端口映射",
+                "summary": "移除虚拟机到宿主机的端口映射",
                 "parameters": [
                     {
-                        "description": "Kvm Request Object",
+                        "description": "Vm Port Map Request Object",
                         "name": "VmPortMapReq",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/v1.KvmReq"
+                            "$ref": "#/definitions/v1.VmPortMapReq"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "code = success? 1 : 0",
+                        "description": "code = success | fail",
                         "schema": {
                             "$ref": "#/definitions/_domain.Response"
                         }
@@ -383,56 +593,80 @@ var doc = `{
                 }
             }
         },
-        "v1.KvmReq": {
+        "agentModel.Task": {
             "type": "object",
             "properties": {
-                "osCategory": {
-                    "description": "Enums consts.OsCategory",
-                    "type": "string",
-                    "example": "windows"
-                },
-                "osLang": {
-                    "description": "Enums consts.OsLang",
-                    "type": "string",
-                    "example": "zh_cn"
-                },
-                "osType": {
-                    "description": "Enums consts.OsType",
-                    "type": "string",
-                    "example": "win10"
-                },
-                "osVersion": {
-                    "type": "string",
-                    "example": "x64-pro"
-                },
-                "vmBacking": {
+                "backing": {
                     "type": "string"
                 },
-                "vmCpu": {
-                    "type": "integer",
-                    "example": 3
+                "completionRate": {
+                    "type": "number"
                 },
-                "vmDiskSize": {
-                    "type": "integer",
-                    "example": 30000
-                },
-                "vmMacAddress": {
+                "createdAt": {
                     "type": "string"
                 },
-                "vmMemorySize": {
-                    "type": "integer",
-                    "example": 5120000
+                "deleted": {
+                    "type": "boolean"
                 },
-                "vmTemplate": {
+                "deletedAt": {
                     "type": "string"
                 },
-                "vmUniqueName": {
-                    "type": "string",
-                    "example": "test-win10-x64-pro-zh_cn"
+                "desc": {
+                    "type": "string"
+                },
+                "disabled": {
+                    "type": "boolean"
+                },
+                "endTime": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "md5": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "retry": {
+                    "type": "integer"
+                },
+                "startTime": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "taskType": {
+                    "type": "string"
+                },
+                "timeoutTime": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "url": {
+                    "description": "for download",
+                    "type": "string"
+                },
+                "vm": {
+                    "description": "for export vm",
+                    "type": "string"
+                },
+                "xml": {
+                    "type": "string"
+                },
+                "zentaoTask": {
+                    "type": "integer"
                 }
             }
         },
-        "v1.KvmReqClone": {
+        "v1.CloneVmReq": {
             "type": "object",
             "properties": {
                 "vmCpu": {
@@ -460,28 +694,114 @@ var doc = `{
                 }
             }
         },
+        "v1.CreateVmReq": {
+            "type": "object",
+            "properties": {
+                "cpu": {
+                    "type": "integer"
+                },
+                "disk": {
+                    "type": "integer"
+                },
+                "memory": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "os": {
+                    "description": "From 'osinfo-query os' command",
+                    "type": "string",
+                    "enum": [
+                        "win10",
+                        "ubuntu20.04"
+                    ]
+                },
+                "path": {
+                    "type": "string"
+                },
+                "taskId": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.CreateVmResp": {
+            "type": "object",
+            "properties": {
+                "mac": {
+                    "type": "string"
+                },
+                "status": {
+                    "description": "Enums consts.VmStatus",
+                    "type": "string"
+                },
+                "vnc": {
+                    "type": "integer"
+                }
+            }
+        },
+        "v1.DownloadCancelReq": {
+            "type": "object",
+            "properties": {
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.DownloadReq": {
+            "type": "object",
+            "properties": {
+                "urls": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "zentaoTask": {
+                    "type": "integer"
+                }
+            }
+        },
+        "v1.ExportVmReq": {
+            "type": "object",
+            "properties": {
+                "backing": {
+                    "type": "string"
+                },
+                "vm": {
+                    "type": "string"
+                },
+                "zentaoTask": {
+                    "type": "integer"
+                }
+            }
+        },
         "v1.KvmResp": {
             "type": "object",
             "properties": {
-                "agentPort": {
+                "agent": {
                     "type": "integer"
                 },
-                "backingPath": {
+                "backing": {
                     "type": "string"
                 },
-                "imagePath": {
+                "image": {
                     "type": "string"
                 },
-                "macAddress": {
+                "ip": {
+                    "type": "string"
+                },
+                "mac": {
                     "type": "string"
                 },
                 "name": {
                     "type": "string"
                 },
                 "status": {
+                    "description": "Enums consts.VmStatus",
                     "type": "string"
                 },
-                "vncPort": {
+                "vnc": {
                     "type": "integer"
                 },
                 "vncUrl": {
@@ -489,41 +809,103 @@ var doc = `{
                 }
             }
         },
-        "v1.KvmRespTempl": {
+        "v1.ListTaskResp": {
             "type": "object",
             "properties": {
-                "backingFile": {
+                "canceled": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/agentModel.Task"
+                    }
+                },
+                "completed": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/agentModel.Task"
+                    }
+                },
+                "created": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/agentModel.Task"
+                    }
+                },
+                "failed": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/agentModel.Task"
+                    }
+                },
+                "inProgress": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/agentModel.Task"
+                    }
+                }
+            }
+        },
+        "v1.ServiceCheckReq": {
+            "type": "object",
+            "properties": {
+                "services": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.ServiceCheckResp": {
+            "type": "object",
+            "properties": {
+                "code": {
                     "type": "string"
                 },
-                "backingFormat": {
+                "kvm": {
+                    "description": "Enums consts.HostServiceStatus",
                     "type": "string"
                 },
-                "cpuCoreNum": {
-                    "type": "integer"
-                },
-                "diskFile": {
+                "novnc": {
+                    "description": "Enums consts.HostServiceStatus",
                     "type": "string"
                 },
+                "websockify": {
+                    "description": "Enums consts.HostServiceStatus",
+                    "type": "string"
+                }
+            }
+        },
+        "v1.VmNotifyReq": {
+            "type": "object",
+            "properties": {
                 "macAddress": {
                     "type": "string"
-                },
-                "memoryUnit": {
-                    "type": "string"
-                },
-                "memoryValue": {
+                }
+            }
+        },
+        "v1.VmNotifyResp": {
+            "type": "object",
+            "properties": {
+                "agentPortOnHost": {
                     "type": "integer"
                 },
-                "name": {
+                "ip": {
                     "type": "string"
                 },
-                "osArch": {
+                "secret": {
                     "type": "string"
-                },
+                }
+            }
+        },
+        "v1.VmPortMapReq": {
+            "type": "object",
+            "properties": {
                 "type": {
+                    "description": "Enums consts.NatForwardType",
                     "type": "string"
                 },
-                "uuid": {
+                "vmIp": {
                     "type": "string"
+                },
+                "vmPort": {
+                    "type": "integer"
                 }
             }
         },
@@ -537,6 +919,7 @@ var doc = `{
                     "type": "integer"
                 },
                 "type": {
+                    "description": "Enums consts.NatForwardType",
                     "type": "string"
                 },
                 "vmIp": {

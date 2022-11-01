@@ -3,11 +3,11 @@ package hostAgentService
 import (
 	"strings"
 
-	v1 "github.com/easysoft/zv/cmd/host/router/v1"
-	kvmService "github.com/easysoft/zv/internal/host/service/kvm"
-	consts "github.com/easysoft/zv/internal/pkg/const"
-	_checkUtils "github.com/easysoft/zv/internal/pkg/utils/check"
-	_stringUtils "github.com/easysoft/zv/pkg/lib/string"
+	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
+	kvmService "github.com/easysoft/zagent/internal/host/service/kvm"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	_checkUtils "github.com/easysoft/zagent/internal/pkg/utils/check"
+	_stringUtils "github.com/easysoft/zagent/pkg/lib/string"
 )
 
 type StatusService struct {
@@ -18,7 +18,7 @@ func NewStatusService() *StatusService {
 	return &StatusService{}
 }
 
-func (s *StatusService) Check(req v1.ServiceReq) (ret v1.CheckResp, err error) {
+func (s *StatusService) Check(req v1.ServiceCheckReq) (ret v1.ServiceCheckResp, err error) {
 	services := strings.Split(req.Services, ",")
 
 	if _stringUtils.StrInArr(consts.ServiceAll.ToString(), services) ||
@@ -30,7 +30,6 @@ func (s *StatusService) Check(req v1.ServiceReq) (ret v1.CheckResp, err error) {
 
 	if _stringUtils.StrInArr(consts.ServiceAll.ToString(), services) ||
 		_stringUtils.StrInArr(consts.ServiceNovnc.ToString(), services) {
-
 		ret.Novnc, err = _checkUtils.CheckNovnc()
 
 	}

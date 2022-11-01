@@ -1,7 +1,7 @@
 package domain
 
 import (
-	consts "github.com/easysoft/zv/internal/pkg/const"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
 )
 
 var (

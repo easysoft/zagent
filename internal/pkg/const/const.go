@@ -2,7 +2,6 @@ package consts
 
 const (
 	AppName          = "zagent"
-	AppNameServer    = "server"
 	AppNameAgent     = "agent"
 	AppNameAgentHost = "host"
 	AppNameAgentVm   = "vm"

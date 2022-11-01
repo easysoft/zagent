@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/easysoft/zv/internal/pkg/domain"
-	serverConst "github.com/easysoft/zv/internal/server/utils/const"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
+	"github.com/easysoft/zagent/internal/pkg/domain"
+	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 )
 
 type HuaweiCloudCciService struct {

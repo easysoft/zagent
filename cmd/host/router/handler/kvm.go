@@ -1,11 +1,11 @@
 package hostHandler
 
 import (
-	v1 "github.com/easysoft/zv/cmd/host/router/v1"
-	"github.com/easysoft/zv/internal/host/service/kvm"
-	consts "github.com/easysoft/zv/internal/pkg/const"
-	natHelper "github.com/easysoft/zv/internal/pkg/utils/net"
-	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
+	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
+	"github.com/easysoft/zagent/internal/host/service/kvm"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	natHelper "github.com/easysoft/zagent/internal/pkg/utils/net"
+	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
 	"github.com/kataras/iris/v12"
 )
 
@@ -18,30 +18,30 @@ func NewKvmCtrl() *KvmCtrl {
 	return &KvmCtrl{}
 }
 
-// ListTmpl
-// @summary 获取KVM虚拟机模板信息
-// @Produce json
-// @Success 200 {object} _domain.Response{data=[]v1.KvmRespTempl} "code = success? 1 : 0"
-// @Router /api/v1/kvm/listTempl [get]
-func (c *KvmCtrl) ListTmpl(ctx iris.Context) {
-	templs, err := c.LibvirtService.ListTmpl()
-
-	if err != nil {
-		ctx.JSON(_httpUtils.RespData(consts.ResultFail, "fail to list vm tmpl", err))
-		return
-	}
-
-	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to list vm tmpl", templs))
-
-	return
-}
+//// ListTmpl
+//// @summary 获取KVM虚拟机模板信息
+//// @Produce json
+//// @Success 200 {object} _domain.Response{data=[]v1.KvmRespTempl} "code = success | fail"
+//// @Router /api/v1/kvm/listTempl [get]
+//func (c *KvmCtrl) ListTmpl(ctx iris.Context) {
+//	templs, err := c.LibvirtService.ListTmpl()
+//
+//	if err != nil {
+//		ctx.JSON(_httpUtils.RespData(consts.ResultFail, "fail to list vm tmpl", err))
+//		return
+//	}
+//
+//	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to list vm tmpl", templs))
+//
+//	return
+//}
 
 // Create
 // @summary 创建KVM虚拟机
 // @Accept json
 // @Produce json
-// @Param kvmReq body v1.KvmReq true "Kvm Request Object"
-// @Success 200 {object} _domain.Response{data=v1.KvmResp} "code = success? 1 : 0"
+// @Param CreateVmReq body v1.CreateVmReq true "Create Kvm Request Object"
+// @Success 200 {object} _domain.Response{data=v1.CreateVmResp} "code = success | fail"
 // @Router /api/v1/kvm/create [post]
 func (c *KvmCtrl) Create(ctx iris.Context) {
 	req := v1.CreateVmReq{}
@@ -69,48 +69,15 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 	return
 }
 
-// Destroy
-// @summary 摧毁KVM虚拟机
-// @Accept json
-// @Produce json
-// @Param name path string true "Kvm Name"
-// @Success 200 {object} _domain.Response{} "code = success? 1 : 0"
-// @Router /api/v1/kvm/{name}/destroy [post]
-func (c *KvmCtrl) Destroy(ctx iris.Context) {
-	name := ctx.Params().GetString("name")
-	if name == "" {
-		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, "vm name is empty", nil))
-		return
-	}
-
-	req := v1.DestroyVmReq{}
-	err := ctx.ReadJSON(&req)
-	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
-		return
-	}
-
-	bizErr := c.LibvirtService.DestroyVmByName(name, true)
-	if bizErr != nil {
-		ctx.JSON(_httpUtils.RespDataFromBizErr(bizErr))
-		return
-	}
-
-	natHelper.RemoveForward(req.Ip, 0, consts.All)
-
-	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to destroy vm", name))
-	return
-}
-
 // Clone
 // @summary 克隆KVM虚拟机
 // @Accept json
 // @Produce json
-// @Param kvmReqClone body v1.KvmReqClone true "Kvm Request Object"
-// @Success 200 {object} _domain.Response{data=v1.KvmResp} "code = success? 1 : 0"
+// @Param CloneVmReq body v1.CloneVmReq true "Kvm Clone Request Object"
+// @Success 200 {object} _domain.Response{data=v1.KvmResp} "code = success | fail"
 // @Router /api/v1/kvm/clone [post]
 func (c *KvmCtrl) Clone(ctx iris.Context) {
-	req := v1.KvmReqClone{}
+	req := v1.CloneVmReq{}
 	err := ctx.ReadJSON(&req)
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
@@ -140,8 +107,45 @@ func (c *KvmCtrl) Clone(ctx iris.Context) {
 		Backing: vmBackingPath,
 	}
 
-	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to create vm", vm))
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to clone vm", vm))
 
+	return
+}
+
+// Destroy
+// @summary 摧毁KVM虚拟机
+// @Accept json
+// @Produce json
+// @Param name path string true "Kvm Name"
+// @Success 200 {object} _domain.Response{data=string} "code = success | fail"
+// @Router /api/v1/kvm/{name}/destroy [post]
+func (c *KvmCtrl) Destroy(ctx iris.Context) {
+	name := ctx.Params().GetString("name")
+	if name == "" {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, "vm name is empty", nil))
+		return
+	}
+
+	req := v1.DestroyVmReq{}
+	err := ctx.ReadJSON(&req)
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
+
+	bizErr := c.LibvirtService.DestroyVmByName(name, true)
+	if bizErr != nil {
+		ctx.JSON(_httpUtils.RespDataFromBizErr(bizErr))
+		return
+	}
+
+	err = natHelper.RemoveForward(req.Ip, 0, consts.All)
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
+
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to destroy vm", name))
 	return
 }
 
@@ -150,7 +154,7 @@ func (c *KvmCtrl) Clone(ctx iris.Context) {
 // @Accept json
 // @Produce json
 // @Param name path string true "Kvm Name"
-// @Success 200 {object} _domain.Response{} "code = success? 1 : 0"
+// @Success 200 {object} _domain.Response{data=string} "code = success | fail"
 // @Router /api/v1/kvm/{name}/reboot [post]
 func (c *KvmCtrl) Reboot(ctx iris.Context) {
 	name := ctx.Params().GetString("name")
@@ -170,7 +174,7 @@ func (c *KvmCtrl) Reboot(ctx iris.Context) {
 // @Accept json
 // @Produce json
 // @Param name path string true "Kvm Name"
-// @Success 200 {object} _domain.Response{} "code = success? 1 : 0"
+// @Success 200 {object} _domain.Response{data=string} "code = success | fail"
 // @Router /api/v1/kvm/{name}/suspend [post]
 func (c *KvmCtrl) Suspend(ctx iris.Context) {
 	name := ctx.Params().GetString("name")
@@ -194,7 +198,7 @@ func (c *KvmCtrl) Suspend(ctx iris.Context) {
 // @Accept json
 // @Produce json
 // @Param name path string true "Kvm Name"
-// @Success 200 {object} _domain.Response{} "code = success? 1 : 0"
+// @Success 200 {object} _domain.Response{data=string} "code = success | fail"
 // @Router /api/v1/kvm/{name}/resume [post]
 func (c *KvmCtrl) Resume(ctx iris.Context) {
 	name := ctx.Params().GetString("name")
@@ -213,20 +217,27 @@ func (c *KvmCtrl) Resume(ctx iris.Context) {
 	return
 }
 
-func (c *KvmCtrl) AddExportVmTask(ctx iris.Context) {
+// Clone
+// @summary 导出KVM虚拟机为模板镜像
+// @Accept json
+// @Produce json
+// @Param ExportVmReq body v1.ExportVmReq true "Export Kvm Request Object"
+// @Success 200 {object} _domain.Response{} "code = success | fail"
+// @Router /api/v1/kvm/exportVm [post]
+func (c *KvmCtrl) ExportVm(ctx iris.Context) {
 	req := v1.ExportVmReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
 		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 		return
 	}
 
-	resp, err := c.KvmService.AddExportVmTask(req)
+	err := c.KvmService.AddExportVmTask(req)
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 		return
 	}
 
-	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to export vm as template", resp))
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to export vm as image", nil))
 	return
 }
 

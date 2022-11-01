@@ -2,12 +2,12 @@ package vmInit
 
 import (
 	"fmt"
-	vmCron "github.com/easysoft/zv/cmd/vm/cron"
-	vmRouter "github.com/easysoft/zv/cmd/vm/router"
-	agentConf "github.com/easysoft/zv/internal/pkg/conf"
-	consts "github.com/easysoft/zv/internal/pkg/const"
-	_db "github.com/easysoft/zv/pkg/db"
-	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
+	vmCron "github.com/easysoft/zagent/cmd/vm/cron"
+	vmRouter "github.com/easysoft/zagent/cmd/vm/router"
+	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	_db "github.com/easysoft/zagent/pkg/db"
+	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
 	"github.com/facebookgo/inject"
 	"github.com/kataras/iris/v12"
 	"github.com/sirupsen/logrus"

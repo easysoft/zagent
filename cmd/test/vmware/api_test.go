@@ -1,7 +1,7 @@
 package wsapiclient
 
 import (
-	vmwareService "github.com/easysoft/zv/internal/pkg/vendors/vmware"
+	vmwareService "github.com/easysoft/zagent/internal/pkg/vendors/vmware"
 	"log"
 	"testing"
 )

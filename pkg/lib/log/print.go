@@ -6,7 +6,7 @@ import (
 	"log"
 	"strings"
 
-	consts "github.com/easysoft/zv/internal/pkg/const"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/fatih/color"
 )
 

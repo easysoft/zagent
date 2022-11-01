@@ -1,4 +1,4 @@
-module github.com/easysoft/zv
+module github.com/easysoft/zagent
 
 go 1.15
 

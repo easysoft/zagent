@@ -1,9 +1,9 @@
 package hostRepo
 
 import (
-	agentModel "github.com/easysoft/zv/internal/host/model"
-	"github.com/easysoft/zv/internal/pkg/const"
-	_logUtils "github.com/easysoft/zv/pkg/lib/log"
+	agentModel "github.com/easysoft/zagent/internal/host/model"
+	"github.com/easysoft/zagent/internal/pkg/const"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"gorm.io/gorm"
 	"time"
 )
@@ -28,12 +28,12 @@ func (r *TaskRepo) Query() (pos []agentModel.Task, err error) {
 	return
 }
 
-func (r *TaskRepo) Get(id uint) (po agentModel.Task) {
+func (r *TaskRepo) Get(id uint) (po agentModel.Task, err error) {
 	r.DB.Model(&agentModel.Task{}).Preload("Environments", "NOT deleted").Where("id = ?", id).First(&po)
 
 	return
 }
-func (r *TaskRepo) GetDetail(id uint) (po agentModel.Task) {
+func (r *TaskRepo) GetDetail(id uint) (po agentModel.Task, err error) {
 	r.DB.Model(&po).
 		Where("id = ?", id).First(&po)
 
@@ -58,14 +58,28 @@ func (r *TaskRepo) Update(po *agentModel.Task) (err error) {
 	return
 }
 
-func (r *TaskRepo) UpdateStatus(id uint, filePath, xmlDesc string, status consts.DownloadStatus) (err error) {
-	err = r.DB.Model(&agentModel.Task{}).Where("id = ?", id).
-		Updates(map[string]interface{}{"status": status, "end_time": time.Now()}).Error
+func (r *TaskRepo) UpdateStatus(id uint, filePath string, completionRate float64, xmlDesc string,
+	status consts.TaskStatus, isStart, isEnd bool) (err error) {
+
+	updates := map[string]interface{}{"status": status, "xml": xmlDesc}
 
 	if filePath != "" {
-		err = r.DB.Model(&agentModel.Task{}).Where("id = ?", id).
-			Updates(map[string]interface{}{"path": filePath}).Error
+		updates["path"] = filePath
 	}
+
+	if completionRate > 0 {
+		updates["completion_rate"] = completionRate
+	}
+
+	if isStart {
+		updates["start_time"] = time.Now()
+	}
+	if isEnd {
+		updates["end_time"] = time.Now()
+	}
+
+	err = r.DB.Model(&agentModel.Task{}).Where("id = ?", id).
+		Updates(updates).Error
 
 	return
 }
@@ -80,5 +94,11 @@ func (r *TaskRepo) Delete(id uint) (err error) {
 func (r *TaskRepo) SetFailed(po agentModel.Task) (err error) {
 	r.DB.Model(&agentModel.Task{}).Where("id=?", po.ID).Updates(
 		map[string]interface{}{"status": consts.Failed, "timeout_time": time.Now()})
+	return
+}
+
+func (r *TaskRepo) AddRetry(po agentModel.Task) (err error) {
+	r.DB.Model(&agentModel.Task{}).Where("id=?", po.ID).Updates(
+		map[string]interface{}{"retry": gorm.Expr("retry + ?", 1)})
 	return
 }

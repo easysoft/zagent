@@ -33,20 +33,13 @@ sudo chmod u+s /usr/sbin/nginx
 sudo chmod -R 666 /zagent/nginx/conf.*.d
 
 # 本地安装swaggo，生成并上传。 https://github.com/swaggo/swag
-rm -rf res/server/docs
-swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/server -o res/server/docs
-rm -rf res/host/docs
-swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/host -o res/host/docs
-rm -rf res/vm/docs
-swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/vm -o res/vm/docs
+rm -rf res/host/docs && swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/host -o res/host/docs
+rm -rf res/vm/docs && swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/vm -o res/vm/docs
 
-nohup swagger serve -p 50001 --no-open /Users/aaron/rd/project/zentao/go/zv/res/server/docs/swagger.json > server.log 2>&1 &
-
-# 服务器上启动go-swagger服务。 https://github.com/go-swagger/go-swagger，跳板 ssh zencloud
+# 服务器上启动go-swagger服务。 https://github.com/go-swagger/go-swagger
 ps -ef | grep swagger | grep -v grep | awk '{print $2}' | xargs kill -9
-nohup swagger serve --no-open -p 50001 res/server/docs/swagger.json > server.log 2>&1 &
-nohup swagger serve --no-open -p 50002 res/host/docs/swagger.json > host.log 2>&1 &
-nohup swagger serve --no-open -p 50003 res/vm/docs/swagger.json > vm.log 2>&1 &
+nohup swagger serve --no-open -p 50002 https://gitee.com/aaronchen2k/zagent/raw/main/res/host/docs/swagger.json > host.log 2>&1 &
+nohup swagger serve --no-open -p 50003 https://gitee.com/aaronchen2k/zagent/raw/main/res/vm/docs/swagger.json > vm.log 2>&1 &
 
 qemu-img create -f qcow2 \
     -o cluster_size=2M,backing_file=/home/aaron/zagent/kvm/download/win10.qcow2 \

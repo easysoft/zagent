@@ -2,14 +2,14 @@ package hostInit
 
 import (
 	"fmt"
-	hostCron "github.com/easysoft/zv/cmd/host/cron"
-	hostRouter "github.com/easysoft/zv/cmd/host/router"
-	hostKvmService "github.com/easysoft/zv/internal/host/service/kvm"
-	virtualService "github.com/easysoft/zv/internal/host/service/virtual"
-	agentConf "github.com/easysoft/zv/internal/pkg/conf"
-	consts "github.com/easysoft/zv/internal/pkg/const"
-	_db "github.com/easysoft/zv/pkg/db"
-	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
+	hostCron "github.com/easysoft/zagent/cmd/host/cron"
+	hostRouter "github.com/easysoft/zagent/cmd/host/router"
+	hostKvmService "github.com/easysoft/zagent/internal/host/service/kvm"
+	virtualService "github.com/easysoft/zagent/internal/host/service/virtual"
+	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	_db "github.com/easysoft/zagent/pkg/db"
+	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
 	"github.com/facebookgo/inject"
 	"github.com/kataras/iris/v12"
 	"github.com/sirupsen/logrus"
@@ -19,7 +19,7 @@ import (
 
 func Init() {
 	agentConf.Init(consts.AppNameAgentHost)
-	_db.InitDB("agent")
+	_db.InitDB("host")
 
 	irisServer := NewServer(nil)
 	irisServer.App.Logger().SetLevel("info")

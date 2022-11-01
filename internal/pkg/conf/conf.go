@@ -3,13 +3,13 @@ package agentConf
 import (
 	"path/filepath"
 
-	consts "github.com/easysoft/zv/internal/pkg/const"
-	netUtils "github.com/easysoft/zv/internal/pkg/utils/net"
-	_const "github.com/easysoft/zv/pkg/const"
-	_commonUtils "github.com/easysoft/zv/pkg/lib/common"
-	_fileUtils "github.com/easysoft/zv/pkg/lib/file"
-	_httpUtils "github.com/easysoft/zv/pkg/lib/http"
-	_i118Utils "github.com/easysoft/zv/pkg/lib/i118"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	netUtils "github.com/easysoft/zagent/internal/pkg/utils/net"
+	_const "github.com/easysoft/zagent/pkg/const"
+	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
+	_fileUtils "github.com/easysoft/zagent/pkg/lib/file"
+	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
+	_i118Utils "github.com/easysoft/zagent/pkg/lib/i118"
 )
 
 var (
@@ -38,6 +38,7 @@ func Init(app string) {
 
 	if Inst.RunMode == consts.RunModeHost {
 		consts.WorkDir = Inst.WorkDir
+		consts.DownloadDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.WorkDir, consts.FolderDownload))
 		consts.NovncDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.WorkDir, consts.FolderNovnc))
 		consts.WebsockifyDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.WorkDir, consts.FolderWebsockify))
 

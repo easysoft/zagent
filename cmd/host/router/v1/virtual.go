@@ -1,6 +1,6 @@
 package v1
 
-import consts "github.com/easysoft/zv/internal/pkg/const"
+import consts "github.com/easysoft/zagent/internal/pkg/const"
 
 type DestroyVmReq struct {
 	Ip string `json:"ip"`
@@ -9,13 +9,13 @@ type DestroyVmReq struct {
 type VmPortMapReq struct {
 	VmIp   string                `json:"vmIp"`
 	VmPort int                   `json:"vmPort"`
-	Type   consts.NatForwardType `json:"type"`
+	Type   consts.NatForwardType `json:"type"` // Enums consts.NatForwardType
 }
 
 type VmPortMapResp struct {
 	VmIp   string                `json:"vmIp"`
 	VmPort int                   `json:"vmPort"`
-	Type   consts.NatForwardType `json:"type"`
+	Type   consts.NatForwardType `json:"type"` // Enums consts.NatForwardType
 
 	HostPort      int  `json:"hostPort"`
 	AlreadyMapped bool `json:"alreadyMapped"`

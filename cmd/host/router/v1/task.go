@@ -1,13 +1,12 @@
 package v1
 
-import consts "github.com/easysoft/zv/internal/pkg/const"
+import agentModel "github.com/easysoft/zagent/internal/host/model"
 
-type TaskResp struct {
-	Status consts.DownloadStatus `json:"status"`
+type ListTaskResp struct {
+	Created    []agentModel.Task `json:"created"`
+	InProgress []agentModel.Task `json:"inProgress"`
 
-	// for download image
-	ImagePath string `json:"path"`
-
-	TaskId   int             `json:"taskId"`
-	TaskType consts.TaskType `json:"taskType"`
+	Canceled  []agentModel.Task `json:"canceled"`
+	Completed []agentModel.Task `json:"completed"`
+	Failed    []agentModel.Task `json:"failed"`
 }

@@ -2,7 +2,7 @@ package _domain
 
 import (
 	"fmt"
-	consts "github.com/easysoft/zv/internal/pkg/const"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
 )
 
 type RemoteReq struct {
