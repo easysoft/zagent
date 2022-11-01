@@ -10,12 +10,11 @@ import (
 
 //find port by keyword
 func GetUsedPortByKeyword(keyword string, defaultVal int) (port int, err error) {
-	port = defaultVal
 	cmd := fmt.Sprintf(`ss -tnlp | grep %s | awk '{ print $4 }'`, keyword)
 	output, _ := _shellUtils.ExeSysCmd(cmd)
 	output = strings.TrimSpace(output)
 
-	if output == "" {
+	if output != "" {
 		list := strings.Split(output, "\n")
 		lastInfo := list[len(list)-1]
 		lastInfo = strings.TrimSpace(lastInfo)
@@ -27,12 +26,15 @@ func GetUsedPortByKeyword(keyword string, defaultVal int) (port int, err error) 
 		port, err = GetUsedPortByPs(keyword, defaultVal)
 	}
 
+	if port == 0 {
+		port = defaultVal
+	}
+
 	return
 }
 
 //find port by ps command
 func GetUsedPortByPs(keyword string, defaultVal int) (port int, err error) {
-	port = defaultVal
 	cmd := fmt.Sprintf(`ps aux | grep "%s" |grep -v grep | tr -s ' ' | cut -d' ' -f2,11-20`, keyword)
 	output, _ := _shellUtils.ExeSysCmd(cmd)
 	output = strings.TrimSpace(output)
@@ -43,7 +45,6 @@ func GetUsedPortByPs(keyword string, defaultVal int) (port int, err error) {
 
 	list := strings.Split(output, "\n")
 	for _, l := range list {
-
 		l = strings.TrimSpace(l)
 		if !strings.Contains(l, keyword) {
 			continue

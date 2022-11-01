@@ -167,7 +167,7 @@ install_novnc()
         ck_ok "unZip novnc"
     fi
     
-    /usr/bin/mv ${HOME}/zagent/vnc_lite.html ${HOME}/zagent/index.html
+    /usr/bin/mv ${HOME}/zagent/novnc/vnc_lite.html ${HOME}/zagent/novnc/index.html
     /usr/bin/rm ${HOME}/zagent/novnc.zip
 }
 download_nginx()
