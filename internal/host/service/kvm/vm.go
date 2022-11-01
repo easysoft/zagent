@@ -59,7 +59,7 @@ func (s *KvmService) CreateVmFromImage(req *v1.CreateVmReq, removeSameName bool)
 		return
 	}
 
-	cmdCreateVm := fmt.Sprintf(consts.CmdCreateVm, vmName, cpuCores, ramSize, diskSize)
+	cmdCreateVm := fmt.Sprintf(consts.CmdCreateVm, vmName, cpuCores, ramSize, srcFile, diskSize)
 	out, err = _shellUtils.ExeShell(cmdCreateVm)
 	if err != nil {
 		_logUtils.Infof("exec cmd '%s' err, output %s, error %s", cmdCreateVm, out, err.Error())

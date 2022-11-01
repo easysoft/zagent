@@ -12,7 +12,7 @@ const (
 --name %s \
 --vcpus %d \
 --ram %d \
---disk path=/home/aaron/zagent/kvm/image/test-1.qcow2,size=%d,sparse \
+--disk path=%s,size=%d,sparse \
 --network default \
 --boot hd \
 --os-variant generic \
