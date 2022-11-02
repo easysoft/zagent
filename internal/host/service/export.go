@@ -49,28 +49,36 @@ func (s *ExportService) ExportVm(po agentModel.Task, targetBakingFilePath string
 
 	dom, err := s.LibvirtService.GetVm(vmName)
 	if err != nil {
+		status = consts.Failed
 		return
 	}
 
 	xml, err = dom.GetXMLDesc(0)
 	if err != nil {
+		status = consts.Failed
 		return
 	}
 
 	vmDiskPath, err := s.QemuService.GetDisk(dom)
 	if err != nil {
+		status = consts.Failed
 		return
 	}
 
-	err = s.LibvirtService.SafeDestroyVmByName(vmName)
-	if err != nil {
+	bizErr := s.LibvirtService.SafeDestroyVmByName(vmName)
+	if bizErr != nil {
+		status = consts.Failed
 		return
 	}
 
 	cmd := fmt.Sprintf(consts.CmdExportVm, vmDiskPath, targetBakingFilePath)
-	_shellUtils.ExeShell(cmd)
+	_, err = _shellUtils.ExeShell(cmd)
+	if err != nil {
+		status = consts.Failed
+		return
+	}
 
-	s.LibvirtService.BootVmByName(vmName)
+	err = s.LibvirtService.BootVmByName(vmName)
 
 	return
 }
