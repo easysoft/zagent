@@ -13,6 +13,7 @@ func TestLibVirt(t *testing.T) {
 	log.Print(err.Error())
 
 	/**
+
 	src:  xml template
 	base: backing file, get by vm's OsCategory properties etc.
 	*/
