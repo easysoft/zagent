@@ -209,7 +209,12 @@ func findSameFile(task agentModel.Task, dir string) (existFile string) {
 
 		if md5 == task.Md5 {
 			existFile = strings.Replace(md5FilePath, ".md5", "", -1)
-			return
+
+			if _fileUtils.FileExist(existFile) {
+				return
+			} else {
+				existFile = ""
+			}
 		}
 	}
 
