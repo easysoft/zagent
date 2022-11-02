@@ -1,11 +1,12 @@
 package hostRepo
 
 import (
+	"time"
+
 	agentModel "github.com/easysoft/zagent/internal/host/model"
-	"github.com/easysoft/zagent/internal/pkg/const"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"gorm.io/gorm"
-	"time"
 )
 
 type TaskRepo struct {
@@ -43,6 +44,17 @@ func (r *TaskRepo) GetDetail(id uint) (po agentModel.Task, err error) {
 func (r *TaskRepo) GetByUrl(url string) (po agentModel.Task, err error) {
 	r.DB.Model(&po).
 		Where("url = ?", url).First(&po)
+
+	return
+}
+
+func (r *TaskRepo) GetByMd5(md5 string) (po agentModel.Task, err error) {
+	if md5 == "" {
+		return
+	}
+
+	r.DB.Model(&po).
+		Where("md5 = ?", md5).Order("id desc").First(&po)
 
 	return
 }

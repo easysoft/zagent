@@ -1,13 +1,15 @@
 package hostAgentService
 
 import (
+	"errors"
+	"sync"
+
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	agentModel "github.com/easysoft/zagent/internal/host/model"
 	hostRepo "github.com/easysoft/zagent/internal/host/repo"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	_channelUtils "github.com/easysoft/zagent/pkg/lib/channel"
 	downloadUtils "github.com/easysoft/zagent/pkg/lib/download"
-	"sync"
 )
 
 var (
@@ -32,6 +34,17 @@ func (s *DownloadService) AddTasks(req []v1.DownloadReq) (err error) {
 			ZentaoTask: item.ZentaoTask,
 			TaskType:   consts.DownloadImage,
 			Status:     consts.Created,
+		}
+
+		existInfo, _ := s.TaskRepo.GetByMd5(item.Md5)
+
+		if existInfo.ID != 0 {
+			if existInfo.Status == consts.InProgress {
+				err = errors.New("the same md5 task exists")
+				return
+			} else {
+				s.TaskRepo.SetFailed(existInfo)
+			}
 		}
 
 		s.TaskRepo.Save(&po)
@@ -63,6 +76,7 @@ func (s *DownloadService) StartTask(po agentModel.Task) {
 		downloadUtils.TaskMap.Delete(po.ID)
 
 		if ch != nil {
+			channelMap.Delete(po.ID)
 			close(ch)
 		}
 	}()
@@ -74,6 +88,8 @@ func (s *DownloadService) CancelTask(taskId uint) {
 	if !ok || chVal == nil {
 		return
 	}
+
+	channelMap.Delete(taskId)
 
 	ch := chVal.(chan int)
 	if ch != nil {
@@ -101,4 +117,15 @@ func (s *DownloadService) RemoveTask(req v1.DownloadReq) {
 	s.TaskRepo.Delete(uint(req.ZentaoTask))
 
 	return
+}
+
+func (s *DownloadService) isEmpty() bool {
+	length := 0
+
+	channelMap.Range(func(key, value interface{}) bool {
+		length++
+		return true
+	})
+
+	return length == 0
 }
