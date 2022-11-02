@@ -241,27 +241,28 @@ func (c *KvmCtrl) Resume(ctx iris.Context) {
 	return
 }
 
-//func (c *KvmCtrl) Boot(ctx iris.Context) {
-//	req :=v1.KvmReq{}
-//	if err := ctx.ReadJSON(&req); err != nil {
-//		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
-//		return
-//	}
-//
-//	c.LibvirtService.BootVmByName(req.VmUniqueName)
-//
-//	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to boot vm", req.VmUniqueName))
-//	return
-//}
-//func (c *KvmCtrl) Shutdown(ctx iris.Context) {
-//	req :=v1.KvmReq{}
-//	if err := ctx.ReadJSON(&req); err != nil {
-//		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
-//		return
-//	}
-//
-//	c.LibvirtService.ShutdownVmByName(req.VmUniqueName)
-//
-//	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to shutdown vm", req.VmUniqueName))
-//	return
-//}
+func (c *KvmCtrl) Boot(ctx iris.Context) {
+	name := ctx.Params().GetString("name")
+	if name == "" {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, "vm name is empty", nil))
+		return
+	}
+
+	c.LibvirtService.BootVmByName(name)
+
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to boot vm", name))
+	return
+}
+
+func (c *KvmCtrl) Shutdown(ctx iris.Context) {
+	name := ctx.Params().GetString("name")
+	if name == "" {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, "vm name is empty", nil))
+		return
+	}
+
+	c.LibvirtService.ShutdownVmByName(name)
+
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to shutdown vm", nil))
+	return
+}

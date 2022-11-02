@@ -2,21 +2,14 @@ package kvm
 
 import (
 	hostKvmService "github.com/easysoft/zagent/internal/host/service/kvm"
-	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
-	"github.com/easysoft/zagent/internal/pkg/const"
-	"github.com/libvirt/libvirt-go"
 	"log"
 	"testing"
 )
 
 func TestLibVirt(t *testing.T) {
-	agentConf.Inst.Host = "192.168.0.56"
-	agentConf.Inst.User = "aaron"
-	agentConf.Init(consts.AppNameAgentHost)
-
 	service := hostKvmService.NewLibvirtService()
 
-	err := service.ShutdownVmByName("test-win10", libvirt.DOMAIN_SHUTDOWN_DEFAULT)
+	err := service.ShutdownVmByName("test-win10")
 	log.Print(err.Error())
 
 	/**
