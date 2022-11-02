@@ -89,7 +89,7 @@ func (c *KvmCtrl) ExportVm(ctx iris.Context) {
 		return
 	}
 
-	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to export vm as image", nil))
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to add export vm task", nil))
 	return
 }
 

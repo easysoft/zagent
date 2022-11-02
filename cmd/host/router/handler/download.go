@@ -34,7 +34,7 @@ func (c *DownloadCtrl) Add(ctx iris.Context) {
 
 	c.DownloadService.AddTasks(req)
 
-	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success", nil))
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to add download image task", nil))
 	return
 }
 
