@@ -49,7 +49,7 @@ func (s *KvmService) CreateVmFromImage(req *v1.CreateVmReq, removeSameName bool)
 	diskSize := req.Disk
 
 	if removeSameName {
-		s.LibvirtService.DestroyVmByName(vmName)
+		s.LibvirtService.SafeDestroyVmByName(vmName)
 	}
 
 	// create image
@@ -174,7 +174,7 @@ func (s *KvmService) UpdateVmMapAndDestroyTimeout(vms []domain.Vm) {
 		// destroy and remove timeout vm
 		v := s.VmMapVar[key]
 		if time.Now().Unix()-v.FirstDetectedTime.Unix() > consts.WaitVmLifecycleTimeout { // timeout
-			s.LibvirtService.DestroyVmByName(v.Name)
+			s.LibvirtService.SafeDestroyVmByName(v.Name)
 			delete(s.VmMapVar, key)
 		}
 	}

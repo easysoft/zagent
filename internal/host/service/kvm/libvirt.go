@@ -55,7 +55,7 @@ func NewLibvirtService() *LibvirtService {
 //	vmBackingPath = req.VmBacking
 //
 //	if removeSameName {
-//		s.DestroyVmByName(vmUniqueName, true)
+//		s.SafeDestroyVmByName(vmUniqueName, true)
 //	}
 //
 //	// gen tmpl xml definition
@@ -217,7 +217,7 @@ func (s *LibvirtService) DestroyVm(dom *libvirt.Domain) (err error) {
 
 	return
 }
-func (s *LibvirtService) DestroyVmByName(name string) (bizErr *domain.BizErr) {
+func (s *LibvirtService) SafeDestroyVmByName(name string) (bizErr *domain.BizErr) {
 	dom, err := s.GetVm(name)
 	if err != nil {
 		bizErr = &domain.ResultVmNotFound

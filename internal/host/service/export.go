@@ -62,7 +62,7 @@ func (s *ExportService) ExportVm(po agentModel.Task, targetBakingFilePath string
 		return
 	}
 
-	err = s.LibvirtService.DestroyVmByName(vmName)
+	err = s.LibvirtService.SafeDestroyVmByName(vmName)
 	if err != nil {
 		return
 	}

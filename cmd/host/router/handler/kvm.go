@@ -157,7 +157,7 @@ func (c *KvmCtrl) Destroy(ctx iris.Context) {
 		return
 	}
 
-	bizErr := c.LibvirtService.DestroyVmByName(name, true)
+	bizErr := c.LibvirtService.SafeDestroyVmByName(name)
 	if bizErr != nil {
 		ctx.JSON(_httpUtils.RespDataFromBizErr(bizErr))
 		return
