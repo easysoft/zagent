@@ -16,7 +16,7 @@ func Download(url string, dst string) (err error) {
 
 	var data []byte
 	data, err = HTTPDownload(url)
-	if err == nil {
+	if err == nil && len(string(data)) == 32 {
 		_logUtils.Info(_i118Utils.Sprintf("file_downloaded", url))
 
 		err = WriteDownloadFile(dst, data)
@@ -33,8 +33,12 @@ func HTTPDownload(url string) (bytes []byte, err error) {
 	defer resp.Body.Close()
 
 	if err != nil {
-		_logUtils.Error(err.Error())
-
+		_logUtils.Infof("download %s error %s", url, err.Error())
+		return
+	}
+	if resp.StatusCode != 200 {
+		_logUtils.Infof("download %s server return %s", url, resp.Status)
+		return
 	}
 
 	d, err := ioutil.ReadAll(resp.Body)
