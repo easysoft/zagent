@@ -57,33 +57,15 @@ definitions:
       zentaoTask:
         type: integer
     type: object
-  v1.CloneVmReq:
-    properties:
-      vmCpu:
-        example: 3
-        type: integer
-      vmDiskSize:
-        example: 30000
-        type: integer
-      vmMacAddress:
-        type: string
-      vmMemorySize:
-        example: 5120000
-        type: integer
-      vmSrc:
-        example: test-win10-x64-pro-zh_cn
-        type: string
-      vmUniqueName:
-        example: test-win10-x64-pro-zh_cn-clone1
-        type: string
-    type: object
   v1.CreateVmReq:
     properties:
       cpu:
         type: integer
       disk:
+        description: Unit G
         type: integer
       memory:
+        description: Unit G
         type: integer
       name:
         type: string
@@ -110,15 +92,15 @@ definitions:
     type: object
   v1.DownloadCancelReq:
     properties:
-      url:
-        type: string
+      id:
+        type: integer
     type: object
   v1.DownloadReq:
     properties:
-      urls:
-        items:
-          type: string
-        type: array
+      md5:
+        type: string
+      url:
+        type: string
       zentaoTask:
         type: integer
     type: object
@@ -130,28 +112,6 @@ definitions:
         type: string
       zentaoTask:
         type: integer
-    type: object
-  v1.KvmResp:
-    properties:
-      agent:
-        type: integer
-      backing:
-        type: string
-      image:
-        type: string
-      ip:
-        type: string
-      mac:
-        type: string
-      name:
-        type: string
-      status:
-        description: Enums consts.VmStatus
-        type: string
-      vnc:
-        type: integer
-      vncUrl:
-        type: string
     type: object
   v1.ListTaskResp:
     properties:
@@ -183,8 +143,6 @@ definitions:
     type: object
   v1.ServiceCheckResp:
     properties:
-      code:
-        type: string
       kvm:
         description: Enums consts.HostServiceStatus
         type: string
@@ -260,7 +218,9 @@ paths:
         name: DownloadReq
         required: true
         schema:
-          $ref: '#/definitions/v1.DownloadReq'
+          items:
+            $ref: '#/definitions/v1.DownloadReq'
+          type: array
       produces:
       - application/json
       responses:
@@ -380,30 +340,6 @@ paths:
                   type: string
               type: object
       summary: 暂停KVM虚拟机
-  /api/v1/kvm/clone:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: Kvm Clone Request Object
-        in: body
-        name: CloneVmReq
-        required: true
-        schema:
-          $ref: '#/definitions/v1.CloneVmReq'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: code = success | fail
-          schema:
-            allOf:
-            - $ref: '#/definitions/_domain.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/v1.KvmResp'
-              type: object
-      summary: 克隆KVM虚拟机
   /api/v1/kvm/create:
     post:
       consumes:

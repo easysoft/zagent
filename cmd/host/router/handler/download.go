@@ -21,7 +21,7 @@ func NewDownloadCtrl() *DownloadCtrl {
 // @summary 添加下载任务
 // @Accept json
 // @Produce json
-// @Param DownloadReq body v1.DownloadReq true "Download Request Object"
+// @Param DownloadReq body []v1.DownloadReq true "Download Request Object"
 // @Success 200 {object} _domain.Response "code = success | fail"
 // @Router /api/v1/download/add [post]
 func (c *DownloadCtrl) Add(ctx iris.Context) {
