@@ -27,13 +27,13 @@ func (s *ExportService) StartTask(po agentModel.Task) {
 	ch := make(chan int, 1)
 
 	go func() {
-		targetFilePath := filepath.Join(agentConf.Inst.DirBaking, po.Backing)
+		targetBakingFilePath := filepath.Join(agentConf.Inst.DirBaking, po.Backing)
 
-		s.TaskRepo.UpdateStatus(po.ID, targetFilePath, 0, "", consts.InProgress, true, false)
+		s.TaskRepo.UpdateStatus(po.ID, targetBakingFilePath, 0, "", consts.InProgress, true, false)
 
-		xmlDesc, finalStatus := s.ExportVm(po, targetFilePath)
+		xmlDesc, finalStatus := s.ExportVm(po, targetBakingFilePath)
 
-		s.TaskRepo.UpdateStatus(po.ID, targetFilePath, 0, xmlDesc, finalStatus, false, true)
+		s.TaskRepo.UpdateStatus(po.ID, targetBakingFilePath, 0, xmlDesc, finalStatus, false, true)
 
 		po, _ = s.TaskRepo.Get(po.ID)
 		s.TaskService.SubmitResult(po)
@@ -44,7 +44,7 @@ func (s *ExportService) StartTask(po agentModel.Task) {
 	}()
 }
 
-func (s *ExportService) ExportVm(po agentModel.Task, targetFilePath string) (xml string, status consts.TaskStatus) {
+func (s *ExportService) ExportVm(po agentModel.Task, targetBakingFilePath string) (xml string, status consts.TaskStatus) {
 	vmName := po.Vm
 
 	dom, err := s.LibvirtService.GetVm(vmName)
@@ -64,7 +64,7 @@ func (s *ExportService) ExportVm(po agentModel.Task, targetFilePath string) (xml
 
 	s.LibvirtService.ShutdownVmByName(vmName)
 
-	cmd := fmt.Sprintf(consts.CmdExportVm, vmDiskPath, targetFilePath)
+	cmd := fmt.Sprintf(consts.CmdExportVm, vmDiskPath, targetBakingFilePath)
 	_shellUtils.ExeShell(cmd)
 
 	s.LibvirtService.BootVmByName(vmName)
