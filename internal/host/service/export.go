@@ -8,6 +8,7 @@ import (
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
+	"github.com/libvirt/libvirt-go"
 	"path/filepath"
 )
 
@@ -62,7 +63,7 @@ func (s *ExportService) ExportVm(po agentModel.Task, targetBakingFilePath string
 		return
 	}
 
-	err = s.LibvirtService.ShutdownVmByName(vmName)
+	err = s.LibvirtService.ShutdownVmByName(vmName, libvirt.DOMAIN_SHUTDOWN_DEFAULT)
 	if err != nil {
 		return
 	}
