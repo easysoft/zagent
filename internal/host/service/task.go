@@ -1,6 +1,7 @@
 package hostAgentService
 
 import (
+	"fmt"
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	agentModel "github.com/easysoft/zagent/internal/host/model"
 	hostRepo "github.com/easysoft/zagent/internal/host/repo"
@@ -9,6 +10,7 @@ import (
 	requestUtils "github.com/easysoft/zagent/internal/pkg/utils/request"
 	downloadUtils "github.com/easysoft/zagent/pkg/lib/download"
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
+	"strconv"
 	"time"
 )
 
@@ -83,6 +85,9 @@ func (s *TaskService) ListTask() (ret v1.ListTaskResp, err error) {
 		if speed > 0 {
 			po.Speed = speed
 		}
+
+		po.CompletionRate, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", po.CompletionRate), 64)
+		po.Speed, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", po.Speed), 64)
 
 		if status == consts.Created {
 			ret.Created = append(ret.Created, po)

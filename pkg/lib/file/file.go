@@ -18,6 +18,10 @@ import (
 )
 
 func ReadFile(filePath string) string {
+	if !FileExist(filePath) {
+		return ""
+	}
+
 	buf := ReadFileBuf(filePath)
 	str := string(buf)
 	str = _commonUtils.RemoveBlankLine(str)
@@ -25,6 +29,10 @@ func ReadFile(filePath string) string {
 }
 
 func ReadFileBuf(filePath string) []byte {
+	if !FileExist(filePath) {
+		return nil
+	}
+
 	buf, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		return []byte(err.Error())

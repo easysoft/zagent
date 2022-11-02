@@ -20,7 +20,7 @@ var (
 	TaskMap sync.Map
 )
 
-func Start(task agentModel.Task, filePath string, ch chan int) (status consts.TaskStatus, existFile string) {
+func Start(task *agentModel.Task, filePath string, ch chan int) (status consts.TaskStatus, existFile string) {
 	fmt.Printf("Start to download %s ...\n", task.Url)
 
 	startTime := time.Now()
@@ -28,10 +28,10 @@ func Start(task agentModel.Task, filePath string, ch chan int) (status consts.Ta
 
 	targetDir := consts.DownloadDir
 	if task.Md5 == "" {
-		getMd5FromRemote(&task, targetDir)
+		getMd5FromRemote(task, targetDir)
 	}
 
-	existFile = findSameFile(task, targetDir)
+	existFile = findSameFile(*task, targetDir)
 	if existFile != "" {
 		status = consts.Completed
 		return
@@ -131,11 +131,11 @@ ExitDownload:
 	} else {
 		task.Path = filePath
 
-		if checkMd5(task) {
+		if checkMd5(*task) {
 			status = consts.Completed
 
 			if task.Md5 != "" {
-				saveMd5FromRequest(&task, targetDir)
+				saveMd5FromRequest(task, targetDir)
 			}
 
 			fmt.Printf("Successfully download %s to %s.\n", task.Url, task.Path)

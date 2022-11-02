@@ -62,7 +62,7 @@ func (s *DownloadService) StartTask(po agentModel.Task) {
 
 		s.TaskRepo.UpdateStatus(po.ID, filePath, 0.01, "", consts.InProgress, true, false)
 
-		finalStatus, existFile := downloadUtils.Start(po, filePath, ch)
+		finalStatus, existFile := downloadUtils.Start(&po, filePath, ch)
 		if existFile != "" {
 			filePath = existFile
 		}
