@@ -32,10 +32,13 @@ func (c *DownloadCtrl) Add(ctx iris.Context) {
 		return
 	}
 
-	c.DownloadService.AddTasks(req)
+	err = c.DownloadService.AddTasks(req)
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
 
 	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success", nil))
-	return
 }
 
 // @summary 强制终止下载任务

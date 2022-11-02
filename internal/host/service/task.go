@@ -1,6 +1,8 @@
 package hostAgentService
 
 import (
+	"time"
+
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	agentModel "github.com/easysoft/zagent/internal/host/model"
 	hostRepo "github.com/easysoft/zagent/internal/host/repo"
@@ -9,7 +11,6 @@ import (
 	requestUtils "github.com/easysoft/zagent/internal/pkg/utils/request"
 	downloadUtils "github.com/easysoft/zagent/pkg/lib/download"
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
-	"time"
 )
 
 type TaskService struct {
@@ -31,7 +32,7 @@ func (s *TaskService) CheckTask() (err error) {
 		runningTask := taskMap.InProgress[0]
 
 		if runningTask.TaskType == consts.DownloadImage {
-			if s.IsError(runningTask) || s.IsTimeout(runningTask) {
+			if s.IsError(runningTask) || s.IsTimeout(runningTask) || s.DownloadService.isEmpty() {
 				if s.NeedRetry(runningTask) {
 					s.DownloadService.RestartTask(runningTask)
 				} else {
