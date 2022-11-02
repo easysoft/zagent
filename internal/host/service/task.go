@@ -136,7 +136,7 @@ func (s *TaskService) IsError(po agentModel.Task) bool {
 func (s *TaskService) IsTimeout(po agentModel.Task) bool {
 	dur := time.Now().Unix() - po.StartTime.Unix()
 	//return dur > 3
-	return dur > consts.DownloadTimeout
+	return dur > consts.DownloadImageTimeout
 }
 
 func (s *TaskService) NeedRetry(po agentModel.Task) bool {

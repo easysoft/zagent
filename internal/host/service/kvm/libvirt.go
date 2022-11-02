@@ -55,7 +55,7 @@ func NewLibvirtService() *LibvirtService {
 //	vmBackingPath = req.VmBacking
 //
 //	if removeSameName {
-//		s.DestroyVmByName(vmUniqueName, true)
+//		s.SafeDestroyVmByName(vmUniqueName, true)
 //	}
 //
 //	// gen tmpl xml definition
@@ -120,10 +120,10 @@ func (s *LibvirtService) CloneVm(req *v1.CloneVmReq, removeSameName bool) (dom *
 		return
 	}
 
-	vmMacAddress := req.VmMacAddress
 	vmUniqueName := req.VmUniqueName
+	vmMacAddress := req.VmMacAddress
 	if removeSameName {
-		s.DestroyVmByName(vmUniqueName, true)
+		s.RemoveVmByName(vmUniqueName, true)
 	}
 
 	vmCpu := req.VmCpu
@@ -208,44 +208,58 @@ func (s *LibvirtService) GetVm(name string) (dom *libvirt.Domain, err error) {
 	return
 }
 
-func (s *LibvirtService) StartVm(dom *libvirt.Domain) (err error) {
+func (s *LibvirtService) StartVmByName(name string) (err error) {
+	dom, err := s.GetVm(name)
+
 	err = dom.Create()
-	return
-}
-func (s *LibvirtService) DestroyVm(dom *libvirt.Domain) (err error) {
-	err = dom.Destroy()
 
 	return
 }
-func (s *LibvirtService) DestroyVmByName(name string, removeDiskImage bool) (bizErr *domain.BizErr) {
+
+func (s *LibvirtService) DestroyVm(dom *libvirt.Domain) (err error) {
+	err = dom.DestroyFlags(libvirt.DOMAIN_DESTROY_GRACEFUL)
+
+	return
+}
+func (s *LibvirtService) SafeDestroyVmByName(name string) (bizErr *domain.BizErr) {
 	dom, err := s.GetVm(name)
 	if err != nil {
 		bizErr = &domain.ResultVmNotFound
 		return
 	}
 
-	dickPath, err := s.QemuService.GetDisk(dom)
+	err = dom.DestroyFlags(libvirt.DOMAIN_DESTROY_GRACEFUL)
+	if err != nil {
+		libvirtErr := err.(libvirt.Error)
+
+		if libvirtErr.Code != libvirt.ERR_OPERATION_INVALID {
+			tmp := domain.NewBizErr(err.Error())
+			bizErr = &tmp
+		} else {
+			bizErr = nil
+		}
+	}
+
+	return
+}
+func (s *LibvirtService) ForceDestroyVmByName(name string) (bizErr *domain.BizErr) {
+	dom, err := s.GetVm(name)
+	if err != nil {
+		bizErr = &domain.ResultVmNotFound
+		return
+	}
+
+	err = dom.DestroyFlags(libvirt.DOMAIN_DESTROY_DEFAULT)
 	if err != nil {
 		tmp := domain.NewBizErr(err.Error())
 		bizErr = &tmp
 		return
-	}
-
-	err = dom.Destroy()
-	if err != nil {
-		tmp := domain.NewBizErr(err.Error())
-		bizErr = &tmp
-		return
-	}
-
-	if removeDiskImage && dickPath != "" {
-		_fileUtils.RmDir(dickPath)
 	}
 
 	return
 }
 
-func (s *LibvirtService) BootVmByName(name string) {
+func (s *LibvirtService) BootVmByName(name string) (err error) {
 	dom, err := s.GetVm(name)
 	if err != nil {
 		return
@@ -254,7 +268,7 @@ func (s *LibvirtService) BootVmByName(name string) {
 	err = dom.Reboot(libvirt.DOMAIN_REBOOT_DEFAULT)
 	return
 }
-func (s *LibvirtService) RebootVmByName(name string) {
+func (s *LibvirtService) RebootVmByName(name string) (err error) {
 	dom, err := s.GetVm(name)
 	if err != nil {
 		return
@@ -263,13 +277,13 @@ func (s *LibvirtService) RebootVmByName(name string) {
 	err = dom.Reboot(libvirt.DOMAIN_REBOOT_DEFAULT)
 	return
 }
-func (s *LibvirtService) ShutdownVmByName(name string) {
+func (s *LibvirtService) ShutdownVmByName(name string) (err error) {
 	dom, err := s.GetVm(name)
 	if err != nil {
 		return
 	}
 
-	err = dom.ShutdownFlags(libvirt.DOMAIN_SHUTDOWN_PARAVIRT)
+	err = dom.Shutdown()
 	return
 }
 
@@ -292,8 +306,22 @@ func (s *LibvirtService) ResumeVmByName(name string) (err error) {
 	return
 }
 
-func (s *LibvirtService) UndefineVm(dom *libvirt.Domain) (err error) {
+func (s *LibvirtService) RemoveVmByName(name string, removeDiskImage bool) (err error) {
+	dom, err := s.GetVm(name)
+	if err != nil {
+		return
+	}
+
 	err = dom.Undefine()
+
+	dickPath, err := s.QemuService.GetDisk(dom)
+	if err != nil {
+		return
+	}
+
+	if removeDiskImage && dickPath != "" {
+		_fileUtils.RmDir(dickPath)
+	}
 
 	return
 }

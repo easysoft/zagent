@@ -2,6 +2,7 @@ package hostAgentService
 
 import (
 	"errors"
+	"fmt"
 	"sync"
 
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
@@ -37,7 +38,10 @@ func (s *DownloadService) AddTasks(req []v1.DownloadReq) (err error) {
 
 		existInfo, _ := s.TaskRepo.GetByMd5(item.Md5)
 
+		fmt.Println(11111111111)
+		fmt.Printf("%+v", existInfo)
 		if existInfo.ID != 0 {
+			fmt.Println(222222, existInfo.Status)
 			if existInfo.Status == consts.InProgress {
 				err = errors.New("the same md5 task exists")
 				return

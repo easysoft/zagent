@@ -69,6 +69,30 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 	return
 }
 
+// ExportVm
+// @summary 导出KVM虚拟机为模板镜像
+// @Accept json
+// @Produce json
+// @Param ExportVmReq body v1.ExportVmReq true "Export Kvm Request Object"
+// @Success 200 {object} _domain.Response "code = success | fail"
+// @Router /api/v1/kvm/exportVm [post]
+func (c *KvmCtrl) ExportVm(ctx iris.Context) {
+	req := v1.ExportVmReq{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
+
+	err := c.KvmService.AddExportVmTask(req)
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
+
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to add export vm task", nil))
+	return
+}
+
 //// Clone
 //// @summary 克隆KVM虚拟机
 //// @Accept json
@@ -133,7 +157,7 @@ func (c *KvmCtrl) Destroy(ctx iris.Context) {
 		return
 	}
 
-	bizErr := c.LibvirtService.DestroyVmByName(name, true)
+	bizErr := c.LibvirtService.SafeDestroyVmByName(name)
 	if bizErr != nil {
 		ctx.JSON(_httpUtils.RespDataFromBizErr(bizErr))
 		return
@@ -217,51 +241,28 @@ func (c *KvmCtrl) Resume(ctx iris.Context) {
 	return
 }
 
-// Clone
-// @summary 导出KVM虚拟机为模板镜像
-// @Accept json
-// @Produce json
-// @Param ExportVmReq body v1.ExportVmReq true "Export Kvm Request Object"
-// @Success 200 {object} _domain.Response{} "code = success | fail"
-// @Router /api/v1/kvm/exportVm [post]
-func (c *KvmCtrl) ExportVm(ctx iris.Context) {
-	req := v1.ExportVmReq{}
-	if err := ctx.ReadJSON(&req); err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+func (c *KvmCtrl) Boot(ctx iris.Context) {
+	name := ctx.Params().GetString("name")
+	if name == "" {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, "vm name is empty", nil))
 		return
 	}
 
-	err := c.KvmService.AddExportVmTask(req)
-	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
-		return
-	}
+	c.LibvirtService.BootVmByName(name)
 
-	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to export vm as image", nil))
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to boot vm", name))
 	return
 }
 
-//func (c *KvmCtrl) Boot(ctx iris.Context) {
-//	req :=v1.KvmReq{}
-//	if err := ctx.ReadJSON(&req); err != nil {
-//		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
-//		return
-//	}
-//
-//	c.LibvirtService.BootVmByName(req.VmUniqueName)
-//
-//	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to boot vm", req.VmUniqueName))
-//	return
-//}
-//func (c *KvmCtrl) Shutdown(ctx iris.Context) {
-//	req :=v1.KvmReq{}
-//	if err := ctx.ReadJSON(&req); err != nil {
-//		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
-//		return
-//	}
-//
-//	c.LibvirtService.ShutdownVmByName(req.VmUniqueName)
-//
-//	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to shutdown vm", req.VmUniqueName))
-//	return
-//}
+func (c *KvmCtrl) Shutdown(ctx iris.Context) {
+	name := ctx.Params().GetString("name")
+	if name == "" {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, "vm name is empty", nil))
+		return
+	}
+
+	c.LibvirtService.ShutdownVmByName(name)
+
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to shutdown vm", nil))
+	return
+}

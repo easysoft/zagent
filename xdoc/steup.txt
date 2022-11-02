@@ -33,13 +33,13 @@ sudo chmod u+s /usr/sbin/nginx
 sudo chmod -R 666 /zagent/nginx/conf.*.d
 
 # 本地安装swaggo，生成并上传。 https://github.com/swaggo/swag
-rm -rf res/host/docs && swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/host -o res/host/docs
-rm -rf res/vm/docs && swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/vm -o res/vm/docs
+rm -rf xdoc/docs/host && swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/host -o xdoc/docs/host
+rm -rf xdoc/docs/vm && swag init --parseDependency --parseInternal --parseDepth 5 -d cmd/vm -o xdoc/docs/vm
 
 # 服务器上启动go-swagger服务。 https://github.com/go-swagger/go-swagger
 ps -ef | grep swagger | grep -v grep | awk '{print $2}' | xargs kill -9
-nohup swagger serve --no-open -p 50002 https://gitee.com/aaronchen2k/zagent/raw/main/res/host/docs/swagger.json > host.log 2>&1 &
-nohup swagger serve --no-open -p 50003 https://gitee.com/aaronchen2k/zagent/raw/main/res/vm/docs/swagger.json > vm.log 2>&1 &
+nohup swagger serve --no-open -p 50002 https://gitee.com/aaronchen2k/zagent/raw/main/xdoc/docs/host/swagger.json > host.log 2>&1 &
+nohup swagger serve --no-open -p 50003 https://gitee.com/aaronchen2k/zagent/raw/main/xdoc/docs/vm/swagger.json > vm.log 2>&1 &
 
 qemu-img convert -O qcow2 download/jammy-server-cloudimg-amd64-disk-kvm.img download/jammy-server-cloudimg-amd64-disk-kvm.qcow2
 

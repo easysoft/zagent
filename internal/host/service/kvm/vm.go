@@ -49,7 +49,7 @@ func (s *KvmService) CreateVmFromImage(req *v1.CreateVmReq, removeSameName bool)
 	diskSize := req.Disk
 
 	if removeSameName {
-		s.LibvirtService.DestroyVmByName(vmName, true)
+		s.LibvirtService.SafeDestroyVmByName(vmName)
 	}
 
 	// create image
@@ -137,6 +137,7 @@ func (s *KvmService) AddExportVmTask(req v1.ExportVmReq) (err error) {
 
 		ZentaoTask: req.ZentaoTask,
 		TaskType:   consts.ExportVm,
+		Status:     consts.Created,
 	}
 
 	s.TaskRepo.Save(&po)
@@ -173,7 +174,7 @@ func (s *KvmService) UpdateVmMapAndDestroyTimeout(vms []domain.Vm) {
 		// destroy and remove timeout vm
 		v := s.VmMapVar[key]
 		if time.Now().Unix()-v.FirstDetectedTime.Unix() > consts.WaitVmLifecycleTimeout { // timeout
-			s.LibvirtService.DestroyVmByName(v.Name, true)
+			s.LibvirtService.SafeDestroyVmByName(v.Name)
 			delete(s.VmMapVar, key)
 		}
 	}

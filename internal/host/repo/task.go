@@ -54,7 +54,7 @@ func (r *TaskRepo) GetByMd5(md5 string) (po agentModel.Task, err error) {
 	}
 
 	r.DB.Model(&po).
-		Where("md5 = ?", md5).First(&po)
+		Where("md5 = ?", md5).Order("id desc").First(&po)
 
 	return
 }

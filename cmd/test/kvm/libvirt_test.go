@@ -1,22 +1,19 @@
 package kvm
 
 import (
-	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
-	"github.com/easysoft/zagent/internal/pkg/const"
-	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
+	hostKvmService "github.com/easysoft/zagent/internal/host/service/kvm"
+	"log"
 	"testing"
 )
 
 func TestLibVirt(t *testing.T) {
-	_logUtils.Init(consts.AppNameAgentHost)
+	service := hostKvmService.NewLibvirtService()
 
-	agentConf.Inst.Host = "192.168.0.56"
-	agentConf.Inst.User = "aaron"
-	agentConf.Init(consts.AppNameAgentHost)
-
-	//service := hostKvmService.NewLibvirtService()
+	err := service.StartVmByName("test-win10")
+	log.Print(err.Error())
 
 	/**
+
 	src:  xml template
 	base: backing file, get by vm's OsCategory properties etc.
 	*/
