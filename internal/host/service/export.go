@@ -9,6 +9,7 @@ import (
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 	"path/filepath"
+	"time"
 )
 
 type ExportService struct {
@@ -71,11 +72,26 @@ func (s *ExportService) ExportVm(po agentModel.Task, targetBakingFilePath string
 		return
 	}
 
-	cmd := fmt.Sprintf(consts.CmdExportVm, vmDiskPath, targetBakingFilePath)
-	_, err = _shellUtils.ExeShell(cmd)
-	if err != nil {
-		status = consts.Failed
+	ch := make(chan string)
+	go func() {
+		cmd := fmt.Sprintf(consts.CmdExportVm, vmDiskPath, targetBakingFilePath)
+		_, e := _shellUtils.ExeShell(cmd)
+
+		msg := consts.Completed.ToString()
+		if e != nil {
+			msg = consts.Error.ToString()
+		}
+
+		ch <- msg
+	}()
+
+	select {
+	case val := <-ch:
+		status = consts.TaskStatus(val)
 		return
+
+	case <-time.After(consts.ExportVmTimeout * time.Second):
+		status = consts.Timeout
 	}
 
 	err = s.LibvirtService.BootVmByName(vmName)
