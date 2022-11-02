@@ -221,10 +221,10 @@ func (s *LibvirtService) DestroyVm(dom *libvirt.Domain) (err error) {
 
 	return
 }
-func (s *LibvirtService) SafeDestroyVmByName(name string) (bizErr domain.BizErr) {
+func (s *LibvirtService) SafeDestroyVmByName(name string) (ret error) {
 	dom, err := s.GetVm(name)
 	if err != nil {
-		bizErr = domain.ResultVmNotFound
+		ret = domain.ResultVmNotFound
 		return
 	}
 
@@ -233,7 +233,7 @@ func (s *LibvirtService) SafeDestroyVmByName(name string) (bizErr domain.BizErr)
 		libvirtErr := err.(libvirt.Error)
 
 		if libvirtErr.Code != libvirt.ERR_OPERATION_INVALID {
-			bizErr = domain.NewBizErr(err.Error())
+			ret = domain.NewBizErr(err.Error())
 		}
 	}
 
