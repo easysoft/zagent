@@ -153,6 +153,10 @@ ExitDownload:
 func checkMd5(task agentModel.Task) bool {
 	expectVal := task.Md5
 
+	if expectVal == "" {
+		return true
+	}
+
 	cmdStr := ""
 	if _commonUtils.IsWin() {
 		cmdStr = "CertUtil -hashfile " + task.Path + " MD5"
