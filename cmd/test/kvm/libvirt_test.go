@@ -4,14 +4,12 @@ import (
 	hostKvmService "github.com/easysoft/zagent/internal/host/service/kvm"
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	"github.com/easysoft/zagent/internal/pkg/const"
-	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"github.com/libvirt/libvirt-go"
+	"log"
 	"testing"
 )
 
 func TestLibVirt(t *testing.T) {
-	_logUtils.Init(consts.AppNameAgentHost)
-
 	agentConf.Inst.Host = "192.168.0.56"
 	agentConf.Inst.User = "aaron"
 	agentConf.Init(consts.AppNameAgentHost)
@@ -19,7 +17,7 @@ func TestLibVirt(t *testing.T) {
 	service := hostKvmService.NewLibvirtService()
 
 	err := service.ShutdownVmByName("test-win10", libvirt.DOMAIN_SHUTDOWN_DEFAULT)
-	_logUtils.Infof("%s", err.Error())
+	log.Print(err.Error())
 
 	/**
 	src:  xml template
