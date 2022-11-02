@@ -213,7 +213,7 @@ func (s *LibvirtService) StartVm(dom *libvirt.Domain) (err error) {
 	return
 }
 func (s *LibvirtService) DestroyVm(dom *libvirt.Domain) (err error) {
-	err = dom.Destroy()
+	err = dom.DestroyFlags(libvirt.DOMAIN_DESTROY_GRACEFUL)
 
 	return
 }
@@ -231,7 +231,7 @@ func (s *LibvirtService) DestroyVmByName(name string, removeDiskImage bool) (biz
 		return
 	}
 
-	err = dom.Destroy()
+	err = dom.DestroyFlags(libvirt.DOMAIN_DESTROY_GRACEFUL)
 	if err != nil {
 		tmp := domain.NewBizErr(err.Error())
 		bizErr = &tmp
@@ -245,7 +245,7 @@ func (s *LibvirtService) DestroyVmByName(name string, removeDiskImage bool) (biz
 	return
 }
 
-func (s *LibvirtService) BootVmByName(name string) {
+func (s *LibvirtService) BootVmByName(name string) (err error) {
 	dom, err := s.GetVm(name)
 	if err != nil {
 		return
@@ -254,7 +254,7 @@ func (s *LibvirtService) BootVmByName(name string) {
 	err = dom.Reboot(libvirt.DOMAIN_REBOOT_DEFAULT)
 	return
 }
-func (s *LibvirtService) RebootVmByName(name string) {
+func (s *LibvirtService) RebootVmByName(name string) (err error) {
 	dom, err := s.GetVm(name)
 	if err != nil {
 		return
@@ -263,13 +263,13 @@ func (s *LibvirtService) RebootVmByName(name string) {
 	err = dom.Reboot(libvirt.DOMAIN_REBOOT_DEFAULT)
 	return
 }
-func (s *LibvirtService) ShutdownVmByName(name string) {
+func (s *LibvirtService) ShutdownVmByName(name string, flag libvirt.DomainShutdownFlags) (err error) {
 	dom, err := s.GetVm(name)
 	if err != nil {
 		return
 	}
 
-	err = dom.ShutdownFlags(libvirt.DOMAIN_SHUTDOWN_PARAVIRT)
+	err = dom.ShutdownFlags(flag)
 	return
 }
 

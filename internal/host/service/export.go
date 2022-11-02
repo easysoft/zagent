@@ -62,7 +62,10 @@ func (s *ExportService) ExportVm(po agentModel.Task, targetBakingFilePath string
 		return
 	}
 
-	s.LibvirtService.ShutdownVmByName(vmName)
+	err = s.LibvirtService.ShutdownVmByName(vmName)
+	if err != nil {
+		return
+	}
 
 	cmd := fmt.Sprintf(consts.CmdExportVm, vmDiskPath, targetBakingFilePath)
 	_shellUtils.ExeShell(cmd)
