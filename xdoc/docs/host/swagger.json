@@ -1,0 +1,830 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "ZAgent宿主机API文档",
+        "contact": {
+            "name": "Support",
+            "url": "https://github.com/easysoft/zv/issues",
+            "email": "462626@qq.com"
+        },
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/v1/download/add": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "添加下载任务",
+                "parameters": [
+                    {
+                        "description": "Download Request Object",
+                        "name": "DownloadReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/v1.DownloadReq"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "$ref": "#/definitions/_domain.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/download/cancel": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "强制终止下载任务",
+                "parameters": [
+                    {
+                        "description": "Cancel Download Request Object",
+                        "name": "DownloadCancelReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.DownloadCancelReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "$ref": "#/definitions/_domain.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/kvm/create": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "创建KVM虚拟机",
+                "parameters": [
+                    {
+                        "description": "Create Kvm Request Object",
+                        "name": "CreateVmReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.CreateVmReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/v1.CreateVmResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/kvm/exportVm": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "导出KVM虚拟机为模板镜像",
+                "parameters": [
+                    {
+                        "description": "Export Kvm Request Object",
+                        "name": "ExportVmReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.ExportVmReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "$ref": "#/definitions/_domain.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/kvm/{name}/destroy": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "摧毁KVM虚拟机",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Kvm Name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/kvm/{name}/reboot": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "重启KVM虚拟机",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Kvm Name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/kvm/{name}/resume": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "恢复KVM虚拟机",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Kvm Name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/kvm/{name}/suspend": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "暂停KVM虚拟机",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Kvm Name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/service/check": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "检测宿主机服务状态",
+                "parameters": [
+                    {
+                        "description": "Service Check Request Object",
+                        "name": "ServiceCheckReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.ServiceCheckReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "$ref": "#/definitions/v1.ServiceCheckResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/task/status": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "获取任务状态",
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/v1.ListTaskResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/virtual/addVmPortMap": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "新增虚拟机到宿主机端口的映射",
+                "parameters": [
+                    {
+                        "description": "Vm Port Map Request Object",
+                        "name": "VmPortMapReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.VmPortMapReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/v1.VmPortMapResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/virtual/getVncToken": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "根据VNC Port获取Token",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "VNC Port",
+                        "name": "port",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/v1.VncTokenResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/virtual/notifyHost": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "虚拟机请求安全码",
+                "parameters": [
+                    {
+                        "description": "Vm Notify Request Object",
+                        "name": "VmNotifyReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.VmNotifyReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/v1.VmNotifyResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/virtual/removeVmPortMap": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "移除虚拟机到宿主机的端口映射",
+                "parameters": [
+                    {
+                        "description": "Vm Port Map Request Object",
+                        "name": "VmPortMapReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.VmPortMapReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "$ref": "#/definitions/_domain.Response"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "_domain.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "Enums consts.ResultCode",
+                    "type": "string"
+                },
+                "data": {
+                    "type": "object"
+                },
+                "msg": {
+                    "type": "string"
+                }
+            }
+        },
+        "agentModel.Task": {
+            "type": "object",
+            "properties": {
+                "backing": {
+                    "type": "string"
+                },
+                "completionRate": {
+                    "type": "number"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "deleted": {
+                    "type": "boolean"
+                },
+                "deletedAt": {
+                    "type": "string"
+                },
+                "desc": {
+                    "type": "string"
+                },
+                "disabled": {
+                    "type": "boolean"
+                },
+                "endTime": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "md5": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "retry": {
+                    "type": "integer"
+                },
+                "startTime": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "taskType": {
+                    "type": "string"
+                },
+                "timeoutTime": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "url": {
+                    "description": "for download",
+                    "type": "string"
+                },
+                "vm": {
+                    "description": "for export vm",
+                    "type": "string"
+                },
+                "xml": {
+                    "type": "string"
+                },
+                "zentaoTask": {
+                    "type": "integer"
+                }
+            }
+        },
+        "v1.CreateVmReq": {
+            "type": "object",
+            "properties": {
+                "cpu": {
+                    "type": "integer"
+                },
+                "disk": {
+                    "description": "Unit G",
+                    "type": "integer"
+                },
+                "memory": {
+                    "description": "Unit G",
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "os": {
+                    "description": "From 'osinfo-query os' command",
+                    "type": "string",
+                    "enum": [
+                        "win10",
+                        "ubuntu20.04"
+                    ]
+                },
+                "path": {
+                    "type": "string"
+                },
+                "taskId": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.CreateVmResp": {
+            "type": "object",
+            "properties": {
+                "mac": {
+                    "type": "string"
+                },
+                "status": {
+                    "description": "Enums consts.VmStatus",
+                    "type": "string"
+                },
+                "vnc": {
+                    "type": "integer"
+                }
+            }
+        },
+        "v1.DownloadCancelReq": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "v1.DownloadReq": {
+            "type": "object",
+            "properties": {
+                "md5": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "zentaoTask": {
+                    "type": "integer"
+                }
+            }
+        },
+        "v1.ExportVmReq": {
+            "type": "object",
+            "properties": {
+                "backing": {
+                    "type": "string"
+                },
+                "vm": {
+                    "type": "string"
+                },
+                "zentaoTask": {
+                    "type": "integer"
+                }
+            }
+        },
+        "v1.ListTaskResp": {
+            "type": "object",
+            "properties": {
+                "canceled": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/agentModel.Task"
+                    }
+                },
+                "completed": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/agentModel.Task"
+                    }
+                },
+                "created": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/agentModel.Task"
+                    }
+                },
+                "failed": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/agentModel.Task"
+                    }
+                },
+                "inProgress": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/agentModel.Task"
+                    }
+                }
+            }
+        },
+        "v1.ServiceCheckReq": {
+            "type": "object",
+            "properties": {
+                "services": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.ServiceCheckResp": {
+            "type": "object",
+            "properties": {
+                "kvm": {
+                    "description": "Enums consts.HostServiceStatus",
+                    "type": "string"
+                },
+                "novnc": {
+                    "description": "Enums consts.HostServiceStatus",
+                    "type": "string"
+                },
+                "websockify": {
+                    "description": "Enums consts.HostServiceStatus",
+                    "type": "string"
+                }
+            }
+        },
+        "v1.VmNotifyReq": {
+            "type": "object",
+            "properties": {
+                "macAddress": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.VmNotifyResp": {
+            "type": "object",
+            "properties": {
+                "agentPortOnHost": {
+                    "type": "integer"
+                },
+                "ip": {
+                    "type": "string"
+                },
+                "secret": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.VmPortMapReq": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "description": "Enums consts.NatForwardType",
+                    "type": "string"
+                },
+                "vmIp": {
+                    "type": "string"
+                },
+                "vmPort": {
+                    "type": "integer"
+                }
+            }
+        },
+        "v1.VmPortMapResp": {
+            "type": "object",
+            "properties": {
+                "alreadyMapped": {
+                    "type": "boolean"
+                },
+                "hostPort": {
+                    "type": "integer"
+                },
+                "type": {
+                    "description": "Enums consts.NatForwardType",
+                    "type": "string"
+                },
+                "vmIp": {
+                    "type": "string"
+                },
+                "vmPort": {
+                    "type": "integer"
+                }
+            }
+        },
+        "v1.VncTokenResp": {
+            "type": "object",
+            "properties": {
+                "ip": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
