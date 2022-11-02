@@ -9,7 +9,7 @@ import (
 func TestLibVirt(t *testing.T) {
 	service := hostKvmService.NewLibvirtService()
 
-	err := service.ShutdownVmByName("test-win10")
+	err := service.StartVmByName("test-win10")
 	log.Print(err.Error())
 
 	/**

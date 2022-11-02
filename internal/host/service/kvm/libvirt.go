@@ -215,10 +215,7 @@ func (s *LibvirtService) StartVmByName(name string) (err error) {
 
 	return
 }
-func (s *LibvirtService) StartVm(dom *libvirt.Domain) (err error) {
-	err = dom.Create()
-	return
-}
+
 func (s *LibvirtService) DestroyVm(dom *libvirt.Domain) (err error) {
 	err = dom.DestroyFlags(libvirt.DOMAIN_DESTROY_GRACEFUL)
 
