@@ -157,15 +157,15 @@ func (c *KvmCtrl) Destroy(ctx iris.Context) {
 		return
 	}
 
-	err = c.LibvirtService.SafeDestroyVmByName(name)
-	if err != nil {
-		ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+	bizErr := c.LibvirtService.SafeDestroyVmByName(name)
+	if bizErr != nil {
+		ctx.JSON(_httpUtils.RespDataFromBizErr(bizErr))
 		return
 	}
 
 	err = natHelper.RemoveForward(req.Ip, 0, consts.All)
 	if err != nil {
-		ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 		return
 	}
 
