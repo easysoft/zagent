@@ -230,9 +230,13 @@ func (s *LibvirtService) SafeDestroyVmByName(name string) (bizErr *domain.BizErr
 
 	err = dom.DestroyFlags(libvirt.DOMAIN_DESTROY_GRACEFUL)
 	if err != nil {
-		tmp := domain.NewBizErr(err.Error())
-		bizErr = &tmp
-		return
+		libvirtErr := err.(libvirt.Error)
+
+		if libvirtErr.Code != libvirt.ERR_OPERATION_INVALID {
+			tmp := domain.NewBizErr(err.Error())
+			bizErr = &tmp
+			return
+		}
 	}
 
 	return
