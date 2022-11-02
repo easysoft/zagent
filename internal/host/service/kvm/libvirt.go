@@ -233,6 +233,22 @@ func (s *LibvirtService) DestroyVmByName(name string) (bizErr *domain.BizErr) {
 
 	return
 }
+func (s *LibvirtService) ForceDestroyVmByName(name string) (bizErr *domain.BizErr) {
+	dom, err := s.GetVm(name)
+	if err != nil {
+		bizErr = &domain.ResultVmNotFound
+		return
+	}
+
+	err = dom.DestroyFlags(libvirt.DOMAIN_DESTROY_DEFAULT)
+	if err != nil {
+		tmp := domain.NewBizErr(err.Error())
+		bizErr = &tmp
+		return
+	}
+
+	return
+}
 
 func (s *LibvirtService) BootVmByName(name string) (err error) {
 	dom, err := s.GetVm(name)
