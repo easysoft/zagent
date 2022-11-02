@@ -69,6 +69,30 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 	return
 }
 
+// ExportVm
+// @summary 导出KVM虚拟机为模板镜像
+// @Accept json
+// @Produce json
+// @Param ExportVmReq body v1.ExportVmReq true "Export Kvm Request Object"
+// @Success 200 {object} _domain.Response "code = success | fail"
+// @Router /api/v1/kvm/exportVm [post]
+func (c *KvmCtrl) ExportVm(ctx iris.Context) {
+	req := v1.ExportVmReq{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
+
+	err := c.KvmService.AddExportVmTask(req)
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
+
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to export vm as image", nil))
+	return
+}
+
 //// Clone
 //// @summary 克隆KVM虚拟机
 //// @Accept json
@@ -214,30 +238,6 @@ func (c *KvmCtrl) Resume(ctx iris.Context) {
 	}
 
 	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to resume vm", name))
-	return
-}
-
-// Clone
-// @summary 导出KVM虚拟机为模板镜像
-// @Accept json
-// @Produce json
-// @Param ExportVmReq body v1.ExportVmReq true "Export Kvm Request Object"
-// @Success 200 {object} _domain.Response "code = success | fail"
-// @Router /api/v1/kvm/exportVm [post]
-func (c *KvmCtrl) ExportVm(ctx iris.Context) {
-	req := v1.ExportVmReq{}
-	if err := ctx.ReadJSON(&req); err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
-		return
-	}
-
-	err := c.KvmService.AddExportVmTask(req)
-	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
-		return
-	}
-
-	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to export vm as image", nil))
 	return
 }
 
