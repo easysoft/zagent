@@ -235,7 +235,8 @@ func (s *LibvirtService) SafeDestroyVmByName(name string) (bizErr *domain.BizErr
 		if libvirtErr.Code != libvirt.ERR_OPERATION_INVALID {
 			tmp := domain.NewBizErr(err.Error())
 			bizErr = &tmp
-			return
+		} else {
+			bizErr = nil
 		}
 	}
 
