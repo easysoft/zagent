@@ -123,7 +123,7 @@ func (s *LibvirtService) CloneVm(req *v1.CloneVmReq, removeSameName bool) (dom *
 	vmUniqueName := req.VmUniqueName
 	vmMacAddress := req.VmMacAddress
 	if removeSameName {
-		s.RemoveVm(vmUniqueName, true)
+		s.RemoveVmByName(vmUniqueName, true)
 	}
 
 	vmCpu := req.VmCpu
@@ -281,7 +281,7 @@ func (s *LibvirtService) ResumeVmByName(name string) (err error) {
 	return
 }
 
-func (s *LibvirtService) RemoveVm(name string, removeDiskImage bool) (err error) {
+func (s *LibvirtService) RemoveVmByName(name string, removeDiskImage bool) (err error) {
 	dom, err := s.GetVm(name)
 	if err != nil {
 		return
