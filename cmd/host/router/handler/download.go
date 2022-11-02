@@ -22,7 +22,7 @@ func NewDownloadCtrl() *DownloadCtrl {
 // @Accept json
 // @Produce json
 // @Param DownloadReq body []v1.DownloadReq true "Download Request Object"
-// @Success 200 {object} _domain.Response{data=nil} "code = success | fail"
+// @Success 200 {object} _domain.Response "code = success | fail"
 // @Router /api/v1/download/add [post]
 func (c *DownloadCtrl) Add(ctx iris.Context) {
 	req := make([]v1.DownloadReq, 0)
@@ -42,7 +42,7 @@ func (c *DownloadCtrl) Add(ctx iris.Context) {
 // @Accept json
 // @Produce json
 // @Param DownloadCancelReq body v1.DownloadCancelReq true "Cancel Download Request Object"
-// @Success 200 {object} _domain.Response{data=nil} "code = success | fail"
+// @Success 200 {object} _domain.Response "code = success | fail"
 // @Router /api/v1/download/cancel [post]
 func (c *DownloadCtrl) Cancel(ctx iris.Context) {
 	req := v1.DownloadCancelReq{}

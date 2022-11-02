@@ -222,7 +222,7 @@ func (c *KvmCtrl) Resume(ctx iris.Context) {
 // @Accept json
 // @Produce json
 // @Param ExportVmReq body v1.ExportVmReq true "Export Kvm Request Object"
-// @Success 200 {object} _domain.Response{data=nil} "code = success | fail"
+// @Success 200 {object} _domain.Response "code = success | fail"
 // @Router /api/v1/kvm/exportVm [post]
 func (c *KvmCtrl) ExportVm(ctx iris.Context) {
 	req := v1.ExportVmReq{}

@@ -94,7 +94,7 @@ func (c *VirtualCtrl) AddVmPortMap(ctx iris.Context) {
 // @Accept json
 // @Produce json
 // @Param VmPortMapReq body v1.VmPortMapReq true "Vm Port Map Request Object"
-// @Success 200 {object} _domain.Response{data=nil} "code = success | fail"
+// @Success 200 {object} _domain.Response "code = success | fail"
 // @Router /api/v1/virtual/removeVmPortMap [post]
 func (c *VirtualCtrl) RemoveVmPortMap(ctx iris.Context) {
 	req := v1.VmPortMapReq{}
