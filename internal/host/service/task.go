@@ -9,7 +9,12 @@ import (
 	requestUtils "github.com/easysoft/zagent/internal/pkg/utils/request"
 	downloadUtils "github.com/easysoft/zagent/pkg/lib/download"
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
+	"sync"
 	"time"
+)
+
+var (
+	TaskMap sync.Map
 )
 
 type TaskService struct {
@@ -76,9 +81,12 @@ func (s *TaskService) ListTask() (ret v1.ListTaskResp, err error) {
 			status = consts.InProgress
 		}
 
-		rate, ok := downloadUtils.TaskMap.Load(po.ID)
-		if ok {
-			po.CompletionRate = rate.(float64)
+		completionRate, speed := downloadUtils.GetTaskStatus(downloadUtils.TaskMap, po.ID)
+		if completionRate > 0 {
+			po.CompletionRate = completionRate
+		}
+		if speed > 0 {
+			po.Speed = speed
 		}
 
 		if status == consts.Created {
@@ -103,10 +111,12 @@ func (s *TaskService) SubmitResult(task agentModel.Task) (err error) {
 		url := requestUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/host/submitResult")
 
 		data := v1.ExportVmResp{
-			Backing:    task.Backing,
-			Xml:        task.Xml,
-			Status:     task.Status,
-			ZentaoTask: task.ZentaoTask,
+			Backing:        task.Backing,
+			Xml:            task.Xml,
+			Status:         task.Status,
+			CompletionRate: task.CompletionRate,
+			Speed:          task.Speed,
+			ZentaoTask:     task.ZentaoTask,
 		}
 
 		_, err = _httpUtils.Put(url, data)
@@ -139,5 +149,9 @@ func (s *TaskService) IsTimeout(po agentModel.Task) bool {
 }
 
 func (s *TaskService) NeedRetry(po agentModel.Task) bool {
+	return po.Retry < consts.DownloadRetry
+}
+
+func (s *TaskService) UpdateTask(po agentModel.Task) bool {
 	return po.Retry < consts.DownloadRetry
 }

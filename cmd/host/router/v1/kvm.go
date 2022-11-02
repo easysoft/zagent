@@ -29,10 +29,14 @@ type ExportVmReq struct {
 }
 
 type ExportVmResp struct {
-	Backing    string            `json:"backing"`
-	Xml        string            `json:"xml"`
-	Status     consts.TaskStatus `json:"status"` // Enums consts.TaskStatus
-	ZentaoTask int               `json:"zentaoTask"`
+	Backing string            `json:"backing"`
+	Xml     string            `json:"xml"`
+	Status  consts.TaskStatus `json:"status"` // Enums consts.TaskStatus
+
+	CompletionRate float64 `json:"completionRate"`
+	Speed          float64 `json:"speed"`
+
+	ZentaoTask int `json:"zentaoTask"`
 }
 
 type CloneVmReq struct {

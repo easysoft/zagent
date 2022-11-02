@@ -5,6 +5,7 @@ import (
 	agentModel "github.com/easysoft/zagent/internal/host/model"
 	hostRepo "github.com/easysoft/zagent/internal/host/repo"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
+	_channelUtils "github.com/easysoft/zagent/pkg/lib/channel"
 	downloadUtils "github.com/easysoft/zagent/pkg/lib/download"
 	"sync"
 )
@@ -53,6 +54,7 @@ func (s *DownloadService) StartTask(po agentModel.Task) {
 			filePath = existFile
 		}
 
+		s.TaskRepo.UpdateSpeed(po.ID, po.Speed)
 		s.TaskRepo.UpdateStatus(po.ID, filePath, 1, "", finalStatus, false, true)
 
 		po, _ = s.TaskRepo.Get(po.ID)
@@ -75,7 +77,10 @@ func (s *DownloadService) CancelTask(taskId uint) {
 
 	ch := chVal.(chan int)
 	if ch != nil {
-		ch <- 1
+		if !_channelUtils.IsChanClose(ch) {
+			ch <- 1
+		}
+
 		ch = nil
 	}
 

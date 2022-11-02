@@ -23,6 +23,9 @@ var (
 func Start(task agentModel.Task, filePath string, ch chan int) (status consts.TaskStatus, existFile string) {
 	fmt.Printf("Start to download %s ...\n", task.Url)
 
+	startTime := time.Now()
+	task.StartTime = &startTime
+
 	targetDir := consts.DownloadDir
 	if task.Md5 == "" {
 		getMd5FromRemote(&task, targetDir)
@@ -34,7 +37,7 @@ func Start(task agentModel.Task, filePath string, ch chan int) (status consts.Ta
 		return
 	}
 
-	TaskMap.Store(task.ID, float64(0))
+	SaveTaskStatus(&TaskMap, task.ID, 0, 0)
 
 	// start file downloads, 3 at a time
 	respCh, err := grab.GetBatch(3, targetDir, task.Url)
@@ -83,7 +86,9 @@ func Start(task agentModel.Task, filePath string, ch chan int) (status consts.Ta
 					if resp.Err() != nil && resp.HTTPResponse.StatusCode != 416 {
 						fmt.Fprintf(os.Stderr, "Error download %s: %v\n", resp.Request.URL(), resp.Err())
 					} else {
-						TaskMap.Store(task.ID, resp.Progress())
+						rate := resp.Progress()
+						speed := GetSpeed(*task.StartTime, resp.BytesComplete()/1000)
+						SaveTaskStatus(&TaskMap, task.ID, rate, speed)
 
 						fmt.Printf("Finish %s %d / %d bytes (%d%%)\n", resp.Filename, resp.BytesComplete(), resp.Size(), int(100*resp.Progress()))
 					}
@@ -101,10 +106,8 @@ func Start(task agentModel.Task, filePath string, ch chan int) (status consts.Ta
 					inProgress++
 
 					rate := resp.Progress()
-					storeRate, ok := TaskMap.Load(task.ID)
-					if ok && rate > storeRate.(float64) {
-						TaskMap.Store(task.ID, rate)
-					}
+					speed := GetSpeed(*task.StartTime, resp.BytesComplete()/1000)
+					SaveTaskStatus(&TaskMap, task.ID, rate, speed)
 
 					fmt.Printf("Downloading %s %d / %d bytes (%d%%)\u001B[K\n", resp.Filename, resp.BytesComplete(), resp.Size(), int(100*rate))
 				}
@@ -141,6 +144,8 @@ ExitDownload:
 			fmt.Printf("Failed to download %s.\n", task.Url)
 		}
 	}
+
+	task.CompletionRate, task.Speed = GetTaskStatus(TaskMap, task.ID)
 
 	return
 }
@@ -226,6 +231,56 @@ func GetPath(task agentModel.Task) (pth string) {
 	name := task.Url[index:]
 
 	pth = filepath.Join(consts.DownloadDir, name)
+
+	return
+}
+
+func GetSpeed(startTime time.Time, sumKByte int64) (ret float64) {
+	sec := time.Now().Unix() - startTime.Unix()
+
+	ret = float64(sumKByte) / float64(sec)
+
+	return
+}
+
+func SaveTaskStatus(cache *sync.Map, id uint, rate, speed float64) {
+	valObj, ok := cache.Load(id)
+
+	if !ok {
+		valObj = map[string]float64{
+			"rate":  rate,
+			"speed": speed,
+		}
+		cache.Store(id, valObj)
+
+		return
+	}
+
+	valMap := valObj.(map[string]float64)
+
+	if rate > valMap["rate"] {
+		valMap["rate"] = rate
+	}
+	if speed > 0 {
+		valMap["speed"] = speed
+	}
+
+	cache.Store(id, valMap)
+
+	return
+}
+
+func GetTaskStatus(cache sync.Map, id uint) (rate, speed float64) {
+	valObj, ok := cache.Load(id)
+
+	if !ok {
+		return
+	}
+
+	valMap := valObj.(map[string]float64)
+
+	rate = valMap["rate"]
+	speed = valMap["speed"]
 
 	return
 }
