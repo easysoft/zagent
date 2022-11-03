@@ -91,6 +91,7 @@ func (s *ExportService) ExportVm(task agentModel.Task, targetBakingFilePath stri
 			job.SaveTaskStatus(&job.TaskStatus, task.ID, rate, 0)
 
 			time.Sleep(1 * time.Second)
+			fmt.Printf("Converting %s %d / %d bytes (%d%%)\u001B[K\n", vmDiskPath, size, srcVmDiskSize, int(100*rate))
 		}
 
 		_logUtils.Infof("complete converting vm to image")
