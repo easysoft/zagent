@@ -72,7 +72,7 @@ func MkDirIfNeeded(dir string) error {
 
 	return nil
 }
-func RmDir(dir string) error {
+func RmFile(dir string) error {
 	if FileExist(dir) {
 		err := os.RemoveAll(dir)
 		return err
