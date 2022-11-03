@@ -9,6 +9,7 @@ import (
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/job"
 	_fileUtils "github.com/easysoft/zagent/pkg/lib/file"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 	"github.com/gofrs/uuid"
 	"path/filepath"
@@ -91,6 +92,8 @@ func (s *ExportService) ExportVm(task agentModel.Task, targetBakingFilePath stri
 
 			time.Sleep(1 * time.Second)
 		}
+
+		_logUtils.Infof("complete converting vm to image")
 	}()
 
 	ch := make(chan string)
