@@ -70,9 +70,9 @@ func Start(task *agentModel.Task, filePath string, ch chan int) (status consts.T
 
 		case <-t.C:
 			// clear lines
-			if inProgress > 0 {
-				fmt.Printf("\033[%dA\033[K", inProgress)
-			}
+			//if inProgress > 0 {
+			//	fmt.Printf("\033[%dA\033[K", inProgress)
+			//}
 
 			// update completed downloads
 			for i, resp := range responses {
