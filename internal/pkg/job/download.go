@@ -67,52 +67,55 @@ func Start(task *agentModel.Task, filePath string, ch chan int) (status consts.T
 			}
 
 		default:
-			// clear lines
-			if inProgress > 0 {
-				fmt.Printf("\033[%dA\033[K", inProgress)
-			}
+		}
+		// clear lines
+		if inProgress > 0 {
+			fmt.Printf("\033[%dA\033[K", inProgress)
+		}
 
-			// update completed downloads
-			for i, resp := range responses {
-				if resp != nil && resp.IsComplete() {
-					// print final result
-					if resp.Err() != nil && resp.HTTPResponse.StatusCode != 416 {
-						fmt.Fprintf(os.Stderr, "Error download %s: %v\n", resp.Request.URL(), resp.Err())
-					} else {
-						rate := resp.Progress()
-						speed := GetSpeed(*task.StartTime, resp.BytesComplete()/1000)
-						SaveTaskStatus(&TaskStatus, task.ID, rate, speed)
-
-						fmt.Printf("Finish %s %d / %d bytes (%d%%)\n", resp.Filename, resp.BytesComplete(), resp.Size(), int(100*resp.Progress()))
-					}
-
-					// mark completed
-					responses[i] = nil
-					completed++
-				}
-			}
-
-			// update downloads in progress
-			inProgress = 0
-			for _, resp := range responses {
-				if resp != nil {
-					inProgress++
-
+		// update completed downloads
+		for i, resp := range responses {
+			if resp != nil && resp.IsComplete() {
+				// print final result
+				if resp.Err() != nil && resp.HTTPResponse.StatusCode != 416 {
+					fmt.Fprintf(os.Stderr, "Error download %s: %v\n", resp.Request.URL(), resp.Err())
+				} else {
 					rate := resp.Progress()
 					speed := GetSpeed(*task.StartTime, resp.BytesComplete()/1000)
 					SaveTaskStatus(&TaskStatus, task.ID, rate, speed)
 
-					fmt.Printf("Downloading %s %d / %d bytes (%d%%)\u001B[K\n", resp.Filename, resp.BytesComplete(), resp.Size(), int(100*rate))
+					fmt.Printf("Finish %s %d / %d bytes (%d%%)\n", resp.Filename, resp.BytesComplete(), resp.Size(), int(100*resp.Progress()))
 				}
+
+				// mark completed
+				responses[i] = nil
+				completed++
 			}
 		}
-		time.Sleep(200 * time.Millisecond)
+
+		// update downloads in progress
+		inProgress = 0
+		for _, resp := range responses {
+			if resp != nil {
+				inProgress++
+
+				rate := resp.Progress()
+				speed := GetSpeed(*task.StartTime, resp.BytesComplete()/1000)
+				SaveTaskStatus(&TaskStatus, task.ID, rate, speed)
+
+				fmt.Printf("Downloading %s %d / %d bytes (%d%%)\u001B[K\n", resp.Filename, resp.BytesComplete(), resp.Size(), int(100*rate))
+			}
+		}
 	}
+	time.Sleep(200 * time.Millisecond)
 
 ExitDownload:
 
 	if isCanceled {
 		if len(responses) > 0 {
+			for _, resp := range responses {
+				resp.Cancel()
+			}
 			responses[0] = nil
 		}
 

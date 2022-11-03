@@ -85,12 +85,16 @@ func (s *DownloadService) StartTask(po agentModel.Task) {
 }
 
 func (s *DownloadService) CancelTask(taskId uint) {
-	chVal, ok := channelMap.Load(taskId)
-
 	taskInfo, _ := s.TaskRepo.GetDetail(taskId)
 	if taskInfo.ID > 0 && taskInfo.Status == consts.Created {
-		s.TaskRepo.SetFailed(taskInfo)
+		s.TaskRepo.SetCanceld(taskInfo)
 	}
+
+	s.StopTask(taskId)
+}
+
+func (s *DownloadService) StopTask(taskId uint) {
+	chVal, ok := channelMap.Load(taskId)
 
 	if !ok || chVal == nil {
 		return
@@ -106,8 +110,6 @@ func (s *DownloadService) CancelTask(taskId uint) {
 
 		ch = nil
 	}
-
-	return
 }
 
 func (s *DownloadService) RestartTask(po agentModel.Task) (ret bool) {

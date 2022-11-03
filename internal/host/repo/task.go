@@ -115,6 +115,12 @@ func (r *TaskRepo) SetFailed(po agentModel.Task) (err error) {
 	return
 }
 
+func (r *TaskRepo) SetCanceld(po agentModel.Task) (err error) {
+	r.DB.Model(&agentModel.Task{}).Where("id=?", po.ID).Updates(
+		map[string]interface{}{"status": consts.Canceled, "timeout_time": time.Now()})
+	return
+}
+
 func (r *TaskRepo) AddRetry(po agentModel.Task) (err error) {
 	r.DB.Model(&agentModel.Task{}).Where("id=?", po.ID).Updates(
 		map[string]interface{}{"retry": gorm.Expr("retry + ?", 1)})
