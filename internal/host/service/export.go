@@ -91,7 +91,9 @@ func (s *ExportService) ExportVm(task agentModel.Task, targetBakingFilePath stri
 
 			job.SaveTaskStatus(&job.TaskStatus, task.ID, rate, 0)
 
-			fmt.Printf("Converting %s %d / %d bytes (%d%%)\u001B[K", vmDiskPath, size, srcVmDiskSize, int(100*rate))
+			fmt.Print("\033[G\033[K")
+			fmt.Printf("Converting %s %d / %d bytes (%d%%)\u001B[K\n", vmDiskPath, size, srcVmDiskSize, int(100*rate))
+			fmt.Print("\033[A")
 
 			<-ticker.C
 		}
