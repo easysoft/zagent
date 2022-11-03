@@ -2,8 +2,9 @@ package hostAgentService
 
 import (
 	"errors"
-	downloadUtils "github.com/easysoft/zagent/internal/pkg/job"
 	"sync"
+
+	downloadUtils "github.com/easysoft/zagent/internal/pkg/job"
 
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	agentModel "github.com/easysoft/zagent/internal/host/model"
@@ -84,6 +85,11 @@ func (s *DownloadService) StartTask(po agentModel.Task) {
 
 func (s *DownloadService) CancelTask(taskId uint) {
 	chVal, ok := channelMap.Load(taskId)
+
+	taskInfo, _ := s.TaskRepo.GetDetail(taskId)
+	if taskInfo.ID > 0 && taskInfo.Status == consts.Created {
+		s.TaskRepo.SetFailed(taskInfo)
+	}
 
 	if !ok || chVal == nil {
 		return
