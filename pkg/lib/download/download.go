@@ -2,18 +2,19 @@ package downloadUtils
 
 import (
 	"fmt"
-	"github.com/cavaliergopher/grab/v3"
-	agentModel "github.com/easysoft/zagent/internal/host/model"
-	consts "github.com/easysoft/zagent/internal/pkg/const"
-	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
-	_fileUtils "github.com/easysoft/zagent/pkg/lib/file"
-	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/cavaliergopher/grab/v3"
+	agentModel "github.com/easysoft/zagent/internal/host/model"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
+	_fileUtils "github.com/easysoft/zagent/pkg/lib/file"
+	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 )
 
 var (
@@ -43,9 +44,6 @@ func Start(task agentModel.Task, filePath string, ch chan int) (status consts.Ta
 		os.Exit(1)
 	}
 
-	// start a ticker to update progress every 200ms
-	t := time.NewTicker(200 * time.Millisecond)
-
 	// monitor downloads
 	completed := 0
 	inProgress := 0
@@ -70,7 +68,7 @@ func Start(task agentModel.Task, filePath string, ch chan int) (status consts.Ta
 				responses = append(responses, resp)
 			}
 
-		case <-t.C:
+		default:
 			// clear lines
 			if inProgress > 0 {
 				fmt.Printf("\033[%dA\033[K", inProgress)
@@ -110,11 +108,10 @@ func Start(task agentModel.Task, filePath string, ch chan int) (status consts.Ta
 				}
 			}
 		}
+		time.Sleep(200 * time.Millisecond)
 	}
 
 ExitDownload:
-
-	t.Stop()
 
 	if isCanceled {
 		if len(responses) > 0 {
