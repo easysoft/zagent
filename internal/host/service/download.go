@@ -2,13 +2,14 @@ package hostAgentService
 
 import (
 	"errors"
+	downloadUtils "github.com/easysoft/zagent/internal/pkg/job"
 	"sync"
 
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	agentModel "github.com/easysoft/zagent/internal/host/model"
 	hostRepo "github.com/easysoft/zagent/internal/host/repo"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
-	downloadUtils "github.com/easysoft/zagent/pkg/lib/download"
+	_channelUtils "github.com/easysoft/zagent/pkg/lib/channel"
 )
 
 var (
@@ -61,17 +62,18 @@ func (s *DownloadService) StartTask(po agentModel.Task) {
 
 		s.TaskRepo.UpdateStatus(po.ID, filePath, 0.01, "", consts.InProgress, true, false)
 
-		finalStatus, existFile := downloadUtils.Start(po, filePath, ch)
+		finalStatus, existFile := downloadUtils.Start(&po, filePath, ch)
 		if existFile != "" {
 			filePath = existFile
 		}
 
+		s.TaskRepo.UpdateSpeed(po.ID, po.Speed)
 		s.TaskRepo.UpdateStatus(po.ID, filePath, 1, "", finalStatus, false, true)
 
 		po, _ = s.TaskRepo.Get(po.ID)
 		s.TaskService.SubmitResult(po)
 
-		downloadUtils.TaskMap.Delete(po.ID)
+		downloadUtils.TaskStatus.Delete(po.ID)
 
 		if ch != nil {
 			channelMap.Delete(po.ID)
@@ -91,7 +93,10 @@ func (s *DownloadService) CancelTask(taskId uint) {
 
 	ch := chVal.(chan int)
 	if ch != nil {
-		ch <- 1
+		if !_channelUtils.IsChanClose(ch) {
+			ch <- 1
+		}
+
 		ch = nil
 	}
 

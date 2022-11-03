@@ -1,4 +1,4 @@
-package downloadUtils
+package job
 
 import (
 	"fmt"
@@ -6,7 +6,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/cavaliergopher/grab/v3"
@@ -17,25 +16,24 @@ import (
 	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 )
 
-var (
-	TaskMap sync.Map
-)
-
-func Start(task agentModel.Task, filePath string, ch chan int) (status consts.TaskStatus, existFile string) {
+func Start(task *agentModel.Task, filePath string, ch chan int) (status consts.TaskStatus, existFile string) {
 	fmt.Printf("Start to download %s ...\n", task.Url)
+
+	startTime := time.Now()
+	task.StartTime = &startTime
 
 	targetDir := consts.DownloadDir
 	if task.Md5 == "" {
-		getMd5FromRemote(&task, targetDir)
+		getMd5FromRemote(task, targetDir)
 	}
 
-	existFile = findSameFile(task, targetDir)
+	existFile = findSameFile(*task, targetDir)
 	if existFile != "" {
 		status = consts.Completed
 		return
 	}
 
-	TaskMap.Store(task.ID, float64(0))
+	SaveTaskStatus(&TaskStatus, task.ID, 0, 0)
 
 	// start file downloads, 3 at a time
 	respCh, err := grab.GetBatch(3, targetDir, task.Url)
@@ -81,7 +79,9 @@ func Start(task agentModel.Task, filePath string, ch chan int) (status consts.Ta
 					if resp.Err() != nil && resp.HTTPResponse.StatusCode != 416 {
 						fmt.Fprintf(os.Stderr, "Error download %s: %v\n", resp.Request.URL(), resp.Err())
 					} else {
-						TaskMap.Store(task.ID, resp.Progress())
+						rate := resp.Progress()
+						speed := GetSpeed(*task.StartTime, resp.BytesComplete()/1000)
+						SaveTaskStatus(&TaskStatus, task.ID, rate, speed)
 
 						fmt.Printf("Finish %s %d / %d bytes (%d%%)\n", resp.Filename, resp.BytesComplete(), resp.Size(), int(100*resp.Progress()))
 					}
@@ -99,10 +99,8 @@ func Start(task agentModel.Task, filePath string, ch chan int) (status consts.Ta
 					inProgress++
 
 					rate := resp.Progress()
-					storeRate, ok := TaskMap.Load(task.ID)
-					if ok && rate > storeRate.(float64) {
-						TaskMap.Store(task.ID, rate)
-					}
+					speed := GetSpeed(*task.StartTime, resp.BytesComplete()/1000)
+					SaveTaskStatus(&TaskStatus, task.ID, rate, speed)
 
 					fmt.Printf("Downloading %s %d / %d bytes (%d%%)\u001B[K\n", resp.Filename, resp.BytesComplete(), resp.Size(), int(100*rate))
 				}
@@ -125,11 +123,11 @@ ExitDownload:
 	} else {
 		task.Path = filePath
 
-		if checkMd5(task) {
+		if checkMd5(*task) {
 			status = consts.Completed
 
 			if task.Md5 != "" {
-				saveMd5FromRequest(&task, targetDir)
+				saveMd5FromRequest(task, targetDir)
 			}
 
 			fmt.Printf("Successfully download %s to %s.\n", task.Url, task.Path)
@@ -139,11 +137,17 @@ ExitDownload:
 		}
 	}
 
+	task.CompletionRate, task.Speed = GetTaskStatus(TaskStatus, task.ID)
+
 	return
 }
 
 func checkMd5(task agentModel.Task) bool {
 	expectVal := task.Md5
+
+	if expectVal == "" {
+		return true
+	}
 
 	cmdStr := ""
 	if _commonUtils.IsWin() {

@@ -18,6 +18,10 @@ import (
 )
 
 func ReadFile(filePath string) string {
+	if !FileExist(filePath) {
+		return ""
+	}
+
 	buf := ReadFileBuf(filePath)
 	str := string(buf)
 	str = _commonUtils.RemoveBlankLine(str)
@@ -25,6 +29,10 @@ func ReadFile(filePath string) string {
 }
 
 func ReadFileBuf(filePath string) []byte {
+	if !FileExist(filePath) {
+		return nil
+	}
+
 	buf, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		return []byte(err.Error())
@@ -64,7 +72,7 @@ func MkDirIfNeeded(dir string) error {
 
 	return nil
 }
-func RmDir(dir string) error {
+func RmFile(dir string) error {
 	if FileExist(dir) {
 		err := os.RemoveAll(dir)
 		return err
@@ -275,4 +283,13 @@ func homeWindows() (string, error) {
 	}
 
 	return home, nil
+}
+
+func GetFileSize(pth string) (size int64, err error) {
+	fi, err := os.Stat(pth)
+	if err == nil {
+		size = fi.Size()
+	}
+
+	return
 }

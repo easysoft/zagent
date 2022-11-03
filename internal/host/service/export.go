@@ -7,7 +7,11 @@ import (
 	kvmService "github.com/easysoft/zagent/internal/host/service/kvm"
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
+	"github.com/easysoft/zagent/internal/pkg/job"
+	_fileUtils "github.com/easysoft/zagent/pkg/lib/file"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
+	"github.com/gofrs/uuid"
 	"path/filepath"
 	"time"
 )
@@ -45,8 +49,8 @@ func (s *ExportService) StartTask(po agentModel.Task) {
 	}()
 }
 
-func (s *ExportService) ExportVm(po agentModel.Task, targetBakingFilePath string) (xml string, status consts.TaskStatus) {
-	vmName := po.Vm
+func (s *ExportService) ExportVm(task agentModel.Task, targetBakingFilePath string) (xml string, status consts.TaskStatus) {
+	vmName := task.Vm
 
 	dom, err := s.LibvirtService.GetVm(vmName)
 	if err != nil {
@@ -72,6 +76,29 @@ func (s *ExportService) ExportVm(po agentModel.Task, targetBakingFilePath string
 		return
 	}
 
+	uuidStr := uuid.Must(uuid.NewV4()).String()
+	srcVmDiskSize, _ := _fileUtils.GetFileSize(vmDiskPath)
+
+	_fileUtils.RmFile(targetBakingFilePath)
+
+	// check disk size
+	completed := false
+	ticker := time.NewTicker(1 * time.Second)
+	go func() {
+		for !completed {
+			size, _ := _fileUtils.GetFileSize(targetBakingFilePath)
+			rate := float64(size) / float64(srcVmDiskSize)
+
+			job.SaveTaskStatus(&job.TaskStatus, task.ID, rate, 0)
+
+			fmt.Printf("Converting %s %d / %d bytes (%d%%)\u001B[K", vmDiskPath, size, srcVmDiskSize, int(100*rate))
+
+			<-ticker.C
+		}
+
+		_logUtils.Infof("complete converting vm to image")
+	}()
+
 	ch := make(chan string)
 	go func() {
 		cmd := fmt.Sprintf(consts.CmdExportVm, vmDiskPath, targetBakingFilePath)
@@ -88,10 +115,14 @@ func (s *ExportService) ExportVm(po agentModel.Task, targetBakingFilePath string
 	select {
 	case val := <-ch:
 		status = consts.TaskStatus(val)
-		return
+		completed = true
 
 	case <-time.After(consts.ExportVmTimeout * time.Second):
 		status = consts.Timeout
+		_shellUtils.KillProcessByUUID(uuidStr)
+
+		completed = true
+		return
 	}
 
 	err = s.LibvirtService.BootVmByName(vmName)

@@ -70,6 +70,12 @@ func (r *TaskRepo) Update(po *agentModel.Task) (err error) {
 	return
 }
 
+func (r *TaskRepo) UpdateSpeed(id uint, speed float64) (err error) {
+	err = r.DB.Model(&agentModel.Task{}).Where("id = ?", id).
+		Updates(map[string]interface{}{"speed": speed}).Error
+	return
+}
+
 func (r *TaskRepo) UpdateStatus(id uint, filePath string, completionRate float64, xmlDesc string,
 	status consts.TaskStatus, isStart, isEnd bool) (err error) {
 

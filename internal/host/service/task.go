@@ -1,16 +1,17 @@
 package hostAgentService
 
 import (
-	"time"
-
+	"fmt"
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	agentModel "github.com/easysoft/zagent/internal/host/model"
 	hostRepo "github.com/easysoft/zagent/internal/host/repo"
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
+	downloadUtils "github.com/easysoft/zagent/internal/pkg/job"
 	requestUtils "github.com/easysoft/zagent/internal/pkg/utils/request"
-	downloadUtils "github.com/easysoft/zagent/pkg/lib/download"
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
+	"strconv"
+	"time"
 )
 
 type TaskService struct {
@@ -32,7 +33,7 @@ func (s *TaskService) CheckTask() (err error) {
 		runningTask := taskMap.InProgress[0]
 
 		if runningTask.TaskType == consts.DownloadImage {
-			if s.IsError(runningTask) || s.IsTimeout(runningTask) || s.DownloadService.isEmpty() {
+			if s.IsError(runningTask) || s.IsTimeout(runningTask) {
 				if s.NeedRetry(runningTask) {
 					s.DownloadService.RestartTask(runningTask)
 				} else {
@@ -77,10 +78,16 @@ func (s *TaskService) ListTask() (ret v1.ListTaskResp, err error) {
 			status = consts.InProgress
 		}
 
-		rate, ok := downloadUtils.TaskMap.Load(po.ID)
-		if ok {
-			po.CompletionRate = rate.(float64)
+		completionRate, speed := downloadUtils.GetTaskStatus(downloadUtils.TaskStatus, po.ID)
+		if completionRate > 0 {
+			po.CompletionRate = completionRate
 		}
+		if speed > 0 {
+			po.Speed = speed
+		}
+
+		po.CompletionRate, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", po.CompletionRate), 64)
+		po.Speed, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", po.Speed), 64)
 
 		if status == consts.Created {
 			ret.Created = append(ret.Created, po)
@@ -104,10 +111,12 @@ func (s *TaskService) SubmitResult(task agentModel.Task) (err error) {
 		url := requestUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/host/submitResult")
 
 		data := v1.ExportVmResp{
-			Backing:    task.Backing,
-			Xml:        task.Xml,
-			Status:     task.Status,
-			ZentaoTask: task.ZentaoTask,
+			Backing:        task.Backing,
+			Xml:            task.Xml,
+			Status:         task.Status,
+			CompletionRate: task.CompletionRate,
+			Speed:          task.Speed,
+			ZentaoTask:     task.ZentaoTask,
 		}
 
 		_, err = _httpUtils.Put(url, data)
