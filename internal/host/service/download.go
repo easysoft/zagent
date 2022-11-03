@@ -40,7 +40,7 @@ func (s *DownloadService) AddTasks(req []v1.DownloadReq) (err error) {
 
 		if existInfo.ID != 0 {
 			if existInfo.Status == consts.InProgress {
-				err = errors.New("the same md5 task exists")
+				err = errors.New("the same md5 task exists and downloading")
 				return
 			} else {
 				s.TaskRepo.SetFailed(existInfo)
