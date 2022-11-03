@@ -83,6 +83,7 @@ func (s *ExportService) ExportVm(task agentModel.Task, targetBakingFilePath stri
 
 	// check disk size
 	completed := false
+	ticker := time.NewTicker(1 * time.Second)
 	go func() {
 		for !completed {
 			size, _ := _fileUtils.GetFileSize(targetBakingFilePath)
@@ -90,8 +91,9 @@ func (s *ExportService) ExportVm(task agentModel.Task, targetBakingFilePath stri
 
 			job.SaveTaskStatus(&job.TaskStatus, task.ID, rate, 0)
 
-			time.Sleep(1 * time.Second)
-			fmt.Printf("Converting %s %d / %d bytes (%d%%)\u001B[K\n", vmDiskPath, size, srcVmDiskSize, int(100*rate))
+			fmt.Printf("Converting %s %d / %d bytes (%d%%)\u001B[K", vmDiskPath, size, srcVmDiskSize, int(100*rate))
+
+			<-ticker.C
 		}
 
 		_logUtils.Infof("complete converting vm to image")
