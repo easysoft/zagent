@@ -21,7 +21,7 @@ const (
 	AgentCheckDownloadInterval  = 15          // sec
 	WebCheckInterval            = 60          // sec
 	DownloadImageTimeout        = 4 * 60 * 60 // sec
-	ExportVmTimeout             = 20          // 1 * 60 * 60 // sec
+	ExportVmTimeout             = 1 * 60 * 60 // sec
 	DownloadRetry               = 3
 
 	DeviceRegisterExpireTime = 5 * 60 // sec

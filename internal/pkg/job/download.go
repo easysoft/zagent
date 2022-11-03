@@ -1,4 +1,4 @@
-package downloadUtils
+package job
 
 import (
 	"fmt"
@@ -12,12 +12,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"sync"
 	"time"
-)
-
-var (
-	TaskMap sync.Map
 )
 
 func Start(task *agentModel.Task, filePath string, ch chan int) (status consts.TaskStatus, existFile string) {
@@ -37,7 +32,7 @@ func Start(task *agentModel.Task, filePath string, ch chan int) (status consts.T
 		return
 	}
 
-	SaveTaskStatus(&TaskMap, task.ID, 0, 0)
+	SaveTaskStatus(&TaskStatus, task.ID, 0, 0)
 
 	// start file downloads, 3 at a time
 	respCh, err := grab.GetBatch(3, targetDir, task.Url)
@@ -88,7 +83,7 @@ func Start(task *agentModel.Task, filePath string, ch chan int) (status consts.T
 					} else {
 						rate := resp.Progress()
 						speed := GetSpeed(*task.StartTime, resp.BytesComplete()/1000)
-						SaveTaskStatus(&TaskMap, task.ID, rate, speed)
+						SaveTaskStatus(&TaskStatus, task.ID, rate, speed)
 
 						fmt.Printf("Finish %s %d / %d bytes (%d%%)\n", resp.Filename, resp.BytesComplete(), resp.Size(), int(100*resp.Progress()))
 					}
@@ -107,7 +102,7 @@ func Start(task *agentModel.Task, filePath string, ch chan int) (status consts.T
 
 					rate := resp.Progress()
 					speed := GetSpeed(*task.StartTime, resp.BytesComplete()/1000)
-					SaveTaskStatus(&TaskMap, task.ID, rate, speed)
+					SaveTaskStatus(&TaskStatus, task.ID, rate, speed)
 
 					fmt.Printf("Downloading %s %d / %d bytes (%d%%)\u001B[K\n", resp.Filename, resp.BytesComplete(), resp.Size(), int(100*rate))
 				}
@@ -145,7 +140,7 @@ ExitDownload:
 		}
 	}
 
-	task.CompletionRate, task.Speed = GetTaskStatus(TaskMap, task.ID)
+	task.CompletionRate, task.Speed = GetTaskStatus(TaskStatus, task.ID)
 
 	return
 }
@@ -235,56 +230,6 @@ func GetPath(task agentModel.Task) (pth string) {
 	name := task.Url[index:]
 
 	pth = filepath.Join(consts.DownloadDir, name)
-
-	return
-}
-
-func GetSpeed(startTime time.Time, sumKByte int64) (ret float64) {
-	sec := time.Now().Unix() - startTime.Unix()
-
-	ret = float64(sumKByte) / float64(sec)
-
-	return
-}
-
-func SaveTaskStatus(cache *sync.Map, id uint, rate, speed float64) {
-	valObj, ok := cache.Load(id)
-
-	if !ok {
-		valObj = map[string]float64{
-			"rate":  rate,
-			"speed": speed,
-		}
-		cache.Store(id, valObj)
-
-		return
-	}
-
-	valMap := valObj.(map[string]float64)
-
-	if rate > valMap["rate"] {
-		valMap["rate"] = rate
-	}
-	if speed > 0 {
-		valMap["speed"] = speed
-	}
-
-	cache.Store(id, valMap)
-
-	return
-}
-
-func GetTaskStatus(cache sync.Map, id uint) (rate, speed float64) {
-	valObj, ok := cache.Load(id)
-
-	if !ok {
-		return
-	}
-
-	valMap := valObj.(map[string]float64)
-
-	rate = valMap["rate"]
-	speed = valMap["speed"]
 
 	return
 }

@@ -7,8 +7,8 @@ import (
 	hostRepo "github.com/easysoft/zagent/internal/host/repo"
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
+	downloadUtils "github.com/easysoft/zagent/internal/pkg/job"
 	requestUtils "github.com/easysoft/zagent/internal/pkg/utils/request"
-	downloadUtils "github.com/easysoft/zagent/pkg/lib/download"
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
 	"strconv"
 	"time"
@@ -78,7 +78,7 @@ func (s *TaskService) ListTask() (ret v1.ListTaskResp, err error) {
 			status = consts.InProgress
 		}
 
-		completionRate, speed := downloadUtils.GetTaskStatus(downloadUtils.TaskMap, po.ID)
+		completionRate, speed := downloadUtils.GetTaskStatus(downloadUtils.TaskStatus, po.ID)
 		if completionRate > 0 {
 			po.CompletionRate = completionRate
 		}

@@ -284,3 +284,12 @@ func homeWindows() (string, error) {
 
 	return home, nil
 }
+
+func GetFileSize(pth string) (size int64, err error) {
+	fi, err := os.Stat(pth)
+	if err == nil {
+		size = fi.Size()
+	}
+
+	return
+}
