@@ -33,6 +33,7 @@ func (s *DownloadService) AddTasks(req []v1.DownloadReq) (err error) {
 			Md5:        item.Md5,
 			ZentaoTask: item.ZentaoTask,
 			TaskType:   consts.DownloadImage,
+			Retry:      1,
 			Status:     consts.Created,
 		}
 
