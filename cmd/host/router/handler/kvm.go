@@ -153,7 +153,7 @@ func (c *KvmCtrl) Shutdown(ctx iris.Context) {
 }
 
 // Reboot
-// @summary 向KVM虚拟机发送关闭信号，有可能无法成功重启
+// @summary 向KVM虚拟机发送重启信号，有可能无法成功重启
 // @Accept json
 // @Produce json
 // @Param name path string true "Kvm Name"
