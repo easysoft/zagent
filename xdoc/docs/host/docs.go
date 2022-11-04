@@ -163,6 +163,46 @@ var doc = `{
                 }
             }
         },
+        "/api/v1/kvm/{name}/boot": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "启动KVM虚拟机",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Kvm Name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/kvm/{name}/destroy": {
             "post": {
                 "consumes": [
@@ -171,7 +211,47 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "摧毁KVM虚拟机",
+                "summary": "安全关闭并断电KVM虚拟机，关机不成功的情况下放弃",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Kvm Name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/kvm/{name}/poweroff": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "强行关闭并断电KVM虚拟机，关闭超时情况下会强行断电",
                 "parameters": [
                     {
                         "type": "string",
@@ -211,7 +291,7 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "重启KVM虚拟机",
+                "summary": "向KVM虚拟机发送关闭信号，有可能无法成功重启",
                 "parameters": [
                     {
                         "type": "string",
@@ -219,6 +299,52 @@ var doc = `{
                         "name": "name",
                         "in": "path",
                         "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/kvm/{name}/remove": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "移除KVM虚拟机",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Kvm Name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "remove vm disk file or not",
+                        "name": "removeDisk",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -283,6 +409,46 @@ var doc = `{
                 }
             }
         },
+        "/api/v1/kvm/{name}/shutdown": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "向KVM虚拟机发送关闭信号，有可能无法成功关闭",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Kvm Name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/_domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/kvm/{name}/suspend": {
             "post": {
                 "consumes": [
@@ -291,7 +457,7 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "暂停KVM虚拟机",
+                "summary": "休眠KVM虚拟机",
                 "parameters": [
                     {
                         "type": "string",
@@ -561,16 +727,16 @@ var doc = `{
                 "backing": {
                     "type": "string"
                 },
-                "completionRate": {
-                    "type": "number"
+                "cancelDate": {
+                    "type": "string"
                 },
-                "createdAt": {
+                "createdDate": {
                     "type": "string"
                 },
                 "deleted": {
                     "type": "boolean"
                 },
-                "deletedAt": {
+                "deletedDate": {
                     "type": "string"
                 },
                 "desc": {
@@ -579,7 +745,7 @@ var doc = `{
                 "disabled": {
                     "type": "boolean"
                 },
-                "endTime": {
+                "endDate": {
                     "type": "string"
                 },
                 "id": {
@@ -594,22 +760,31 @@ var doc = `{
                 "path": {
                     "type": "string"
                 },
+                "rate": {
+                    "type": "number"
+                },
                 "retry": {
                     "type": "integer"
                 },
-                "startTime": {
+                "speed": {
+                    "type": "number"
+                },
+                "startDate": {
                     "type": "string"
                 },
                 "status": {
                     "type": "string"
                 },
-                "taskType": {
+                "task": {
+                    "type": "integer"
+                },
+                "timeoutDate": {
                     "type": "string"
                 },
-                "timeoutTime": {
+                "type": {
                     "type": "string"
                 },
-                "updatedAt": {
+                "updatedDate": {
                     "type": "string"
                 },
                 "url": {
@@ -622,9 +797,6 @@ var doc = `{
                 },
                 "xml": {
                     "type": "string"
-                },
-                "zentaoTask": {
-                    "type": "integer"
                 }
             }
         },
@@ -656,7 +828,7 @@ var doc = `{
                 "path": {
                     "type": "string"
                 },
-                "taskId": {
+                "task": {
                     "type": "string"
                 }
             }
@@ -690,11 +862,11 @@ var doc = `{
                 "md5": {
                     "type": "string"
                 },
+                "task": {
+                    "type": "integer"
+                },
                 "url": {
                     "type": "string"
-                },
-                "zentaoTask": {
-                    "type": "integer"
                 }
             }
         },
@@ -704,11 +876,11 @@ var doc = `{
                 "backing": {
                     "type": "string"
                 },
+                "task": {
+                    "type": "integer"
+                },
                 "vm": {
                     "type": "string"
-                },
-                "zentaoTask": {
-                    "type": "integer"
                 }
             }
         },
@@ -739,7 +911,7 @@ var doc = `{
                         "$ref": "#/definitions/agentModel.Task"
                     }
                 },
-                "inProgress": {
+                "inprogress": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/agentModel.Task"
@@ -797,15 +969,15 @@ var doc = `{
         "v1.VmPortMapReq": {
             "type": "object",
             "properties": {
+                "ip": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                },
                 "type": {
                     "description": "Enums consts.NatForwardType",
                     "type": "string"
-                },
-                "vmIp": {
-                    "type": "string"
-                },
-                "vmPort": {
-                    "type": "integer"
                 }
             }
         },
@@ -818,15 +990,15 @@ var doc = `{
                 "hostPort": {
                     "type": "integer"
                 },
+                "ip": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                },
                 "type": {
                     "description": "Enums consts.NatForwardType",
                     "type": "string"
-                },
-                "vmIp": {
-                    "type": "string"
-                },
-                "vmPort": {
-                    "type": "integer"
                 }
             }
         },

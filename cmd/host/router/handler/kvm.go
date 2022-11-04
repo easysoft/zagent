@@ -69,30 +69,6 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 	return
 }
 
-// ExportVm
-// @summary 导出KVM虚拟机为模板镜像
-// @Accept json
-// @Produce json
-// @Param ExportVmReq body v1.ExportVmReq true "Export Kvm Request Object"
-// @Success 200 {object} _domain.Response "code = success | fail"
-// @Router /api/v1/kvm/exportVm [post]
-func (c *KvmCtrl) ExportVm(ctx iris.Context) {
-	req := v1.ExportVmReq{}
-	if err := ctx.ReadJSON(&req); err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
-		return
-	}
-
-	err := c.KvmService.AddExportVmTask(req)
-	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
-		return
-	}
-
-	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to add export vm task", nil))
-	return
-}
-
 //// Clone
 //// @summary 克隆KVM虚拟机
 //// @Accept json
@@ -136,8 +112,68 @@ func (c *KvmCtrl) ExportVm(ctx iris.Context) {
 //	return
 //}
 
+// Boot
+// @summary 启动KVM虚拟机
+// @Accept json
+// @Produce json
+// @Param name path string true "Kvm Name"
+// @Success 200 {object} _domain.Response{data=string} "code = success | fail"
+// @Router /api/v1/kvm/{name}/boot [post]
+func (c *KvmCtrl) Boot(ctx iris.Context) {
+	name := ctx.Params().GetString("name")
+	if name == "" {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, "vm name is empty", nil))
+		return
+	}
+
+	c.LibvirtService.BootVmByName(name)
+
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to boot vm", name))
+	return
+}
+
+// Shutdown
+// @summary 向KVM虚拟机发送关闭信号，有可能无法成功关闭
+// @Accept json
+// @Produce json
+// @Param name path string true "Kvm Name"
+// @Success 200 {object} _domain.Response{data=string} "code = success | fail"
+// @Router /api/v1/kvm/{name}/shutdown [post]
+func (c *KvmCtrl) Shutdown(ctx iris.Context) {
+	name := ctx.Params().GetString("name")
+	if name == "" {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, "vm name is empty", nil))
+		return
+	}
+
+	c.LibvirtService.ShutdownVmByName(name)
+
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to shutdown vm", nil))
+	return
+}
+
+// Reboot
+// @summary 向KVM虚拟机发送关闭信号，有可能无法成功重启
+// @Accept json
+// @Produce json
+// @Param name path string true "Kvm Name"
+// @Success 200 {object} _domain.Response{data=string} "code = success | fail"
+// @Router /api/v1/kvm/{name}/reboot [post]
+func (c *KvmCtrl) Reboot(ctx iris.Context) {
+	name := ctx.Params().GetString("name")
+	if name == "" {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, "vm name is empty", nil))
+		return
+	}
+
+	c.LibvirtService.RebootVmByName(name)
+
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to reboot vm", name))
+	return
+}
+
 // Destroy
-// @summary 摧毁KVM虚拟机
+// @summary 安全关闭并断电KVM虚拟机，关机不成功的情况下放弃
 // @Accept json
 // @Produce json
 // @Param name path string true "Kvm Name"
@@ -173,28 +209,45 @@ func (c *KvmCtrl) Destroy(ctx iris.Context) {
 	return
 }
 
-// Reboot
-// @summary 重启KVM虚拟机
+// Poweroff
+// @summary 强行关闭并断电KVM虚拟机，关闭超时情况下会强行断电
 // @Accept json
 // @Produce json
 // @Param name path string true "Kvm Name"
 // @Success 200 {object} _domain.Response{data=string} "code = success | fail"
-// @Router /api/v1/kvm/{name}/reboot [post]
-func (c *KvmCtrl) Reboot(ctx iris.Context) {
+// @Router /api/v1/kvm/{name}/poweroff [post]
+func (c *KvmCtrl) Poweroff(ctx iris.Context) {
 	name := ctx.Params().GetString("name")
 	if name == "" {
 		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, "vm name is empty", nil))
 		return
 	}
 
-	c.LibvirtService.RebootVmByName(name)
+	req := v1.DestroyVmReq{}
+	err := ctx.ReadJSON(&req)
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
 
-	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to reboot vm", name))
+	bizErr := c.LibvirtService.ForceDestroyVmByName(name)
+	if bizErr != nil {
+		ctx.JSON(_httpUtils.RespDataFromBizErr(bizErr))
+		return
+	}
+
+	err = natHelper.RemoveForward(req.Ip, 0, consts.All)
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
+
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to destroy vm", name))
 	return
 }
 
 // Suspend
-// @summary 暂停KVM虚拟机
+// @summary 休眠KVM虚拟机
 // @Accept json
 // @Produce json
 // @Param name path string true "Kvm Name"
@@ -241,28 +294,57 @@ func (c *KvmCtrl) Resume(ctx iris.Context) {
 	return
 }
 
-func (c *KvmCtrl) Boot(ctx iris.Context) {
-	name := ctx.Params().GetString("name")
-	if name == "" {
-		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, "vm name is empty", nil))
+// ExportVm
+// @summary 导出KVM虚拟机为模板镜像
+// @Accept json
+// @Produce json
+// @Param ExportVmReq body v1.ExportVmReq true "Export Kvm Request Object"
+// @Success 200 {object} _domain.Response "code = success | fail"
+// @Router /api/v1/kvm/exportVm [post]
+func (c *KvmCtrl) ExportVm(ctx iris.Context) {
+	req := v1.ExportVmReq{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 		return
 	}
 
-	c.LibvirtService.BootVmByName(name)
+	err := c.KvmService.AddExportVmTask(req)
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
 
-	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to boot vm", name))
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to add export vm task", nil))
 	return
 }
 
-func (c *KvmCtrl) Shutdown(ctx iris.Context) {
+// Resume
+// @summary 移除KVM虚拟机
+// @Accept json
+// @Produce json
+// @Param name path string true "Kvm Name"
+// @Param removeDisk query bool false "remove vm disk file or not"
+// @Success 200 {object} _domain.Response{data=string} "code = success | fail"
+// @Router /api/v1/kvm/{name}/remove [post]
+func (c *KvmCtrl) Remove(ctx iris.Context) {
 	name := ctx.Params().GetString("name")
 	if name == "" {
 		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, "vm name is empty", nil))
 		return
 	}
 
-	c.LibvirtService.ShutdownVmByName(name)
+	removeDisk, err := ctx.URLParamBool("removeDisk")
+	if err != nil {
+		removeDisk = true // default is true
+		return
+	}
 
-	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to shutdown vm", nil))
+	err = c.LibvirtService.RemoveVmByName(name, removeDisk)
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
+
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to resume vm", name))
 	return
 }

@@ -71,12 +71,18 @@ func (r *Router) App() {
 				//client.Post("/clone", r.KvmCtrl.Clone).Name = "克隆KVM虚拟机"
 				//client.Get("/listTmpl", r.KvmCtrl.ListTmpl).Name = "列出KVM虚拟机镜像"
 
-				client.Post("/{name:string}/destroy", r.KvmCtrl.Destroy).Name = "摧毁KVM虚拟机"
+				client.Post("/{name:string}/boot", r.KvmCtrl.Boot).Name = "启动KVM虚拟机"
+				client.Post("/{name:string}/shutdown", r.KvmCtrl.Shutdown).Name = "关闭KVM虚拟机"
 				client.Post("/{name:string}/reboot", r.KvmCtrl.Reboot).Name = "重启KVM虚拟机"
-				client.Post("/{name:string}/suspend", r.KvmCtrl.Suspend).Name = "暂停KVM虚拟机"
+
+				client.Post("/{name:string}/destroy", r.KvmCtrl.Destroy).Name = "安全关闭并断电KVM虚拟机"
+				client.Post("/{name:string}/poweroff", r.KvmCtrl.Poweroff).Name = "强行关闭并断电KVM虚拟机"
+
+				client.Post("/{name:string}/suspend", r.KvmCtrl.Suspend).Name = "休眠KVM虚拟机"
 				client.Post("/{name:string}/resume", r.KvmCtrl.Resume).Name = "恢复KVM虚拟机"
 
 				client.Post("/exportVm", r.KvmCtrl.ExportVm).Name = "导出KVM虚拟机为模板镜像"
+				client.Post("/remove", r.KvmCtrl.Remove).Name = "移除KVM虚拟机"
 			})
 
 			v1.PartyFunc("/virtualbox", func(client iris.Party) {
