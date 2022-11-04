@@ -15,7 +15,6 @@ type Router struct {
 	TaskCtrl     *hostHandler.TaskCtrl     `inject:""`
 	DownloadCtrl *hostHandler.DownloadCtrl `inject:""`
 	CheckCtrl    *hostHandler.ServiceCtrl  `inject:""`
-	JobCtrl      *hostHandler.JobCtrl      `inject:""`
 
 	KvmCtrl        *hostHandler.KvmCtrl        `inject:""`
 	VirtualBoxCtrl *hostHandler.VirtualBoxCtrl `inject:""`
@@ -53,10 +52,6 @@ func (r *Router) App() {
 				client.Post("/add", r.DownloadCtrl.Add).Name = "添加下载任务"
 				client.Post("/cancel", r.DownloadCtrl.Cancel).Name = "强制终止下载任务"
 			})
-
-			//v1.PartyFunc("/job", func(client iris.Party) {
-			//	client.Post("/add", r.JobCtrl.Add).Name = "创建任务"
-			//})
 
 			v1.PartyFunc("/virtual", func(client iris.Party) {
 				client.Post("/notifyHost", r.VirtualCtrl.NotifyHost).Name = "虚拟机请求安全码"
