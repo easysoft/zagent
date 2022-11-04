@@ -3,15 +3,17 @@ package virtualService
 import (
 	"errors"
 	"fmt"
-	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
-	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
-	consts "github.com/easysoft/zagent/internal/pkg/const"
-	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"sync"
+
+	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
+	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
+	_stringUtils "github.com/easysoft/zagent/pkg/lib/string"
 )
 
 type NoVncService struct {
@@ -28,7 +30,33 @@ func NewNovncService() *NoVncService {
 }
 
 func (s *NoVncService) GetToken(port string) (ret v1.VncTokenResp, err error) {
-	obj, ok := s.syncMap.Load(port)
+	token := _stringUtils.Uuid()
+	ip := agentConf.Inst.NodeIp
+	ret = v1.VncTokenResp{
+		Token: token,
+		Ip:    ip,
+		Port:  port,
+	}
+	s.syncMap.Store(token, ret)
+
+	//delete other token
+	s.syncMap.Range(func(key, value interface{}) bool {
+		if key != token {
+			vncResp := value.(v1.VncTokenResp)
+
+			if vncResp.Ip == ret.Ip && vncResp.Port == ret.Port {
+				s.syncMap.Delete(key)
+			}
+		}
+
+		return true
+	})
+
+	return
+}
+
+func (s *NoVncService) GetAddressByToken(token string) (ret v1.VncTokenResp, err error) {
+	obj, ok := s.syncMap.Load(token)
 
 	if !ok {
 		return
