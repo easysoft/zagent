@@ -12,13 +12,13 @@ type Task struct {
 	Desc string `json:"desc,omitempty"`
 
 	// for download
-	Url            string            `json:"url,omitempty"`
-	Md5            string            `json:"md5,omitempty"`
-	Path           string            `json:"path,omitempty"`
-	Status         consts.TaskStatus `json:"status"`
-	Retry          int               `json:"retry"`
-	CompletionRate float64           `json:"completionRate"`
-	Speed          float64           `json:"speed"`
+	Url    string            `json:"url,omitempty"`
+	Md5    string            `json:"md5,omitempty"`
+	Path   string            `json:"path,omitempty"`
+	Status consts.TaskStatus `json:"status"`
+	Retry  int               `json:"retry"`
+	Rate   float64           `json:"rate"`
+	Speed  float64           `json:"speed,omitempty"`
 
 	// for export vm
 	Vm      string `json:"vm,omitempty"`
@@ -26,12 +26,13 @@ type Task struct {
 	Xml     string `json:"xml,omitempty"`
 	//Path    string `json:"path,omitempty"`
 
-	StartTime   *time.Time `json:"startTime"`
-	EndTime     *time.Time `json:"endTime"`
-	TimeoutTime *time.Time `json:"timeoutTime,omitempty"`
+	StartDate *time.Time `json:"startDate" gorm:"column:startDate"`
+	EndDate   *time.Time `json:"endDate" gorm:"column:endDate"`
+	Timeout   *time.Time `json:"timeout,omitempty" gorm:"column:timeout"`
+	Cancel    *time.Time `json:"cancel,omitempty" gorm:"column:cancel"`
 
-	ZentaoTask int             `json:"zentaoTask"`
-	TaskType   consts.TaskType `json:"taskType"`
+	Task int             `json:"task" gorm:"column:task"`
+	Type consts.TaskType `json:"type" gorm:"type"`
 }
 
 func (Task) TableName() string {

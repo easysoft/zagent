@@ -30,7 +30,7 @@ func (r *TaskRepo) Query() (pos []agentModel.Task, err error) {
 }
 
 func (r *TaskRepo) Get(id uint) (po agentModel.Task, err error) {
-	r.DB.Model(&agentModel.Task{}).Preload("Environments", "NOT deleted").Where("id = ?", id).First(&po)
+	r.DB.Model(&agentModel.Task{}).Where("id = ?", id).First(&po)
 
 	return
 }
@@ -48,13 +48,15 @@ func (r *TaskRepo) GetByUrl(url string) (po agentModel.Task, err error) {
 	return
 }
 
-func (r *TaskRepo) GetByMd5(md5 string) (po agentModel.Task, err error) {
+func (r *TaskRepo) GetActiveTaskByMd5(md5 string) (po agentModel.Task, err error) {
 	if md5 == "" {
 		return
 	}
 
 	r.DB.Model(&po).
-		Where("md5 = ?", md5).Order("id desc").First(&po)
+		Where("status NOT IN (?) and md5 = ?",
+			[]consts.TaskStatus{consts.Canceled, consts.Completed, consts.Failed}, md5).
+		Order("id desc").First(&po)
 
 	return
 }
@@ -86,14 +88,14 @@ func (r *TaskRepo) UpdateStatus(id uint, filePath string, completionRate float64
 	}
 
 	if completionRate > 0 {
-		updates["completion_rate"] = completionRate
+		updates["rate"] = completionRate
 	}
 
 	if isStart {
-		updates["start_time"] = time.Now()
+		updates["startDate"] = time.Now()
 	}
 	if isEnd {
-		updates["end_time"] = time.Now()
+		updates["endDate"] = time.Now()
 	}
 
 	err = r.DB.Model(&agentModel.Task{}).Where("id = ?", id).
@@ -104,20 +106,20 @@ func (r *TaskRepo) UpdateStatus(id uint, filePath string, completionRate float64
 
 func (r *TaskRepo) Delete(id uint) (err error) {
 	err = r.DB.Model(&agentModel.Task{}).Where("id = ?", id).
-		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
+		Updates(map[string]interface{}{"deleted": true, "deletedDate": time.Now()}).Error
 
 	return
 }
 
 func (r *TaskRepo) SetFailed(po agentModel.Task) (err error) {
 	r.DB.Model(&agentModel.Task{}).Where("id=?", po.ID).Updates(
-		map[string]interface{}{"status": consts.Failed, "timeout_time": time.Now()})
+		map[string]interface{}{"status": consts.Failed, "timeout": time.Now()})
 	return
 }
 
-func (r *TaskRepo) SetCanceld(po agentModel.Task) (err error) {
+func (r *TaskRepo) SetCanceled(po agentModel.Task) (err error) {
 	r.DB.Model(&agentModel.Task{}).Where("id=?", po.ID).Updates(
-		map[string]interface{}{"status": consts.Canceled, "timeout_time": time.Now()})
+		map[string]interface{}{"status": consts.Canceled, "cancel": time.Now()})
 	return
 }
 

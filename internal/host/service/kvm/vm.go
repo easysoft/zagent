@@ -135,9 +135,9 @@ func (s *KvmService) AddExportVmTask(req v1.ExportVmReq) (err error) {
 		Vm:      req.Vm,
 		Backing: req.Backing,
 
-		ZentaoTask: req.ZentaoTask,
-		TaskType:   consts.ExportVm,
-		Status:     consts.Created,
+		Task:   req.ZentaoTask,
+		Type:   consts.ExportVm,
+		Status: consts.Created,
 	}
 
 	s.TaskRepo.Save(&po)

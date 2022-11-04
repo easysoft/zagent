@@ -16,27 +16,27 @@ import (
 	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 )
 
-func Start(task *agentModel.Task, filePath string, ch chan int) (status consts.TaskStatus, existFile string) {
-	fmt.Printf("Start to download %s ...\n", task.Url)
+func Start(downloadTask *agentModel.Task, filePath string, ch chan int) (status consts.TaskStatus, existFile string) {
+	fmt.Printf("Start to download %s ...\n", downloadTask.Url)
 
 	startTime := time.Now()
-	task.StartTime = &startTime
+	downloadTask.StartDate = &startTime
 
 	targetDir := consts.DownloadDir
-	if task.Md5 == "" {
-		getMd5FromRemote(task, targetDir)
+	if downloadTask.Md5 == "" {
+		getMd5FromRemote(downloadTask, targetDir)
 	}
 
-	existFile = findSameFile(*task, targetDir)
+	existFile = findSameFile(*downloadTask, targetDir)
 	if existFile != "" {
 		status = consts.Completed
 		return
 	}
 
-	SaveTaskStatus(&TaskStatus, task.ID, 0, 0)
+	SaveTaskStatus(&TaskStatus, downloadTask.ID, 0, 0)
 
 	// start file downloads, 3 at a time
-	respCh, err := grab.GetBatch(3, targetDir, task.Url)
+	respCh, err := grab.GetBatch(3, targetDir, downloadTask.Url)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
@@ -81,8 +81,8 @@ func Start(task *agentModel.Task, filePath string, ch chan int) (status consts.T
 					fmt.Fprintf(os.Stderr, "Error download %s: %v\n", resp.Request.URL(), resp.Err())
 				} else {
 					rate := resp.Progress()
-					speed := GetSpeed(*task.StartTime, resp.BytesComplete()/1000)
-					SaveTaskStatus(&TaskStatus, task.ID, rate, speed)
+					speed := GetSpeed(*downloadTask.StartDate, resp.BytesComplete()/1000)
+					SaveTaskStatus(&TaskStatus, downloadTask.ID, rate, speed)
 
 					fmt.Printf("Finish %s %d / %d bytes (%d%%)\n", resp.Filename, resp.BytesComplete(), resp.Size(), int(100*resp.Progress()))
 				}
@@ -100,47 +100,46 @@ func Start(task *agentModel.Task, filePath string, ch chan int) (status consts.T
 				inProgress++
 
 				rate := resp.Progress()
-				speed := GetSpeed(*task.StartTime, resp.BytesComplete()/1000)
-				SaveTaskStatus(&TaskStatus, task.ID, rate, speed)
+				speed := GetSpeed(*downloadTask.StartDate, resp.BytesComplete()/1000)
+				SaveTaskStatus(&TaskStatus, downloadTask.ID, rate, speed)
 
-				fmt.Printf("Downloading %s %d / %d bytes (%d%%)\u001B[K\n", resp.Filename, resp.BytesComplete(), resp.Size(), int(100*rate))
+				fmt.Printf("Downloading %s %d / %d bytes %f (%d%%)\u001B[K\n", resp.Filename, resp.BytesComplete(), resp.Size(), speed, int(100*rate))
 			}
 		}
+
+		time.Sleep(500 * time.Millisecond)
 	}
-	time.Sleep(200 * time.Millisecond)
 
 ExitDownload:
 
 	if isCanceled {
-		if len(responses) > 0 {
-			for _, resp := range responses {
-				resp.Cancel()
-			}
-			responses[0] = nil
+		for index, resp := range responses {
+			resp.Cancel()
+			responses[index] = nil
 		}
 
 		completed++
 
 		status = consts.Canceled
-		fmt.Printf("Force to terminate download %s.\n", task.Url)
+		fmt.Printf("Force to terminate download %s.\n", downloadTask.Url)
 	} else {
-		task.Path = filePath
+		downloadTask.Path = filePath
 
-		if checkMd5(*task) {
+		if checkMd5(*downloadTask) {
 			status = consts.Completed
 
-			if task.Md5 != "" {
-				saveMd5FromRequest(task, targetDir)
+			if downloadTask.Md5 != "" {
+				saveMd5FromRequest(downloadTask, targetDir)
 			}
 
-			fmt.Printf("Successfully download %s to %s.\n", task.Url, task.Path)
+			fmt.Printf("Successfully download %s to %s.\n", downloadTask.Url, downloadTask.Path)
 		} else {
 			status = consts.Error
-			fmt.Printf("Failed to download %s.\n", task.Url)
+			fmt.Printf("Failed to download %s.\n", downloadTask.Url)
 		}
 	}
 
-	task.CompletionRate, task.Speed = GetTaskStatus(TaskStatus, task.ID)
+	downloadTask.Rate, downloadTask.Speed = GetTaskStatus(TaskStatus, downloadTask.ID)
 
 	return
 }

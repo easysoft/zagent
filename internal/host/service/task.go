@@ -33,7 +33,7 @@ func (s *TaskService) CheckTask() (err error) {
 	if len(taskMap.InProgress) > 0 {
 		runningTask := taskMap.InProgress[0]
 
-		if runningTask.TaskType == consts.DownloadImage {
+		if runningTask.Type == consts.DownloadImage {
 			if s.IsError(runningTask) || s.IsTimeout(runningTask) || s.DownloadService.isEmpty() {
 				if s.NeedRetry(runningTask) {
 					s.DownloadService.RestartTask(runningTask)
@@ -51,7 +51,7 @@ func (s *TaskService) CheckTask() (err error) {
 	if toStartNewTask && len(taskMap.Created) > 0 {
 		newTask := taskMap.Created[0]
 
-		if newTask.TaskType == consts.DownloadImage {
+		if newTask.Type == consts.DownloadImage {
 			s.DownloadService.StartTask(newTask)
 		} else {
 			s.ExportService.StartTask(newTask)
@@ -81,13 +81,13 @@ func (s *TaskService) ListTask() (ret v1.ListTaskResp, err error) {
 
 		completionRate, speed := downloadUtils.GetTaskStatus(downloadUtils.TaskStatus, po.ID)
 		if completionRate > 0 {
-			po.CompletionRate = completionRate
+			po.Rate = completionRate
 		}
 		if speed > 0 {
 			po.Speed = speed
 		}
 
-		po.CompletionRate, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", po.CompletionRate), 64)
+		po.Rate, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", po.Rate), 64)
 		po.Speed, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", po.Speed), 64)
 
 		if status == consts.Created {
@@ -108,28 +108,28 @@ func (s *TaskService) ListTask() (ret v1.ListTaskResp, err error) {
 
 func (s *TaskService) SubmitResult(task agentModel.Task) (err error) {
 	// only submit vm task
-	if task.TaskType == consts.DownloadImage {
+	if task.Type == consts.DownloadImage {
 		url := requestUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/host/submitResult")
 
 		data := v1.ExportVmResp{
-			Backing:        task.Backing,
-			Xml:            task.Xml,
-			Status:         task.Status,
-			CompletionRate: task.CompletionRate,
-			Speed:          task.Speed,
-			ZentaoTask:     task.ZentaoTask,
+			Backing: task.Backing,
+			Xml:     task.Xml,
+			Status:  task.Status,
+			Rate:    task.Rate,
+			Speed:   task.Speed,
+			Task:    task.Task,
 		}
 
 		_, err = _httpUtils.Put(url, data)
 
-	} else if task.TaskType == consts.ExportVm {
+	} else if task.Type == consts.ExportVm {
 		url := requestUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/host/submitResult")
 
 		data := v1.ExportVmResp{
-			Backing:    task.Backing,
-			Xml:        task.Xml,
-			Status:     task.Status,
-			ZentaoTask: task.ZentaoTask,
+			Backing: task.Backing,
+			Xml:     task.Xml,
+			Status:  task.Status,
+			Task:    task.Task,
 		}
 
 		_, err = _httpUtils.Post(url, data)
@@ -144,9 +144,9 @@ func (s *TaskService) IsError(po agentModel.Task) bool {
 }
 
 func (s *TaskService) IsTimeout(po agentModel.Task) bool {
-	dur := time.Now().Unix() - po.StartTime.Unix()
+	dur := time.Now().Unix() - po.StartDate.Unix()
 	//return dur > 3
-	return dur > consts.DownloadImageTimeout
+	return po.Status == consts.InProgress && dur > consts.DownloadImageTimeout
 }
 
 func (s *TaskService) NeedRetry(po agentModel.Task) bool {

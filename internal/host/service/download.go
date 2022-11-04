@@ -30,23 +30,19 @@ func NewDownloadService() *DownloadService {
 func (s *DownloadService) AddTasks(req []v1.DownloadReq) (err error) {
 	for _, item := range req {
 		po := agentModel.Task{
-			Url:        item.Url,
-			Md5:        item.Md5,
-			ZentaoTask: item.ZentaoTask,
-			TaskType:   consts.DownloadImage,
-			Retry:      1,
-			Status:     consts.Created,
+			Url:    item.Url,
+			Md5:    item.Md5,
+			Task:   item.Task,
+			Type:   consts.DownloadImage,
+			Retry:  1,
+			Status: consts.Created,
 		}
 
-		existInfo, _ := s.TaskRepo.GetByMd5(item.Md5)
+		existTask, _ := s.TaskRepo.GetActiveTaskByMd5(item.Md5)
 
-		if existInfo.ID != 0 {
-			if existInfo.Status == consts.InProgress {
-				err = errors.New("the same md5 task exists and downloading")
-				return
-			} else {
-				s.TaskRepo.SetFailed(existInfo)
-			}
+		if existTask.ID != 0 {
+			err = errors.New("the same md5 task is downloading")
+			return
 		}
 
 		s.TaskRepo.Save(&po)
@@ -86,8 +82,9 @@ func (s *DownloadService) StartTask(po agentModel.Task) {
 
 func (s *DownloadService) CancelTask(taskId uint) {
 	taskInfo, _ := s.TaskRepo.GetDetail(taskId)
+
 	if taskInfo.ID > 0 && taskInfo.Status == consts.Created {
-		s.TaskRepo.SetCanceld(taskInfo)
+		s.TaskRepo.SetCanceled(taskInfo)
 	}
 
 	s.StopTask(taskId)
@@ -123,7 +120,7 @@ func (s *DownloadService) RestartTask(po agentModel.Task) (ret bool) {
 }
 
 func (s *DownloadService) RemoveTask(req v1.DownloadReq) {
-	s.TaskRepo.Delete(uint(req.ZentaoTask))
+	s.TaskRepo.Delete(uint(req.Task))
 
 	return
 }
