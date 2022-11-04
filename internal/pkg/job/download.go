@@ -125,7 +125,7 @@ ExitDownload:
 	} else {
 		downloadTask.Path = filePath
 
-		if checkMd5(*downloadTask) {
+		if CheckMd5(*downloadTask) {
 			status = consts.Completed
 
 			if downloadTask.Md5 != "" {
@@ -135,6 +135,7 @@ ExitDownload:
 			fmt.Printf("Successfully download %s to %s.\n", downloadTask.Url, downloadTask.Path)
 		} else {
 			status = consts.Error
+			os.Remove(filePath)
 			fmt.Printf("Failed to download %s.\n", downloadTask.Url)
 		}
 	}
@@ -144,7 +145,7 @@ ExitDownload:
 	return
 }
 
-func checkMd5(task agentModel.Task) bool {
+func CheckMd5(task agentModel.Task) bool {
 	expectVal := task.Md5
 
 	if expectVal == "" {

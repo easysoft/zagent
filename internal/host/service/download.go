@@ -58,6 +58,15 @@ func (s *DownloadService) StartTask(po agentModel.Task) {
 	go func() {
 		filePath := downloadUtils.GetPath(po)
 
+		//query same md5 task
+		sameMd5Task, _ := s.TaskRepo.GetCompletedTaskByMd5(po.Md5)
+		if sameMd5Task.ID > 0 {
+			if downloadUtils.CheckMd5(sameMd5Task) {
+				po.Path = sameMd5Task.Path
+				filePath = downloadUtils.GetPath(po)
+			}
+		}
+
 		s.TaskRepo.UpdateStatus(po.ID, filePath, 0.01, "", consts.Inprogress, true, false)
 
 		finalStatus, existFile := downloadUtils.Start(&po, filePath, ch)
