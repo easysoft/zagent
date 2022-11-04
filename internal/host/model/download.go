@@ -26,10 +26,10 @@ type Task struct {
 	Xml     string `json:"xml,omitempty"`
 	//Path    string `json:"path,omitempty"`
 
-	StartDate *time.Time `json:"startDate" gorm:"column:startDate"`
-	EndDate   *time.Time `json:"endDate" gorm:"column:endDate"`
-	Timeout   *time.Time `json:"timeout,omitempty" gorm:"column:timeout"`
-	Cancel    *time.Time `json:"cancel,omitempty" gorm:"column:cancel"`
+	StartDate   *time.Time `json:"startDate" gorm:"column:startDate"`
+	EndDate     *time.Time `json:"endDate" gorm:"column:endDate"`
+	TimeoutDate *time.Time `json:"timeoutDate,omitempty" gorm:"column:timeoutDate"`
+	CancelDate  *time.Time `json:"cancelDate,omitempty" gorm:"column:cancelDate"`
 
 	Task int             `json:"task" gorm:"column:task"`
 	Type consts.TaskType `json:"type" gorm:"type"`

@@ -113,13 +113,13 @@ func (r *TaskRepo) Delete(id uint) (err error) {
 
 func (r *TaskRepo) SetFailed(po agentModel.Task) (err error) {
 	r.DB.Model(&agentModel.Task{}).Where("id=?", po.ID).Updates(
-		map[string]interface{}{"status": consts.Failed, "timeout": time.Now()})
+		map[string]interface{}{"status": consts.Failed, "timeoutDate": time.Now()})
 	return
 }
 
 func (r *TaskRepo) SetCanceled(po agentModel.Task) (err error) {
 	r.DB.Model(&agentModel.Task{}).Where("id=?", po.ID).Updates(
-		map[string]interface{}{"status": consts.Canceled, "cancel": time.Now()})
+		map[string]interface{}{"status": consts.Canceled, "cancelDate": time.Now()})
 	return
 }
 

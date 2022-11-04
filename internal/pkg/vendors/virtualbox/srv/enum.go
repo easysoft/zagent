@@ -801,7 +801,7 @@ const (
 
 	GuestSessionWaitResultError GuestSessionWaitResult = "Error"
 
-	GuestSessionWaitResultTimeout GuestSessionWaitResult = "Timeout"
+	GuestSessionWaitResultTimeout GuestSessionWaitResult = "TimeoutDate"
 
 	GuestSessionWaitResultWaitFlagNotSupported GuestSessionWaitResult = "WaitFlagNotSupported"
 )
@@ -897,7 +897,7 @@ const (
 
 	ProcessWaitResultError ProcessWaitResult = "Error"
 
-	ProcessWaitResultTimeout ProcessWaitResult = "Timeout"
+	ProcessWaitResultTimeout ProcessWaitResult = "TimeoutDate"
 
 	ProcessWaitResultStdIn ProcessWaitResult = "StdIn"
 

@@ -45,7 +45,7 @@ func (c *DownloadCtrl) Add(ctx iris.Context) {
 // @summary 强制终止下载任务
 // @Accept json
 // @Produce json
-// @Param DownloadCancelReq body v1.DownloadCancelReq true "Cancel Download Request Object"
+// @Param DownloadCancelReq body v1.DownloadCancelReq true "CancelDate Download Request Object"
 // @Success 200 {object} _domain.Response "code = success | fail"
 // @Router /api/v1/download/cancel [post]
 func (c *DownloadCtrl) Cancel(ctx iris.Context) {

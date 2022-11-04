@@ -72,7 +72,7 @@ var doc = `{
                 "summary": "强制终止下载任务",
                 "parameters": [
                     {
-                        "description": "Cancel Download Request Object",
+                        "description": "CancelDate Download Request Object",
                         "name": "DownloadCancelReq",
                         "in": "body",
                         "required": true,
