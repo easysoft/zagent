@@ -13,19 +13,19 @@ definitions:
     properties:
       backing:
         type: string
-      completionRate:
-        type: number
-      createdAt:
+      cancelDate:
+        type: string
+      createdDate:
         type: string
       deleted:
         type: boolean
-      deletedAt:
+      deletedDate:
         type: string
       desc:
         type: string
       disabled:
         type: boolean
-      endTime:
+      endDate:
         type: string
       id:
         type: integer
@@ -35,17 +35,23 @@ definitions:
         type: string
       path:
         type: string
+      rate:
+        type: number
       retry:
         type: integer
-      startTime:
+      speed:
+        type: number
+      startDate:
         type: string
       status:
         type: string
-      taskType:
+      task:
+        type: integer
+      timeoutDate:
         type: string
-      timeoutTime:
+      type:
         type: string
-      updatedAt:
+      updatedDate:
         type: string
       url:
         description: for download
@@ -55,8 +61,6 @@ definitions:
         type: string
       xml:
         type: string
-      zentaoTask:
-        type: integer
     type: object
   v1.CreateVmReq:
     properties:
@@ -78,7 +82,7 @@ definitions:
         type: string
       path:
         type: string
-      taskId:
+      task:
         type: string
     type: object
   v1.CreateVmResp:
@@ -100,19 +104,19 @@ definitions:
     properties:
       md5:
         type: string
+      task:
+        type: integer
       url:
         type: string
-      zentaoTask:
-        type: integer
     type: object
   v1.ExportVmReq:
     properties:
       backing:
         type: string
+      task:
+        type: integer
       vm:
         type: string
-      zentaoTask:
-        type: integer
     type: object
   v1.ListTaskResp:
     properties:
@@ -132,7 +136,7 @@ definitions:
         items:
           $ref: '#/definitions/agentModel.Task'
         type: array
-      inProgress:
+      inprogress:
         items:
           $ref: '#/definitions/agentModel.Task'
         type: array
@@ -170,13 +174,13 @@ definitions:
     type: object
   v1.VmPortMapReq:
     properties:
+      ip:
+        type: string
+      port:
+        type: integer
       type:
         description: Enums consts.NatForwardType
         type: string
-      vmIp:
-        type: string
-      vmPort:
-        type: integer
     type: object
   v1.VmPortMapResp:
     properties:
@@ -184,13 +188,13 @@ definitions:
         type: boolean
       hostPort:
         type: integer
+      ip:
+        type: string
+      port:
+        type: integer
       type:
         description: Enums consts.NatForwardType
         type: string
-      vmIp:
-        type: string
-      vmPort:
-        type: integer
     type: object
   v1.VncTokenResp:
     properties:
@@ -235,7 +239,7 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: Cancel Download Request Object
+      - description: CancelDate Download Request Object
         in: body
         name: DownloadCancelReq
         required: true
@@ -249,6 +253,29 @@ paths:
           schema:
             $ref: '#/definitions/_domain.Response'
       summary: 强制终止下载任务
+  /api/v1/kvm/{name}/boot:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Kvm Name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code = success | fail
+          schema:
+            allOf:
+            - $ref: '#/definitions/_domain.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: 启动KVM虚拟机
   /api/v1/kvm/{name}/destroy:
     post:
       consumes:
@@ -271,7 +298,30 @@ paths:
                 data:
                   type: string
               type: object
-      summary: 摧毁KVM虚拟机
+      summary: 安全关闭并断电KVM虚拟机，关机不成功的情况下放弃
+  /api/v1/kvm/{name}/poweroff:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Kvm Name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code = success | fail
+          schema:
+            allOf:
+            - $ref: '#/definitions/_domain.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: 强行关闭并断电KVM虚拟机，关闭超时情况下会强行断电
   /api/v1/kvm/{name}/reboot:
     post:
       consumes:
@@ -294,7 +344,34 @@ paths:
                 data:
                   type: string
               type: object
-      summary: 重启KVM虚拟机
+      summary: 向KVM虚拟机发送重启信号，有可能无法成功重启
+  /api/v1/kvm/{name}/remove:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Kvm Name
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: remove vm disk file or not
+        in: query
+        name: removeDisk
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code = success | fail
+          schema:
+            allOf:
+            - $ref: '#/definitions/_domain.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: 移除KVM虚拟机
   /api/v1/kvm/{name}/resume:
     post:
       consumes:
@@ -318,6 +395,29 @@ paths:
                   type: string
               type: object
       summary: 恢复KVM虚拟机
+  /api/v1/kvm/{name}/shutdown:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Kvm Name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code = success | fail
+          schema:
+            allOf:
+            - $ref: '#/definitions/_domain.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: 向KVM虚拟机发送关闭信号，有可能无法成功关闭
   /api/v1/kvm/{name}/suspend:
     post:
       consumes:
@@ -340,7 +440,7 @@ paths:
                 data:
                   type: string
               type: object
-      summary: 暂停KVM虚拟机
+      summary: 休眠KVM虚拟机
   /api/v1/kvm/create:
     post:
       consumes:
