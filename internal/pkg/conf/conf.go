@@ -42,8 +42,6 @@ func Init(app string) {
 		consts.NovncDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.WorkDir, consts.FolderNovnc))
 		consts.WebsockifyDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.WorkDir, consts.FolderWebsockify))
 
-		Inst.DirToken = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.WorkDir, consts.FolderToken))
-
 		Inst.DirKvm = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.WorkDir, consts.FolderKvm))
 		Inst.DirIso = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, consts.FolderIso))
 		Inst.DirBaking = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, consts.FolderBacking))
@@ -51,7 +49,6 @@ func Init(app string) {
 
 		_fileUtils.MkDirIfNeeded(consts.DownloadDir)
 
-		_fileUtils.MkDirIfNeeded(Inst.DirToken)
 		_fileUtils.MkDirIfNeeded(Inst.DirIso)
 		_fileUtils.MkDirIfNeeded(Inst.DirBaking)
 		_fileUtils.MkDirIfNeeded(Inst.DirImage)
@@ -80,7 +77,6 @@ type Config struct {
 	DirIso    string
 	DirBaking string
 	DirImage  string
-	DirToken  string
 
 	DB DBConfig
 }

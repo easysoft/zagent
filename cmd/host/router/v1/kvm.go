@@ -13,7 +13,7 @@ type CreateVmReq struct {
 	Memory int `json:"memory"` // Unit G
 	Disk   int `json:"disk"`   // Unit G
 
-	TaskId string `json:"taskId"`
+	Task string `json:"task"`
 }
 
 type CreateVmResp struct {
@@ -23,9 +23,9 @@ type CreateVmResp struct {
 }
 
 type ExportVmReq struct {
-	Vm         string `json:"vm"`
-	Backing    string `json:"backing"`
-	ZentaoTask int    `json:"zentaoTask"`
+	Vm      string `json:"vm"`
+	Backing string `json:"backing"`
+	Task    int    `json:"task"`
 }
 
 type ExportVmResp struct {
@@ -39,17 +39,17 @@ type ExportVmResp struct {
 	Task int `json:"task"`
 }
 
-type CloneVmReq struct {
-	VmMacAddress string `json:"vmMacAddress"`
-	VmUniqueName string `json:"vmUniqueName" example:"test-win10-x64-pro-zh_cn-clone1"`
-	VmSrc        string `json:"vmSrc" example:"test-win10-x64-pro-zh_cn"`
-
-	VmCpu        uint `json:"vmCpu" example:"3"`
-	VmMemorySize uint `json:"vmMemorySize" example:"5"` // Unit G
-	VmDiskSize   uint `json:"vmDiskSize" example:"60"`  // Unit G
-
-	//StartAfterCreated bool `json:"startAfterCreated"`
-}
+//type CloneVmReq struct {
+//	VmMacAddress string `json:"vmMacAddress"`
+//	VmUniqueName string `json:"vmUniqueName" example:"test-win10-x64-pro-zh_cn-clone1"`
+//	VmSrc        string `json:"vmSrc" example:"test-win10-x64-pro-zh_cn"`
+//
+//	VmCpu        uint `json:"vmCpu" example:"3"`
+//	VmMemorySize uint `json:"vmMemorySize" example:"5"` // Unit G
+//	VmDiskSize   uint `json:"vmDiskSize" example:"60"`  // Unit G
+//
+//	//StartAfterCreated bool `json:"startAfterCreated"`
+//}
 
 type KvmResp struct {
 	Name    string          `json:"name"`

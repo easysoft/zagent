@@ -170,7 +170,7 @@ type TaskStatus string
 
 const (
 	Created    TaskStatus = "created"
-	InProgress TaskStatus = "inprogress"
+	Inprogress TaskStatus = "inprogress"
 
 	// temp status
 	Timeout TaskStatus = "timeout"

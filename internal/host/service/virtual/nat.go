@@ -20,13 +20,13 @@ func NewNatService() *NatService {
 func (s *NatService) AddVmPortMap(req v1.VmPortMapReq) (resp v1.VmPortMapResp, err error) {
 	copier.CopyWithOption(&resp, req, copier.Option{DeepCopy: true})
 
-	resp.HostPort, resp.AlreadyMapped, _ = natHelper.ForwardPortIfNeeded(req.VmIp, req.VmPort, req.Type)
+	resp.HostPort, resp.AlreadyMapped, _ = natHelper.ForwardPortIfNeeded(req.Ip, req.Port, req.Type)
 
 	return
 }
 
 func (s *NatService) RemoveVmPortMap(req v1.VmPortMapReq) (err error) {
-	err = natHelper.RemoveForward(req.VmIp, req.VmPort, req.Type)
+	err = natHelper.RemoveForward(req.Ip, req.Port, req.Type)
 
 	return
 }

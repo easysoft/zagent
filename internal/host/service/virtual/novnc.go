@@ -6,9 +6,7 @@ import (
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
-	_fileUtils "github.com/easysoft/zagent/pkg/lib/file"
 	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
-	_stringUtils "github.com/easysoft/zagent/pkg/lib/string"
 	"os/exec"
 	"path/filepath"
 	"strconv"
@@ -23,7 +21,7 @@ type NoVncService struct {
 func NewNovncService() *NoVncService {
 	srv := NoVncService{}
 
-	srv.genWebsockifyTokens()
+	//srv.genWebsockifyTokens()
 	srv.launchWebsockifyService()
 
 	return &srv
@@ -41,36 +39,36 @@ func (s *NoVncService) GetToken(port string) (ret v1.VncTokenResp, err error) {
 	return
 }
 
-func (s *NoVncService) genWebsockifyTokens() {
-	port := consts.VncPortStart
-	for port <= consts.VncPortEnd {
-		portStr := strconv.Itoa(port)
-		token := _stringUtils.Uuid()
-		ip := agentConf.Inst.NodeIp
-
-		// uuid: 192.168.1.215:51800	// must has space after first :
-		content := fmt.Sprintf("%s: %s:%s", token, ip, portStr)
-
-		pth := filepath.Join(agentConf.Inst.DirToken, portStr+".txt")
-		_fileUtils.WriteFile(pth, content)
-
-		result := v1.VncTokenResp{
-			Token: token,
-			Ip:    ip,
-			Port:  portStr,
-		}
-		s.syncMap.Store(portStr, result)
-
-		port++
-	}
-}
+//func (s *NoVncService) genWebsockifyTokens() {
+//	port := consts.VncPortStart
+//	for port <= consts.VncPortEnd {
+//		portStr := strconv.Itoa(port)
+//		token := _stringUtils.Uuid()
+//		ip := agentConf.Inst.NodeIp
+//
+//		// uuid: 192.168.1.215:51800	// must has space after first :
+//		content := fmt.Sprintf("%s: %s:%s", token, ip, portStr)
+//
+//		pth := filepath.Join(agentConf.Inst.DirToken, portStr+".txt")
+//		_fileUtils.WriteFile(pth, content)
+//
+//		result := v1.VncTokenResp{
+//			Token: token,
+//			Ip:    ip,
+//			Port:  portStr,
+//		}
+//		s.syncMap.Store(portStr, result)
+//
+//		port++
+//	}
+//}
 
 func (s *NoVncService) launchWebsockifyService() (ret v1.VncTokenResp) {
 	exePath := filepath.Join(agentConf.Inst.WorkDir, "websockify/run")
 	logPath := filepath.Join(agentConf.Inst.WorkDir, "websockify/nohup.log")
 
-	cmd := fmt.Sprintf("nohup %s --token-plugin TokenFile --token-source %s %d > %s 2>&1 &",
-		exePath, agentConf.Inst.DirToken, consts.WebsockifyPort, logPath)
+	cmd := fmt.Sprintf("nohup %s --token-plugin TokenFile %d > %s 2>&1 &",
+		exePath, consts.WebsockifyPort, logPath)
 
 	_shellUtils.KillProcess("websockify")
 	_shellUtils.ExeShell(cmd)

@@ -30,8 +30,8 @@ func (s *TaskService) CheckTask() (err error) {
 	taskMap, _ := s.ListTask()
 
 	toStartNewTask := false
-	if len(taskMap.InProgress) > 0 {
-		runningTask := taskMap.InProgress[0]
+	if len(taskMap.Inprogress) > 0 {
+		runningTask := taskMap.Inprogress[0]
 
 		if runningTask.Type == consts.DownloadImage {
 			if s.IsError(runningTask) || s.IsTimeout(runningTask) || s.DownloadService.isEmpty() {
@@ -65,7 +65,7 @@ func (s *TaskService) CheckTask() (err error) {
 func (s *TaskService) ListTask() (ret v1.ListTaskResp, err error) {
 	ret = v1.ListTaskResp{
 		Created:    make([]agentModel.Task, 0),
-		InProgress: make([]agentModel.Task, 0),
+		Inprogress: make([]agentModel.Task, 0),
 		Canceled:   make([]agentModel.Task, 0),
 		Completed:  make([]agentModel.Task, 0),
 		Failed:     make([]agentModel.Task, 0),
@@ -76,7 +76,7 @@ func (s *TaskService) ListTask() (ret v1.ListTaskResp, err error) {
 	for _, po := range pos {
 		status := po.Status
 		if status == consts.Timeout || status == consts.Error {
-			status = consts.InProgress
+			status = consts.Inprogress
 		}
 
 		completionRate, speed := downloadUtils.GetTaskStatus(downloadUtils.TaskStatus, po.ID)
@@ -92,8 +92,8 @@ func (s *TaskService) ListTask() (ret v1.ListTaskResp, err error) {
 
 		if status == consts.Created {
 			ret.Created = append(ret.Created, po)
-		} else if status == consts.InProgress {
-			ret.InProgress = append(ret.InProgress, po)
+		} else if status == consts.Inprogress {
+			ret.Inprogress = append(ret.Inprogress, po)
 		} else if status == consts.Canceled {
 			ret.Canceled = append(ret.Canceled, po)
 		} else if status == consts.Completed {
@@ -146,7 +146,7 @@ func (s *TaskService) IsError(po agentModel.Task) bool {
 func (s *TaskService) IsTimeout(po agentModel.Task) bool {
 	dur := time.Now().Unix() - po.StartDate.Unix()
 	//return dur > 3
-	return po.Status == consts.InProgress && dur > consts.DownloadImageTimeout
+	return po.Status == consts.Inprogress && dur > consts.DownloadImageTimeout
 }
 
 func (s *TaskService) NeedRetry(po agentModel.Task) bool {
