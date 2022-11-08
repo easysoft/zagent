@@ -110,7 +110,8 @@ install_zagent()
         unzip -o ./agent.zip
         ck_ok "unZip Zagent"
         if [[ -n $secret ]];then
-            nohup ./zagent-host -P 8085 -secret $secret > /dev/null 2>&1 &
+            sudo chmod +x ./zagent-host
+            nohup ./zagent-host -p 8086 -secret $secret > /dev/null 2>&1 &
         fi
     fi
     
