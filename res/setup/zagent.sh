@@ -71,7 +71,7 @@ download_zagent()
         echo "agent.zip already exist"
         echo "Check md5"
         zip_md5=`md5sum agent.zip|awk '{print $1}'`
-        if [ ${zip_md5} == '2b3bd1cb0bedb5abe150220cc1895e5d' ]
+        if [ ${zip_md5} == '7af16fcb7ea244da69b6c0c553fe94bb' ]
         then
             return 0
         else
@@ -84,7 +84,7 @@ download_zagent()
     echo "Check md5"
     zip_md5=`md5sum agent.zip|awk '{print $1}'`
     
-    if [ ${zip_md5} == '2b3bd1cb0bedb5abe150220cc1895e5d' ]
+    if [ ${zip_md5} == '7af16fcb7ea244da69b6c0c553fe94bb' ]
     then
         return 0
     fi
@@ -109,7 +109,6 @@ install_zagent()
         echo "unZip zagent"
         unzip -d ./zagent -o ./agent.zip
         ck_ok "unZip Zagent"
-        cp ./zagent/ztf zagent-host
         if [[ -n $secret ]];then
             nohup ./zagent-host -P 8085 -secret $secret > /dev/null 2>&1 &
         fi
@@ -127,7 +126,7 @@ download_novnc()
         echo "novnc.zip already exist"
         echo "Check md5"
         zip_md5=`md5sum novnc.zip|awk '{print $1}'`
-        if [ ${zip_md5} == '2b3bd1cb0bedb5abe150220cc1895e5d' ]
+        if [ ${zip_md5} == 'ba625b47552aa42357f65c400fa9847a' ]
         then
             return 0
         else
@@ -135,12 +134,12 @@ download_novnc()
         fi
     fi
     
-    curl -L -o novnc.zip https://ztf.im/dl/ztf/3.2.0/linux/ztf.zip
+    curl -L -o novnc.zip https://github.com/novnc/noVNC/archive/refs/tags/v1.3.0.zip
     ck_ok "download novnc"
     echo "Check md5"
     zip_md5=`md5sum novnc.zip|awk '{print $1}'`
     
-    if [ ${zip_md5} == '2b3bd1cb0bedb5abe150220cc1895e5d' ]
+    if [ ${zip_md5} == 'ba625b47552aa42357f65c400fa9847a' ]
     then
         return 0
     fi
