@@ -93,7 +93,7 @@ download_zagent()
 }
 install_zagent()
 {
-    if [ -f ${HOME}/zagent/zagent/ztf ];then
+    if [ -f ${HOME}/zagent/zagent-host ];then
         if [ ${force} == false ];then
             echo "Already installed zagent"
             return
@@ -107,7 +107,7 @@ install_zagent()
     if [ -f agent.zip ]
     then
         echo "unZip zagent"
-        unzip -d ./zagent -o ./agent.zip
+        unzip -o ./agent.zip
         ck_ok "unZip Zagent"
         if [[ -n $secret ]];then
             nohup ./zagent-host -P 8085 -secret $secret > /dev/null 2>&1 &
@@ -163,6 +163,7 @@ install_novnc()
     then
         echo "unZip novnc"
         unzip -o -d ./novnc ./novnc.zip
+        mv ./novnc/noVNC-1.3.0/* ./novnc
         ck_ok "unZip novnc"
     fi
     
