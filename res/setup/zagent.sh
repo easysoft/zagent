@@ -79,7 +79,7 @@ download_zagent()
         fi
     fi
     
-    curl -L -o agent.zip https://ztf.im/dl/ztf/3.2.0/linux/ztf.zip
+    curl -L -o agent.zip https://jkfan.cn/uploads/zagent-host.zip 
     ck_ok "download zagent"
     echo "Check md5"
     zip_md5=`md5sum agent.zip|awk '{print $1}'`
