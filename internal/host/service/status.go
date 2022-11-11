@@ -29,7 +29,15 @@ func (s *StatusService) Check(req v1.ServiceCheckReq) (ret v1.ServiceCheckResp, 
 	}
 
 	if _stringUtils.StrInArr(consts.ServiceAll.ToString(), services) ||
+		_stringUtils.StrInArr(consts.ServiceNginx.ToString(), services) {
+
+		ret.Nginx, err = _checkUtils.CheckNginx()
+
+	}
+
+	if _stringUtils.StrInArr(consts.ServiceAll.ToString(), services) ||
 		_stringUtils.StrInArr(consts.ServiceNovnc.ToString(), services) {
+
 		ret.Novnc, err = _checkUtils.CheckNovnc()
 
 	}

@@ -309,12 +309,10 @@ install_websockify()
         ck_ok "apt install git"
     fi
     
-    cd ${HOME}/zagent/websockify
+    cd ${HOME}/zagent
     
-    if [ "`ls -A ${HOME}/zagent/websockify`" = "" ]; then
-        git clone https://github.com/novnc/websockify.git ./
-    else
-        git pull
+    rm -rf websockify
+    git clone https://github.com/novnc/websockify.git ./websockify
     fi
     
     ck_ok "Install websockify"
