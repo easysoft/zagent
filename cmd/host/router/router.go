@@ -78,7 +78,7 @@ func (r *Router) App() {
 				client.Post("/{name:string}/resume", r.KvmCtrl.Resume).Name = "恢复KVM虚拟机"
 
 				client.Post("/exportVm", r.KvmCtrl.ExportVm).Name = "导出KVM虚拟机为模板镜像"
-				client.Post("/remove", r.KvmCtrl.Remove).Name = "移除KVM虚拟机"
+				client.Post("/{name:string}/remove", r.KvmCtrl.Remove).Name = "移除KVM虚拟机"
 			})
 
 			v1.PartyFunc("/virtualbox", func(client iris.Party) {
