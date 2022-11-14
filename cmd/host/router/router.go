@@ -34,6 +34,8 @@ func (r *Router) App() {
 	iris.LimitRequestBodySize(consts.UploadMaxSize)
 	r.api.UseRouter(_httpUtils.CrsAuth())
 
+	r.api.AddRouteUnsafe(r.api.HandleDir("/novnc", consts.NovncDir)...)
+
 	app := r.api.Party("/api").AllowMethods(iris.MethodOptions)
 	{
 		v1 := app.Party("/v1")
