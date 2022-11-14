@@ -22,6 +22,11 @@ type CreateVmResp struct {
 	Status consts.VmStatus `json:"status"` // Enums consts.VmStatus
 }
 
+type RemoveVmReq struct {
+	Name       string `json:"name"`
+	RemoveDisk bool   `json:"removeDisk"`
+}
+
 type ExportVmReq struct {
 	Vm      string `json:"vm"`
 	Backing string `json:"backing"`
