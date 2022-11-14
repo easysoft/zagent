@@ -227,6 +227,10 @@ func findSameFile(task agentModel.Task, dir string) (existFile string) {
 
 func GetPath(task agentModel.Task) (pth string) {
 	index := strings.LastIndex(task.Url, "/")
+	if index == -1 {
+		return
+	}
+
 	name := task.Url[index:]
 
 	pth = filepath.Join(consts.DownloadDir, name)

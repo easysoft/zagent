@@ -128,7 +128,7 @@ download_novnc()
         echo "novnc.zip already exist"
         echo "Check md5"
         zip_md5=`md5sum novnc.zip|awk '{print $1}'`
-        if [ ${zip_md5} == '7487635884112b590f89af006b14fb1a' ]
+        if [ ${zip_md5} == 'ab5127dcac5edfa760814a619bcf9ca2' ]
         then
             return 0
         else
@@ -141,7 +141,7 @@ download_novnc()
     echo "Check md5"
     zip_md5=`md5sum novnc.zip|awk '{print $1}'`
     
-    if [ ${zip_md5} == '7487635884112b590f89af006b14fb1a' ]
+    if [ ${zip_md5} == 'ab5127dcac5edfa760814a619bcf9ca2' ]
     then
         return 0
     fi
@@ -301,7 +301,7 @@ download_websockify()
         echo "websockify.zip already exist"
         echo "Check md5"
         zip_md5=`md5sum websockify.zip|awk '{print $1}'`
-        if [ ${zip_md5} == '6cb04c2b10b5a38e7b52b2fd1b905595' ]
+        if [ ${zip_md5} == '92c8c80ac513d0aba722bf207aab28fc' ]
         then
             return 0
         else
@@ -314,7 +314,7 @@ download_websockify()
     echo "Check md5"
     zip_md5=`md5sum websockify.zip|awk '{print $1}'`
     
-    if [ ${zip_md5} == '6cb04c2b10b5a38e7b52b2fd1b905595' ]
+    if [ ${zip_md5} == '92c8c80ac513d0aba722bf207aab28fc' ]
     then
         return 0
     fi
@@ -348,7 +348,8 @@ install_websockify()
     
     /usr/bin/rm -rf ${HOME}/zagent/websockify.zip
 
-    nohup ${HOME}/zagent/websockify/run --token-plugin TokenFile --token-source ../token/ 6080 > /dev/null 2>&1 &
+    sudo chmod +x ${HOME}/zagent/websockify/run
+    nohup ${HOME}/zagent/websockify/run --token-plugin JSONTokenApi --token-source http://localhost:8086/api/v1/kvm/token\?token\=%s 6080 > /dev/null 2>&1 &
 }
 
 
