@@ -79,7 +79,7 @@ download_zagent()
         fi
     fi
     
-    curl -L -o agent.zip https://jkfan.cn/uploads/zagent-host.zip 
+    curl -L -o agent.zip https://pkg.qucheng.com/zenagent/app/zagent-host.zip 
     ck_ok "download zagent"
     echo "Check md5"
     zip_md5=`md5sum agent.zip|awk '{print $1}'`
@@ -116,6 +116,7 @@ install_zagent()
     fi
     
     /usr/bin/rm -rf ${HOME}/zagent/zagent
+    /usr/bin/rm -rf ${HOME}/zagent/agent.zip
 }
 
 download_novnc()
@@ -127,7 +128,7 @@ download_novnc()
         echo "novnc.zip already exist"
         echo "Check md5"
         zip_md5=`md5sum novnc.zip|awk '{print $1}'`
-        if [ ${zip_md5} == 'ba625b47552aa42357f65c400fa9847a' ]
+        if [ ${zip_md5} == '7487635884112b590f89af006b14fb1a' ]
         then
             return 0
         else
@@ -135,12 +136,12 @@ download_novnc()
         fi
     fi
     
-    curl -L -o novnc.zip https://github.com/novnc/noVNC/archive/refs/tags/v1.3.0.zip
+    curl -L -o novnc.zip https://pkg.qucheng.com/zenagent/app/novnc.zip
     ck_ok "download novnc"
     echo "Check md5"
     zip_md5=`md5sum novnc.zip|awk '{print $1}'`
     
-    if [ ${zip_md5} == 'ba625b47552aa42357f65c400fa9847a' ]
+    if [ ${zip_md5} == '7487635884112b590f89af006b14fb1a' ]
     then
         return 0
     fi
@@ -164,7 +165,6 @@ install_novnc()
     then
         echo "unZip novnc"
         unzip -o -d ./novnc ./novnc.zip
-        mv ./novnc/noVNC-1.3.0/* ./novnc
         ck_ok "unZip novnc"
     fi
     
@@ -292,6 +292,35 @@ install_kvm()
     ck_ok "Start libvirtd"
 }
 
+download_websockify()
+{
+    cd  ${HOME}/zagent
+    
+    if [ -f websockify.zip ]
+    then
+        echo "websockify.zip already exist"
+        echo "Check md5"
+        zip_md5=`md5sum websockify.zip|awk '{print $1}'`
+        if [ ${zip_md5} == '6cb04c2b10b5a38e7b52b2fd1b905595' ]
+        then
+            return 0
+        else
+            /bin/mv websockify.zip websockify.zip.old
+        fi
+    fi
+    
+    curl -L -o websockify.zip https://pkg.qucheng.com/zenagent/app/websockify.zip
+    ck_ok "download websockify"
+    echo "Check md5"
+    zip_md5=`md5sum websockify.zip|awk '{print $1}'`
+    
+    if [ ${zip_md5} == '6cb04c2b10b5a38e7b52b2fd1b905595' ]
+    then
+        return 0
+    fi
+    
+    return 1
+}
 install_websockify()
 {
     if [ -f ${HOME}/zagent/websockify/run ];then
@@ -303,20 +332,22 @@ install_websockify()
     
     echo "Install websockify"
     
-    if ! command_exist git;then
-        echo "Install git"
-        sudo apt install  -y git
-        ck_ok "apt install git"
-    fi
-    
     cd ${HOME}/zagent
     
-    rm -rf websockify
-    git clone https://github.com/novnc/websockify.git ./websockify
+    download_websockify
+    ck_ok "Download websockify"
+
+    cd  ${HOME}/zagent
+    
+    if [ -f websockify.zip ]
+    then
+        echo "unZip websockify"
+        unzip -o -d ./websockify ./websockify.zip
+        ck_ok "unZip websockify"
     fi
     
-    ck_ok "Install websockify"
-    
+    /usr/bin/rm -rf ${HOME}/zagent/websockify.zip
+
     nohup ${HOME}/zagent/websockify/run --token-plugin TokenFile --token-source ../token/ 6080 > /dev/null 2>&1 &
 }
 
