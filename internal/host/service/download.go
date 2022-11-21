@@ -29,6 +29,10 @@ func NewDownloadService() *DownloadService {
 
 func (s *DownloadService) AddTasks(req []v1.DownloadReq) (err error) {
 	for _, item := range req {
+		if item.Url == "" {
+			err = errors.New("url is empty")
+			return
+		}
 		po := agentModel.Task{
 			Url:    item.Url,
 			Md5:    item.Md5,
@@ -92,7 +96,7 @@ func (s *DownloadService) StartTask(po agentModel.Task) {
 func (s *DownloadService) CancelTask(taskId uint) {
 	taskInfo, _ := s.TaskRepo.GetDetail(taskId)
 
-	if taskInfo.ID > 0 && taskInfo.Status == consts.Created {
+	if taskInfo.ID > 0 {
 		s.TaskRepo.SetCanceled(taskInfo)
 	}
 
