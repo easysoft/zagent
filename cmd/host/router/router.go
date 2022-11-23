@@ -35,6 +35,8 @@ func (r *Router) App() {
 	r.api.UseRouter(_httpUtils.CrsAuth())
 
 	r.api.AddRouteUnsafe(r.api.HandleDir("/novnc", consts.NovncDir)...)
+	r.api.AddRouteUnsafe(r.api.HandleDir("/core", consts.NovncDir+"/core")...)
+	r.api.AddRouteUnsafe(r.api.HandleDir("/vendor", consts.NovncDir+"/vendor")...)
 
 	app := r.api.Party("/api").AllowMethods(iris.MethodOptions)
 	{
