@@ -28,7 +28,7 @@ func main() {
 
 	consts.PrintLog = false
 	agentConf.Inst.RunMode = consts.RunModeHost
-	agentConf.Init(consts.AppNameAgentHost)
+	agentConf.Init(consts.AppNameAgentVm)
 	_logUtils.Init(consts.AppNameAgentHost)
 
 	if check {
