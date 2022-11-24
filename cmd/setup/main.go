@@ -44,10 +44,10 @@ func main() {
 		_checkUtils.CheckPrint("websockify", status)
 	} else if softList != "" {
 		consts.PrintLog = true
-		cmd := fmt.Sprintf(`/usr/bin/bash <(curl -s -S -L %s) -s %s`, "https://raw.githubusercontent.com/easysoft/zenagent/main/res/setup/zagent.sh", softList)
+		cmd := fmt.Sprintf(`/usr/bin/bash <(curl -s -S -L %s) -s %s`, "https://pkg.qucheng.com/zenagent/zagent.sh", softList)
 
 		if forceInstall {
-			cmd = fmt.Sprintf(`/usr/bin/bash <(curl -s -S -L %s) -s %s -r`, "https://raw.githubusercontent.com/easysoft/zenagent/main/res/setup/zagent.sh", softList)
+			cmd = fmt.Sprintf(`/usr/bin/bash <(curl -s -S -L %s) -s %s -r`, "https://pkg.qucheng.com/zenagent/zagent.sh", softList)
 		}
 
 		if secret != "" {
@@ -57,10 +57,10 @@ func main() {
 		_shellUtils.ExeShellWithOutput(cmd)
 	} else {
 		consts.PrintLog = true
-		cmd := fmt.Sprintf(`/usr/bin/bash <(curl -s -S -L %s)`, "https://raw.githubusercontent.com/easysoft/zenagent/main/res/setup/zagent.sh")
+		cmd := fmt.Sprintf(`/usr/bin/bash <(curl -s -S -L %s)`, "https://pkg.qucheng.com/zenagent/zagent.sh")
 
 		if forceInstall {
-			cmd = fmt.Sprintf(`/usr/bin/bash <(curl -s -S -L %s) -r`, "https://raw.githubusercontent.com/easysoft/zenagent/main/res/setup/zagent.sh")
+			cmd = fmt.Sprintf(`/usr/bin/bash <(curl -s -S -L %s) -r`, "https://pkg.qucheng.com/zenagent/zagent.sh")
 		}
 
 		if secret != "" {
