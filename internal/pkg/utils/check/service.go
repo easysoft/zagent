@@ -54,7 +54,7 @@ func CheckNovnc() (status consts.HostServiceStatus, err error) {
 	status = consts.HostServiceNotAvailable
 
 	port, _ := natHelper.GetUsedPortByKeyword("zagent-host", agentConf.Inst.NodePort)
-	address := fmt.Sprintf("http://127.0.0.1:%v/novnc/index.html", port)
+	address := fmt.Sprintf("http://127.0.0.1:%v/novnc", port)
 	html, err := _httpUtils.Get(address)
 
 	if err == nil && strings.Contains(string(html), `<title>noVNC</title>`) {
