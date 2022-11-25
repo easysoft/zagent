@@ -349,7 +349,7 @@ install_websockify()
     /usr/bin/rm -rf ${HOME}/zagent/websockify.zip
     
     sudo chmod +x ${HOME}/zagent/websockify/run
-    nohup ${HOME}/zagent/websockify/run --token-plugin JSONTokenApi --token-source http://localhost:8086/api/v1/kvm/token\?token\=%s 6080 > /dev/null 2>&1 &
+    nohup ${HOME}/zagent/websockify/run --token-plugin JSONTokenApi --token-source http://127.0.0.1:8086/api/v1/virtual/getVncAddress?token=%s 6080 > /dev/null 2>&1 &
 }
 
 
