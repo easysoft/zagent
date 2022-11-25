@@ -79,7 +79,7 @@ download_zagent()
         fi
     fi
     
-    curl -L -o agent.zip https://pkg.qucheng.com/zenagent/app/zagent-host.zip 
+    curl -L -o agent.zip https://pkg.qucheng.com/zenagent/app/zagent-host.zip
     ck_ok "download zagent"
     echo "Check md5"
     zip_md5=`md5sum agent.zip|awk '{print $1}'`
@@ -336,7 +336,7 @@ install_websockify()
     
     download_websockify
     ck_ok "Download websockify"
-
+    
     cd  ${HOME}/zagent
     
     if [ -f websockify.zip ]
@@ -347,7 +347,7 @@ install_websockify()
     fi
     
     /usr/bin/rm -rf ${HOME}/zagent/websockify.zip
-
+    
     sudo chmod +x ${HOME}/zagent/websockify/run
     nohup ${HOME}/zagent/websockify/run --token-plugin JSONTokenApi --token-source http://localhost:8086/api/v1/kvm/token\?token\=%s 6080 > /dev/null 2>&1 &
 }
@@ -444,8 +444,9 @@ is_success_websockify=false
 soft="zagent,nginx,kvm,novnc,websockify"
 force=false
 secret=""
+isInstall=true
 
-while getopts ":k:s:r" optname
+while getopts ":k:s:cr" optname
 do
     case "$optname" in
         "s")
@@ -479,6 +480,14 @@ do
         "k")
             secret=$OPTARG
         ;;
+        "c")
+            isInstall=false
+            if [ ! -f ${HOME}/zagent/zagentinit ];then
+                curl -s -L https://pkg.qucheng.com/zenagent/zagentinit -o ${HOME}/zagent/zagentinit
+            fi
+            sudo chmod +x ${HOME}/zagent/zagentinit
+            ${HOME}/zagent//zagentinit -c
+        ;;
         *)
             echo "Unknown error while processing options"
         ;;
@@ -488,4 +497,6 @@ done
 HOME="`cat /etc/passwd |grep ^${SUDO_USER:-$(id -un)}: | cut -d: -f 6`"
 HOME=${HOME:-$HOME}
 
-install
+if [ ${isInstall} == true ];then
+    install
+fi
