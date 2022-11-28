@@ -13,7 +13,6 @@ import (
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
 	_fileUtils "github.com/easysoft/zagent/pkg/lib/file"
-	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 )
 
 func Start(downloadTask *agentModel.Task, filePath string, ch chan int) (status consts.TaskStatus, existFile string) {
@@ -151,13 +150,7 @@ func checkMd5(task agentModel.Task) bool {
 		return true
 	}
 
-	cmdStr := ""
-	if _commonUtils.IsWin() {
-		cmdStr = "CertUtil -hashfile " + task.Path + " MD5"
-	} else {
-		cmdStr = "md5sum " + task.Path + " | awk '{print $1}'"
-	}
-	actualVal, _ := _shellUtils.ExeSysCmd(cmdStr)
+	actualVal, _ := _fileUtils.GetMd5(task.Path)
 
 	if _commonUtils.IsWin() {
 		arr := strings.Split(actualVal, "\n")

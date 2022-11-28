@@ -317,7 +317,7 @@ func (s *LibvirtService) RemoveVmByName(name string, removeDiskImage bool) (err 
 	}
 
 	if removeDiskImage && dickPath != "" {
-		_fileUtils.RmFile(dickPath)
+		_fileUtils.RemoveFile(dickPath)
 	}
 
 	return

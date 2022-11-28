@@ -6,15 +6,6 @@ const (
 	AppNameAgentHost = "host"
 	AppNameAgentVm   = "vm"
 
-	AgentPort      = 8086
-	WebsockifyPort = 8087
-	NoVncPath      = "/novnc"
-
-	NatPortStart = 51602
-	NatPortEnd   = 51799
-	VncPortStart = 5901
-	VncPortEnd   = 5999
-
 	UploadMaxSize = 100000
 
 	AgentCheckExecutionInterval = 15          // sec
@@ -45,19 +36,16 @@ const (
 	ResDriverName     = "driver"
 
 	KvmHostIpInNatNetwork = "192.168.122.1"
-	AgentServicePost      = 8086
-	SshServicePost        = 22
 
-	ConfigVer = 1
+	SshServicePost       = 22
+	AgentHostServicePort = 55001
+	WebsockifyPort       = 55002
+	NatPortStart         = 55100
+	NatPortEnd           = 55199
 
-	BrowserDriverDir = "browser_driver"
-
-	BuildParamAppPath     = "${appPath}"
-	BuildParamAppPackage  = "${appPackage}"
-	BuildParamAppActivity = "${appActivity}"
-	BuildParamAppiumPort  = "${appiumPort}"
-
-	BuildParamSeleniumDriverPath = "${driverPath}"
+	AgentVmServicePort = 55201
+	ZtfServicePost     = 56202
+	ZdServicePost      = 56203
 
 	FolderKvm      = "kvm"
 	FolderIso      = "iso"
@@ -69,5 +57,12 @@ const (
 	FolderNovnc      = "novnc"
 	FolderWebsockify = "websockify"
 
+	FolderZtf = "ztf"
+	FolderZd  = "zd"
+
 	Localhost = "127.0.0.1"
+
+	QiNiuUrl           = "https://dl.cnezsoft.com/"
+	VersionDownloadUrl = QiNiuUrl + "%s/version.txt"
+	PackageDownloadUrl = QiNiuUrl + "%s/%s/%s/%s.zip"
 )

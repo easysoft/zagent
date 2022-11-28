@@ -34,7 +34,7 @@ func (s *SeleniumService) DownloadDriver(build *commDomain.Build) (err error) {
 		url += ".exe"
 	}
 
-	_fileUtils.RmFile(filePath)
+	_fileUtils.RemoveFile(filePath)
 	err = _fileUtils.Download(url, filePath)
 	if err == nil {
 		build.SeleniumDriverPath = filePath

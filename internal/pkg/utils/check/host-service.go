@@ -53,7 +53,7 @@ func CheckKvm() (status consts.HostServiceStatus, err error) {
 func CheckNovnc() (status consts.HostServiceStatus, err error) {
 	status = consts.HostServiceNotAvailable
 
-	port, _ := natHelper.GetUsedPortByKeyword("zagent-host", agentConf.Inst.NodePort)
+	port, _ := natHelper.GetUsedPortByKeyword("zagent-host", agentConf.Inst.NodePort) // installed in agent server
 	address := fmt.Sprintf("127.0.0.1:%v/novnc/index.html", port)
 	html, err := _httpUtils.Get(address)
 
@@ -88,29 +88,6 @@ func CheckWebsockify() (status consts.HostServiceStatus, err error) {
 		pth := filepath.Join(consts.WebsockifyDir, "run")
 		found := _fileUtils.FileExist(pth)
 
-		if !found {
-			status = consts.HostServiceNotInstall
-		}
-	}
-
-	return
-}
-
-func CheckAgent() (status consts.HostServiceStatus, err error) {
-	status = consts.HostServiceNotAvailable
-
-	timeout := time.Second
-
-	port, _ := natHelper.GetUsedPortByKeyword("agent-host", agentConf.Inst.NodePort)
-	address := net.JoinHostPort(consts.Localhost, strconv.Itoa(port))
-	conn, err := net.DialTimeout("tcp", address, timeout)
-
-	if conn != nil {
-		status = consts.HostServiceReady
-		defer conn.Close()
-	} else {
-		pth := filepath.Join(consts.WorkDir, "zagent-host")
-		found := _fileUtils.FileExist(pth)
 		if !found {
 			status = consts.HostServiceNotInstall
 		}

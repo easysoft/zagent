@@ -309,6 +309,9 @@ const (
 	ServiceNovnc      HostService = "novnc"
 	ServiceWebsockify HostService = "websockify"
 
+	ServiceZtf HostService = "ztf"
+	ServiceZd  HostService = "zd"
+
 	ServiceAll HostService = "all"
 )
 

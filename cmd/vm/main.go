@@ -36,10 +36,10 @@ func main() {
 	flagSet = flag.NewFlagSet(consts.AppNameAgentVm, flag.ContinueOnError)
 
 	flagSet.StringVar(&runMode, "t", consts.RunModeVm.ToString(), "")
-	flagSet.StringVar(&agentConf.Inst.Server, "s", "http://192.168.0.107:8085", "")
+	flagSet.StringVar(&agentConf.Inst.Server, "s", "http://127.0.0.1:55001", "")
 	flagSet.StringVar(&agentConf.Inst.NodeName, "n", "", "")
-	flagSet.StringVar(&agentConf.Inst.NodeIp, "i", "", "")
-	flagSet.IntVar(&agentConf.Inst.NodePort, "p", 8086, "")
+	flagSet.StringVar(&agentConf.Inst.NodeIp, "i", "127.0.0.1", "")
+	flagSet.IntVar(&agentConf.Inst.NodePort, "p", consts.AgentVmServicePort, "")
 	flagSet.StringVar(&agentConf.Inst.Secret, "secret", "", "")
 	flagSet.StringVar(&agentConf.Inst.Language, "l", "zh", "")
 

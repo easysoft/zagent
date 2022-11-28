@@ -55,7 +55,7 @@ func (c *VirtualCtrl) NotifyHost(ctx iris.Context) {
 	//	ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 	//	return
 	//}
-	//err = natHelper.ForwardPort(vmIp, consts.AgentServicePost, vmAgentPortMapped, consts.Http)
+	//err = natHelper.ForwardPort(vmIp, consts.AgentServicePort, vmAgentPortMapped, consts.Http)
 	//if err != nil {
 	//	ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 	//	return

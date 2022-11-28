@@ -19,11 +19,11 @@ func NewCheckCtrl() *ServiceCtrl {
 // @summary 检测宿主机服务状态
 // @Accept json
 // @Produce json
-// @Param ServiceCheckReq body v1.ServiceCheckReq true "Service Check Request Object"
-// @Success 200 {object} v1.ServiceCheckResp "code = success | fail"
+// @Param HostServiceCheckReq body v1.HostServiceCheckReq true "Service Check Request Object"
+// @Success 200 {object} v1.HostServiceCheckResp "code = success | fail"
 // @Router /api/v1/service/check [post]
 func (c *ServiceCtrl) CheckService(ctx iris.Context) {
-	req := v1.ServiceCheckReq{}
+	req := v1.HostServiceCheckReq{}
 	err := ctx.ReadJSON(&req)
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))

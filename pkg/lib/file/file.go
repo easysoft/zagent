@@ -46,7 +46,8 @@ func WriteFile(filePath string, content string) {
 	MkDirIfNeeded(dir)
 
 	var d1 = []byte(content)
-	err2 := ioutil.WriteFile(filePath, d1, 0666) //写入文件(字节数组)
+	err2 := ioutil.WriteFile(filePath, d1, 0777) //写入文件(字节数组)
+
 	check(err2)
 }
 
@@ -72,7 +73,7 @@ func MkDirIfNeeded(dir string) error {
 
 	return nil
 }
-func RmFile(dir string) error {
+func RemoveFile(dir string) error {
 	if FileExist(dir) {
 		err := os.RemoveAll(dir)
 		return err

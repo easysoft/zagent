@@ -8,10 +8,8 @@ import (
 )
 
 type Router struct {
-	api      *iris.Application
-	TestCtrl *vmHandler.TestCtrl `inject:""`
-
-	JobCtrl *vmHandler.JobCtrl `inject:""`
+	api         *iris.Application
+	ServiceCtrl *vmHandler.ServiceCtrl `inject:""`
 }
 
 func NewRouter(app *iris.Application) *Router {
@@ -29,10 +27,10 @@ func (r *Router) App() {
 		{
 			//v1.Use(core.Auth())
 
-			v1.Get("/test", r.TestCtrl.Test).Name = "测试"
+			v1.PartyFunc("/service", func(client iris.Party) {
+				client.Post("/check", r.ServiceCtrl.Check).Name = "检测执行节点服务状态"
 
-			v1.PartyFunc("/job", func(client iris.Party) {
-				client.Post("/add", r.JobCtrl.Add).Name = "创建任务"
+				client.Post("/setup", r.ServiceCtrl.Setup).Name = "安装服务"
 			})
 		}
 	}
