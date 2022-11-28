@@ -80,7 +80,7 @@ download_zagent()
         echo "agent.zip already exist"
         echo "Check md5"
         zip_md5=`md5sum agent.zip|awk '{print $1}'`
-        if [ ${zip_md5} == 'aff9de5dc4ed557e36d096430e8c81ad' ]
+        if [ ${zip_md5} == 'f82ed9ac1a83a9677936e06628b1a338' ]
         then
             return 0
         else
@@ -93,7 +93,7 @@ download_zagent()
     echo "Check md5"
     zip_md5=`md5sum agent.zip|awk '{print $1}'`
     
-    if [ ${zip_md5} == 'aff9de5dc4ed557e36d096430e8c81ad' ]
+    if [ ${zip_md5} == 'f82ed9ac1a83a9677936e06628b1a338' ]
     then
         return 0
     fi
