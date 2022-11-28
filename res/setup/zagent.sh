@@ -33,13 +33,22 @@ command_exist(){
         return 1
     fi
 }
-is_active(){
-    check_command=`sudo systemctl is-active $1`
-    
-    if [ ${check_command} == 'active' ]; then
+
+service_is_inactive(){
+    check_command=`sudo ps -ef | grep $1 | grep -v grep | awk '{print $2}'`
+    if test -z $check_command; then
         return 0
     else
         return 1
+    fi
+}
+is_inactive(){
+    check_command=`sudo systemctl is-active $1`
+    
+    if [ ${check_command} == 'active' ]; then
+        return 1
+    else
+        return 0
     fi
 }
 create_dir(){
@@ -96,6 +105,9 @@ install_zagent()
     if [ -f ${HOME}/zagent/zagent-host ];then
         if [ ${force} == false ];then
             echo "Already installed zagent"
+            if service_is_inactive zagent-host;then
+                nohup ${HOME}/zagent/zagent-host -p 8086 -secret $secret > /dev/null 2>&1 &
+            fi
             return
         fi
     fi
@@ -206,6 +218,9 @@ install_nginx()
     if command_exist nginx;then
         if [ ${force} == false ];then
             echo "Already installed nginx"
+            if is_inactive nginx;then
+                sudo systemctl start nginx
+            fi
             return
         fi
     fi
@@ -223,6 +238,10 @@ install_nginx()
     do
         if ! dpkg -l $pkg >/dev/null 2>&1
         then
+            if ! $is_update_apt;then
+                sudo apt update
+                is_update_apt=true
+            fi
             sudo apt reinstall -y $pkg
             ck_ok "apt install $pkg"
         else
@@ -280,11 +299,18 @@ install_kvm()
     if command_exist libvirtd;then
         if [ ${force} == false ];then
             echo "Already installed kvm"
+            if is_inactive libvirtd;then
+                sudo service libvirtd start
+            fi
             return
         fi
     fi
     
     echo "Install kvm"
+    if ! $is_update_apt;then
+        sudo apt update
+        is_update_apt=true
+    fi
     sudo apt reinstall -y qemu-kvm libvirt-daemon-system libvirt-clients libvirt-dev qemu virt-manager bridge-utils libosinfo-bin
     ck_ok "Install kvm"
     
@@ -326,6 +352,9 @@ install_websockify()
     if [ -f ${HOME}/zagent/websockify/run ];then
         if [ ${force} == false ];then
             echo "Already installed websockify"
+            if service_is_inactive JSONTokenApi;then
+                nohup ${HOME}/zagent/websockify/run --token-plugin JSONTokenApi --token-source http://127.0.0.1:8086/api/v1/virtual/getVncAddress?token=%s 6080 > /dev/null 2>&1 &
+            fi
             return
         fi
     fi
@@ -355,10 +384,12 @@ install_websockify()
 
 install()
 {
-    sudo apt update
-    
     if ! command_exist curl;then
         echo "Install curl"
+        if ! $is_update_apt;then
+            sudo apt update
+            is_update_apt=true
+        fi
         sudo apt install  -y curl
         ck_ok "apt install curl"
     fi
@@ -440,6 +471,8 @@ is_success_nginx=false
 is_success_kvm=false
 is_success_novnc=false
 is_success_websockify=false
+
+is_update_apt=false
 
 soft="zagent,nginx,kvm,novnc,websockify"
 force=false

@@ -75,7 +75,7 @@ func (s *TaskService) ListTask() (ret v1.ListTaskResp, err error) {
 
 	for _, po := range pos {
 		status := po.Status
-		if status == consts.Timeout || status == consts.Error {
+		if po.Type == consts.DownloadImage && (status == consts.Timeout || status == consts.Error) {
 			status = consts.Inprogress
 		}
 

@@ -2,6 +2,7 @@ package hostAgentService
 
 import (
 	"errors"
+	"os"
 	"sync"
 
 	downloadUtils "github.com/easysoft/zagent/internal/pkg/job"
@@ -65,7 +66,8 @@ func (s *DownloadService) StartTask(po agentModel.Task) {
 		//query same md5 task
 		sameMd5Task, _ := s.TaskRepo.GetCompletedTaskByMd5(po.Md5)
 		if sameMd5Task.ID > 0 {
-			if downloadUtils.CheckMd5(sameMd5Task) {
+			_, err := os.Stat(sameMd5Task.Path)
+			if err == nil && os.IsExist(err) && downloadUtils.CheckMd5(sameMd5Task) {
 				po.Path = sameMd5Task.Path
 				filePath = downloadUtils.GetPath(po)
 			}
