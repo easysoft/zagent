@@ -33,13 +33,22 @@ command_exist(){
         return 1
     fi
 }
-is_active(){
-    check_command=`sudo systemctl is-active $1`
-    
-    if [ ${check_command} == 'active' ]; then
+
+service_is_inactive(){
+    check_command=`sudo ps -ef | grep $1 | grep -v grep | awk '{print $2}'`
+    if test -z $check_command; then
         return 0
     else
         return 1
+    fi
+}
+is_inactive(){
+    check_command=`sudo systemctl is-active $1`
+    
+    if [ ${check_command} == 'active' ]; then
+        return 1
+    else
+        return 0
     fi
 }
 create_dir(){
@@ -71,7 +80,7 @@ download_zagent()
         echo "agent.zip already exist"
         echo "Check md5"
         zip_md5=`md5sum agent.zip|awk '{print $1}'`
-        if [ ${zip_md5} == '2b3bd1cb0bedb5abe150220cc1895e5d' ]
+        if [ ${zip_md5} == 'f82ed9ac1a83a9677936e06628b1a338' ]
         then
             return 0
         else
@@ -79,12 +88,12 @@ download_zagent()
         fi
     fi
     
-    curl -L -o agent.zip https://ztf.im/dl/ztf/3.2.0/linux/ztf.zip
+    curl -L -o agent.zip https://pkg.qucheng.com/zenagent/app/zagent-host.zip
     ck_ok "download zagent"
     echo "Check md5"
     zip_md5=`md5sum agent.zip|awk '{print $1}'`
     
-    if [ ${zip_md5} == '2b3bd1cb0bedb5abe150220cc1895e5d' ]
+    if [ ${zip_md5} == 'f82ed9ac1a83a9677936e06628b1a338' ]
     then
         return 0
     fi
@@ -93,9 +102,12 @@ download_zagent()
 }
 install_zagent()
 {
-    if [ -f ${HOME}/zagent/zagent/ztf ];then
+    if [ -f ${HOME}/zagent/zagent-host ];then
         if [ ${force} == false ];then
             echo "Already installed zagent"
+            if service_is_inactive zagent-host;then
+                nohup ${HOME}/zagent/zagent-host -p 8086 -secret $secret > /dev/null 2>&1 &
+            fi
             return
         fi
     fi
@@ -107,15 +119,16 @@ install_zagent()
     if [ -f agent.zip ]
     then
         echo "unZip zagent"
-        unzip -d ./zagent -o ./agent.zip
+        unzip -o ./agent.zip
         ck_ok "unZip Zagent"
-        cp ./zagent/ztf zagent-host
         if [[ -n $secret ]];then
-            nohup ./zagent-host -P 8085 -secret $secret > /dev/null 2>&1 &
+            sudo chmod +x ./zagent-host
+            nohup ./zagent-host -p 8086 -secret $secret > /dev/null 2>&1 &
         fi
     fi
     
     /usr/bin/rm -rf ${HOME}/zagent/zagent
+    /usr/bin/rm -rf ${HOME}/zagent/agent.zip
 }
 
 download_novnc()
@@ -127,7 +140,7 @@ download_novnc()
         echo "novnc.zip already exist"
         echo "Check md5"
         zip_md5=`md5sum novnc.zip|awk '{print $1}'`
-        if [ ${zip_md5} == '2b3bd1cb0bedb5abe150220cc1895e5d' ]
+        if [ ${zip_md5} == 'ab5127dcac5edfa760814a619bcf9ca2' ]
         then
             return 0
         else
@@ -135,12 +148,12 @@ download_novnc()
         fi
     fi
     
-    curl -L -o novnc.zip https://ztf.im/dl/ztf/3.2.0/linux/ztf.zip
+    curl -L -o novnc.zip https://pkg.qucheng.com/zenagent/app/novnc.zip
     ck_ok "download novnc"
     echo "Check md5"
     zip_md5=`md5sum novnc.zip|awk '{print $1}'`
     
-    if [ ${zip_md5} == '2b3bd1cb0bedb5abe150220cc1895e5d' ]
+    if [ ${zip_md5} == 'ab5127dcac5edfa760814a619bcf9ca2' ]
     then
         return 0
     fi
@@ -205,6 +218,9 @@ install_nginx()
     if command_exist nginx;then
         if [ ${force} == false ];then
             echo "Already installed nginx"
+            if is_inactive nginx;then
+                sudo systemctl start nginx
+            fi
             return
         fi
     fi
@@ -222,6 +238,10 @@ install_nginx()
     do
         if ! dpkg -l $pkg >/dev/null 2>&1
         then
+            if ! $is_update_apt;then
+                sudo apt update
+                is_update_apt=true
+            fi
             sudo apt reinstall -y $pkg
             ck_ok "apt install $pkg"
         else
@@ -279,11 +299,18 @@ install_kvm()
     if command_exist libvirtd;then
         if [ ${force} == false ];then
             echo "Already installed kvm"
+            if is_inactive libvirtd;then
+                sudo service libvirtd start
+            fi
             return
         fi
     fi
     
     echo "Install kvm"
+    if ! $is_update_apt;then
+        sudo apt update
+        is_update_apt=true
+    fi
     sudo apt reinstall -y qemu-kvm libvirt-daemon-system libvirt-clients libvirt-dev qemu virt-manager bridge-utils libosinfo-bin
     ck_ok "Install kvm"
     
@@ -291,43 +318,78 @@ install_kvm()
     ck_ok "Start libvirtd"
 }
 
+download_websockify()
+{
+    cd  ${HOME}/zagent
+    
+    if [ -f websockify.zip ]
+    then
+        echo "websockify.zip already exist"
+        echo "Check md5"
+        zip_md5=`md5sum websockify.zip|awk '{print $1}'`
+        if [ ${zip_md5} == '92c8c80ac513d0aba722bf207aab28fc' ]
+        then
+            return 0
+        else
+            /bin/mv websockify.zip websockify.zip.old
+        fi
+    fi
+    
+    curl -L -o websockify.zip https://pkg.qucheng.com/zenagent/app/websockify.zip
+    ck_ok "download websockify"
+    echo "Check md5"
+    zip_md5=`md5sum websockify.zip|awk '{print $1}'`
+    
+    if [ ${zip_md5} == '92c8c80ac513d0aba722bf207aab28fc' ]
+    then
+        return 0
+    fi
+    
+    return 1
+}
 install_websockify()
 {
     if [ -f ${HOME}/zagent/websockify/run ];then
         if [ ${force} == false ];then
             echo "Already installed websockify"
+            if service_is_inactive JSONTokenApi;then
+                nohup ${HOME}/zagent/websockify/run --token-plugin JSONTokenApi --token-source http://127.0.0.1:8086/api/v1/virtual/getVncAddress?token=%s 6080 > /dev/null 2>&1 &
+            fi
             return
         fi
     fi
     
     echo "Install websockify"
     
-    if ! command_exist git;then
-        echo "Install git"
-        sudo apt install  -y git
-        ck_ok "apt install git"
+    cd ${HOME}/zagent
+    
+    download_websockify
+    ck_ok "Download websockify"
+    
+    cd  ${HOME}/zagent
+    
+    if [ -f websockify.zip ]
+    then
+        echo "unZip websockify"
+        unzip -o -d ./websockify ./websockify.zip
+        ck_ok "unZip websockify"
     fi
     
-    cd ${HOME}/zagent/websockify
+    /usr/bin/rm -rf ${HOME}/zagent/websockify.zip
     
-    if [ "`ls -A ${HOME}/zagent/websockify`" = "" ]; then
-        git clone https://github.com/novnc/websockify.git ./
-    else
-        git pull
-    fi
-    
-    ck_ok "Install websockify"
-    
-    nohup ${HOME}/zagent/websockify/run --token-plugin TokenFile --token-source ../token/ 6080 > /dev/null 2>&1 &
+    sudo chmod +x ${HOME}/zagent/websockify/run
+    nohup ${HOME}/zagent/websockify/run --token-plugin JSONTokenApi --token-source http://127.0.0.1:8086/api/v1/virtual/getVncAddress?token=%s 6080 > /dev/null 2>&1 &
 }
 
 
 install()
 {
-    sudo apt update
-    
     if ! command_exist curl;then
         echo "Install curl"
+        if ! $is_update_apt;then
+            sudo apt update
+            is_update_apt=true
+        fi
         sudo apt install  -y curl
         ck_ok "apt install curl"
     fi
@@ -410,11 +472,14 @@ is_success_kvm=false
 is_success_novnc=false
 is_success_websockify=false
 
+is_update_apt=false
+
 soft="zagent,nginx,kvm,novnc,websockify"
 force=false
 secret=""
+isInstall=true
 
-while getopts ":k:s:r" optname
+while getopts ":k:s:cr" optname
 do
     case "$optname" in
         "s")
@@ -448,6 +513,14 @@ do
         "k")
             secret=$OPTARG
         ;;
+        "c")
+            isInstall=false
+            if [ ! -f ${HOME}/zagent/zagentinit ];then
+                curl -s -L https://pkg.qucheng.com/zenagent/zagentinit -o ${HOME}/zagent/zagentinit
+            fi
+            sudo chmod +x ${HOME}/zagent/zagentinit
+            ${HOME}/zagent//zagentinit -c
+        ;;
         *)
             echo "Unknown error while processing options"
         ;;
@@ -457,4 +530,6 @@ done
 HOME="`cat /etc/passwd |grep ^${SUDO_USER:-$(id -un)}: | cut -d: -f 6`"
 HOME=${HOME:-$HOME}
 
-install
+if [ ${isInstall} == true ];then
+    install
+fi

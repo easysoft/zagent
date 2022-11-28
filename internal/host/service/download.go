@@ -2,6 +2,7 @@ package hostAgentService
 
 import (
 	"errors"
+	"os"
 	"sync"
 
 	downloadUtils "github.com/easysoft/zagent/internal/pkg/job"
@@ -29,6 +30,10 @@ func NewDownloadService() *DownloadService {
 
 func (s *DownloadService) AddTasks(req []v1.DownloadReq) (err error) {
 	for _, item := range req {
+		if item.Url == "" {
+			err = errors.New("url is empty")
+			return
+		}
 		po := agentModel.Task{
 			Url:    item.Url,
 			Md5:    item.Md5,
@@ -58,6 +63,16 @@ func (s *DownloadService) StartTask(po agentModel.Task) {
 	go func() {
 		filePath := downloadUtils.GetPath(po)
 
+		//query same md5 task
+		sameMd5Task, _ := s.TaskRepo.GetCompletedTaskByMd5(po.Md5)
+		if sameMd5Task.ID > 0 {
+			_, err := os.Stat(sameMd5Task.Path)
+			if err == nil && os.IsExist(err) && downloadUtils.CheckMd5(sameMd5Task) {
+				po.Path = sameMd5Task.Path
+				filePath = downloadUtils.GetPath(po)
+			}
+		}
+
 		s.TaskRepo.UpdateStatus(po.ID, filePath, 0.01, "", consts.Inprogress, true, false)
 
 		finalStatus, existFile := downloadUtils.Start(&po, filePath, ch)
@@ -83,7 +98,7 @@ func (s *DownloadService) StartTask(po agentModel.Task) {
 func (s *DownloadService) CancelTask(taskId uint) {
 	taskInfo, _ := s.TaskRepo.GetDetail(taskId)
 
-	if taskInfo.ID > 0 && taskInfo.Status == consts.Created {
+	if taskInfo.ID > 0 {
 		s.TaskRepo.SetCanceled(taskInfo)
 	}
 

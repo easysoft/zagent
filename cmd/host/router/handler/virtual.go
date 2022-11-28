@@ -1,6 +1,8 @@
 package hostHandler
 
 import (
+	"sync"
+
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	kvmService "github.com/easysoft/zagent/internal/host/service/kvm"
 	virtualService "github.com/easysoft/zagent/internal/host/service/virtual"
@@ -8,7 +10,6 @@ import (
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
 	"github.com/kataras/iris/v12"
-	"sync"
 )
 
 var (
@@ -135,4 +136,27 @@ func (c *VirtualCtrl) GetToken(ctx iris.Context) {
 	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success", ret))
 
 	return
+}
+
+// @summary 根据VNC Token 获取 ip，port
+// @Accept json
+// @Produce json
+// @Param port query string true "VNC Port"
+// @Success 200 {object} iris.map{"port":5900,"ip":127.0.0.1} "code = success | fail"
+// @Router /api/v1/virtual/getVncAddress [get]
+func (c *VirtualCtrl) GetAddress(ctx iris.Context) {
+	token := ctx.URLParam("token")
+
+	if token == "" {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, "no token param", nil))
+		return
+	}
+
+	ret, _ := c.NoVncService.GetAddressByToken(token)
+	if ret.Token == "" {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, "token not found", nil))
+		return
+	}
+
+	ctx.JSON(iris.Map{"port": ret.Port, "host": ret.Ip})
 }

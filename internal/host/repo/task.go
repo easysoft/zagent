@@ -61,6 +61,19 @@ func (r *TaskRepo) GetActiveTaskByMd5(md5 string) (po agentModel.Task, err error
 	return
 }
 
+func (r *TaskRepo) GetCompletedTaskByMd5(md5 string) (po agentModel.Task, err error) {
+	if md5 == "" {
+		return
+	}
+
+	r.DB.Model(&po).
+		Where("status = ? and md5 = ?",
+			consts.Completed, md5).
+		Order("id desc").First(&po)
+
+	return
+}
+
 func (r *TaskRepo) Save(po *agentModel.Task) (err error) {
 	err = r.DB.Model(&agentModel.Task{}).Create(&po).Error
 	return

@@ -11,6 +11,9 @@ var (
 
 func GetSpeed(startTime time.Time, sumKByte int64) (ret float64) {
 	sec := time.Now().Unix() - startTime.Unix()
+	if sec == 0 {
+		sec = 1
+	}
 
 	ret = float64(sumKByte) / float64(sec)
 

@@ -306,6 +306,7 @@ type HostService string
 
 const (
 	ServiceKvm        HostService = "kvm"
+	ServiceNginx      HostService = "nginx"
 	ServiceNovnc      HostService = "novnc"
 	ServiceWebsockify HostService = "websockify"
 

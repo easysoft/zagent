@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/easysoft/zagent/cmd/host/router/v1"
+	"time"
+
+	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
-	"github.com/easysoft/zagent/internal/pkg/const"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/domain"
 	agentService "github.com/easysoft/zagent/internal/pkg/service"
 	agentTestingService "github.com/easysoft/zagent/internal/pkg/service/testing"
@@ -17,7 +19,6 @@ import (
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
 	_i118Utils "github.com/easysoft/zagent/pkg/lib/i118"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
-	"time"
 )
 
 type VmService struct {
@@ -110,7 +111,7 @@ func (s *VmService) Register(isBusy bool) (ok bool) {
 }
 
 func (s *VmService) register(host interface{}) (resp []byte, ok bool) {
-	url := requestUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/executionNode/heartbeat")
+	url := requestUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/zanode/heartbeat")
 
 	resp, err := _httpUtils.Post(url, host)
 	ok = err == nil

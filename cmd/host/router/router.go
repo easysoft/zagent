@@ -34,6 +34,10 @@ func (r *Router) App() {
 	iris.LimitRequestBodySize(consts.UploadMaxSize)
 	r.api.UseRouter(_httpUtils.CrsAuth())
 
+	r.api.AddRouteUnsafe(r.api.HandleDir("/novnc", consts.NovncDir)...)
+	r.api.AddRouteUnsafe(r.api.HandleDir("/core", consts.NovncDir+"/core")...)
+	r.api.AddRouteUnsafe(r.api.HandleDir("/vendor", consts.NovncDir+"/vendor")...)
+
 	app := r.api.Party("/api").AllowMethods(iris.MethodOptions)
 	{
 		v1 := app.Party("/v1")
@@ -56,6 +60,7 @@ func (r *Router) App() {
 			v1.PartyFunc("/virtual", func(client iris.Party) {
 				client.Post("/notifyHost", r.VirtualCtrl.NotifyHost).Name = "虚拟机请求安全码"
 				client.Get("/getVncToken", r.VirtualCtrl.GetToken).Name = "根据VNC Port获取Token"
+				client.Get("/getVncAddress", r.VirtualCtrl.GetAddress).Name = "获取vnc token对应虚拟机地址"
 
 				client.Post("/addVmPortMap", r.VirtualCtrl.AddVmPortMap).Name = "新增虚拟机到宿主机端口的映射"
 				client.Post("/removeVmPortMap", r.VirtualCtrl.RemoveVmPortMap).Name = "移除虚拟机到宿主机的端口映射"

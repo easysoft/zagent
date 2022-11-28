@@ -2,7 +2,7 @@ package hostHandler
 
 import (
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
-	"github.com/easysoft/zagent/internal/host/service/kvm"
+	kvmService "github.com/easysoft/zagent/internal/host/service/kvm"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	natHelper "github.com/easysoft/zagent/internal/pkg/utils/net"
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
@@ -327,24 +327,21 @@ func (c *KvmCtrl) ExportVm(ctx iris.Context) {
 // @Success 200 {object} _domain.Response{data=string} "code = success | fail"
 // @Router /api/v1/kvm/{name}/remove [post]
 func (c *KvmCtrl) Remove(ctx iris.Context) {
-	name := ctx.Params().GetString("name")
-	if name == "" {
+	req := v1.RemoveVmReq{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
+	if req.Name == "" {
 		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, "vm name is empty", nil))
 		return
 	}
 
-	removeDisk, err := ctx.URLParamBool("removeDisk")
+	err := c.LibvirtService.RemoveVmByName(req.Name, req.RemoveDisk)
 	if err != nil {
-		removeDisk = true // default is true
+		ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 		return
 	}
 
-	err = c.LibvirtService.RemoveVmByName(name, removeDisk)
-	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
-		return
-	}
-
-	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to resume vm", name))
-	return
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to remove vm", req.Name))
 }
