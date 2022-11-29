@@ -14,11 +14,9 @@ import (
 func DownloadAdv(url, filePath string) (dur int64, err error) {
 	startTime := time.Now()
 
-	// create client
 	client := grab.NewClient()
 	req, _ := grab.NewRequest(filePath, url)
 
-	// start download
 	resp := client.Do(req)
 
 	_logUtils.Infof("%v, downloading %v...\n", resp.HTTPResponse.Status, req.URL())
@@ -118,6 +116,8 @@ func AddTimeParam(url string) (ret string) {
 	} else {
 		url += fmt.Sprintf("?ts=%d", time.Now().Unix())
 	}
+
+	ret = url
 
 	return
 }

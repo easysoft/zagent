@@ -29,7 +29,7 @@ func (s *ToolService) Setup(req v1.VmServiceInstallReq) (ret v1.VmServiceInstall
 
 	pass, err := s.downloadTool(req.Name, newVersionStr)
 	if pass && err == nil {
-		//restartTool(app, startService)
+		//restartTool(req.Name, newVersionStr)
 
 		s.updateVersionFile(req.Name, newVersionStr)
 
@@ -75,6 +75,7 @@ func (s *ToolService) downloadTool(name string, version string) (pass bool, err 
 	targetPath := filepath.Join(dir, "download", version+".zip")
 	extractDir := filepath.Join(dir, version)
 
+	_fileUtils.RemoveFile(targetPath)
 	_, err = _fileUtils.DownloadAdv(_fileUtils.AddTimeParam(url), targetPath)
 	if err != nil {
 		return
@@ -82,6 +83,8 @@ func (s *ToolService) downloadTool(name string, version string) (pass bool, err 
 
 	md5Url := url + ".md5"
 	md5Path := targetPath + ".md5"
+
+	_fileUtils.RemoveFile(md5Path)
 	_, err = _fileUtils.DownloadAdv(_fileUtils.AddTimeParam(md5Url), md5Path)
 	if err != nil {
 		return
