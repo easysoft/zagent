@@ -106,7 +106,9 @@ install_zagent()
         if [ ${force} == false ];then
             echo "Already installed zagent"
             if service_is_inactive zagent-host;then
-                nohup ${HOME}/zagent/zagent-host -p 8086 -secret $secret > /dev/null 2>&1 &
+                if [[ -n $secret ]];then
+                    nohup ./zagent-host -p 8086 -secret $secret > /dev/null 2>&1 &
+                fi
             fi
             return
         fi
@@ -121,8 +123,8 @@ install_zagent()
         echo "unZip zagent"
         unzip -o ./agent.zip
         ck_ok "unZip Zagent"
+        sudo chmod +x ./zagent-host
         if [[ -n $secret ]];then
-            sudo chmod +x ./zagent-host
             nohup ./zagent-host -p 8086 -secret $secret > /dev/null 2>&1 &
         fi
     fi
@@ -315,6 +317,7 @@ install_kvm()
     ck_ok "Install kvm"
     
     sudo service libvirtd restart
+    sudo chmod 777 /var/run/libvirt/libvirt-sock
     ck_ok "Start libvirtd"
 }
 
