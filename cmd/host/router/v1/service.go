@@ -2,11 +2,11 @@ package v1
 
 import consts "github.com/easysoft/zagent/internal/pkg/const"
 
-type ServiceCheckReq struct {
+type HostServiceCheckReq struct {
 	Services string `json:"services"`
 }
 
-type ServiceCheckResp struct {
+type HostServiceCheckResp struct {
 	Kvm        consts.HostServiceStatus `json:"kvm"`        // Enums consts.HostServiceStatus
 	Nginx      consts.HostServiceStatus `json:"nginx"`      // Enums consts.HostServiceStatus
 	Novnc      consts.HostServiceStatus `json:"novnc"`      // Enums consts.HostServiceStatus

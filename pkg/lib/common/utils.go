@@ -32,11 +32,7 @@ func RemoveBlankLine(str string) string {
 func GetOs() string {
 	osName := runtime.GOOS
 
-	if osName == "darwin" {
-		return "mac"
-	} else {
-		return osName
-	}
+	return osName
 }
 func IsWin() bool {
 	return GetOs() == "windows"

@@ -2,12 +2,59 @@ package _fileUtils
 
 import (
 	"fmt"
-	_i118Utils "github.com/easysoft/zagent/pkg/lib/i118"
+	"github.com/cavaliergopher/grab/v3"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"io/ioutil"
 	"net/http"
 	"path/filepath"
+	"strings"
+	"time"
 )
+
+func DownloadAdv(url, filePath string) (dur int64, err error) {
+	startTime := time.Now()
+
+	client := grab.NewClient()
+	req, _ := grab.NewRequest(filePath, url)
+
+	resp := client.Do(req)
+
+	_logUtils.Infof("%v, downloading %v...\n", resp.HTTPResponse.Status, req.URL())
+
+	t := time.NewTicker(500 * time.Millisecond)
+	defer t.Stop()
+
+Loop:
+	for {
+		select {
+		case <-t.C:
+			fmt.Print("\033[G\033[K")
+
+			fmt.Printf("  transferred %d / %d bytes (%.2f%%)\n",
+				resp.BytesComplete(),
+				resp.Size(),
+				100*resp.Progress())
+
+			fmt.Print("\033[A")
+
+		case <-resp.Done:
+			break Loop
+		}
+	}
+
+	// check for errors
+	if err := resp.Err(); err != nil {
+		_logUtils.Infof("download failed: %v\n", err)
+	}
+
+	_logUtils.Infof("saved to %v \n", resp.Filename)
+
+	endTime := time.Now()
+
+	dur = endTime.Unix() - startTime.Unix()
+
+	return
+}
 
 func Download(url string, dst string) (err error) {
 	fmt.Printf("DownloadToFile From: %s to %s.\n", url, dst)
@@ -16,13 +63,13 @@ func Download(url string, dst string) (err error) {
 
 	var data []byte
 	data, err = HTTPDownload(url)
-	if err == nil && len(string(data)) == 32 {
-		_logUtils.Info(_i118Utils.Sprintf("file_downloaded", url))
+	if err != nil {
+		return
+	}
 
-		err = WriteDownloadFile(dst, data)
-		if err == nil {
-			_logUtils.Info(_i118Utils.Sprintf("file_download_saved", url, dst))
-		}
+	err = WriteDownloadFile(dst, data)
+	if err != nil {
+		_logUtils.Infof("save %s to %s successfully", url, dst)
 	}
 
 	return
@@ -48,10 +95,29 @@ func HTTPDownload(url string) (bytes []byte, err error) {
 	return d, err
 }
 
-func WriteDownloadFile(dst string, d []byte) error {
-	err := ioutil.WriteFile(dst, d, 0444)
+func WriteDownloadFile(dst string, d []byte) (err error) {
+	err = RemoveFile(dst)
+	if err != nil {
+		_logUtils.Error(err.Error())
+		return
+	}
+
+	err = ioutil.WriteFile(dst, d, 0777)
 	if err != nil {
 		_logUtils.Error(err.Error())
 	}
-	return err
+
+	return
+}
+
+func AddTimeParam(url string) (ret string) {
+	if strings.Index(url, "?") > 0 {
+		url += fmt.Sprintf("&ts=%d", time.Now().Unix())
+	} else {
+		url += fmt.Sprintf("?ts=%d", time.Now().Unix())
+	}
+
+	ret = url
+
+	return
 }

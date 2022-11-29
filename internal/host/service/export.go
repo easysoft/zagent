@@ -79,7 +79,7 @@ func (s *ExportService) ExportVm(task agentModel.Task, targetBakingFilePath stri
 	uuidStr := uuid.Must(uuid.NewV4()).String()
 	srcVmDiskSize, _ := _fileUtils.GetFileSize(vmDiskPath)
 
-	_fileUtils.RmFile(targetBakingFilePath)
+	_fileUtils.RemoveFile(targetBakingFilePath)
 
 	// check disk size
 	completed := false

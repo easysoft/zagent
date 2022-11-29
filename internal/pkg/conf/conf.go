@@ -31,7 +31,12 @@ func Init(app string) {
 		Inst.NodeIp = ip.String()
 	}
 
-	Inst.WebsockifyPort, _ = netUtils.GetUsedPortByKeyword("websockify", consts.WebsockifyPort)
+	if app == consts.AppNameAgentHost {
+		Inst.WebsockifyPort, _ = netUtils.GetUsedPortByKeyword("websockify", consts.WebsockifyPort)
+	} else if app == consts.AppNameAgentVm {
+		Inst.ZtfPort, _ = netUtils.GetUsedPortByKeyword("ztf", consts.ZtfServicePost)
+		Inst.ZdPort, _ = netUtils.GetUsedPortByKeyword("zd", consts.ZdServicePost)
+	}
 
 	home, _ := _fileUtils.GetUserHome()
 	Inst.WorkDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(home, consts.AppName))
@@ -48,10 +53,18 @@ func Init(app string) {
 		Inst.DirImage = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, consts.FolderImage))
 
 		_fileUtils.MkDirIfNeeded(consts.DownloadDir)
-
 		_fileUtils.MkDirIfNeeded(Inst.DirIso)
 		_fileUtils.MkDirIfNeeded(Inst.DirBaking)
 		_fileUtils.MkDirIfNeeded(Inst.DirImage)
+
+	} else if Inst.RunMode == consts.RunModeVm {
+		consts.WorkDir = Inst.WorkDir
+
+		Inst.DirZtf = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.WorkDir, consts.FolderZtf))
+		Inst.DirZd = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.WorkDir, consts.FolderZd))
+
+		_fileUtils.MkDirIfNeeded(filepath.Join(Inst.DirZtf, "download"))
+		_fileUtils.MkDirIfNeeded(filepath.Join(Inst.DirZd, "download"))
 	}
 }
 
@@ -65,6 +78,8 @@ type Config struct {
 	NodeIp         string
 	NodePort       int
 	WebsockifyPort int
+	ZtfPort        int
+	ZdPort         int
 	MacAddress     string
 
 	Secret   string
@@ -77,6 +92,9 @@ type Config struct {
 	DirIso    string
 	DirBaking string
 	DirImage  string
+
+	DirZtf string
+	DirZd  string
 
 	DB DBConfig
 }
