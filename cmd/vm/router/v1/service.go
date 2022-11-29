@@ -17,6 +17,10 @@ type VmServiceCheckResp struct {
 type VmServiceInstallReq struct {
 	Name    string `json:"name"`
 	Version string `json:"version"`
+
+	Secret string `json:"secret"`
+	Server string `json:"server"`
+	Ip     string `json:"ip"`
 }
 
 type VmServiceInstallResp struct {

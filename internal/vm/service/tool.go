@@ -9,7 +9,11 @@ import (
 	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
 	_fileUtils "github.com/easysoft/zagent/pkg/lib/file"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
+	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 	"github.com/mholt/archiver/v3"
+	"log"
+	"os"
+	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -25,14 +29,13 @@ func NewToolService() *ToolService {
 func (s *ToolService) Setup(req v1.VmServiceInstallReq) (ret v1.VmServiceInstallResp, err error) {
 	oldVersionStr, oldVersionNum := s.getOldVersion(req.Name)
 
-	newVersionStr, newVersionNum := s.DownloadVersion(req.Name)
+	newVersionStr, newVersionNum := s.downloadVersion(req.Name)
 
 	pass, err := s.downloadTool(req.Name, newVersionStr)
 	if pass && err == nil {
-		//restartTool(req.Name, newVersionStr)
+		s.restartTool(req.Name, newVersionStr, req.Secret, req.Server, req.Ip)
 
 		s.updateVersionFile(req.Name, newVersionStr)
-
 		if newVersionNum > oldVersionNum {
 			_logUtils.Infof("upgrade %s from %s to %s", req.Name, oldVersionStr, newVersionStr)
 		}
@@ -41,24 +44,18 @@ func (s *ToolService) Setup(req v1.VmServiceInstallReq) (ret v1.VmServiceInstall
 	return
 }
 
-func (s *ToolService) GetToolPath(name string) {
-	dir := s.getToolDir(name)
+func (s *ToolService) restartTool(name, version, secret, server, ip string) (err error) {
+	pth := s.getToolPath(name, version)
 
-	pth := filepath.Join(dir, "ztf")
-	if _commonUtils.IsWin() {
-		pth += ".exe"
+	uuid := ""
+	if name == "ztf" {
+		uuid = consts.ZtfUuid
+	} else if name == "zd" {
+		uuid = consts.ZdUuid
 	}
-}
 
-func (s *ToolService) DownloadVersion(name string) (versionStr string, versionNum float64) {
-	dir := s.getToolDir(name)
-
-	versionFile := filepath.Join(dir, "version.txt")
-	versionUrl := fmt.Sprintf(consts.VersionDownloadUrl, name)
-	_fileUtils.Download(_fileUtils.AddTimeParam(versionUrl), versionFile)
-
-	versionStr = strings.TrimSpace(_fileUtils.ReadFile(versionFile))
-	versionNum = convertVersion(versionStr)
+	_shellUtils.KillProcessByUUID(uuid)
+	s.startProcess(name, pth, uuid, ip, server, secret)
 
 	return
 }
@@ -107,6 +104,30 @@ func (s *ToolService) downloadTool(name string, version string) (pass bool, err 
 	return
 }
 
+func (s *ToolService) getToolPath(name, version string) (pth string) {
+	dir := s.getToolDir(name)
+
+	pth = filepath.Join(dir, version, name)
+	if _commonUtils.IsWin() {
+		pth += ".exe"
+	}
+
+	return
+}
+
+func (s *ToolService) downloadVersion(name string) (versionStr string, versionNum float64) {
+	dir := s.getToolDir(name)
+
+	versionFile := filepath.Join(dir, "version.txt")
+	versionUrl := fmt.Sprintf(consts.VersionDownloadUrl, name)
+	_fileUtils.Download(_fileUtils.AddTimeParam(versionUrl), versionFile)
+
+	versionStr = strings.TrimSpace(_fileUtils.ReadFile(versionFile))
+	versionNum = s.convertVersion(versionStr)
+
+	return
+}
+
 func checkMd5(filePth, md5Pth string) (pass bool) {
 	if !_fileUtils.FileExist(filePth) {
 		return false
@@ -124,7 +145,7 @@ func (s *ToolService) getOldVersion(name string) (versionStr string, versionNum 
 	versionFile := filepath.Join(dir, "version.txt")
 
 	versionStr = strings.TrimSpace(_fileUtils.ReadFile(versionFile))
-	versionNum = convertVersion(versionStr)
+	versionNum = s.convertVersion(versionStr)
 
 	return
 }
@@ -146,13 +167,52 @@ func (s *ToolService) updateVersionFile(name string, str string) {
 	_fileUtils.WriteFile(pth, str)
 }
 
-func convertVersion(str string) (version float64) {
+func (s *ToolService) convertVersion(str string) (version float64) {
 	arr := strings.Split(str, ".")
 	if len(arr) > 2 { // ignore 3th
 		str = strings.Join(arr[:2], ".")
 	}
 
 	version, _ = strconv.ParseFloat(str, 64)
+
+	return
+}
+
+func (s *ToolService) startProcess(name, execPath, uuid, ip, server, secret string) (out string, err error) {
+	execDir := _fileUtils.GetAbsolutePath(filepath.Dir(execPath))
+
+	cmdStr := ""
+	var cmd *exec.Cmd
+	if _commonUtils.IsWin() {
+		if name == "ztf" {
+			tmpl := `start cmd /c %s -uuid %s -secret %s -s %s -i %s -p %d ^1^> %snohup.%s.log ^2^>^&^1`
+			cmdStr = fmt.Sprintf(tmpl, execPath, uuid, secret, server, ip, consts.ZtfServicePost, consts.WorkDir, name)
+		} else if name == "zd" { // set root for workdir
+			tmpl := `start cmd /c %s -uuid %s -b %s -p %d ^1^> %snohup.%s.log ^2^>^&^1`
+			cmdStr = fmt.Sprintf(tmpl, execPath, uuid, ip, consts.ZdServicePost, consts.WorkDir, name)
+		}
+
+		cmd = exec.Command("cmd", "/C", cmdStr)
+
+	} else {
+		if name == "ztf" {
+			cmd = exec.Command("nohup", execPath, "-uuid", uuid,
+				"-secret", secret, "-s", server, "-i", ip, "-p", strconv.Itoa(consts.ZtfServicePost))
+		} else if name == "zd" {
+			cmd = exec.Command("nohup", execPath, "-uuid", uuid, "-b", ip, "-p", strconv.Itoa(consts.ZdServicePost))
+		}
+
+		log := filepath.Join(consts.WorkDir, "nohup."+name+".log")
+		f, _ := os.Create(log)
+
+		cmd.Stdout = f
+		cmd.Stderr = f
+	}
+
+	log.Println("launch tool by using cmd " + cmd.String())
+
+	cmd.Dir = execDir
+	err = cmd.Start()
 
 	return
 }

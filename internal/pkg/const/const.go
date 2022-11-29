@@ -65,4 +65,13 @@ const (
 	QiNiuUrl           = "https://dl.cnezsoft.com/"
 	VersionDownloadUrl = QiNiuUrl + "%s/version.txt"
 	PackageDownloadUrl = QiNiuUrl + "%s/%s/%s/%s.zip"
+
+	ALIYUN_ECS_URL     = "ecs-%s.aliyuncs.com"
+	ALIYUN_ECS_URL_VNC = "https://g.alicdn.com/aliyun/ecs-console-vnc2/0.0.8/index.html" +
+		"?vncUrl=%s&instanceId=%s&isWindows=%t&password=%s"
+	ALIYUN_ECI_URL = "eci.aliyuncs.com"
+	ALIYUN_VPC_URL = "vpc.aliyuncs.com"
+
+	HuaweiCloudUrlJobCreate  = "https://cci.%s.myhuaweicloud.cn/apis/batch/v1/namespaces/%s/jobs"
+	HuaweiCloudUrlJobDestroy = "https://cci.%s.myhuaweicloud.cn/apis/batch/v1/namespaces/%s/jobs/%s"
 )

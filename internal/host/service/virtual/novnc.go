@@ -98,7 +98,7 @@ func (s *NoVncService) launchWebsockifyService() (ret v1.VncTokenResp) {
 	cmd := fmt.Sprintf("nohup %s --token-plugin TokenFile %d > %s 2>&1 &",
 		exePath, consts.WebsockifyPort, logPath)
 
-	_shellUtils.KillProcess("websockify")
+	_shellUtils.KillProcessByName("websockify")
 	_shellUtils.ExeShell(cmd)
 
 	return

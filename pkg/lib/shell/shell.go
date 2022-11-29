@@ -162,20 +162,17 @@ func GetProcess(app string) (string, error) {
 	return output, err
 }
 
-func KillProcess(app string) (string, error) {
+func KillProcessByName(app string) (string, error) {
 	var cmd *exec.Cmd
 
-	tmpl := ""
 	cmdStr := ""
 	if _commonUtils.IsWin() {
 		// tasklist | findstr ztf.exe
-		tmpl = `taskkill.exe /f /im %s.exe`
-		cmdStr = fmt.Sprintf(tmpl, app)
+		cmdStr = fmt.Sprintf(`taskkill.exe /f /im %s.exe`, app)
 
 		cmd = exec.Command("cmd", "/C", cmdStr)
 	} else {
-		tmpl = `ps -ef | grep '%s' | grep -v "grep" | awk '{print $2}' | xargs kill -9`
-		cmdStr = fmt.Sprintf(tmpl, app)
+		cmdStr = fmt.Sprintf(`ps -ef | grep '%s' | grep -v "grep" | awk '{print $2}' | xargs kill -9`, app)
 
 		cmd = exec.Command("/bin/bash", "-c", cmdStr)
 	}

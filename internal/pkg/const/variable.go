@@ -2,6 +2,7 @@ package consts
 
 import (
 	"fmt"
+	_stringUtils "github.com/easysoft/zagent/pkg/lib/string"
 	"path/filepath"
 	"sync"
 	"time"
@@ -31,4 +32,7 @@ var (
 	ExistSshPortMap  = sync.Map{}
 
 	PrintLog = true
+
+	ZtfUuid = _stringUtils.Uuid()
+	ZdUuid  = _stringUtils.Uuid()
 )
