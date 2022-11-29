@@ -2,7 +2,6 @@ package consts
 
 import (
 	"fmt"
-	_stringUtils "github.com/easysoft/zagent/pkg/lib/string"
 	"path/filepath"
 	"sync"
 	"time"
@@ -33,6 +32,6 @@ var (
 
 	PrintLog = true
 
-	ZtfUuid = _stringUtils.Uuid()
-	ZdUuid  = _stringUtils.Uuid()
+	ZtfUuid = "net-zentao-b08c691053ba49daaffcedde352406ae-ztf"
+	ZdUuid  = "net-zentao-b08c691053ba49daaffcedde352406ae-zd"
 )

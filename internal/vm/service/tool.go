@@ -27,24 +27,40 @@ func NewToolService() *ToolService {
 }
 
 func (s *ToolService) Setup(req v1.VmServiceInstallReq) (ret v1.VmServiceInstallResp, err error) {
-	oldVersionStr, oldVersionNum := s.getOldVersion(req.Name)
+	s.stopTool(req.Name)
 
-	newVersionStr, newVersionNum := s.downloadVersion(req.Name)
+	oldVersionStr, oldVersionNum := s.getOldVersion(req.Name)
+	newVersionStr, newVersionNum := s.getVersion(req.Name, req.Version)
 
 	pass, err := s.downloadTool(req.Name, newVersionStr)
-	if pass && err == nil {
-		s.restartTool(req.Name, newVersionStr, req.Secret, req.Server, req.Ip)
+	if !pass || err != nil {
+		return
+	}
 
-		s.updateVersionFile(req.Name, newVersionStr)
-		if newVersionNum > oldVersionNum {
-			_logUtils.Infof("upgrade %s from %s to %s", req.Name, oldVersionStr, newVersionStr)
-		}
+	s.startTool(req.Name, newVersionStr, req.Secret, req.Server, req.Ip)
+
+	s.updateVersionFile(req.Name, newVersionStr)
+	if newVersionNum > oldVersionNum {
+		_logUtils.Infof("replace %s from %s to %s", req.Name, oldVersionStr, newVersionStr)
 	}
 
 	return
 }
 
-func (s *ToolService) restartTool(name, version, secret, server, ip string) (err error) {
+func (s *ToolService) stopTool(name string) (err error) {
+	uuid := ""
+	if name == "ztf" {
+		uuid = consts.ZtfUuid
+	} else if name == "zd" {
+		uuid = consts.ZdUuid
+	}
+
+	_shellUtils.KillProcessByUUID(uuid)
+
+	return
+}
+
+func (s *ToolService) startTool(name, version, secret, server, ip string) (err error) {
 	pth := s.getToolPath(name, version)
 
 	uuid := ""
@@ -54,7 +70,6 @@ func (s *ToolService) restartTool(name, version, secret, server, ip string) (err
 		uuid = consts.ZdUuid
 	}
 
-	_shellUtils.KillProcessByUUID(uuid)
 	s.startProcess(name, pth, uuid, ip, server, secret)
 
 	return
@@ -115,14 +130,19 @@ func (s *ToolService) getToolPath(name, version string) (pth string) {
 	return
 }
 
-func (s *ToolService) downloadVersion(name string) (versionStr string, versionNum float64) {
+func (s *ToolService) getVersion(name, version string) (versionStr string, versionNum float64) {
 	dir := s.getToolDir(name)
 
-	versionFile := filepath.Join(dir, "version.txt")
-	versionUrl := fmt.Sprintf(consts.VersionDownloadUrl, name)
-	_fileUtils.Download(_fileUtils.AddTimeParam(versionUrl), versionFile)
+	if version == "" {
+		versionFile := filepath.Join(dir, "version.txt")
+		versionUrl := fmt.Sprintf(consts.VersionDownloadUrl, name)
+		_fileUtils.Download(_fileUtils.AddTimeParam(versionUrl), versionFile)
 
-	versionStr = strings.TrimSpace(_fileUtils.ReadFile(versionFile))
+		versionStr = strings.TrimSpace(_fileUtils.ReadFile(versionFile))
+	} else {
+		versionStr = version
+	}
+
 	versionNum = s.convertVersion(versionStr)
 
 	return

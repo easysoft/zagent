@@ -18,8 +18,8 @@ type VmServiceInstallReq struct {
 	Name    string `json:"name"`
 	Version string `json:"version"`
 
-	Secret string `json:"secret"`
 	Server string `json:"server"`
+	Secret string `json:"secret"`
 	Ip     string `json:"ip"`
 }
 
