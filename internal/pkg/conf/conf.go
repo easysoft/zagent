@@ -34,8 +34,8 @@ func Init(app string) {
 	if app == consts.AppNameAgentHost {
 		Inst.WebsockifyPort, _ = netUtils.GetUsedPortByKeyword("websockify", consts.WebsockifyPort)
 	} else if app == consts.AppNameAgentVm {
-		Inst.ZtfPort, _ = netUtils.GetUsedPortByKeyword("ztf", consts.ZtfServicePost)
-		Inst.ZdPort, _ = netUtils.GetUsedPortByKeyword("zd", consts.ZdServicePost)
+		Inst.ZtfPort, _ = netUtils.GetUsedPortByKeyword("ztf", consts.ZtfServicePort)
+		Inst.ZdPort, _ = netUtils.GetUsedPortByKeyword("zd", consts.ZdServicePort)
 	}
 
 	home, _ := _fileUtils.GetUserHome()

@@ -44,8 +44,8 @@ const (
 	NatPortEnd           = 55199
 
 	AgentVmServicePort = 55201
-	ZtfServicePost     = 56202
-	ZdServicePost      = 56203
+	ZtfServicePort     = 56202
+	ZdServicePort      = 56203
 
 	FolderKvm      = "kvm"
 	FolderIso      = "iso"

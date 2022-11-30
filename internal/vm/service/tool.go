@@ -82,7 +82,12 @@ func (s *ToolService) downloadTool(name string, version string) (pass bool, err 
 	if _commonUtils.IsWin() {
 		os = fmt.Sprintf("win%d", strconv.IntSize)
 	}
-	url := fmt.Sprintf(consts.PackageDownloadUrl, name, version, os, name)
+
+	zipName := name
+	if name == "ztf" {
+		zipName += "-server"
+	}
+	url := fmt.Sprintf(consts.PackageDownloadUrl, name, version, os, zipName)
 
 	targetPath := filepath.Join(dir, "download", version+".zip")
 	extractDir := filepath.Join(dir, version)
@@ -122,7 +127,12 @@ func (s *ToolService) downloadTool(name string, version string) (pass bool, err 
 func (s *ToolService) getToolPath(name, version string) (pth string) {
 	dir := s.getToolDir(name)
 
-	pth = filepath.Join(dir, version, name)
+	exeName := name
+	if name == "ztf" {
+		exeName += "-server"
+	}
+
+	pth = filepath.Join(dir, version, exeName)
 	if _commonUtils.IsWin() {
 		pth += ".exe"
 	}
@@ -206,10 +216,10 @@ func (s *ToolService) startProcess(name, execPath, uuid, ip, server, secret stri
 	if _commonUtils.IsWin() {
 		if name == "ztf" {
 			tmpl := `start cmd /c %s -uuid %s -secret %s -s %s -i %s -p %d ^1^> %snohup.%s.log ^2^>^&^1`
-			cmdStr = fmt.Sprintf(tmpl, execPath, uuid, secret, server, ip, consts.ZtfServicePost, consts.WorkDir, name)
+			cmdStr = fmt.Sprintf(tmpl, execPath, uuid, secret, server, ip, consts.ZtfServicePort, consts.WorkDir, name)
 		} else if name == "zd" { // set root for workdir
 			tmpl := `start cmd /c %s -uuid %s -b %s -p %d ^1^> %snohup.%s.log ^2^>^&^1`
-			cmdStr = fmt.Sprintf(tmpl, execPath, uuid, ip, consts.ZdServicePost, consts.WorkDir, name)
+			cmdStr = fmt.Sprintf(tmpl, execPath, uuid, ip, consts.ZdServicePort, consts.WorkDir, name)
 		}
 
 		cmd = exec.Command("cmd", "/C", cmdStr)
@@ -217,9 +227,9 @@ func (s *ToolService) startProcess(name, execPath, uuid, ip, server, secret stri
 	} else {
 		if name == "ztf" {
 			cmd = exec.Command("nohup", execPath, "-uuid", uuid,
-				"-secret", secret, "-s", server, "-i", ip, "-p", strconv.Itoa(consts.ZtfServicePost))
+				"-secret", secret, "-s", server, "-i", ip, "-p", strconv.Itoa(consts.ZtfServicePort))
 		} else if name == "zd" {
-			cmd = exec.Command("nohup", execPath, "-uuid", uuid, "-b", ip, "-p", strconv.Itoa(consts.ZdServicePost))
+			cmd = exec.Command("nohup", execPath, "-uuid", uuid, "-b", ip, "-p", strconv.Itoa(consts.ZdServicePort))
 		}
 
 		log := filepath.Join(consts.WorkDir, "nohup."+name+".log")
