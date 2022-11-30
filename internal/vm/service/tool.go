@@ -209,6 +209,9 @@ func (s *ToolService) convertVersion(str string) (version float64) {
 }
 
 func (s *ToolService) startProcess(name, execPath, uuid, ip, server, secret string) (out string, err error) {
+	if ip == "" {
+		ip = agentConf.Inst.NodeIp
+	}
 	execDir := _fileUtils.GetAbsolutePath(filepath.Dir(execPath))
 
 	cmdStr := ""

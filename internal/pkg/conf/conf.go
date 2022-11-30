@@ -58,6 +58,11 @@ func Init(app string) {
 		_fileUtils.MkDirIfNeeded(Inst.DirImage)
 
 	} else if Inst.RunMode == consts.RunModeVm {
+		if Inst.NodeIp == "" {
+			ip, _ := _commonUtils.GetIp()
+			Inst.NodeIp = ip.String()
+		}
+
 		consts.WorkDir = Inst.WorkDir
 
 		Inst.DirZtf = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.WorkDir, consts.FolderZtf))
