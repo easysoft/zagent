@@ -17,17 +17,15 @@ func KillProcessByUUID(uuid string) {
 	out, _ := cmd1.Output()
 	lines := strings.Split(string(out), "\n")
 	for index, line := range lines {
-		if index == 0 {
+		line = strings.TrimSpace(line)
+
+		if index == 0 || line == "" {
 			continue
 		}
-		line = strings.TrimSpace(line)
+
 		cols := strings.Split(line, " ")
-		pid := ""
-		if len(cols) > 3 {
-			pid = cols[3]
-		} else if len(cols) > 2 {
-			pid = cols[2]
-		}
+		pid := cols[len(cols)-1]
+
 		if pid != "" {
 			fmt.Println(fmt.Sprintf(`taskkill /F /pid %s`, pid))
 			cmd2 := exec.Command("cmd")
