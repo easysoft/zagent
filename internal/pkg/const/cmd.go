@@ -1,7 +1,7 @@
 package consts
 
 const (
-	CmdCreateImage = `qemu-img create -f qcow2 \
+	CmdCreateImage = `qemu-img create -f qcow2 -F qcow2 \
 -o cluster_size=2M,backing_file=%s \
 %s 60G
 `
