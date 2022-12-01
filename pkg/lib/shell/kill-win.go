@@ -6,6 +6,7 @@ package _shellUtils
 import (
 	"fmt"
 	"os/exec"
+	"regexp"
 	"strings"
 	"syscall"
 )
