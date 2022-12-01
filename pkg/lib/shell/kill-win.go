@@ -19,6 +19,9 @@ func KillProcessByUUID(uuid string) {
 	for index, line := range lines {
 		line = strings.TrimSpace(line)
 
+		reg := regexp.MustCompile(`( +)`)
+		line = reg.ReplaceAllString(line, " ")
+
 		if index == 0 || line == "" {
 			continue
 		}
