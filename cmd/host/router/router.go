@@ -4,6 +4,7 @@ import (
 	hostHandler "github.com/easysoft/zagent/cmd/host/router/handler"
 	hostService "github.com/easysoft/zagent/internal/host/service"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
+	"github.com/easysoft/zagent/internal/pkg/core"
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
 	"github.com/kataras/iris/v12"
 )
@@ -42,7 +43,7 @@ func (r *Router) App() {
 	{
 		v1 := app.Party("/v1")
 		{
-			//v1.Use(core.Auth())
+			v1.Use(core.Auth())
 
 			v1.PartyFunc("/service", func(client iris.Party) {
 				client.Post("/check", r.CheckCtrl.CheckService).Name = "检测宿主机服务状态"

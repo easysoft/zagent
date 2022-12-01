@@ -2,6 +2,9 @@ package hostInit
 
 import (
 	"fmt"
+	"net/http"
+	"time"
+
 	hostCron "github.com/easysoft/zagent/cmd/host/cron"
 	hostRouter "github.com/easysoft/zagent/cmd/host/router"
 	hostKvmService "github.com/easysoft/zagent/internal/host/service/kvm"
@@ -13,8 +16,6 @@ import (
 	"github.com/facebookgo/inject"
 	"github.com/kataras/iris/v12"
 	"github.com/sirupsen/logrus"
-	"net/http"
-	"time"
 )
 
 func Init() {

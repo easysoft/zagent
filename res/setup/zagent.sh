@@ -80,7 +80,7 @@ download_zagent()
         echo "agent.zip already exist"
         echo "Check md5"
         zip_md5=`md5sum agent.zip|awk '{print $1}'`
-        if [ ${zip_md5} == 'f80964f3fa6555d0993710b2c8b283ca' ]
+        if [ ${zip_md5} == '8657a6cf25953dd9eeb09017edaf5477' ]
         then
             return 0
         else
@@ -93,7 +93,7 @@ download_zagent()
     echo "Check md5"
     zip_md5=`md5sum agent.zip|awk '{print $1}'`
     
-    if [ ${zip_md5} == 'f80964f3fa6555d0993710b2c8b283ca' ]
+    if [ ${zip_md5} == '8657a6cf25953dd9eeb09017edaf5477' ]
     then
         return 0
     fi
@@ -107,7 +107,7 @@ install_zagent()
             echo "Already installed zagent"
             if service_is_inactive zagent-host;then
                 if [[ -n $secret ]];then
-                    nohup ./zagent-host -p 8086 -secret $secret > /dev/null 2>&1 &
+                    nohup ${HOME}/zagent/zagent-host -p 8086 -secret $secret > /dev/null 2>&1 &
                 fi
             fi
             return
