@@ -121,8 +121,8 @@ func (s *KvmService) GetVms() (vms []domain.Vm) {
 
 		if vm.Status == consts.VmRunning && vm.Ip != "" {
 			vm.AgentPortOnHost, _, _ = natHelper.ForwardPortIfNeeded(vm.Ip, consts.AgentVmServicePort, consts.Http)
-			vm.ZtfPortOnHost, _, _ = natHelper.ForwardPortIfNeeded(vm.Ip, consts.ZtfServicePost, consts.Http)
-			vm.ZdPortOnHost, _, _ = natHelper.ForwardPortIfNeeded(vm.Ip, consts.ZdServicePost, consts.Http)
+			vm.ZtfPortOnHost, _, _ = natHelper.ForwardPortIfNeeded(vm.Ip, consts.ZtfServicePort, consts.Http)
+			vm.ZdPortOnHost, _, _ = natHelper.ForwardPortIfNeeded(vm.Ip, consts.ZdServicePort, consts.Http)
 
 			vm.SshPortOnHost, _, _ = natHelper.ForwardPortIfNeeded(vm.Ip, consts.SshServicePost, consts.Stream)
 		}

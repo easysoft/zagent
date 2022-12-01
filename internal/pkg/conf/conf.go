@@ -34,8 +34,8 @@ func Init(app string) {
 	if app == consts.AppNameAgentHost {
 		Inst.WebsockifyPort, _ = netUtils.GetUsedPortByKeyword("websockify", consts.WebsockifyPort)
 	} else if app == consts.AppNameAgentVm {
-		Inst.ZtfPort, _ = netUtils.GetUsedPortByKeyword("ztf", consts.ZtfServicePost)
-		Inst.ZdPort, _ = netUtils.GetUsedPortByKeyword("zd", consts.ZdServicePost)
+		Inst.ZtfPort, _ = netUtils.GetUsedPortByKeyword("ztf", consts.ZtfServicePort)
+		Inst.ZdPort, _ = netUtils.GetUsedPortByKeyword("zd", consts.ZdServicePort)
 	}
 
 	home, _ := _fileUtils.GetUserHome()
@@ -58,6 +58,11 @@ func Init(app string) {
 		_fileUtils.MkDirIfNeeded(Inst.DirImage)
 
 	} else if Inst.RunMode == consts.RunModeVm {
+		if Inst.NodeIp == "" {
+			ip, _ := _commonUtils.GetIp()
+			Inst.NodeIp = ip.String()
+		}
+
 		consts.WorkDir = Inst.WorkDir
 
 		Inst.DirZtf = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.WorkDir, consts.FolderZtf))

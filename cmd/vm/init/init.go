@@ -77,7 +77,7 @@ func (s *Server) Serve() error {
 	}
 
 	err := s.App.Run(
-		iris.Addr(fmt.Sprintf("%s:%d", agentConf.Inst.NodeIp, agentConf.Inst.NodePort)),
+		iris.Addr(fmt.Sprintf("%s:%d", "0.0.0.0", agentConf.Inst.NodePort)),
 		iris.WithoutServerError(iris.ErrServerClosed),
 		iris.WithOptimizations,
 		iris.WithTimeFormat(time.RFC3339),

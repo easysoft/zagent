@@ -2,7 +2,7 @@ package _stdinUtils
 
 import (
 	"bufio"
-	_i118Utils "github.com/easysoft/zagent/internal/pkg/lib/i118"
+	_i118Utils "github.com/easysoft/zagent/pkg/lib/i118"
 	"log"
 	"os"
 	"regexp"
