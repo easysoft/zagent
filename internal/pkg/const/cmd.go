@@ -25,7 +25,7 @@ const (
 
 	CmdStartVm = `virsh --connect qemu:///system start %s`
 
-	CmdExportVm = `qemu-img convert -f qcow2 -O qcow2 %s %s`
+	CmdExportVm = `qemu-img convert -f qcow2 -O qcow2 -c %s %s`
 )
 
 var ()

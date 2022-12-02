@@ -4,18 +4,20 @@ import "C"
 import (
 	"errors"
 	"fmt"
+	"path/filepath"
+	"strings"
+
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
-	"github.com/easysoft/zagent/internal/pkg/const"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/domain"
+	_fileUtils "github.com/easysoft/zagent/pkg/lib/file"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 	_sshUtils "github.com/easysoft/zagent/pkg/lib/ssh"
 	_stringUtils "github.com/easysoft/zagent/pkg/lib/string"
 	"github.com/libvirt/libvirt-go"
-	"github.com/libvirt/libvirt-go-xml"
+	libvirtxml "github.com/libvirt/libvirt-go-xml"
 	"golang.org/x/crypto/ssh"
-	"path/filepath"
-	"strings"
 )
 
 type QemuService struct {
@@ -334,4 +336,28 @@ func (s *QemuService) GetDisk(dom *libvirt.Domain) (path string, err error) {
 	path = domCfg.Devices.Disks[mainDiskIndex].Source.File.File
 
 	return
+}
+
+func (s *QemuService) GetBackingFileSize(diskPath string) (size int64) {
+	var cmd = fmt.Sprintf("qemu-img info %s", diskPath)
+
+	out, err := _shellUtils.ExeShell(cmd)
+	if out == "" || err != nil {
+		return 0
+	}
+
+	backingPath := ""
+
+	outSlice := strings.Split(out, "\n")
+	for _, line := range outSlice {
+		line = strings.TrimSpace(line)
+		if strings.Contains(line, "backing file:") {
+			backingPath = strings.TrimSpace(line[strings.Index(line, ":")+1:])
+			break
+		}
+	}
+
+	size, _ = _fileUtils.GetFileSize(backingPath)
+
+	return size
 }
