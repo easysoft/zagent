@@ -1,11 +1,12 @@
 package core
 
 import (
+	"net/http"
+
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	authUtils "github.com/easysoft/zagent/internal/pkg/utils/auth"
 	_const "github.com/easysoft/zagent/pkg/const"
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
-	"net/http"
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/context"
@@ -16,7 +17,7 @@ func Auth() iris.Handler {
 		token := authUtils.GetTokenInAuthorization(ctx.GetHeader(_const.Authorization))
 
 		success := false
-		if token == consts.AuthToken {
+		if token != "" && token == consts.AuthToken {
 			success = true
 		}
 
