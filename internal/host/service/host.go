@@ -30,29 +30,32 @@ func NewHostService() *HostService {
 }
 
 func (s *HostService) Check() {
-	// is running，register busy
-	if s.JobService.IsRunning() {
-		s.Register(true)
-		return
-	}
+	s.Register(false)
+	return
 
-	// no task to run, submit free
-	if s.JobService.GetTaskSize() == 0 {
-		s.Register(false)
-		return
-	}
-
-	// has task to run，register busy, then run
-	job := s.JobService.PeekJob()
-	s.Register(true)
-
-	s.JobService.StartTask()
-
-	s.PassEnvsToContainerIfNeeded(&job)
-	s.TestService.Run(&job)
-
-	s.JobService.RemoveTask()
-	s.JobService.EndTask()
+	//// is running，register busy
+	//if s.JobService.IsRunning() {
+	//	s.Register(true)
+	//	return
+	//}
+	//
+	//// no task to run, submit free
+	//if s.JobService.GetTaskSize() == 0 {
+	//	s.Register(false)
+	//	return
+	//}
+	//
+	//// has task to run，register busy, then run
+	//job := s.JobService.PeekJob()
+	//s.Register(true)
+	//
+	//s.JobService.StartTask()
+	//
+	//s.PassEnvsToContainerIfNeeded(&job)
+	//s.TestService.Run(&job)
+	//
+	//s.JobService.RemoveTask()
+	//s.JobService.EndTask()
 }
 
 func (s *HostService) Register(isBusy bool) {

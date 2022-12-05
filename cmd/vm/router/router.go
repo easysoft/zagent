@@ -28,9 +28,8 @@ func (r *Router) App() {
 			//v1.Use(core.Auth())
 
 			v1.PartyFunc("/service", func(client iris.Party) {
-				client.Post("/check", r.ServiceCtrl.Check).Name = "检测执行节点服务状态"
-
-				client.Post("/setup", r.ServiceCtrl.Setup).Name = "安装服务"
+				client.Post("/check", r.ServiceCtrl.Check).Name = "检测节点服务状态"
+				client.Post("/setup", r.ServiceCtrl.Setup).Name = "安装测试服务"
 			})
 		}
 	}
