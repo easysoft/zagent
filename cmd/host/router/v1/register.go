@@ -1,8 +1,9 @@
 package v1
 
 import (
-	consts "github.com/easysoft/zagent/internal/pkg/const"
 	"time"
+
+	consts "github.com/easysoft/zagent/internal/pkg/const"
 )
 
 // vm notity host being ready
@@ -25,7 +26,7 @@ type VmRegisterReq struct {
 }
 
 type RegisterResp struct {
-	Token           string    `json:"token" yaml:"token"`
-	ExpiredTimeUnix int64     `json:"expiredTimeUnix" yaml:"expiredTimeUnix"`
-	ExpiredDate     time.Time `json:"expiredDate" yaml:"expiredDate"`
+	Token         string    `json:"tokenSN" yaml:"token"`
+	TokenTimeUnix int64     `json:"tokenTimeUnix" yaml:"tokenTimeUnix"`
+	TokenTime     time.Time `json:"tokenTime" yaml:"tokenTime"`
 }

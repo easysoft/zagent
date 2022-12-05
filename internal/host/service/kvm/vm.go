@@ -2,20 +2,21 @@ package kvmService
 
 import (
 	"fmt"
+	"path/filepath"
+	"strings"
+	"time"
+
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	agentModel "github.com/easysoft/zagent/internal/host/model"
 	hostRepo "github.com/easysoft/zagent/internal/host/repo"
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
-	"github.com/easysoft/zagent/internal/pkg/const"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/domain"
 	natHelper "github.com/easysoft/zagent/internal/pkg/utils/net"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 	"github.com/libvirt/libvirt-go"
 	libvirtxml "github.com/libvirt/libvirt-go-xml"
-	"path/filepath"
-	"strings"
-	"time"
 )
 
 const ()
@@ -134,6 +135,10 @@ func (s *KvmService) GetVms() (vms []domain.Vm) {
 }
 
 func (s *KvmService) AddExportVmTask(req v1.ExportVmReq) (err error) {
+	if len(req.Backing) < 6 || req.Backing[len(req.Backing)-6:] != ".qcow2" {
+		req.Backing += ".qcow2"
+	}
+
 	po := agentModel.Task{
 		Vm:      req.Vm,
 		Backing: req.Backing,

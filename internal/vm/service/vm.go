@@ -91,9 +91,9 @@ func (s *VmService) Register(isBusy bool) (ok bool) {
 		respObj := v1.RegisterResp{}
 		err := json.Unmarshal(respBytes, &respObj)
 		if err == nil && respObj.Token != "" {
-			respObj.ExpiredDate, _ = _dateUtils.UnitToDate(respObj.ExpiredTimeUnix)
+			respObj.TokenTime, _ = _dateUtils.UnitToDate(respObj.TokenTimeUnix)
 			consts.AuthToken = respObj.Token
-			consts.ExpiredDate = respObj.ExpiredDate
+			consts.ExpiredDate = respObj.TokenTime
 		}
 	}
 

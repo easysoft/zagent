@@ -2,10 +2,13 @@ package hostAgentService
 
 import (
 	"encoding/json"
-	"github.com/easysoft/zagent/cmd/host/router/v1"
+	"strings"
+	"time"
+
+	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	hostKvmService "github.com/easysoft/zagent/internal/host/service/kvm"
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
-	"github.com/easysoft/zagent/internal/pkg/const"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/domain"
 	agentService "github.com/easysoft/zagent/internal/pkg/service"
 	agentTestingService "github.com/easysoft/zagent/internal/pkg/service/testing"
@@ -14,8 +17,6 @@ import (
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
 	_i118Utils "github.com/easysoft/zagent/pkg/lib/i118"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
-	"strings"
-	"time"
 )
 
 type HostService struct {
@@ -87,9 +88,9 @@ func (s *HostService) Register(isBusy bool) {
 		respObj := v1.RegisterResp{}
 		err := json.Unmarshal(respBytes, &respObj)
 		if err == nil && respObj.Token != "" {
-			respObj.ExpiredDate, _ = _dateUtils.UnitToDate(respObj.ExpiredTimeUnix)
+			respObj.TokenTime, _ = _dateUtils.UnitToDate(respObj.TokenTimeUnix)
 			consts.AuthToken = respObj.Token
-			consts.ExpiredDate = respObj.ExpiredDate
+			consts.ExpiredDate = respObj.TokenTime
 		}
 	}
 
@@ -100,12 +101,12 @@ func (s *HostService) Register(isBusy bool) {
 	if ok {
 		_logUtils.Info(_i118Utils.I118Prt.Sprintf("success_to_register", agentConf.Inst.Server))
 	} else {
-		_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_register", agentConf.Inst.Server, respBytes))
+		_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_register", agentConf.Inst.Server, string(respBytes)))
 	}
 }
 
 func (s *HostService) register(host interface{}) (resp []byte, ok bool) {
-	url := requestUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/host/submitTaskResult")
+	url := requestUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/host/heartbeat")
 
 	resp, err := _httpUtils.Post(url, host)
 	ok = err == nil

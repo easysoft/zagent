@@ -2,6 +2,9 @@ package hostAgentService
 
 import (
 	"fmt"
+	"path/filepath"
+	"time"
+
 	agentModel "github.com/easysoft/zagent/internal/host/model"
 	hostRepo "github.com/easysoft/zagent/internal/host/repo"
 	kvmService "github.com/easysoft/zagent/internal/host/service/kvm"
@@ -12,8 +15,6 @@ import (
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 	"github.com/gofrs/uuid"
-	"path/filepath"
-	"time"
 )
 
 type ExportService struct {
@@ -70,6 +71,8 @@ func (s *ExportService) ExportVm(task agentModel.Task, targetBakingFilePath stri
 		return
 	}
 
+	backingSize := s.QemuService.GetBackingFileSize(vmDiskPath)
+
 	bizErr := s.LibvirtService.SafeDestroyVmByName(vmName)
 	if bizErr != nil {
 		status = consts.Failed
@@ -78,6 +81,7 @@ func (s *ExportService) ExportVm(task agentModel.Task, targetBakingFilePath stri
 
 	uuidStr := uuid.Must(uuid.NewV4()).String()
 	srcVmDiskSize, _ := _fileUtils.GetFileSize(vmDiskPath)
+	srcVmDiskSize += backingSize
 
 	_fileUtils.RemoveFile(targetBakingFilePath)
 

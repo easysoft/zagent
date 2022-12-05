@@ -120,7 +120,7 @@ func (s *TaskService) SubmitResult(task agentModel.Task) (err error) {
 			Task:    task.Task,
 		}
 
-		_, err = _httpUtils.Put(url, data)
+		_, err = _httpUtils.Post(url, data)
 
 	} else if task.Type == consts.ExportVm {
 		url := requestUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/host/submitResult")
