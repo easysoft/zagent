@@ -278,6 +278,48 @@ ExecStop=/bin/sh -c "/bin/kill -s TERM \$(/bin/cat /usr/local/nginx/logs/nginx.p
 [Install]
 WantedBy=multi-user.target
 EOF
+
+cat > /usr/local/nginx/conf/nginx.conf <<EOF
+worker_processes  1;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    sendfile        on;
+    keepalive_timeout  65;
+
+    server {
+        listen       80;
+        server_name  localhost;
+
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+    }
+
+    include ${HOME}/zagent/conf.http.d/*.conf;
+}
+
+stream{
+    upstream tcpssh{
+        hash $remote_addr consistent;
+        server 	8.8.8.8:389 max_fails=3 fail_timeout=10s;  
+    }
+
+    include ${HOME}/zagent/conf.stream.d/*.conf;
+}
+EOF
     
     sudo /bin/mv /tmp/nginx.service /lib/systemd/system/nginx.service
     ck_ok "edit nginx.service"
