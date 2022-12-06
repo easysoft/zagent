@@ -103,18 +103,23 @@
             "type": "object",
             "properties": {
                 "ip": {
+                    "description": "testing node ip, port ztf:56202, zd:56203",
                     "type": "string"
                 },
                 "name": {
+                    "description": "tool name, ztf or zd",
                     "type": "string"
                 },
                 "secret": {
+                    "description": "secret to access zentao",
                     "type": "string"
                 },
                 "server": {
+                    "description": "zentao server url",
                     "type": "string"
                 },
                 "version": {
+                    "description": "tool version",
                     "type": "string"
                 }
             }
