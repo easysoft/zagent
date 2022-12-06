@@ -107,7 +107,7 @@ install_zagent()
             echo "Already installed zagent"
             if service_is_inactive zagent-host;then
                 if [[ -n $secret ]];then
-                    nohup ${HOME}/zagent/zagent-host -p 8086 -secret $secret > /dev/null 2>&1 &
+                    nohup ${HOME}/zagent/zagent-host -p 55001 -secret $secret -s $zentaoSite > /dev/null 2>&1 &
                 fi
             fi
             return
@@ -125,7 +125,7 @@ install_zagent()
         ck_ok "unZip Zagent"
         sudo chmod +x ./zagent-host
         if [[ -n $secret ]];then
-            nohup ./zagent-host -p 8086 -secret $secret > /dev/null 2>&1 &
+            nohup ./zagent-host -p 55001 -secret $secret -s $zentaoSite > /dev/null 2>&1 &
         fi
     fi
     
@@ -356,7 +356,7 @@ install_websockify()
         if [ ${force} == false ];then
             echo "Already installed websockify"
             if service_is_inactive JSONTokenApi;then
-                nohup ${HOME}/zagent/websockify/run --token-plugin JSONTokenApi --token-source http://127.0.0.1:8086/api/v1/virtual/getVncAddress?token=%s 6080 > /dev/null 2>&1 &
+                nohup ${HOME}/zagent/websockify/run --token-plugin JSONTokenApi --token-source http://127.0.0.1:55001/api/v1/virtual/getVncAddress?token=%s 6080 > /dev/null 2>&1 &
             fi
             return
         fi
@@ -381,7 +381,7 @@ install_websockify()
     /usr/bin/rm -rf ${HOME}/zagent/websockify.zip
     
     sudo chmod +x ${HOME}/zagent/websockify/run
-    nohup ${HOME}/zagent/websockify/run --token-plugin JSONTokenApi --token-source http://127.0.0.1:8086/api/v1/virtual/getVncAddress?token=%s 6080 > /dev/null 2>&1 &
+    nohup ${HOME}/zagent/websockify/run --token-plugin JSONTokenApi --token-source http://127.0.0.1:55001/api/v1/virtual/getVncAddress?token=%s 6080 > /dev/null 2>&1 &
 }
 
 
@@ -480,9 +480,10 @@ is_update_apt=false
 soft="zagent,nginx,kvm,novnc,websockify"
 force=false
 secret=""
+zentaoSite=""
 isInstall=true
 
-while getopts ":k:s:cr" optname
+while getopts ":k:s:z:cr" optname
 do
     case "$optname" in
         "s")
@@ -516,13 +517,16 @@ do
         "k")
             secret=$OPTARG
         ;;
+        "z")
+            zentaoSite=$OPTARG
+        ;;
         "c")
             isInstall=false
             if [ ! -f ${HOME}/zagent/zagentinit ];then
                 curl -s -L https://pkg.qucheng.com/zenagent/zagentinit -o ${HOME}/zagent/zagentinit
             fi
             sudo chmod +x ${HOME}/zagent/zagentinit
-            ${HOME}/zagent//zagentinit -c
+            ${HOME}/zagent/zagentinit -c
         ;;
         *)
             echo "Unknown error while processing options"
