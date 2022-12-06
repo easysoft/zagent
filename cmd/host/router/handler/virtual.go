@@ -142,7 +142,7 @@ func (c *VirtualCtrl) GetToken(ctx iris.Context) {
 // @Accept json
 // @Produce json
 // @Param port query string true "VNC Port"
-// @Success 200 {object} iris.map{"port":5900,"ip":127.0.0.1} "code = success | fail"
+// @Success 200 {object} _domain.Response{v1.VncTokenResp} "code = success | fail"
 // @Router /api/v1/virtual/getVncAddress [get]
 func (c *VirtualCtrl) GetAddress(ctx iris.Context) {
 	token := ctx.URLParam("token")
@@ -158,5 +158,5 @@ func (c *VirtualCtrl) GetAddress(ctx iris.Context) {
 		return
 	}
 
-	ctx.JSON(iris.Map{"port": ret.Port, "host": ret.Ip})
+	ctx.JSON(ret)
 }

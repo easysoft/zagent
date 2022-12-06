@@ -501,11 +501,11 @@ var doc = `{
                 "parameters": [
                     {
                         "description": "Service Check Request Object",
-                        "name": "ServiceCheckReq",
+                        "name": "HostServiceCheckReq",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/v1.ServiceCheckReq"
+                            "$ref": "#/definitions/v1.HostServiceCheckReq"
                         }
                     }
                 ],
@@ -513,7 +513,7 @@ var doc = `{
                     "200": {
                         "description": "code = success | fail",
                         "schema": {
-                            "$ref": "#/definitions/v1.ServiceCheckResp"
+                            "$ref": "#/definitions/v1.HostServiceCheckResp"
                         }
                     }
                 }
@@ -587,6 +587,34 @@ var doc = `{
                                     }
                                 }
                             ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/virtual/getVncAddress": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "根据VNC Token 获取 ip，port",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "VNC Port",
+                        "name": "port",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "$ref": "#/definitions/_domain.Response"
                         }
                     }
                 }
@@ -884,6 +912,35 @@ var doc = `{
                 }
             }
         },
+        "v1.HostServiceCheckReq": {
+            "type": "object",
+            "properties": {
+                "services": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.HostServiceCheckResp": {
+            "type": "object",
+            "properties": {
+                "kvm": {
+                    "description": "Enums consts.HostServiceStatus",
+                    "type": "string"
+                },
+                "nginx": {
+                    "description": "Enums consts.HostServiceStatus",
+                    "type": "string"
+                },
+                "novnc": {
+                    "description": "Enums consts.HostServiceStatus",
+                    "type": "string"
+                },
+                "websockify": {
+                    "description": "Enums consts.HostServiceStatus",
+                    "type": "string"
+                }
+            }
+        },
         "v1.ListTaskResp": {
             "type": "object",
             "properties": {
@@ -916,31 +973,6 @@ var doc = `{
                     "items": {
                         "$ref": "#/definitions/agentModel.Task"
                     }
-                }
-            }
-        },
-        "v1.ServiceCheckReq": {
-            "type": "object",
-            "properties": {
-                "services": {
-                    "type": "string"
-                }
-            }
-        },
-        "v1.ServiceCheckResp": {
-            "type": "object",
-            "properties": {
-                "kvm": {
-                    "description": "Enums consts.HostServiceStatus",
-                    "type": "string"
-                },
-                "novnc": {
-                    "description": "Enums consts.HostServiceStatus",
-                    "type": "string"
-                },
-                "websockify": {
-                    "description": "Enums consts.HostServiceStatus",
-                    "type": "string"
                 }
             }
         },
@@ -1005,7 +1037,7 @@ var doc = `{
         "v1.VncTokenResp": {
             "type": "object",
             "properties": {
-                "ip": {
+                "host": {
                     "type": "string"
                 },
                 "port": {

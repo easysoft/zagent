@@ -99,7 +99,7 @@ func (c *KvmCtrl) Create(ctx iris.Context) {
 //	vmName, _ := dom.GetName()
 //	vm := v1.KvmResp{
 //		Name:    vmName,
-//		Ip:      vmIp,
+//		Host:      vmIp,
 //		Mac:     req.VmMacAddress,
 //		Agent:   vmAgentPortMapped,
 //		Vnc:     vmVncPort,

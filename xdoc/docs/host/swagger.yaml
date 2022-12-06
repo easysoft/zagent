@@ -118,6 +118,26 @@ definitions:
       vm:
         type: string
     type: object
+  v1.HostServiceCheckReq:
+    properties:
+      services:
+        type: string
+    type: object
+  v1.HostServiceCheckResp:
+    properties:
+      kvm:
+        description: Enums consts.HostServiceStatus
+        type: string
+      nginx:
+        description: Enums consts.HostServiceStatus
+        type: string
+      novnc:
+        description: Enums consts.HostServiceStatus
+        type: string
+      websockify:
+        description: Enums consts.HostServiceStatus
+        type: string
+    type: object
   v1.ListTaskResp:
     properties:
       canceled:
@@ -140,23 +160,6 @@ definitions:
         items:
           $ref: '#/definitions/agentModel.Task'
         type: array
-    type: object
-  v1.ServiceCheckReq:
-    properties:
-      services:
-        type: string
-    type: object
-  v1.ServiceCheckResp:
-    properties:
-      kvm:
-        description: Enums consts.HostServiceStatus
-        type: string
-      novnc:
-        description: Enums consts.HostServiceStatus
-        type: string
-      websockify:
-        description: Enums consts.HostServiceStatus
-        type: string
     type: object
   v1.VmNotifyReq:
     properties:
@@ -198,7 +201,7 @@ definitions:
     type: object
   v1.VncTokenResp:
     properties:
-      ip:
+      host:
         type: string
       port:
         type: string
@@ -491,17 +494,17 @@ paths:
       parameters:
       - description: Service Check Request Object
         in: body
-        name: ServiceCheckReq
+        name: HostServiceCheckReq
         required: true
         schema:
-          $ref: '#/definitions/v1.ServiceCheckReq'
+          $ref: '#/definitions/v1.HostServiceCheckReq'
       produces:
       - application/json
       responses:
         "200":
           description: code = success | fail
           schema:
-            $ref: '#/definitions/v1.ServiceCheckResp'
+            $ref: '#/definitions/v1.HostServiceCheckResp'
       summary: 检测宿主机服务状态
   /api/v1/task/status:
     get:
@@ -544,6 +547,24 @@ paths:
                   $ref: '#/definitions/v1.VmPortMapResp'
               type: object
       summary: 新增虚拟机到宿主机端口的映射
+  /api/v1/virtual/getVncAddress:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: VNC Port
+        in: query
+        name: port
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code = success | fail
+          schema:
+            $ref: '#/definitions/_domain.Response'
+      summary: 根据VNC Token 获取 ip，port
   /api/v1/virtual/getVncToken:
     get:
       consumes:

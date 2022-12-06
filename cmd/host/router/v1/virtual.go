@@ -23,6 +23,6 @@ type VmPortMapResp struct {
 
 type VncTokenResp struct {
 	Token string `json:"token"`
-	Ip    string `json:"ip"`
+	Host  string `json:"host"`
 	Port  string `json:"port"`
 }

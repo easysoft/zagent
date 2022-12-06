@@ -34,7 +34,7 @@ func (s *NoVncService) GetToken(port string) (ret v1.VncTokenResp, err error) {
 	ip := agentConf.Inst.NodeIp
 	ret = v1.VncTokenResp{
 		Token: token,
-		Ip:    ip,
+		Host:  ip,
 		Port:  port,
 	}
 	s.syncMap.Store(token, ret)
@@ -44,7 +44,7 @@ func (s *NoVncService) GetToken(port string) (ret v1.VncTokenResp, err error) {
 		if key != token {
 			vncResp := value.(v1.VncTokenResp)
 
-			if vncResp.Ip == ret.Ip && vncResp.Port == ret.Port {
+			if vncResp.Host == ret.Host && vncResp.Port == ret.Port {
 				s.syncMap.Delete(key)
 			}
 		}
@@ -82,7 +82,7 @@ func (s *NoVncService) GetAddressByToken(token string) (ret v1.VncTokenResp, err
 //
 //		result := v1.VncTokenResp{
 //			Token: token,
-//			Ip:    ip,
+//			Host:    ip,
 //			Port:  portStr,
 //		}
 //		s.syncMap.Store(portStr, result)
