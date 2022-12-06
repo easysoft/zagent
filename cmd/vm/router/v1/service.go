@@ -15,12 +15,12 @@ type VmServiceCheckResp struct {
 }
 
 type VmServiceInstallReq struct {
-	Name    string `json:"name"`
-	Version string `json:"version"`
+	Name    string `json:"name"`    // tool name, ztf or zd
+	Version string `json:"version"` // tool version
 
-	Server string `json:"server"`
-	Secret string `json:"secret"`
-	Ip     string `json:"ip"`
+	Server string `json:"server"` // zentao server url
+	Secret string `json:"secret"` // secret to access zentao
+	Ip     string `json:"ip"`     // testing node ip, port ztf:56202, zd:56203
 }
 
 type VmServiceInstallResp struct {
