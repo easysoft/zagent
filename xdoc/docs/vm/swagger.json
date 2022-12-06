@@ -1,0 +1,131 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "ZAgent虚拟机API文档",
+        "contact": {
+            "name": "API Support",
+            "url": "https://github.com/easysoft/zv/issues",
+            "email": "462626@qq.com"
+        },
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/v1/service/check": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "检测虚拟机服务状态",
+                "parameters": [
+                    {
+                        "description": "Service Check Request Object",
+                        "name": "VmServiceCheckReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.VmServiceCheckReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "$ref": "#/definitions/v1.VmServiceCheckResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/service/setup": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "安装虚拟机服务",
+                "parameters": [
+                    {
+                        "description": "Service Install Request Object",
+                        "name": "VmServiceCheckReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.VmServiceInstallReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "$ref": "#/definitions/v1.VmServiceInstallResp"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "v1.VmServiceCheckReq": {
+            "type": "object",
+            "properties": {
+                "services": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.VmServiceCheckResp": {
+            "type": "object",
+            "properties": {
+                "zdStatus": {
+                    "description": "Enums consts.HostServiceStatus",
+                    "type": "string"
+                },
+                "zdVersion": {
+                    "type": "string"
+                },
+                "ztfStatus": {
+                    "description": "Enums consts.HostServiceStatus",
+                    "type": "string"
+                },
+                "ztfVersion": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.VmServiceInstallReq": {
+            "type": "object",
+            "properties": {
+                "ip": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "secret": {
+                    "type": "string"
+                },
+                "server": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.VmServiceInstallResp": {
+            "type": "object",
+            "properties": {
+                "version": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
