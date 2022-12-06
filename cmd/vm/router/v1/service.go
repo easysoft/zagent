@@ -3,7 +3,7 @@ package v1
 import consts "github.com/easysoft/zagent/internal/pkg/const"
 
 type VmServiceCheckReq struct {
-	Services string `json:"services"`
+	Services string `json:"services"` // tool name, ztf or zd
 }
 
 type VmServiceCheckResp struct {
