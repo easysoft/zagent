@@ -33,7 +33,7 @@ const (
 )
 
 func GetValidPort() (hostPort int, err error) {
-	cmd := fmt.Sprintf(`netstat -tln | awk '{print $4}' | grep -o ':51[0-9]\{3\}'`)
+	cmd := fmt.Sprintf(`netstat -tln | awk '{print $4}' | grep -o ':551[0-9]\{2\}'`)
 	output, _ := _shellUtils.ExeSysCmd(cmd)
 
 	list := strings.Split(output, "\n")
