@@ -1,19 +1,14 @@
 package hostHandler
 
 import (
-	"sync"
-
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	kvmService "github.com/easysoft/zagent/internal/host/service/kvm"
 	virtualService "github.com/easysoft/zagent/internal/host/service/virtual"
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
+	natHelper "github.com/easysoft/zagent/internal/pkg/utils/net"
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
 	"github.com/kataras/iris/v12"
-)
-
-var (
-	vmMacMap = sync.Map{}
 )
 
 type VirtualCtrl struct {
@@ -51,22 +46,16 @@ func (c *VirtualCtrl) NotifyHost(ctx iris.Context) {
 	}
 
 	// map vm agent port to host
-	//vmAgentPortMapped, err := natHelper.GetValidPort()
-	//if err != nil {
-	//	ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
-	//	return
-	//}
-	//err = natHelper.ForwardPort(vmIp, consts.AgentServicePort, vmAgentPortMapped, consts.Http)
-	//if err != nil {
-	//	ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
-	//	return
-	//}
-	//
-	//data.AgentPortOnHost = vmAgentPortMapped
+	vmAgentPortMapped, _, err := natHelper.ForwardPortIfNeeded(vmIp, consts.AgentVmServicePort, consts.Http)
+	if err != nil {
+		ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
+
+	data.AgentPortOnHost = vmAgentPortMapped
 	data.Ip = vmIp
 
 	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to refresh secret", data))
-	return
 }
 
 // @summary 新增虚拟机到宿主机端口的映射
