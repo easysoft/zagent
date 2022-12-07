@@ -47,7 +47,7 @@ func (s *CronService) Init() {
 	)
 
 	_cronUtils.AddTask(
-		"download",
+		"tasks",
 		fmt.Sprintf("@every %ds", consts.AgentCheckDownloadInterval),
 		func() {
 			s.TaskService.CheckTask()

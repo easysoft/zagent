@@ -76,6 +76,7 @@
             "type": "object",
             "properties": {
                 "services": {
+                    "description": "tool name, ztf or zd",
                     "type": "string"
                 }
             }

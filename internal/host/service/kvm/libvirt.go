@@ -10,6 +10,7 @@ import (
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	_stringUtils "github.com/easysoft/zagent/pkg/lib/string"
 	"github.com/libvirt/libvirt-go"
+	"time"
 )
 
 const (
@@ -255,6 +256,34 @@ func (s *LibvirtService) ForceDestroyVmByName(name string) (bizErr *domain.BizEr
 
 	return
 }
+func (s *LibvirtService) TryThenForceDestroyVmByName(name string) (bizErr *domain.BizErr) {
+	bizErr = s.SafeDestroyVmByName(name)
+
+	if bizErr != nil {
+		bizErr = s.ForceDestroyVmByName(name)
+	}
+
+	timer := time.NewTimer(10 * time.Second)
+	for {
+		select {
+		case <-timer.C:
+			bizErr = s.ForceDestroyVmByName(name)
+			break
+		default:
+			dom, err := s.GetVm(name)
+			if err == nil {
+				domainState, _, _ := dom.GetState()
+				if domainState == libvirt.DOMAIN_SHUTOFF || domainState == libvirt.DOMAIN_SHUTDOWN {
+					break
+				}
+			}
+
+			time.Sleep(1 * time.Second)
+		}
+	}
+
+	return
+}
 
 func (s *LibvirtService) BootVmByName(name string) (err error) {
 	dom, err := s.GetVm(name)
@@ -305,6 +334,11 @@ func (s *LibvirtService) ResumeVmByName(name string) (err error) {
 
 func (s *LibvirtService) RemoveVmByName(name string, removeDiskImage bool) (err error) {
 	dom, err := s.GetVm(name)
+	if err != nil {
+		return
+	}
+
+	err = dom.DestroyFlags(libvirt.DOMAIN_DESTROY_DEFAULT)
 	if err != nil {
 		return
 	}

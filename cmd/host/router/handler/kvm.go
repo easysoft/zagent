@@ -230,7 +230,7 @@ func (c *KvmCtrl) Poweroff(ctx iris.Context) {
 		return
 	}
 
-	bizErr := c.LibvirtService.ForceDestroyVmByName(name)
+	bizErr := c.LibvirtService.TryThenForceDestroyVmByName(name)
 	if bizErr != nil {
 		ctx.JSON(_httpUtils.RespDataFromBizErr(bizErr))
 		return

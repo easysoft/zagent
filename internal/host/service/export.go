@@ -73,7 +73,7 @@ func (s *ExportService) ExportVm(task agentModel.Task, targetBakingFilePath stri
 
 	backingSize := s.QemuService.GetBackingFileSize(vmDiskPath)
 
-	bizErr := s.LibvirtService.SafeDestroyVmByName(vmName)
+	bizErr := s.LibvirtService.TryThenForceDestroyVmByName(vmName)
 	if bizErr != nil {
 		status = consts.Failed
 		return

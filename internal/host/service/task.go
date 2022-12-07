@@ -53,7 +53,7 @@ func (s *TaskService) CheckTask() (err error) {
 
 		if newTask.Type == consts.DownloadImage {
 			s.DownloadService.StartTask(newTask)
-		} else {
+		} else if newTask.Type == consts.ExportVm {
 			s.ExportService.StartTask(newTask)
 		}
 
