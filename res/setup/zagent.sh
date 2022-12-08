@@ -86,7 +86,7 @@ download_zagent()
         echo "agent.zip already exist"
         echo "Check md5"
         zip_md5=`md5sum agent.zip|awk '{print $1}'`
-        if [ ${zip_md5} == '15704b25ac1e38165239b7a65a34e008' ]
+        if [ ${zip_md5} == 'a37b045ef79975516a13d32a446ef68a' ]
         then
             return 0
         else
@@ -99,7 +99,7 @@ download_zagent()
     echo "Check md5"
     zip_md5=`md5sum agent.zip|awk '{print $1}'`
     
-    if [ ${zip_md5} == '15704b25ac1e38165239b7a65a34e008' ]
+    if [ ${zip_md5} == 'a37b045ef79975516a13d32a446ef68a' ]
     then
         return 0
     fi
@@ -126,6 +126,9 @@ install_zagent()
     
     if [ -f agent.zip ]
     then
+        if ! command_exist netstat;then
+            sudo apt install net-tools
+        fi
         echo "unZip zagent"
         unzip -o ./agent.zip
         ck_ok "unZip Zagent"
@@ -145,7 +148,7 @@ download_zvm()
     if [ -f vm.zip ]
     then
         zip_md5=`md5sum vm.zip|awk '{print $1}'`
-        if [ ${zip_md5} == 'e43819387715fa7e40d18bd5f1552991' ]
+        if [ ${zip_md5} == '88c27f875c8bf6e27cae09d6b8f32ba1' ]
         then
             return 0
         fi
@@ -156,7 +159,7 @@ download_zvm()
     echo "Check md5"
     zip_md5=`md5sum vm.zip|awk '{print $1}'`
     
-    if [ ${zip_md5} == 'e43819387715fa7e40d18bd5f1552991' ]
+    if [ ${zip_md5} == '88c27f875c8bf6e27cae09d6b8f32ba1' ]
     then
         return 0
     fi
@@ -351,7 +354,7 @@ ExecStop=/bin/sh -c "/bin/kill -s TERM \$(/bin/cat /usr/local/nginx/logs/nginx.p
 WantedBy=multi-user.target
 EOF
     
-cat > /usr/local/nginx/conf/nginx.conf <<EOF
+sudo bash -c 'cat > /usr/local/nginx/conf/nginx.conf <<EOF
 worker_processes  1;
 
 events {
@@ -380,7 +383,7 @@ http {
         }
     }
 
-    include ${HOME}/zagent/conf.http.d/*.conf;
+    include '${HOME}'/zagent/nginx/conf.http.d/*.conf;
 }
 
 stream{
@@ -389,15 +392,19 @@ stream{
         server 	8.8.8.8:389 max_fails=3 fail_timeout=10s;
     }
 
-    include ${HOME}/zagent/conf.stream.d/*.conf;
+    include '${HOME}'/zagent/nginx/conf.stream.d/*.conf;
 }
-EOF
+EOF'
     
     sudo /bin/mv /tmp/nginx.service /lib/systemd/system/nginx.service
     ck_ok "edit nginx.service"
     
     sudo ln -s /usr/local/nginx/sbin/nginx /usr/local/bin/
     
+    sudo chown root.${USER} /usr/local/nginx/sbin/nginx
+    sudo chmod 750 /usr/local/nginx/sbin/nginx
+    sudo chmod u+s /usr/local/nginx/sbin/nginx
+
     echo "Load service"
     sudo systemctl unmask nginx.service
     sudo  systemctl daemon-reload
@@ -564,8 +571,8 @@ if [ ${ID} != "ubuntu" ];then
 fi
 
 is_install_zagent=true
-is_install_zvm=true
-is_install_ztf=true
+is_install_zvm=false
+is_install_ztf=false
 is_install_nginx=true
 is_install_kvm=true
 is_install_novnc=true
@@ -603,7 +610,7 @@ do
                 if [[ $OPTARG =~ zagent ]];then
                     is_install_zagent=true
                 fi
-                if [[ $OPTARG =~ vm ]];then
+                if [[ $OPTARG =~ zvm ]];then
                     is_install_zvm=true
                     is_install_ztf=true
                 fi

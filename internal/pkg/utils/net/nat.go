@@ -40,7 +40,7 @@ func GetValidPort() (hostPort int, err error) {
 
 	for p := consts.NatPortStart; p <= consts.NatPortEnd; p++ {
 		str := ":" + strconv.Itoa(p)
-		if !_stringUtils.StrInArr(str, list) {
+		if !_stringUtils.StrInArr(str, list) && !NginxUsedPort(p) {
 			hostPort = p
 			break
 		}
@@ -53,16 +53,33 @@ func GetValidPort() (hostPort int, err error) {
 	return
 }
 
+func NginxUsedPort(hostPort int) bool {
+	return NginxUsedPortByTyp(hostPort, consts.Http) || NginxUsedPortByTyp(hostPort, consts.Stream)
+}
+
+func NginxUsedPortByTyp(hostPort int, typ consts.NatForwardType) bool {
+	homeDir, _ := _fileUtils.GetUserHome()
+	dir := filepath.Join(homeDir, "zagent", "nginx", fmt.Sprintf("conf.%s.d", typ))
+
+	cmd := fmt.Sprintf("ls -al %s | grep @%d.conf | grep -v grep", dir, hostPort)
+	out, _ := _shellUtils.ExeSysCmd(cmd)
+
+	return strings.Contains(out, strconv.Itoa(hostPort))
+}
+
 func ForwardPortIfNeeded(vmIp string, vmPort int, typ consts.NatForwardType) (hostPort int, alreadyMapped bool, err error) {
-	hostPort, err = GetValidPort()
-	if err != nil {
+	if vmIp == "" {
 		return
 	}
-
 	mappedHostPort := getMappedInfo(vmIp, vmPort, typ)
 	if mappedHostPort != 0 {
 		hostPort = mappedHostPort
 		alreadyMapped = true
+		return
+	}
+
+	hostPort, err = GetValidPort()
+	if err != nil {
 		return
 	}
 
