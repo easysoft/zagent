@@ -44,7 +44,7 @@ func (r *Router) App() {
 		v1 := app.Party("/v1")
 		{
 			v1.PartyFunc("/virtual", func(client iris.Party) {
-				client.Post("/notifyHost", r.VirtualCtrl.NotifyHost).Name = "虚拟机请求安全码"
+				client.Post("/notifyHost", r.VirtualCtrl.VmHeartbeat).Name = "虚拟机请求安全码"
 			})
 			v1.PartyFunc("/virtual", func(client iris.Party) {
 				client.Get("/getVncAddress", r.VirtualCtrl.GetAddress).Name = "获取vnc token对应虚拟机地址"

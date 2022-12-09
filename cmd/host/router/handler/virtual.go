@@ -4,7 +4,6 @@ import (
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	kvmService "github.com/easysoft/zagent/internal/host/service/kvm"
 	virtualService "github.com/easysoft/zagent/internal/host/service/virtual"
-	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	natHelper "github.com/easysoft/zagent/internal/pkg/utils/net"
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
@@ -21,13 +20,13 @@ func NewVirtualCtrl() *VirtualCtrl {
 	return &VirtualCtrl{}
 }
 
-// @summary 虚拟机请求安全码
+// @summary 虚拟机心跳并请求Token
 // @Accept json
 // @Produce json
 // @Param VmNotifyReq body v1.VmNotifyReq true "Vm Notify Request Object"
 // @Success 200 {object} _domain.Response{data=v1.VmNotifyResp} "code = success | fail"
 // @Router /api/v1/virtual/notifyHost [post]
-func (c *VirtualCtrl) NotifyHost(ctx iris.Context) {
+func (c *VirtualCtrl) VmHeartbeat(ctx iris.Context) {
 	req := v1.VmNotifyReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
 		ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
@@ -35,7 +34,7 @@ func (c *VirtualCtrl) NotifyHost(ctx iris.Context) {
 	}
 
 	data := v1.VmNotifyResp{
-		Secret: agentConf.Inst.Secret,
+		Token: consts.AuthToken,
 	}
 
 	// get vm ip
