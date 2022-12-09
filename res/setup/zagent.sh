@@ -13,6 +13,12 @@ print_res(){
             echo -e "\033[31m Secret is empty, zagent start fail \033[0m"
         fi
     fi
+    if $is_install_zvm && $is_success_zvm;then
+        echo -e "\033[32m Install zagent success \033[0m"
+    fi
+    if $is_install_ztf && $is_success_ztf;then
+        echo -e "\033[32m Install ztf success \033[0m"
+    fi
     if $is_install_nginx && $is_success_nginx;then
         echo -e "\033[32m Install nginx success \033[0m"
     fi
@@ -36,7 +42,7 @@ command_exist(){
 
 service_is_inactive(){
     check_command=`sudo ps -ef | grep $1 | grep -v grep | awk '{print $2}'`
-    if test -z $check_command; then
+    if [[ -z ${check_command} ]]; then
         return 0
     else
         return 1
@@ -80,7 +86,7 @@ download_zagent()
         echo "agent.zip already exist"
         echo "Check md5"
         zip_md5=`md5sum agent.zip|awk '{print $1}'`
-        if [ ${zip_md5} == '15704b25ac1e38165239b7a65a34e008' ]
+        if [ ${zip_md5} == 'a37b045ef79975516a13d32a446ef68a' ]
         then
             return 0
         else
@@ -93,7 +99,7 @@ download_zagent()
     echo "Check md5"
     zip_md5=`md5sum agent.zip|awk '{print $1}'`
     
-    if [ ${zip_md5} == '15704b25ac1e38165239b7a65a34e008' ]
+    if [ ${zip_md5} == 'a37b045ef79975516a13d32a446ef68a' ]
     then
         return 0
     fi
@@ -120,6 +126,9 @@ install_zagent()
     
     if [ -f agent.zip ]
     then
+        if ! command_exist netstat;then
+            sudo apt install net-tools
+        fi
         echo "unZip zagent"
         unzip -o ./agent.zip
         ck_ok "unZip Zagent"
@@ -129,8 +138,74 @@ install_zagent()
         fi
     fi
     
-    /usr/bin/rm -rf ${HOME}/zagent/zagent
     /usr/bin/rm -rf ${HOME}/zagent/agent.zip
+}
+
+download_zvm()
+{
+    cd  ${HOME}/zagent
+    
+    if [ -f vm.zip ]
+    then
+        zip_md5=`md5sum vm.zip|awk '{print $1}'`
+        if [ ${zip_md5} == '88c27f875c8bf6e27cae09d6b8f32ba1' ]
+        then
+            return 0
+        fi
+    fi
+    
+    curl -L -o vm.zip https://pkg.qucheng.com/zenagent/app/zagent-vm.zip
+    ck_ok "download zagent-vm"
+    echo "Check md5"
+    zip_md5=`md5sum vm.zip|awk '{print $1}'`
+    
+    if [ ${zip_md5} == '88c27f875c8bf6e27cae09d6b8f32ba1' ]
+    then
+        return 0
+    fi
+    
+    return 1
+}
+install_ztf(){
+    sleep 3s
+    result=$(curl http://127.0.0.1:55201/api/v1/service/setup -X POST -d '{"name":"ztf","secret":"'"$secret"'","server":"'"$zentaoSite"'"}' --header "Content-Type:application/json" | grep success)
+    if [[ "$result" != "" ]]
+    then
+        is_success_ztf=true
+    else
+        echo -e "\033[31m Install ztf error. \033[0m"
+        exit 1
+    fi
+}
+install_zvm()
+{
+    if [ -f ${HOME}/zagent/zagent-vm ];then
+        if [ ${force} == false ];then
+            echo "Already installed zagent-vm"
+            echo `${HOME}/zagent/zagent-vm -p 55201 -s $zentaoSite > /dev/null 2>&1 &`
+            if service_is_inactive zagent-vm;then
+                nohup ${HOME}/zagent/zagent-vm -p 55201 -s $zentaoSite > /dev/null 2>&1 &
+            fi
+            install_ztf
+            return
+        fi
+    fi
+    
+    download_zvm
+    ck_ok "download Zagent-vm"
+    cd  ${HOME}/zagent
+    
+    if [ -f vm.zip ]
+    then
+        echo "unZip zagent-vm"
+        unzip -o ./vm.zip
+        ck_ok "unZip Zagent-vm"
+        sudo chmod +x ./zagent-vm
+        nohup ./zagent-vm -p 55201 -s $zentaoSite > /dev/null 2>&1 &
+    fi
+    
+    /usr/bin/rm -rf ${HOME}/zagent/vm.zip
+    install_ztf
 }
 
 download_novnc()
@@ -278,8 +353,8 @@ ExecStop=/bin/sh -c "/bin/kill -s TERM \$(/bin/cat /usr/local/nginx/logs/nginx.p
 [Install]
 WantedBy=multi-user.target
 EOF
-
-cat > /usr/local/nginx/conf/nginx.conf <<EOF
+    
+sudo bash -c 'cat > /usr/local/nginx/conf/nginx.conf <<EOF
 worker_processes  1;
 
 events {
@@ -308,24 +383,28 @@ http {
         }
     }
 
-    include ${HOME}/zagent/conf.http.d/*.conf;
+    include '${HOME}'/zagent/nginx/conf.http.d/*.conf;
 }
 
 stream{
     upstream tcpssh{
         hash $remote_addr consistent;
-        server 	8.8.8.8:389 max_fails=3 fail_timeout=10s;  
+        server 	8.8.8.8:389 max_fails=3 fail_timeout=10s;
     }
 
-    include ${HOME}/zagent/conf.stream.d/*.conf;
+    include '${HOME}'/zagent/nginx/conf.stream.d/*.conf;
 }
-EOF
+EOF'
     
     sudo /bin/mv /tmp/nginx.service /lib/systemd/system/nginx.service
     ck_ok "edit nginx.service"
     
     sudo ln -s /usr/local/nginx/sbin/nginx /usr/local/bin/
     
+    sudo chown root.${USER} /usr/local/nginx/sbin/nginx
+    sudo chmod 750 /usr/local/nginx/sbin/nginx
+    sudo chmod u+s /usr/local/nginx/sbin/nginx
+
     echo "Load service"
     sudo systemctl unmask nginx.service
     sudo  systemctl daemon-reload
@@ -439,11 +518,15 @@ install()
         ck_ok "apt install curl"
     fi
     
+    create_dir ${HOME}/zagent
     if $is_install_zagent;then
-        create_dir ${HOME}/zagent
-        create_dir ${HOME}/zagent/zagent
         install_zagent
         is_success_zagent=true
+    fi
+    
+    if $is_install_zvm;then
+        install_zvm
+        is_success_zvm=true
     fi
     
     if $is_install_nginx;then
@@ -473,24 +556,6 @@ install()
     fi
     
     print_res
-    # if $is_install_zagent;then
-    #     echo -e "\033[32m Install zagent success \033[0m"
-    #     if [ -z $secret ];then
-    #         echo -e "\033[31m Secret is empty, zagent start fail \033[0m"
-    #     fi
-    # fi
-    # if $is_install_nginx;then
-    #     echo -e "\033[32m Install nginx success \033[0m"
-    # fi
-    # if $is_install_kvm;then
-    #     echo -e "\033[32m Install kvm success \033[0m"
-    # fi
-    # if $is_install_novnc;then
-    #     echo -e "\033[32m Install novnc success \033[0m"
-    # fi
-    # if $is_install_websockify;then
-    #     echo -e "\033[32m Install websockify success \033[0m"
-    # fi
 }
 
 if [ ! -n "$(egrep -o "(vmx|svm)" /proc/cpuinfo)" ];then
@@ -506,12 +571,16 @@ if [ ${ID} != "ubuntu" ];then
 fi
 
 is_install_zagent=true
+is_install_zvm=false
+is_install_ztf=false
 is_install_nginx=true
 is_install_kvm=true
 is_install_novnc=true
 is_install_websockify=true
 
 is_success_zagent=false
+is_success_zvm=false
+is_success_ztf=false
 is_success_nginx=false
 is_success_kvm=false
 is_success_novnc=false
@@ -532,12 +601,18 @@ do
             if [ -n $OPTARG ];then
                 soft=$OPTARG
                 is_install_zagent=false
+                is_install_zvm=false
+                is_install_ztf=false
                 is_install_nginx=false
                 is_install_kvm=false
                 is_install_novnc=false
                 is_install_websockify=false
                 if [[ $OPTARG =~ zagent ]];then
                     is_install_zagent=true
+                fi
+                if [[ $OPTARG =~ zvm ]];then
+                    is_install_zvm=true
+                    is_install_ztf=true
                 fi
                 if [[ $OPTARG =~ nginx ]];then
                     is_install_nginx=true

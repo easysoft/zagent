@@ -210,6 +210,7 @@ func (s *KvmService) GetVmIpByMac(macAddress string) (ip string, err error) {
 
 		if strings.TrimSpace(cols[0]) == macAddress {
 			ip = strings.Split(strings.TrimSpace(cols[1]), "/")[0]
+			ip = strings.TrimSpace(ip)
 
 			break
 		}
