@@ -70,10 +70,8 @@ func (s *KvmService) CreateVmFromImage(req *v1.CreateVmReq, removeSameName bool)
 	}
 
 	// start vm
-	cmdStartVm := fmt.Sprintf(consts.CmdStartVm, vmName)
-	out, err = _shellUtils.ExeShell(cmdStartVm)
+	err = s.StartVm(vmName)
 	if err != nil {
-		_logUtils.Infof("exec cmd '%s' err, output %s, error %s", cmdStartVm, out, err.Error())
 		return
 	}
 
@@ -91,6 +89,18 @@ func (s *KvmService) CreateVmFromImage(req *v1.CreateVmReq, removeSameName bool)
 	vmVncPort = newDomCfg.Devices.Graphics[0].VNC.Port
 
 	return
+}
+
+func (s *KvmService) StartVm(vmName string) error {
+	cmdStartVm := fmt.Sprintf(consts.CmdStartVm, vmName)
+	out, err := _shellUtils.ExeShell(cmdStartVm)
+
+	if err != nil {
+		_logUtils.Infof("exec cmd '%s' err, output %s, error %s", cmdStartVm, out, err.Error())
+		return err
+	}
+
+	return nil
 }
 
 func (s *KvmService) GetVms() (vms []domain.Vm) {

@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	_const "github.com/easysoft/zagent/pkg/const"
-	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
 	"io"
 	"io/ioutil"
 	"os"
@@ -15,6 +13,9 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+
+	_const "github.com/easysoft/zagent/pkg/const"
+	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
 )
 
 func ReadFile(filePath string) string {
@@ -213,6 +214,9 @@ func GetFileNameWithoutExt(pathOrUrl string) string {
 func GetExtName(pathOrUrl string) string {
 	index := strings.LastIndex(pathOrUrl, ".")
 
+	if index == -1 {
+		return ""
+	}
 	return pathOrUrl[index:]
 }
 

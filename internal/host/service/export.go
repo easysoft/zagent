@@ -22,6 +22,8 @@ type ExportService struct {
 	LibvirtService *kvmService.LibvirtService `inject:""`
 	QemuService    *kvmService.QemuService    `inject:""`
 
+	KvmService *kvmService.KvmService `inject:""`
+
 	TaskRepo *hostRepo.TaskRepo `inject:""`
 }
 
@@ -131,7 +133,7 @@ func (s *ExportService) ExportVm(task agentModel.Task, targetBakingFilePath stri
 		return
 	}
 
-	err = s.LibvirtService.BootVmByName(vmName)
+	err = s.KvmService.StartVm(vmName)
 
 	return
 }
