@@ -12,7 +12,7 @@ type VmNotifyReq struct {
 }
 
 type VmNotifyResp struct {
-	Secret          string `json:"secret"`
+	Token           string `json:"token"`
 	Ip              string `json:"ip"`
 	AgentPortOnHost int    `json:"agentPortOnHost"`
 }
