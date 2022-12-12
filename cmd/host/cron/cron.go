@@ -2,11 +2,13 @@ package hostCron
 
 import (
 	"fmt"
+	"sync"
+	"time"
+
 	hostAgentService "github.com/easysoft/zagent/internal/host/service"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	_cronUtils "github.com/easysoft/zagent/pkg/lib/cron"
 	"github.com/kataras/iris/v12"
-	"sync"
 )
 
 type CronService struct {
@@ -53,6 +55,8 @@ func (s *CronService) Init() {
 			s.TaskService.CheckTask()
 		},
 	)
+
+	time.AfterFunc(2*time.Second, func() { s.HostService.Check() })
 
 	iris.RegisterOnInterrupt(func() {
 		_cronUtils.Stop()

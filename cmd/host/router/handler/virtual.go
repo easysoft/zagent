@@ -4,6 +4,7 @@ import (
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	kvmService "github.com/easysoft/zagent/internal/host/service/kvm"
 	virtualService "github.com/easysoft/zagent/internal/host/service/virtual"
+	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	natHelper "github.com/easysoft/zagent/internal/pkg/utils/net"
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
@@ -53,6 +54,7 @@ func (c *VirtualCtrl) VmHeartbeat(ctx iris.Context) {
 
 	data.AgentPortOnHost = vmAgentPortMapped
 	data.Ip = vmIp
+	data.Server = agentConf.Inst.Server
 
 	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to refresh secret", data))
 }

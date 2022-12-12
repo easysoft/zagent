@@ -15,6 +15,7 @@ type VmNotifyResp struct {
 	Token           string `json:"token"`
 	Ip              string `json:"ip"`
 	AgentPortOnHost int    `json:"agentPortOnHost"`
+	Server          string `json:"server"`
 }
 
 type VmRegisterReq struct {

@@ -143,6 +143,7 @@ After=network-online.target remote-fs.target nss-lookup.target
 Wants=network-online.target
 
 [Service]
+User=${USER}
 Type=forking
 ExecStart=/bin/bash -c "${HOME}/zagent/zagent-host -p 55001 -secret ${secret} -s ${zentaoSite} > /dev/null 2>&1 &"
 
@@ -235,6 +236,7 @@ After=network-online.target remote-fs.target nss-lookup.target
 Wants=network-online.target
 
 [Service]
+User=${USER}
 Type=forking
 ExecStart=/bin/bash -c "${HOME}/zagent/zagent-vm -p 55201 -s ${zentaoSite} > /dev/null 2>&1 &"
 
@@ -395,6 +397,7 @@ After=network-online.target remote-fs.target nss-lookup.target
 Wants=network-online.target
 
 [Service]
+User=${USER}
 Type=forking
 PIDFile=/usr/local/nginx/logs/nginx.pid
 ExecStart=/usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf

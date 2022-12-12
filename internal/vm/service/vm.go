@@ -15,7 +15,6 @@ import (
 	requestUtils "github.com/easysoft/zagent/internal/pkg/utils/request"
 	_domain "github.com/easysoft/zagent/pkg/domain"
 	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
-	_dateUtils "github.com/easysoft/zagent/pkg/lib/date"
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
 	_i118Utils "github.com/easysoft/zagent/pkg/lib/i118"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
@@ -85,18 +84,18 @@ func (s *VmService) Register(isBusy bool) (ok bool) {
 		}
 	}
 
-	respBytes, ok := s.register(vm)
+	// respBytes, ok := s.register(vm)
 
-	if ok {
-		respObj := v1.RegisterResp{}
-		err := json.Unmarshal(respBytes, &respObj)
-		if err == nil && respObj.Token != "" {
-			respObj.TokenTime, _ = _dateUtils.UnitToDate(respObj.TokenTimeUnix)
-			consts.AuthToken = respObj.Token
-			consts.ExpiredDate = respObj.TokenTime
-		}
-	}
-
+	// if ok {
+	// 	respObj := v1.RegisterResp{}
+	// 	err := json.Unmarshal(respBytes, &respObj)
+	// 	if err == nil && respObj.Token != "" {
+	// 		respObj.TokenTime, _ = _dateUtils.UnitToDate(respObj.TokenTimeUnix)
+	// 		consts.AuthToken = respObj.Token
+	// 		consts.ExpiredDate = respObj.TokenTime
+	// 	}
+	// }
+	ok = true
 	if consts.AuthToken == "" {
 		ok = false
 	}
@@ -104,7 +103,7 @@ func (s *VmService) Register(isBusy bool) (ok bool) {
 	if ok {
 		_logUtils.Info(_i118Utils.I118Prt.Sprintf("success_to_register", agentConf.Inst.Server))
 	} else {
-		_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_register", agentConf.Inst.Server, respBytes))
+		_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_register", agentConf.Inst.Server))
 	}
 
 	return
