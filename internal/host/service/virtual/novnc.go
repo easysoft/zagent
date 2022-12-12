@@ -94,9 +94,9 @@ func (s *NoVncService) GetAddressByToken(token string) (ret v1.VncTokenResp, err
 func (s *NoVncService) launchWebsockifyService() (ret v1.VncTokenResp) {
 	exePath := filepath.Join(agentConf.Inst.WorkDir, "websockify/run")
 	logPath := filepath.Join(agentConf.Inst.WorkDir, "websockify/nohup.log")
-
-	cmd := fmt.Sprintf("nohup %s --token-plugin TokenFile %d > %s 2>&1 &",
-		exePath, consts.WebsockifyPort, logPath)
+	// zagent/websockify/run --token-plugin JSONTokenApi --token-source http://127.0.0.1:55001/api/v1/virtual/getVncAddress\?token\=%s 6080 -D
+	cmd := fmt.Sprintf("nohup %s --token-plugin JSONTokenApi --token-source http://127.0.0.1:%d/api/v1/virtual/getVncAddress?token=\%s 6080 > %s 2>&1 &",
+		exePath, consts.AgentHostServicePort, logPath)
 
 	_shellUtils.KillProcessByName("websockify")
 	_shellUtils.ExeShell(cmd)

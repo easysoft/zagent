@@ -3,6 +3,7 @@ package vmRouter
 import (
 	vmHandler "github.com/easysoft/zagent/cmd/vm/router/handler"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
+	"github.com/easysoft/zagent/internal/pkg/core"
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
 	"github.com/kataras/iris/v12"
 )
@@ -25,7 +26,7 @@ func (r *Router) App() {
 	{
 		v1 := app.Party("/v1")
 		{
-			//v1.Use(core.Auth())
+			v1.Use(core.Auth())
 
 			v1.PartyFunc("/service", func(client iris.Party) {
 				client.Post("/check", r.ServiceCtrl.Check).Name = "检测节点服务状态"

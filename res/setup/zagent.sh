@@ -86,7 +86,7 @@ download_zagent()
         echo "agent.zip already exist"
         echo "Check md5"
         zip_md5=`md5sum agent.zip|awk '{print $1}'`
-        if [ ${zip_md5} == 'a37b045ef79975516a13d32a446ef68a' ]
+        if [ ${zip_md5} == '19266173347a3099fd50b9b44130d4f9' ]
         then
             return 0
         else
@@ -99,7 +99,7 @@ download_zagent()
     echo "Check md5"
     zip_md5=`md5sum agent.zip|awk '{print $1}'`
     
-    if [ ${zip_md5} == 'a37b045ef79975516a13d32a446ef68a' ]
+    if [ ${zip_md5} == '19266173347a3099fd50b9b44130d4f9' ]
     then
         return 0
     fi
@@ -132,9 +132,35 @@ install_zagent()
         echo "unZip zagent"
         unzip -o ./agent.zip
         ck_ok "unZip Zagent"
+        sudo pkill zagent-host
         sudo chmod +x ./zagent-host
         if [[ -n $secret ]];then
-            nohup ./zagent-host -p 55001 -secret $secret -s $zentaoSite > /dev/null 2>&1 &
+            cat > /tmp/zagent.service <<EOF
+[Unit]
+Description=Zagent service
+Documentation=https://github.com/easysoft/zenagent
+After=network-online.target remote-fs.target nss-lookup.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+ExecStart=/bin/bash -c "${HOME}/zagent/zagent-host -p 55001 -secret ${secret} -s ${zentaoSite} > /dev/null 2>&1 &"
+
+[Install]
+WantedBy=multi-user.target
+EOF
+            
+            sudo /bin/mv /tmp/zagent.service /lib/systemd/system/zagent.service
+            ck_ok "edit zagent.service"
+            
+            echo "Load service"
+            sudo systemctl unmask zagent.service
+            sudo  systemctl daemon-reload
+            sudo systemctl enable zagent
+            
+            echo "Start Zagent"
+            sudo systemctl start zagent
+            ck_ok "Start Zagent"
         fi
     fi
     
@@ -182,11 +208,10 @@ install_zvm()
     if [ -f ${HOME}/zagent/zagent-vm ];then
         if [ ${force} == false ];then
             echo "Already installed zagent-vm"
-            echo `${HOME}/zagent/zagent-vm -p 55201 -s $zentaoSite > /dev/null 2>&1 &`
             if service_is_inactive zagent-vm;then
                 nohup ${HOME}/zagent/zagent-vm -p 55201 -s $zentaoSite > /dev/null 2>&1 &
             fi
-            install_ztf
+            # install_ztf
             return
         fi
     fi
@@ -200,8 +225,34 @@ install_zvm()
         echo "unZip zagent-vm"
         unzip -o ./vm.zip
         ck_ok "unZip Zagent-vm"
+        sudo pkill zagent-vm
         sudo chmod +x ./zagent-vm
-        nohup ./zagent-vm -p 55201 -s $zentaoSite > /dev/null 2>&1 &
+                    cat > /tmp/zagent-vm.service <<EOF
+[Unit]
+Description=Zagent-vm service
+Documentation=https://github.com/easysoft/zenagent
+After=network-online.target remote-fs.target nss-lookup.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+ExecStart=/bin/bash -c "${HOME}/zagent/zagent-vm -p 55201 -s ${zentaoSite} > /dev/null 2>&1 &"
+
+[Install]
+WantedBy=multi-user.target
+EOF
+        
+        sudo /bin/mv /tmp/zagent-vm.service /lib/systemd/system/zagent-vm.service
+        ck_ok "edit zagent-vm.service"
+        
+        echo "Load service"
+        sudo systemctl unmask zagent-vm.service
+        sudo  systemctl daemon-reload
+        sudo systemctl enable zagent-vm
+        
+        echo "Start Zagent-vm"
+        sudo systemctl start zagent-vm
+        ck_ok "Start Zagent-vm"
     fi
     
     /usr/bin/rm -rf ${HOME}/zagent/vm.zip
@@ -404,7 +455,7 @@ EOF'
     sudo chown root.${USER} /usr/local/nginx/sbin/nginx
     sudo chmod 750 /usr/local/nginx/sbin/nginx
     sudo chmod u+s /usr/local/nginx/sbin/nginx
-
+    
     echo "Load service"
     sudo systemctl unmask nginx.service
     sudo  systemctl daemon-reload
@@ -477,7 +528,7 @@ install_websockify()
         if [ ${force} == false ];then
             echo "Already installed websockify"
             if service_is_inactive JSONTokenApi;then
-                nohup ${HOME}/zagent/websockify/run --token-plugin JSONTokenApi --token-source http://127.0.0.1:55001/api/v1/virtual/getVncAddress?token=%s 6080 > /dev/null 2>&1 &
+                nohup ${HOME}/zagent/websockify/run --token-plugin JSONTokenApi --token-source http://127.0.0.1:55001/api/v1/virtual/getVncAddress?token=%s 6080 > ${HOME}/zagent/websockify/nohup.log 2>&1 &
             fi
             return
         fi
@@ -502,7 +553,7 @@ install_websockify()
     /usr/bin/rm -rf ${HOME}/zagent/websockify.zip
     
     sudo chmod +x ${HOME}/zagent/websockify/run
-    nohup ${HOME}/zagent/websockify/run --token-plugin JSONTokenApi --token-source http://127.0.0.1:55001/api/v1/virtual/getVncAddress?token=%s 6080 > /dev/null 2>&1 &
+    ${HOME}/zagent/websockify/run --token-plugin JSONTokenApi --token-source http://127.0.0.1:55001/api/v1/virtual/getVncAddress?token=%s 6080 -D
 }
 
 

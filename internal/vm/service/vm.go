@@ -76,10 +76,10 @@ func (s *VmService) Register(isBusy bool) (ok bool) {
 
 	if consts.AuthSecret == "" || consts.ExpiredDate.Unix() < time.Now().Unix() { // re-apply token using secret
 		var err error
-		vm.Secret, vm.Ip, vm.AgentPortOnHost, err = s.notifyHost()
-		consts.AuthSecret = vm.Secret
+		vm.Token, vm.Ip, vm.AgentPortOnHost, err = s.notifyHost()
+		consts.AuthToken = vm.Token
 
-		if err != nil || vm.Secret == "" || vm.Ip == "" || vm.AgentPortOnHost == 0 {
+		if err != nil || vm.Token == "" || vm.Ip == "" || vm.AgentPortOnHost == 0 {
 			_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_notify", "error or return empty value"))
 			return
 		}
@@ -119,7 +119,7 @@ func (s *VmService) register(host interface{}) (resp []byte, ok bool) {
 	return
 }
 
-func (s *VmService) notifyHost() (secret, ip string, agentPortOnHost int, err error) {
+func (s *VmService) notifyHost() (token, ip string, agentPortOnHost int, err error) {
 	uri := "virtual/notifyHost"
 	url := _httpUtils.GenUrl(
 		fmt.Sprintf("http://%s:%d/", consts.KvmHostIpInNatNetwork, consts.AgentHostServicePort),
@@ -149,10 +149,10 @@ func (s *VmService) notifyHost() (secret, ip string, agentPortOnHost int, err er
 	}
 
 	agentPortOnHost = respData.AgentPortOnHost
-	secret = respData.Secret
+	token = respData.Token
 	ip = respData.Ip
-	if secret == "" {
-		err = errors.New("secret is empty")
+	if token == "" {
+		err = errors.New("token is empty")
 		return
 	}
 
