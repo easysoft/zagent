@@ -86,7 +86,7 @@ download_zagent()
         echo "agent.zip already exist"
         echo "Check md5"
         zip_md5=`md5sum agent.zip|awk '{print $1}'`
-        if [ ${zip_md5} == '19266173347a3099fd50b9b44130d4f9' ]
+        if [ ${zip_md5} == `curl -s https://pkg.qucheng.com/zenagent/app/zagent-host.md5` ]
         then
             return 0
         else
@@ -99,7 +99,7 @@ download_zagent()
     echo "Check md5"
     zip_md5=`md5sum agent.zip|awk '{print $1}'`
     
-    if [ ${zip_md5} == '19266173347a3099fd50b9b44130d4f9' ]
+    if [ ${zip_md5} == `curl -s https://pkg.qucheng.com/zenagent/app/zagent-host.md5` ]
     then
         return 0
     fi
@@ -113,7 +113,7 @@ install_zagent()
             echo "Already installed zagent"
             if service_is_inactive zagent-host;then
                 if [[ -n $secret ]];then
-                    nohup ${HOME}/zagent/zagent-host -p 55001 -secret $secret -s $zentaoSite > /dev/null 2>&1 &
+                    sudo systemctl start zagent
                 fi
             fi
             return
@@ -174,7 +174,7 @@ download_zvm()
     if [ -f vm.zip ]
     then
         zip_md5=`md5sum vm.zip|awk '{print $1}'`
-        if [ ${zip_md5} == '88c27f875c8bf6e27cae09d6b8f32ba1' ]
+        if [ ${zip_md5} == `curl -s https://pkg.qucheng.com/zenagent/app/zagent-vm.md5` ]
         then
             return 0
         fi
@@ -185,7 +185,7 @@ download_zvm()
     echo "Check md5"
     zip_md5=`md5sum vm.zip|awk '{print $1}'`
     
-    if [ ${zip_md5} == '88c27f875c8bf6e27cae09d6b8f32ba1' ]
+    if [ ${zip_md5} == `curl -s https://pkg.qucheng.com/zenagent/app/zagent-vm.md5` ]
     then
         return 0
     fi
@@ -209,7 +209,7 @@ install_zvm()
         if [ ${force} == false ];then
             echo "Already installed zagent-vm"
             if service_is_inactive zagent-vm;then
-                nohup ${HOME}/zagent/zagent-vm -p 55201 -s $zentaoSite > /dev/null 2>&1 &
+                sudo systemctl start zagent-vm
             fi
             # install_ztf
             return
@@ -227,7 +227,7 @@ install_zvm()
         ck_ok "unZip Zagent-vm"
         sudo pkill zagent-vm
         sudo chmod +x ./zagent-vm
-                    cat > /tmp/zagent-vm.service <<EOF
+        cat > /tmp/zagent-vm.service <<EOF
 [Unit]
 Description=Zagent-vm service
 Documentation=https://github.com/easysoft/zenagent
@@ -256,7 +256,7 @@ EOF
     fi
     
     /usr/bin/rm -rf ${HOME}/zagent/vm.zip
-    install_ztf
+    # install_ztf
 }
 
 download_novnc()
@@ -268,7 +268,7 @@ download_novnc()
         echo "novnc.zip already exist"
         echo "Check md5"
         zip_md5=`md5sum novnc.zip|awk '{print $1}'`
-        if [ ${zip_md5} == 'ab5127dcac5edfa760814a619bcf9ca2' ]
+        if [ ${zip_md5} == `curl -s https://pkg.qucheng.com/zenagent/app/novnc.md5` ]
         then
             return 0
         else
@@ -281,7 +281,7 @@ download_novnc()
     echo "Check md5"
     zip_md5=`md5sum novnc.zip|awk '{print $1}'`
     
-    if [ ${zip_md5} == 'ab5127dcac5edfa760814a619bcf9ca2' ]
+    if [ ${zip_md5} == `curl -s https://pkg.qucheng.com/zenagent/app/novnc.md5` ]
     then
         return 0
     fi
@@ -502,7 +502,7 @@ download_websockify()
         echo "websockify.zip already exist"
         echo "Check md5"
         zip_md5=`md5sum websockify.zip|awk '{print $1}'`
-        if [ ${zip_md5} == '92c8c80ac513d0aba722bf207aab28fc' ]
+        if [ ${zip_md5} == `curl -s https://pkg.qucheng.com/zenagent/app/websockify.md5` ]
         then
             return 0
         else
@@ -515,7 +515,7 @@ download_websockify()
     echo "Check md5"
     zip_md5=`md5sum websockify.zip|awk '{print $1}'`
     
-    if [ ${zip_md5} == '92c8c80ac513d0aba722bf207aab28fc' ]
+    if [ ${zip_md5} == `curl -s https://pkg.qucheng.com/zenagent/app/websockify.md5` ]
     then
         return 0
     fi
