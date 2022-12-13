@@ -127,7 +127,9 @@ func (s *KvmService) GetVms() (vms []domain.Vm) {
 		newDomCfg.Unmarshal(newXml)
 
 		vm.MacAddress = newDomCfg.Devices.Interfaces[0].MAC.Address
-		vm.VncPortOnHost = newDomCfg.Devices.Graphics[0].VNC.Port
+		if len(newDomCfg.Devices.Graphics) > 0 {
+			vm.VncPortOnHost = newDomCfg.Devices.Graphics[0].VNC.Port
+		}
 		vm.Ip, _ = s.GetVmIpByMac(vm.MacAddress)
 
 		if vm.Status == consts.VmRunning && vm.Ip != "" {
