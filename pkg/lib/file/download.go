@@ -2,13 +2,14 @@ package _fileUtils
 
 import (
 	"fmt"
-	"github.com/cavaliergopher/grab/v3"
-	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"io/ioutil"
 	"net/http"
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/cavaliergopher/grab/v3"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 )
 
 func DownloadAdv(url, filePath string) (dur int64, err error) {
@@ -77,6 +78,10 @@ func Download(url string, dst string) (err error) {
 
 func HTTPDownload(url string) (bytes []byte, err error) {
 	resp, err := http.Get(url)
+	if err != nil {
+		_logUtils.Infof("download %s error %s", url, err.Error())
+		return
+	}
 	defer resp.Body.Close()
 
 	if err != nil {
