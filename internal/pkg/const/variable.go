@@ -25,7 +25,7 @@ var (
 	AuthToken   = ""
 	ExpiredDate = time.Now()
 
-	Verbose          = false
+	Verbose          = true
 	ExistVncPortMap  = sync.Map{}
 	ExistHttpPortMap = sync.Map{}
 	ExistSshPortMap  = sync.Map{}
