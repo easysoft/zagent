@@ -3,14 +3,15 @@ package kvmService
 import "C"
 import (
 	"fmt"
+	"time"
+
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
-	"github.com/easysoft/zagent/internal/pkg/const"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/domain"
 	_fileUtils "github.com/easysoft/zagent/pkg/lib/file"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	_stringUtils "github.com/easysoft/zagent/pkg/lib/string"
 	"github.com/libvirt/libvirt-go"
-	"time"
 )
 
 const (
@@ -338,17 +339,17 @@ func (s *LibvirtService) RemoveVmByName(name string, removeDiskImage bool) (err 
 		return
 	}
 
+	dickPath, err := s.QemuService.GetDisk(dom)
+	if err != nil {
+		return
+	}
+
 	err = dom.DestroyFlags(libvirt.DOMAIN_DESTROY_DEFAULT)
 	if err != nil {
 		return
 	}
 
 	err = dom.Undefine()
-
-	dickPath, err := s.QemuService.GetDisk(dom)
-	if err != nil {
-		return
-	}
 
 	if removeDiskImage && dickPath != "" {
 		_fileUtils.RemoveFile(dickPath)
