@@ -106,17 +106,49 @@ download_zagent()
     
     return 1
 }
+restart_zagent()
+{
+    sudo pkill zagent-host
+    cat > /tmp/zagent.sh <<EOF
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          zagent.sh
+# Required-start:    $local_fs $remote_fs $network $syslog
+# Required-Stop:     $local_fs $remote_fs $network $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: starts the zagent.sh daemon
+# Description:       starts zagent.sh using start-stop-daemon
+### END INIT INFO
+# zagent.sh
+
+/usr/bin/nohup ${HOME}/zagent/zagent-host -p 55001 -secret ${secret} -s ${zentaoSite} > ${HOME}/zagent/zagent.log 2>&1 &
+EOF
+    sudo chmod +x /tmp/zagent.sh
+    sudo /bin/mv /tmp/zagent.sh /etc/init.d/
+    ck_ok "edit zagent.sh"
+    
+    echo "Load sh"
+    sudo update-rc.d zagent.sh defaults 90
+    
+    echo "Start Zagent"
+    /usr/bin/nohup ${HOME}/zagent/zagent-host -p 55001 -secret ${secret} -s ${zentaoSite} > ${HOME}/zagent/zagent.log 2>&1 &
+    ck_ok "Start Zagent"
+}
 install_zagent()
 {
-    if [ -f ${HOME}/zagent/zagent-host ];then
-        if [ ${force} == false ];then
-            echo "Already installed zagent"
-            if service_is_inactive zagent-host;then
+    cd  ${HOME}/zagent
+    if [ -f ${HOME}/zagent/agent.zip ];then
+        zip_md5=`md5sum agent.zip|awk '{print $1}'`
+        if [ ${zip_md5} == `curl -s https://pkg.qucheng.com/zenagent/app/zagent-host.md5` ]
+        then
+            if [ ${force} == false ];then
+                echo "Already installed zagent"
                 if [[ -n $secret ]];then
-                    sudo systemctl start zagent
+                    restart_zagent
                 fi
+                return
             fi
-            return
         fi
     fi
     
@@ -135,33 +167,7 @@ install_zagent()
         sudo pkill zagent-host
         sudo chmod +x ./zagent-host
         if [[ -n $secret ]];then
-            cat > /tmp/zagent.service <<EOF
-[Unit]
-Description=Zagent service
-Documentation=https://github.com/easysoft/zenagent
-After=network-online.target remote-fs.target nss-lookup.target
-Wants=network-online.target
-
-[Service]
-User=${USER}
-Type=forking
-ExecStart=/bin/bash -c "${HOME}/zagent/zagent-host -p 55001 -secret ${secret} -s ${zentaoSite} > /dev/null 2>&1 &"
-
-[Install]
-WantedBy=multi-user.target
-EOF
-            
-            sudo /bin/mv /tmp/zagent.service /lib/systemd/system/zagent.service
-            ck_ok "edit zagent.service"
-            
-            echo "Load service"
-            sudo systemctl unmask zagent.service
-            sudo  systemctl daemon-reload
-            sudo systemctl enable zagent
-            
-            echo "Start Zagent"
-            sudo systemctl start zagent
-            ck_ok "Start Zagent"
+            restart_zagent
         fi
     fi
     
@@ -206,14 +212,19 @@ install_ztf(){
 }
 install_zvm()
 {
-    if [ -f ${HOME}/zagent/zagent-vm ];then
-        if [ ${force} == false ];then
-            echo "Already installed zagent-vm"
-            if service_is_inactive zagent-vm;then
-                sudo systemctl start zagent-vm
+    cd  ${HOME}/zagent
+    if [ -f ${HOME}/zagent/vm.zip ];then
+        zip_md5=`md5sum vm.zip|awk '{print $1}'`
+        if [ ${zip_md5} == `curl -s https://pkg.qucheng.com/zenagent/app/zagent-vm.md5` ]
+        then
+            if [ ${force} == false ];then
+                echo "Already installed zagent-vm"
+                if service_is_inactive zagent-vm;then
+                    sudo systemctl start zagent-vm
+                fi
+                install_ztf
+                return
             fi
-            # install_ztf
-            return
         fi
     fi
     
@@ -257,8 +268,7 @@ EOF
         ck_ok "Start Zagent-vm"
     fi
     
-    /usr/bin/rm -rf ${HOME}/zagent/vm.zip
-    # install_ztf
+    install_ztf
 }
 
 download_novnc()
