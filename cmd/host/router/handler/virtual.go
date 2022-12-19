@@ -45,6 +45,8 @@ func (c *VirtualCtrl) VmHeartbeat(ctx iris.Context) {
 		return
 	}
 
+	c.KvmService.UpdateHeartbeat(req.MacAddress)
+
 	// map vm agent port to host
 	vmAgentPortMapped, _, err := natHelper.ForwardPortIfNeeded(vmIp, consts.AgentVmServicePort, consts.Http)
 	if err != nil {

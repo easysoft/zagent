@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
@@ -22,8 +23,9 @@ import (
 const ()
 
 type KvmService struct {
-	VmMapVar  map[string]domain.Vm
-	TimeStamp int64
+	VmMapVar         map[string]domain.Vm
+	SyncHeartbeatMap sync.Map
+	TimeStamp        int64
 
 	LibvirtService *LibvirtService `inject:""`
 	QemuService    *QemuService    `inject:""`
@@ -168,7 +170,7 @@ func (s *KvmService) AddExportVmTask(req v1.ExportVmReq) (err error) {
 func (s *KvmService) UpdateVmMapAndDestroyTimeout(vms []domain.Vm) {
 	names := map[string]bool{}
 
-	for _, vm := range vms {
+	for key, vm := range vms {
 		name := vm.Name
 		names[name] = true
 
@@ -176,6 +178,7 @@ func (s *KvmService) UpdateVmMapAndDestroyTimeout(vms []domain.Vm) {
 			v := s.VmMapVar[name]
 			v.Status = vm.Status
 			s.VmMapVar[name] = v
+			vms[key].Heartbeat = s.GetHeartbeat(v.MacAddress)
 		} else { // update time then add
 			if vm.FirstDetectedTime.IsZero() {
 				vm.FirstDetectedTime = time.Now()
@@ -198,6 +201,18 @@ func (s *KvmService) UpdateVmMapAndDestroyTimeout(vms []domain.Vm) {
 			delete(s.VmMapVar, key)
 		}
 	}
+}
+
+func (s *KvmService) UpdateHeartbeat(mac string) {
+	s.SyncHeartbeatMap.Store(mac, time.Now())
+}
+
+func (s *KvmService) GetHeartbeat(mac string) (val time.Time) {
+	inf, ok := s.SyncHeartbeatMap.Load(mac)
+	if ok {
+		val = inf.(time.Time)
+	}
+	return
 }
 
 func (s *KvmService) getKeys(m map[string]domain.Vm) []string {

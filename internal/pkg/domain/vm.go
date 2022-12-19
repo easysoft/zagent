@@ -1,8 +1,9 @@
 package domain
 
 import (
-	consts "github.com/easysoft/zagent/internal/pkg/const"
 	"time"
+
+	consts "github.com/easysoft/zagent/internal/pkg/const"
 )
 
 type Vm struct {
@@ -40,10 +41,11 @@ type Vm struct {
 	ResolutionHeight int    `json:"resolutionHeight"`
 	ResolutionWidth  int    `json:"resolutionWidth"`
 
-	Secret          string `json:"secret" yaml:"secret"`
-	VncPortOnHost   int    `json:"vncPortOnHost"`
-	AgentPortOnHost int    `json:"agentPortOnHost"`
-	ZtfPortOnHost   int    `json:"ztfPortOnHost"`
-	ZdPortOnHost    int    `json:"zdPortOnHost"`
-	SshPortOnHost   int    `json:"sshPortOnHost"`
+	Secret          string    `json:"secret" yaml:"secret"`
+	VncPortOnHost   int       `json:"vncPortOnHost"`
+	AgentPortOnHost int       `json:"agentPortOnHost"`
+	ZtfPortOnHost   int       `json:"ztfPortOnHost"`
+	ZdPortOnHost    int       `json:"zdPortOnHost"`
+	SshPortOnHost   int       `json:"sshPortOnHost"`
+	Heartbeat       time.Time `json:"heartbeat"`
 }

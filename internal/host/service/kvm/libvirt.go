@@ -344,10 +344,7 @@ func (s *LibvirtService) RemoveVmByName(name string, removeDiskImage bool) (err 
 		return
 	}
 
-	err = dom.DestroyFlags(libvirt.DOMAIN_DESTROY_DEFAULT)
-	if err != nil {
-		return
-	}
+	dom.DestroyFlags(libvirt.DOMAIN_DESTROY_DEFAULT)
 
 	err = dom.Undefine()
 
