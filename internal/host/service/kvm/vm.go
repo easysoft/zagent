@@ -148,6 +148,27 @@ func (s *KvmService) GetVms() (vms []domain.Vm) {
 	return vms
 }
 
+func (s *KvmService) GetIpByName(vmName string) (ip string) {
+	domains := s.LibvirtService.ListVm()
+
+	for _, dom := range domains {
+		name, _ := dom.GetName()
+
+		if name != vmName {
+			continue
+		}
+
+		newXml, _ := dom.GetXMLDesc(0)
+		newDomCfg := &libvirtxml.Domain{}
+		newDomCfg.Unmarshal(newXml)
+
+		macAddress := newDomCfg.Devices.Interfaces[0].MAC.Address
+		ip, _ = s.GetVmIpByMac(macAddress)
+		break
+	}
+	return
+}
+
 func (s *KvmService) AddExportVmTask(req v1.ExportVmReq) (err error) {
 	if len(req.Backing) < 6 || req.Backing[len(req.Backing)-6:] != ".qcow2" {
 		req.Backing += ".qcow2"

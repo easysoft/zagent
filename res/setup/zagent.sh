@@ -124,12 +124,22 @@ restart_zagent()
 
 /usr/bin/nohup ${HOME}/zagent/zagent-host -p 55001 -secret ${secret} -s ${zentaoSite} > ${HOME}/zagent/zagent.log 2>&1 &
 EOF
-    sudo chmod +x /tmp/zagent.sh
-    sudo /bin/mv /tmp/zagent.sh /etc/init.d/
-    ck_ok "edit zagent.sh"
-    
-    echo "Load sh"
-    sudo update-rc.d zagent.sh defaults 90
+    if [ ${ID} = ${ubuntu} ];then
+        sudo chmod +x /tmp/zagent.sh
+        sudo /bin/mv /tmp/zagent.sh /etc/init.d/
+        ck_ok "edit zagent.sh"
+        
+        echo "Load sh"
+        sudo update-rc.d zagent.sh defaults 90
+    else
+        sudo /bin/mv /tmp/zagent.sh /etc/rc.d/init.d/
+        sudo chmod +x /etc/rc.d/init.d/zagent.sh
+        ck_ok "edit zagent.sh"
+        cd /etc/rc.d/init.d
+        sudo chkconfig --add zagent.sh
+        sudo chkconfig zagent.sh on
+        echo "Load sh"
+    fi
     
     echo "Start Zagent"
     /usr/bin/nohup ${HOME}/zagent/zagent-host -p 55001 -secret ${secret} -s ${zentaoSite} > ${HOME}/zagent/zagent.log 2>&1 &
@@ -159,7 +169,7 @@ install_zagent()
     if [ -f agent.zip ]
     then
         if ! command_exist netstat;then
-            sudo apt install net-tools
+            install_netTools
         fi
         echo "unZip zagent"
         unzip -o ./agent.zip
@@ -172,6 +182,15 @@ install_zagent()
     fi
     
     /usr/bin/rm -rf ${HOME}/zagent/agent.zip
+}
+
+install_netTools()
+{
+    if [[ ${ID} = ${ubuntu} ]];then
+        sudo apt install net-tools
+    else
+        sudo yum install net-tools.x86_64
+    fi
 }
 
 download_zvm()
@@ -353,6 +372,49 @@ download_nginx()
         exit 1
     fi
 }
+
+apt_update()
+{
+    if [[ ${ID} = ${ubuntu} ]];then
+        if ! $is_update_apt;then
+            sudo apt update
+            is_update_apt=true
+        fi
+    fi
+}
+
+install_depends()
+{
+    if [[ ${ID} = ${ubuntu} ]];then
+        for pkg in make libpcre++-dev build-essential libssl-dev zlib1g-dev
+        do
+            if ! dpkg -l $pkg >/dev/null 2>&1
+            then
+                apt_update
+                sudo apt reinstall -y $pkg
+                ck_ok "install $pkg"
+            else
+                echo "$pkg already installed"
+            fi
+        done
+    else
+        for pkg in gcc-c++ pcre-devel zlib-devel make openssl-devel
+        do
+            if ! dpkg -l $pkg >/dev/null 2>&1
+            then
+                apt_update
+                if [[ ${ID} = ${ubuntu} ]];then
+                    sudo apt reinstall -y $pkg
+                else
+                    sudo yum install -y $pkg
+                fi
+                ck_ok "yum install $pkg"
+            else
+                echo "$pkg already installed"
+            fi
+        done
+    fi
+}
 install_nginx()
 {
     if command_exist nginx;then
@@ -373,21 +435,7 @@ install_nginx()
     cd nginx-1.23.0
     
     echo "Install depends"
-    ##ubuntu
-    for pkg in make libpcre++-dev build-essential libssl-dev  zlib1g-dev
-    do
-        if ! dpkg -l $pkg >/dev/null 2>&1
-        then
-            if ! $is_update_apt;then
-                sudo apt update
-                is_update_apt=true
-            fi
-            sudo apt reinstall -y $pkg
-            ck_ok "apt install $pkg"
-        else
-            echo "$pkg already installed"
-        fi
-    done
+    install_depends
     
     echo "Configure Nginx"
     sudo ./configure --prefix=/usr/local/nginx  --with-http_ssl_module --with-http_stub_status_module --with-stream
@@ -481,6 +529,15 @@ EOF'
     sudo /usr/bin/rm /usr/local/src/nginx-1.23.0.tar.gz
 }
 
+install_libvirt()
+{
+    if [[ ${ID} = ${ubuntu} ]];then
+        sudo apt reinstall -y qemu-kvm libvirt-daemon-system libvirt-clients libvirt-dev qemu virt-manager bridge-utils libosinfo-bin
+    else
+        sudo yum -y install qemu-kvm python-virtinst libvirt libvirt-python virt-manager libguestfs-tools bridge-utils virt-install
+    fi
+}
+
 install_kvm()
 {
     if command_exist libvirtd;then
@@ -494,11 +551,9 @@ install_kvm()
     fi
     
     echo "Install kvm"
-    if ! $is_update_apt;then
-        sudo apt update
-        is_update_apt=true
-    fi
-    sudo apt reinstall -y qemu-kvm libvirt-daemon-system libvirt-clients libvirt-dev qemu virt-manager bridge-utils libosinfo-bin
+    apt_update
+    
+    install_libvirt
     ck_ok "Install kvm"
     
     sudo service libvirtd restart
@@ -563,23 +618,41 @@ install_websockify()
         ck_ok "unZip websockify"
     fi
     
+    if ! command_exist python3;then
+        if [[ ${ID} = ${ubuntu} ]];then
+            sudo apt install python3
+        else
+            sudo yum install python3
+        fi
+    fi
+    
     /usr/bin/rm -rf ${HOME}/zagent/websockify.zip
     
     sudo chmod +x ${HOME}/zagent/websockify/run
     ${HOME}/zagent/websockify/run --token-plugin JSONTokenApi --token-source http://127.0.0.1:55001/api/v1/virtual/getVncAddress?token=%s 6080 -D
 }
 
+install_curl()
+{
+    if [[ ${ID} = ${ubuntu} ]];then
+        sudo apt install  -y curl
+    else
+        sudo yum install curl
+    fi
+}
 
 install()
 {
     if ! command_exist curl;then
         echo "Install curl"
         if ! $is_update_apt;then
-            sudo apt update
+            if [[ ${ID} = ${ubuntu} ]];then
+                sudo apt update
+            fi
             is_update_apt=true
         fi
-        sudo apt install  -y curl
-        ck_ok "apt install curl"
+        install_curl
+        ck_ok "install curl"
     fi
     
     create_dir ${HOME}/zagent
@@ -622,14 +695,17 @@ install()
     print_res
 }
 
-if [ ! -n "$(egrep -o "(vmx|svm)" /proc/cpuinfo)" ];then
-    echo -e "\033[31m Not support virtualization \033[0m"
-    exit 1
-fi
+# if [ ! -n "$(egrep -o "(vmx|svm)" /proc/cpuinfo)" ];then
+#     echo -e "\033[31m Not support virtualization \033[0m"
+#     exit 1
+# fi
+
+ubuntu=ubuntu
+centos=centos
 
 source /etc/os-release
 
-if [ ${ID} != "ubuntu" ];then
+if [[ ${ID} != ${ubuntu} && ${ID} != ${centos} ]];then
     echo -e "\033[31m Not support os \033[0m"
     exit 1
 fi

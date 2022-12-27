@@ -126,7 +126,7 @@ func (c *KvmCtrl) Boot(ctx iris.Context) {
 		return
 	}
 
-	c.LibvirtService.BootVmByName(name)
+	c.KvmService.StartVm(name)
 
 	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to boot vm", name))
 	return
@@ -187,11 +187,7 @@ func (c *KvmCtrl) Destroy(ctx iris.Context) {
 	}
 
 	req := v1.DestroyVmReq{}
-	err := ctx.ReadJSON(&req)
-	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
-		return
-	}
+	req.Ip = c.KvmService.GetIpByName(name)
 
 	bizErr := c.LibvirtService.SafeDestroyVmByName(name)
 	if bizErr != nil {
@@ -199,7 +195,7 @@ func (c *KvmCtrl) Destroy(ctx iris.Context) {
 		return
 	}
 
-	err = natHelper.RemoveForward(req.Ip, 0, consts.All)
+	err := natHelper.RemoveForward(req.Ip, 0, consts.All)
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 		return
