@@ -695,10 +695,10 @@ install()
     print_res
 }
 
-# if [ ! -n "$(egrep -o "(vmx|svm)" /proc/cpuinfo)" ];then
-#     echo -e "\033[31m Not support virtualization \033[0m"
-#     exit 1
-# fi
+if [ ! -n "$(egrep -o "(vmx|svm)" /proc/cpuinfo)" ];then
+    echo -e "\033[31m Not support virtualization \033[0m"
+    exit 1
+fi
 
 ubuntu=ubuntu
 centos=centos
