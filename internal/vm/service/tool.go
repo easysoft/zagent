@@ -250,3 +250,11 @@ func (s *ToolService) startProcess(name, execPath, uuid, ip, server, secret stri
 
 	return
 }
+
+func (s *ToolService) StartToolByName(name string) (ret v1.VmServiceInstallResp, err error) {
+	s.stopTool(name)
+
+	oldVersionStr, _ := s.getOldVersion(name)
+	s.startTool(name, oldVersionStr, "", "", "")
+	return
+}
