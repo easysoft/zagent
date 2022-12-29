@@ -39,6 +39,14 @@ func (s *CronService) Init() {
 		},
 	)
 
+	_cronUtils.AddTask(
+		"runZTF",
+		fmt.Sprintf("@every %ds", consts.AgentCheckExecutionInterval),
+		func() {
+			s.runZtf()
+		},
+	)
+
 	iris.RegisterOnInterrupt(func() {
 		_cronUtils.Stop()
 	})
@@ -65,6 +73,7 @@ func (s *CronService) checkTask() {
 
 func (s *CronService) runZtf() {
 	serviceStatus, _ := s.StatusService.Check(v1.VmServiceCheckReq{Services: "ztf"})
+	fmt.Println(111, serviceStatus.ZtfStatus)
 	if serviceStatus.ZtfStatus == consts.HostServiceReady {
 		return
 	} else if serviceStatus.ZtfStatus == consts.HostServiceNotAvailable {

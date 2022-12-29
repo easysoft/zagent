@@ -219,8 +219,8 @@ func (s *ToolService) startProcess(name, execPath, uuid, ip, server, secret stri
 	var cmd *exec.Cmd
 	if _commonUtils.IsWin() {
 		if name == "ztf" {
-			tmpl := `start cmd /c %s -uuid %s -secret %s -h http://%s:%d -i %s -p %d ^1^> %snohup.%s.log ^2^>^&^1`
-			cmdStr = fmt.Sprintf(tmpl, execPath, uuid, secret, consts.KvmHostIpInNatNetwork, consts.AgentHostServicePort, ip, consts.ZtfServicePort, consts.WorkDir, name)
+			tmpl := `start cmd /c %s -uuid %s -h http://%s:%d -i %s -p %d ^1^> %snohup.%s.log ^2^>^&^1`
+			cmdStr = fmt.Sprintf(tmpl, execPath, uuid, consts.KvmHostIpInNatNetwork, consts.AgentHostServicePort, ip, consts.ZtfServicePort, consts.WorkDir, name)
 		} else if name == "zd" { // set root for workdir
 			tmpl := `start cmd /c %s -uuid %s -b %s -p %d ^1^> %snohup.%s.log ^2^>^&^1`
 			cmdStr = fmt.Sprintf(tmpl, execPath, uuid, ip, consts.ZdServicePort, consts.WorkDir, name)
@@ -231,7 +231,7 @@ func (s *ToolService) startProcess(name, execPath, uuid, ip, server, secret stri
 	} else {
 		if name == "ztf" {
 			cmd = exec.Command("nohup", execPath, "-uuid", uuid,
-				"-secret", secret, "-h", "http://"+consts.KvmHostIpInNatNetwork+":"+strconv.Itoa(consts.AgentHostServicePort), "-i", ip, "-p", strconv.Itoa(consts.ZtfServicePort))
+				"-h", "http://"+consts.KvmHostIpInNatNetwork+":"+strconv.Itoa(consts.AgentHostServicePort), "-i", ip, "-p", strconv.Itoa(consts.ZtfServicePort))
 		} else if name == "zd" {
 			cmd = exec.Command("nohup", execPath, "-uuid", uuid, "-b", ip, "-p", strconv.Itoa(consts.ZdServicePort))
 		}
@@ -252,8 +252,6 @@ func (s *ToolService) startProcess(name, execPath, uuid, ip, server, secret stri
 }
 
 func (s *ToolService) StartToolByName(name string) (ret v1.VmServiceInstallResp, err error) {
-	s.stopTool(name)
-
 	oldVersionStr, _ := s.getOldVersion(name)
 	s.startTool(name, oldVersionStr, "", "", "")
 	return
