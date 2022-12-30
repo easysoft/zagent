@@ -2,6 +2,8 @@ package netUtils
 
 import (
 	"fmt"
+	"regexp"
+	"runtime"
 	"strconv"
 	"strings"
 
@@ -10,9 +12,38 @@ import (
 
 //find port by keyword
 func GetUsedPortByKeyword(keyword string, defaultVal int) (port int, err error) {
+	if runtime.GOOS == "windows" {
+		return GetWindowsUsedPortByKeyword(keyword, defaultVal)
+	}
 	cmd := fmt.Sprintf(`ss -tnlp | grep %s | awk '{ print $4 }'`, keyword)
 	output, _ := _shellUtils.ExeSysCmd(cmd)
 	output = strings.TrimSpace(output)
+
+	if output != "" {
+		list := strings.Split(output, "\n")
+		lastInfo := list[len(list)-1]
+		lastInfo = strings.TrimSpace(lastInfo)
+		info := strings.Split(lastInfo, ":")
+		port, err = strconv.Atoi(info[len(info)-1])
+	}
+
+	if port == 0 {
+		port, err = GetUsedPortByPs(keyword, defaultVal)
+	}
+
+	if port == 0 {
+		port = defaultVal
+	}
+
+	return
+}
+
+func GetWindowsUsedPortByKeyword(keyword string, defaultVal int) (port int, err error) {
+	cmd := fmt.Sprintf(`tasklist|findstr %s`, keyword)
+	output, _ := _shellUtils.ExeSysCmd(cmd)
+	output = strings.TrimSpace(output)
+	reg := regexp.MustCompile(`( +)`)
+	output = reg.ReplaceAllString(output, " ")
 
 	if output != "" {
 		list := strings.Split(output, "\n")
