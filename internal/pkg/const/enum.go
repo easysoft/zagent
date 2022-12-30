@@ -71,6 +71,7 @@ const (
 
 	VmRunning VmStatus = "running" // report by agent on host
 	VmShutOff VmStatus = "shutoff" // report by agent on host
+	VmPaused  VmStatus = "suspend" // report by agent on host
 
 	VmBusy  VmStatus = "busy"  // report by agent in vm
 	VmReady VmStatus = "ready" // report by agent in vm

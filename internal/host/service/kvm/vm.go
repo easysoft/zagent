@@ -122,6 +122,8 @@ func (s *KvmService) GetVms() (vms []domain.Vm) {
 			vm.Status = consts.VmRunning
 		} else if domainState == libvirt.DOMAIN_SHUTOFF || domainState == libvirt.DOMAIN_SHUTDOWN {
 			vm.Status = consts.VmShutOff
+		} else if domainState == libvirt.DOMAIN_PAUSED {
+			vm.Status = consts.VmPaused
 		}
 
 		newXml, _ := dom.GetXMLDesc(0)

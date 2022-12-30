@@ -791,6 +791,10 @@ do
     esac
 done
 
+if [ -z "$zentaoSite" ]; then
+    zentaoSite="192.168.122.1"
+fi
+
 HOME="`cat /etc/passwd |grep ^${SUDO_USER:-$(id -un)}: | cut -d: -f 6`"
 HOME=${HOME:-$HOME}
 
