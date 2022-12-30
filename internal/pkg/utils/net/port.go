@@ -3,16 +3,16 @@ package netUtils
 import (
 	"fmt"
 	"regexp"
-	"runtime"
 	"strconv"
 	"strings"
 
+	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
 	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 )
 
 //find port by keyword
 func GetUsedPortByKeyword(keyword string, defaultVal int) (port int, err error) {
-	if runtime.GOOS == "windows" {
+	if _commonUtils.IsWin() {
 		return GetWindowsUsedPortByKeyword(keyword, defaultVal)
 	}
 	cmd := fmt.Sprintf(`ss -tnlp | grep %s | awk '{ print $4 }'`, keyword)
@@ -41,26 +41,33 @@ func GetUsedPortByKeyword(keyword string, defaultVal int) (port int, err error) 
 func GetWindowsUsedPortByKeyword(keyword string, defaultVal int) (port int, err error) {
 	cmd := fmt.Sprintf(`tasklist|findstr %s`, keyword)
 	output, _ := _shellUtils.ExeSysCmd(cmd)
+
 	output = strings.TrimSpace(output)
 	reg := regexp.MustCompile(`( +)`)
 	output = reg.ReplaceAllString(output, " ")
-
-	if output != "" {
-		list := strings.Split(output, "\n")
-		lastInfo := list[len(list)-1]
-		lastInfo = strings.TrimSpace(lastInfo)
-		info := strings.Split(lastInfo, ":")
-		port, err = strconv.Atoi(info[len(info)-1])
+	cols := strings.Split(output, " ")
+	if len(cols) < 2 {
+		return
 	}
 
-	if port == 0 {
-		port, err = GetUsedPortByPs(keyword, defaultVal)
+	pid := cols[1]
+	pidNum, _ := strconv.Atoi(pid)
+	if pidNum == 0 {
+		return
 	}
 
-	if port == 0 {
-		port = defaultVal
+	cmd = fmt.Sprintf(`netstat -aon|findstr %s`, pid)
+	output, _ = _shellUtils.ExeSysCmd(cmd)
+
+	output = strings.TrimSpace(output)
+	output = reg.ReplaceAllString(output, " ")
+	cols = strings.Split(output, " ")
+	if len(cols) < 2 {
+		return
 	}
 
+	address := strings.Split(cols[1], ":")
+	port, err = strconv.Atoi(address[1])
 	return
 }
 
