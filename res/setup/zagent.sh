@@ -558,6 +558,7 @@ install_kvm()
     
     sudo service libvirtd restart
     sudo chmod 777 /var/run/libvirt/libvirt-sock
+    sudo setfacl -m u:libvirt-qemu:rx ${HOME}
     ck_ok "Start libvirtd"
 }
 
