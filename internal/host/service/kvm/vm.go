@@ -321,15 +321,3 @@ func (s *KvmService) PullSnap(req *v1.RemoveSnapReq) (err error) {
 
 	return
 }
-
-func (s *KvmService) GetSnaps(vm, snap string) (left, right string, err error) {
-	cmd := fmt.Sprintf("qemu-img rebase -b %s %s", snapLeft, snapRight)
-
-	out, err := _shellUtils.ExeShell(cmd)
-	if err != nil {
-		_logUtils.Infof("remove snap '%s' err, output %s, error %s", cmd, out, err.Error())
-		return
-	}
-
-	return
-}
