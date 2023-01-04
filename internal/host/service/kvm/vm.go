@@ -268,3 +268,19 @@ func (s *KvmService) GetVmIpByMac(macAddress string) (ip string, err error) {
 
 	return
 }
+
+func (s *KvmService) CreateSnap(req *v1.CreateSnapReq) (err error) {
+	pth := filepath.Join(agentConf.Inst.DirSnap, req.Name+".qcow2")
+
+	cmd := fmt.Sprintf("virsh snapshot-create-as %s --name %s "+
+		"--diskspec hda,snapshot=external,file=%s "+
+		"--atomic --disk-only", req.Vm, req.Name, pth)
+
+	out, err := _shellUtils.ExeShell(cmd)
+	if err != nil {
+		_logUtils.Infof("exec create snap cmd '%s' err, output %s, error %s", cmd, out, err.Error())
+		return
+	}
+
+	return
+}

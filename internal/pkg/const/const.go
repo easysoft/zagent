@@ -52,6 +52,7 @@ const (
 	FolderDownload = "download"
 	FolderBacking  = "backing"
 	FolderImage    = "image"
+	FolderSnap     = "snap"
 	FolderToken    = "token"
 
 	FolderNovnc      = "novnc"

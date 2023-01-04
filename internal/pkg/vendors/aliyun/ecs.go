@@ -5,7 +5,7 @@ import (
 	"fmt"
 	ecs "github.com/alibabacloud-go/ecs-20140526/v2/client"
 	"github.com/alibabacloud-go/tea/tea"
-	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	_stringUtils "github.com/easysoft/zagent/pkg/lib/string"
 )
@@ -139,7 +139,7 @@ func (s AliyunEcsService) QueryVncUrl(id, vncPassword, regionId string, isWindow
 		return
 	}
 
-	url = fmt.Sprintf(serverConst.ALIYUN_ECS_URL_VNC, *resp.Body.VncUrl, id, isWindows, vncPassword)
+	url = fmt.Sprintf(consts.ALIYUN_ECS_URL_VNC, *resp.Body.VncUrl, id, isWindows, vncPassword)
 
 	return
 }

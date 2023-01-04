@@ -51,11 +51,13 @@ func Init(app string) {
 		Inst.DirIso = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, consts.FolderIso))
 		Inst.DirBaking = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, consts.FolderBacking))
 		Inst.DirImage = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, consts.FolderImage))
+		Inst.DirSnap = _fileUtils.AddPathSepIfNeeded(filepath.Join(Inst.DirKvm, consts.FolderSnap))
 
 		_fileUtils.MkDirIfNeeded(consts.DownloadDir)
 		_fileUtils.MkDirIfNeeded(Inst.DirIso)
 		_fileUtils.MkDirIfNeeded(Inst.DirBaking)
 		_fileUtils.MkDirIfNeeded(Inst.DirImage)
+		_fileUtils.MkDirIfNeeded(Inst.DirSnap)
 
 	} else if Inst.RunMode == consts.RunModeVm {
 		if Inst.NodeIp == "" {
@@ -97,6 +99,7 @@ type Config struct {
 	DirIso    string
 	DirBaking string
 	DirImage  string
+	DirSnap   string
 
 	DirZtf string
 	DirZd  string

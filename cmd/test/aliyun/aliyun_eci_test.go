@@ -5,7 +5,6 @@ import (
 	testconst "github.com/easysoft/zagent/cmd/test/_const"
 	"github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/vendors/aliyun"
-	serverConst "github.com/easysoft/zagent/internal/server/utils/const"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"testing"
 )
@@ -17,9 +16,9 @@ func TestAliyunEci(t *testing.T) {
 	eciSrv := aliyun.NewAliyunEciService()
 	eciSrv.AliyunCommService = commSrv
 
-	eciClient, _ := commSrv.CreateEciClient(serverConst.ALIYUN_ECI_URL, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
+	eciClient, _ := commSrv.CreateEciClient(consts.ALIYUN_ECI_URL, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
 
-	ecsUrl := fmt.Sprintf(serverConst.ALIYUN_ECS_URL, testconst.ALIYUN_REGION)
+	ecsUrl := fmt.Sprintf(consts.ALIYUN_ECS_URL, testconst.ALIYUN_REGION)
 	ecsClient, _ := commSrv.CreateEcsClient(ecsUrl, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
 	vpcClient, _ := commSrv.CreateVpcClient(ecsUrl, testconst.ALIYUN_KEY, testconst.ALIYUN_Secret)
 
