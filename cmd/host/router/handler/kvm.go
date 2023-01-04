@@ -341,3 +341,22 @@ func (c *KvmCtrl) Remove(ctx iris.Context) {
 
 	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to remove vm", req.Name))
 }
+
+func (c *KvmCtrl) CreateSnap(ctx iris.Context) {
+	req := v1.CreateSnapReq{}
+	err := ctx.ReadJSON(&req)
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
+
+	err = c.KvmService.CreateSnap(&req)
+	if err != nil {
+		ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
+
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to create snapshot", nil))
+
+	return
+}
