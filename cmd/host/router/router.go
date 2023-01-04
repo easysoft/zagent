@@ -91,6 +91,7 @@ func (r *Router) App() {
 				client.Post("/remove", r.KvmCtrl.Remove).Name = "移除KVM虚拟机"
 
 				client.Post("/createSnap", r.KvmCtrl.CreateSnap).Name = "创建虚拟机快照"
+				client.Post("/removeSnap", r.KvmCtrl.CreateSnap).Name = "删除虚拟机快照"
 			})
 
 			v1.PartyFunc("/virtualbox", func(client iris.Party) {

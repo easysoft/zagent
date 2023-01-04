@@ -278,7 +278,19 @@ func (s *KvmService) CreateSnap(req *v1.CreateSnapReq) (err error) {
 
 	out, err := _shellUtils.ExeShell(cmd)
 	if err != nil {
-		_logUtils.Infof("exec create snap cmd '%s' err, output %s, error %s", cmd, out, err.Error())
+		_logUtils.Infof("create snap '%s' err, output %s, error %s", cmd, out, err.Error())
+		return
+	}
+
+	return
+}
+
+func (s *KvmService) RemoveSnap(req *v1.RemoveSnapReq) (err error) {
+	cmd := fmt.Sprintf("virsh snapshot-delete %s --metadata %s", req.Vm, req.Name)
+
+	out, err := _shellUtils.ExeShell(cmd)
+	if err != nil {
+		_logUtils.Infof("remove snap '%s' err, output %s, error %s", cmd, out, err.Error())
 		return
 	}
 

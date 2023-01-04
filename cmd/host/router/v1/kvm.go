@@ -90,3 +90,8 @@ type CreateSnapReq struct {
 	Name string `json:"name"`
 	Vm   string `json:"vm"`
 }
+
+type RemoveSnapReq struct {
+	Name string `json:"name"`
+	Vm   string `json:"vm"`
+}

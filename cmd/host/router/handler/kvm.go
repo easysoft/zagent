@@ -360,3 +360,22 @@ func (c *KvmCtrl) CreateSnap(ctx iris.Context) {
 
 	return
 }
+
+func (c *KvmCtrl) RemoveSnap(ctx iris.Context) {
+	req := v1.RemoveSnapReq{}
+	err := ctx.ReadJSON(&req)
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
+
+	err = c.KvmService.RemoveSnap(&req)
+	if err != nil {
+		ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
+
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to create snapshot", nil))
+
+	return
+}
