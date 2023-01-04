@@ -63,12 +63,15 @@ func ExeShellInDirWithPid(cmdStr string, dir string) (ret string, err error, pid
 
 	err = cmd.Run()
 	if err != nil {
-		_logUtils.Error(_i118Utils.Sprintf("fail_to_exec_command", cmdStr, cmd.Dir,
-			err.Error()+", "+stderr.String()))
+		ret = err.Error()+", "+stderr.String())
+
+		_logUtils.Error(_i118Utils.Sprintf("fail_to_exec_command", cmdStr, cmd.Dir, ret))
+	} else {
+		ret = out.String()
 	}
 
 	pid = cmd.Process.Pid
-	ret = _stringUtils.TrimAll(out.String())
+
 	return
 }
 
