@@ -375,7 +375,7 @@ func (c *KvmCtrl) RemoveSnap(ctx iris.Context) {
 		return
 	}
 
-	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to create snapshot", nil))
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to remove snapshot", nil))
 
 	return
 }

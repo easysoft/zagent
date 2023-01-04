@@ -489,3 +489,25 @@ func (s *LibvirtService) IsAlive() (ret bool) {
 
 	return
 }
+
+func (s *LibvirtService) GetVmSnaps(name, snap string) (curr, left, right *libvirt.DomainSnapshot) {
+	dom, err := s.GetVm(name)
+	if err != nil {
+		return
+	}
+
+	snaps, _ := dom.ListAllSnapshots(0)
+
+	for _, snap := range snaps {
+		snapName, _ := snap.GetName()
+		if snapName == name {
+			curr = &snap
+			left, _ = snap.GetParent(0)
+			children, _ := snap.ListAllChildren(0)
+
+			right = &children[0]
+		}
+	}
+
+	return
+}
