@@ -276,7 +276,7 @@ func (s *KvmService) CreateSnap(req *v1.CreateSnapReq) (err error) {
 		"--diskspec hda,snapshot=external,file=%s "+
 		"--atomic --disk-only", req.Vm, req.Name, pth)
 
-	out, err := _shellUtils.ExeSysCmd(cmd)
+	out, err := _shellUtils.ExeShell(cmd)
 	if err != nil {
 		_logUtils.Infof("exec create snap cmd '%s' err, output %s, error %s", cmd, out, err.Error())
 		return
