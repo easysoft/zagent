@@ -7,7 +7,6 @@ import (
 	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
 	_i118Utils "github.com/easysoft/zagent/pkg/lib/i118"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
-	_stringUtils "github.com/easysoft/zagent/pkg/lib/string"
 	"io"
 	"os/exec"
 	"regexp"
@@ -63,7 +62,7 @@ func ExeShellInDirWithPid(cmdStr string, dir string) (ret string, err error, pid
 
 	err = cmd.Run()
 	if err != nil {
-		ret = err.Error()+", "+stderr.String())
+		ret = err.Error() + ", " + stderr.String()
 
 		_logUtils.Error(_i118Utils.Sprintf("fail_to_exec_command", cmdStr, cmd.Dir, ret))
 	} else {
