@@ -44,7 +44,7 @@ func (s *SnapService) ListSnap(vm string) (ret []*libvirt.DomainSnapshot, err er
 	return
 }
 
-func (s *SnapService) RemoveSnap(req *v1.SnapReq) (err error) {
+func (s *SnapService) RemoveSnap(req *v1.SnapTaskReq) (err error) {
 	cmd := fmt.Sprintf("virsh snapshot-delete %s %s", req.Vm, req.Name)
 
 	out, err := _shellUtils.ExeShell(cmd)
@@ -57,7 +57,7 @@ func (s *SnapService) RemoveSnap(req *v1.SnapReq) (err error) {
 }
 
 // RevertSnap 回滚到快照
-func (s *SnapService) RevertSnap(req *v1.SnapReq) (err error) {
+func (s *SnapService) RevertSnap(req *v1.SnapTaskReq) (err error) {
 	cmd := fmt.Sprintf("virsh snapshot-revert %s %s", req.Vm, req.Name)
 
 	out, err := _shellUtils.ExeShell(cmd)
@@ -69,7 +69,7 @@ func (s *SnapService) RevertSnap(req *v1.SnapReq) (err error) {
 	return
 }
 
-func (s *SnapService) AddTasks(req []v1.SnapReq) (err error) {
+func (s *SnapService) AddTasks(req []v1.SnapTaskReq) (err error) {
 	for _, item := range req {
 		if item.Vm == "" || item.Name == "" {
 			err = errors.New("vm OR item is empty")

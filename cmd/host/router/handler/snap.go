@@ -21,11 +21,11 @@ func NewSnapCtrl() *SnapCtrl {
 // @summary 添加创建快照任务
 // @Accept json
 // @Produce json
-// @Param SnapReq body []v1.SnapReq true "Snap Request Object"
+// @Param SnapTaskReq body []v1.SnapTaskReq true "Snap Request Object"
 // @Success 200 {object} _domain.Response "code = success | fail"
 // @Router /api/v1/snaps/add [post]
 func (c *SnapCtrl) Add(ctx iris.Context) {
-	req := make([]v1.SnapReq, 0)
+	req := make([]v1.SnapTaskReq, 0)
 	err := ctx.ReadJSON(&req)
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
@@ -63,7 +63,7 @@ func (c *SnapCtrl) Cancel(ctx iris.Context) {
 }
 
 func (c *SnapCtrl) ListSnap(ctx iris.Context) {
-	req := v1.SnapReq{}
+	req := v1.SnapTaskReq{}
 	err := ctx.ReadJSON(&req)
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
@@ -82,7 +82,7 @@ func (c *SnapCtrl) ListSnap(ctx iris.Context) {
 }
 
 func (c *SnapCtrl) RemoveSnap(ctx iris.Context) {
-	req := v1.SnapReq{}
+	req := v1.SnapTaskReq{}
 	err := ctx.ReadJSON(&req)
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
@@ -101,7 +101,7 @@ func (c *SnapCtrl) RemoveSnap(ctx iris.Context) {
 }
 
 func (c *SnapCtrl) RevertSnap(ctx iris.Context) {
-	req := v1.SnapReq{}
+	req := v1.SnapTaskReq{}
 	err := ctx.ReadJSON(&req)
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))

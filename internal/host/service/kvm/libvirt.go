@@ -3,6 +3,7 @@ package kvmService
 import "C"
 import (
 	"fmt"
+	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	"time"
 
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
@@ -490,7 +491,7 @@ func (s *LibvirtService) IsAlive() (ret bool) {
 	return
 }
 
-func (s *LibvirtService) GetVmSnaps(vm string) (ret []*libvirt.DomainSnapshot) {
+func (s *LibvirtService) GetVmSnaps(vm string) (ret []v1.SnapItemResp) {
 	dom, err := s.GetVm(vm)
 	if err != nil {
 		return
@@ -499,7 +500,16 @@ func (s *LibvirtService) GetVmSnaps(vm string) (ret []*libvirt.DomainSnapshot) {
 	snaps, _ := dom.ListAllSnapshots(0)
 
 	for _, snap := range snaps {
-		ret = append(ret, &snap)
+		name, _ := snap.GetName()
+		parent, _ := snap.GetParent(0)
+		parentName, _ := parent.GetName()
+
+		item := v1.SnapItemResp{
+			Name:   name,
+			Parent: parentName,
+		}
+
+		ret = append(ret, item)
 	}
 
 	return
