@@ -61,6 +61,19 @@ func (r *TaskRepo) GetActiveTaskByMd5(md5 string) (po agentModel.Task, err error
 	return
 }
 
+func (r *TaskRepo) GetActiveTaskByVm(vm string) (po agentModel.Task, err error) {
+	if vm == "" {
+		return
+	}
+
+	r.DB.Model(&po).
+		Where("status NOT IN (?) and vm = ?",
+			[]consts.TaskStatus{consts.Canceled, consts.Completed, consts.Failed}, vm).
+		Order("id desc").First(&po)
+
+	return
+}
+
 func (r *TaskRepo) GetCompletedTaskByMd5(md5 string) (po agentModel.Task, err error) {
 	if md5 == "" {
 		return

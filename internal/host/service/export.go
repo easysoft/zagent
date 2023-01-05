@@ -39,7 +39,7 @@ func (s *ExportService) StartTask(po agentModel.Task) {
 
 		s.TaskRepo.UpdateStatus(po.ID, targetBakingFilePath, 0, "", consts.Inprogress, true, false)
 
-		xmlDesc, finalStatus := s.ExportVm(po, targetBakingFilePath)
+		xmlDesc, finalStatus := s.exportVm(po, targetBakingFilePath)
 
 		s.TaskRepo.UpdateStatus(po.ID, targetBakingFilePath, 0, xmlDesc, finalStatus, false, true)
 
@@ -52,7 +52,7 @@ func (s *ExportService) StartTask(po agentModel.Task) {
 	}()
 }
 
-func (s *ExportService) ExportVm(task agentModel.Task, targetBakingFilePath string) (xml string, status consts.TaskStatus) {
+func (s *ExportService) exportVm(task agentModel.Task, targetBakingFilePath string) (xml string, status consts.TaskStatus) {
 	vmName := task.Vm
 
 	dom, err := s.LibvirtService.GetVm(vmName)
@@ -109,15 +109,16 @@ func (s *ExportService) ExportVm(task agentModel.Task, targetBakingFilePath stri
 
 	ch := make(chan string)
 	go func() {
+		// TODO: add uuid in cmd
 		cmd := fmt.Sprintf(consts.CmdExportVm, vmDiskPath, targetBakingFilePath)
 		_, e := _shellUtils.ExeShell(cmd)
 
-		msg := consts.Completed.ToString()
+		statusMsg := consts.Completed.ToString()
 		if e != nil {
-			msg = consts.Error.ToString()
+			statusMsg = consts.Error.ToString()
 		}
 
-		ch <- msg
+		ch <- statusMsg
 	}()
 
 	select {

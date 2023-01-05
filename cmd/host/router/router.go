@@ -17,7 +17,9 @@ type Router struct {
 	DownloadCtrl *hostHandler.DownloadCtrl `inject:""`
 	CheckCtrl    *hostHandler.ServiceCtrl  `inject:""`
 
-	KvmCtrl        *hostHandler.KvmCtrl        `inject:""`
+	KvmCtrl  *hostHandler.KvmCtrl  `inject:""`
+	SnapCtrl *hostHandler.SnapCtrl `inject:""`
+
 	VirtualBoxCtrl *hostHandler.VirtualBoxCtrl `inject:""`
 	VmWareCtrl     *hostHandler.VmWareCtrl     `inject:""`
 	VirtualCtrl    *hostHandler.VirtualCtrl    `inject:""`
@@ -90,8 +92,11 @@ func (r *Router) App() {
 				client.Post("/exportVm", r.KvmCtrl.ExportVm).Name = "导出KVM虚拟机为模板镜像"
 				client.Post("/remove", r.KvmCtrl.Remove).Name = "移除KVM虚拟机"
 
-				client.Post("/createSnap", r.KvmCtrl.CreateSnap).Name = "创建虚拟机快照"
-				client.Post("/removeSnap", r.KvmCtrl.RemoveSnap).Name = "删除虚拟机快照"
+				client.Post("/addSnapTask", r.SnapCtrl.Add).Name = "创建虚拟机快照"
+				client.Post("/cancelSnapTask", r.SnapCtrl.Cancel).Name = "强制终止创建虚拟机快照"
+				client.Post("/listSnap", r.SnapCtrl.ListSnap).Name = "列出虚拟机快照"
+				client.Post("/removeSnap", r.SnapCtrl.RemoveSnap).Name = "删除虚拟机快照"
+				client.Post("/revertSnap", r.SnapCtrl.RevertSnap).Name = "回滚虚拟机快照"
 			})
 
 			v1.PartyFunc("/virtualbox", func(client iris.Party) {
