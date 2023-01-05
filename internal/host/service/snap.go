@@ -9,7 +9,6 @@ import (
 	"github.com/easysoft/zagent/internal/pkg/job"
 	_channelUtils "github.com/easysoft/zagent/pkg/lib/channel"
 	"github.com/gofrs/uuid"
-	"github.com/libvirt/libvirt-go"
 	"sync"
 	"time"
 
@@ -38,7 +37,7 @@ func NewSnapService() *SnapService {
 }
 
 // ListSnap 列出快照
-func (s *SnapService) ListSnap(vm string) (ret []*libvirt.DomainSnapshot, err error) {
+func (s *SnapService) ListSnap(vm string) (ret []v1.SnapItemResp, err error) {
 	ret = s.LibvirtService.GetVmSnaps(vm)
 
 	return
