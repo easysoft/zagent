@@ -87,7 +87,7 @@ func (s *SnapService) AddTasks(req []v1.SnapReq) (err error) {
 		existTask, _ := s.TaskRepo.GetActiveTaskByVm(item.Vm)
 
 		if existTask.ID != 0 {
-			err = errors.New("the same vm task is downloading")
+			err = errors.New("the same create snapshot task is running")
 			return
 		}
 
