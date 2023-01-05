@@ -3,7 +3,6 @@ package hostHandler
 import (
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	hostAgentService "github.com/easysoft/zagent/internal/host/service"
-	kvmService "github.com/easysoft/zagent/internal/host/service/kvm"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
 	"github.com/kataras/iris/v12"
@@ -12,7 +11,7 @@ import (
 type SnapCtrl struct {
 	TaskService *hostAgentService.TaskService `inject:""`
 
-	SnapService *kvmService.SnapService `inject:""`
+	SnapService *hostAgentService.SnapService `inject:""`
 }
 
 func NewSnapCtrl() *SnapCtrl {

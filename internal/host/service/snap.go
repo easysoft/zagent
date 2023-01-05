@@ -1,10 +1,10 @@
-package kvmService
+package hostAgentService
 
 import (
 	"errors"
 	"fmt"
 	agentModel "github.com/easysoft/zagent/internal/host/model"
-	hostAgentService "github.com/easysoft/zagent/internal/host/service"
+	kvmService "github.com/easysoft/zagent/internal/host/service/kvm"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/job"
 	_channelUtils "github.com/easysoft/zagent/pkg/lib/channel"
@@ -19,19 +19,15 @@ import (
 	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 )
 
-var (
-	channelMap sync.Map
-)
-
 type SnapService struct {
 	SyncHeartbeatMap sync.Map
 	TimeStamp        int64
 
-	LibvirtService *LibvirtService `inject:""`
-	QemuService    *QemuService    `inject:""`
+	LibvirtService *kvmService.LibvirtService `inject:""`
+	QemuService    *kvmService.QemuService    `inject:""`
 
-	TaskRepo    *hostRepo.TaskRepo            `inject:""`
-	TaskService *hostAgentService.TaskService `inject:""`
+	TaskRepo    *hostRepo.TaskRepo `inject:""`
+	TaskService *TaskService       `inject:""`
 }
 
 func NewSnapService() *SnapService {
