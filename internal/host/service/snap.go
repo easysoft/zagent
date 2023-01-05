@@ -57,7 +57,7 @@ func (s *SnapService) RemoveSnap(req *v1.SnapTaskReq) (err error) {
 
 // RevertSnap 回滚到快照
 func (s *SnapService) RevertSnap(req *v1.SnapTaskReq) (err error) {
-	cmd := fmt.Sprintf("virsh snapshot-revert %s %s", req.Vm, req.Name)
+	cmd := fmt.Sprintf("virsh snapshot-revert %s %s --running", req.Vm, req.Name)
 
 	out, err := _shellUtils.ExeShell(cmd)
 	if err != nil {
