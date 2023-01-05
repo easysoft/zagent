@@ -65,8 +65,6 @@ func (s *SnapService) RevertSnap(req *v1.SnapTaskReq) (err error) {
 		return
 	}
 
-	err = s.KvmService.StartVm(req.Name)
-
 	return
 }
 
