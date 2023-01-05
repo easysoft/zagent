@@ -23,6 +23,7 @@ type SnapService struct {
 
 	LibvirtService *kvmService.LibvirtService `inject:""`
 	QemuService    *kvmService.QemuService    `inject:""`
+	KvmService     *kvmService.KvmService     `inject:""`
 
 	TaskRepo    *hostRepo.TaskRepo `inject:""`
 	TaskService *TaskService       `inject:""`
@@ -63,6 +64,8 @@ func (s *SnapService) RevertSnap(req *v1.SnapTaskReq) (err error) {
 		_logUtils.Infof("revert snap '%s' err, output %s, error %s", cmd, out, err.Error())
 		return
 	}
+
+	err = s.KvmService.StartVm(req.Name)
 
 	return
 }
