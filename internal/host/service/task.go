@@ -18,6 +18,7 @@ import (
 type TaskService struct {
 	DownloadService *DownloadService `inject:""`
 	ExportService   *ExportService   `inject:""`
+	SnapService     *SnapService     `inject:""`
 
 	TaskRepo *hostRepo.TaskRepo `inject:""`
 }
@@ -55,6 +56,8 @@ func (s *TaskService) CheckTask() (err error) {
 			s.DownloadService.StartTask(newTask)
 		} else if newTask.Type == consts.ExportVm {
 			s.ExportService.StartTask(newTask)
+		} else if newTask.Type == consts.CreateSnap {
+			s.SnapService.StartTask(newTask)
 		}
 
 	}
