@@ -7,7 +7,6 @@ import (
 	kvmService "github.com/easysoft/zagent/internal/host/service/kvm"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/job"
-	_channelUtils "github.com/easysoft/zagent/pkg/lib/channel"
 	"github.com/gofrs/uuid"
 	"sync"
 	"time"
@@ -147,45 +146,6 @@ func (s *SnapService) StartTask(po agentModel.Task) {
 			close(ch)
 		}
 	}()
-}
-
-func (s *SnapService) CancelTask(taskId uint) {
-	taskInfo, _ := s.TaskRepo.GetDetail(taskId)
-
-	if taskInfo.ID > 0 {
-		s.TaskRepo.SetCanceled(taskInfo)
-	}
-
-	s.stopTask(taskId)
-}
-
-func (s *SnapService) stopTask(taskId uint) {
-	chVal, ok := channelMap.Load(taskId)
-
-	if !ok || chVal == nil {
-		return
-	}
-
-	channelMap.Delete(taskId)
-
-	ch := chVal.(chan int)
-	if ch != nil {
-		if !_channelUtils.IsChanClose(ch) {
-			ch <- 1
-		}
-
-		ch = nil
-	}
-}
-
-func (s *SnapService) RestartTask(po agentModel.Task) (ret bool) {
-	s.CancelTask(po.ID)
-
-	s.StartTask(po)
-
-	s.TaskRepo.AddRetry(po)
-
-	return
 }
 
 func (s *SnapService) RemoveTask(req v1.DownloadReq) {

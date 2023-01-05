@@ -42,26 +42,6 @@ func (c *SnapCtrl) Add(ctx iris.Context) {
 	return
 }
 
-// @summary 强制终止新建快照任务
-// @Accept json
-// @Produce json
-// @Param SnapCancelReq body v1.SnapCancelReq true "CancelDate Snap Request Object"
-// @Success 200 {object} _domain.Response "code = success | fail"
-// @Router /api/v1/snaps/cancel [post]
-func (c *SnapCtrl) Cancel(ctx iris.Context) {
-	req := v1.SnapCancelReq{}
-	err := ctx.ReadJSON(&req)
-	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
-		return
-	}
-
-	c.SnapService.CancelTask(uint(req.Id))
-
-	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success", nil))
-	return
-}
-
 func (c *SnapCtrl) ListSnap(ctx iris.Context) {
 	req := v1.SnapTaskReq{}
 	err := ctx.ReadJSON(&req)
