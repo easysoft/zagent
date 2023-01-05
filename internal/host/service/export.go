@@ -115,7 +115,7 @@ func (s *ExportService) exportVm(task agentModel.Task, targetBakingFilePath stri
 
 		statusMsg := consts.Completed.ToString()
 		if e != nil {
-			statusMsg = consts.Error.ToString()
+			statusMsg = consts.Failed.ToString()
 		}
 
 		ch <- statusMsg

@@ -108,7 +108,7 @@ func (s *SnapService) createSnap(po *agentModel.Task) (status consts.TaskStatus)
 		statusMsg := consts.Completed.ToString()
 		if err != nil {
 			_logUtils.Infof("create snap '%s' err, output %s, error %s", cmd, out, err.Error())
-			statusMsg = consts.Error.ToString()
+			statusMsg = consts.Failed.ToString()
 		}
 
 		ch <- statusMsg
