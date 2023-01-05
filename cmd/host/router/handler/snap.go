@@ -76,7 +76,7 @@ func (c *SnapCtrl) ListSnap(ctx iris.Context) {
 		return
 	}
 
-	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to create snapshot", snaps))
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "", snaps))
 
 	return
 }
@@ -114,7 +114,7 @@ func (c *SnapCtrl) RevertSnap(ctx iris.Context) {
 		return
 	}
 
-	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to remove snapshot", nil))
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to revert snapshot", nil))
 
 	return
 }
