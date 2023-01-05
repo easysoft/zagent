@@ -502,7 +502,11 @@ func (s *LibvirtService) GetVmSnaps(vm string) (ret []v1.SnapItemResp) {
 	for _, snap := range snaps {
 		name, _ := snap.GetName()
 		parent, _ := snap.GetParent(0)
-		parentName, _ := parent.GetName()
+
+		parentName := ""
+		if parent != nil {
+			parentName, _ = parent.GetName()
+		}
 
 		item := v1.SnapItemResp{
 			Name:   name,
