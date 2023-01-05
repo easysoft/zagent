@@ -102,7 +102,7 @@ func (s *SnapService) createSnap(po *agentModel.Task) (status consts.TaskStatus)
 
 	ch := make(chan string)
 	go func() {
-		cmd := fmt.Sprintf("virsh snapshot-create-as %s %s -atomic -uuid-%s", po.Vm, po.Name, uuidStr)
+		cmd := fmt.Sprintf("virsh snapshot-create-as %s %s --atomic -uuid-%s", po.Vm, po.Name, uuidStr)
 		out, err := _shellUtils.ExeShell(cmd)
 
 		statusMsg := consts.Completed.ToString()
