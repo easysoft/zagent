@@ -90,6 +90,7 @@ type Config struct {
 	MacAddress     string
 
 	Secret   string
+	Uuid     string
 	Language string
 	NodeName string
 	WorkDir  string

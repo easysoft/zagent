@@ -2,15 +2,16 @@ package main
 
 import (
 	"flag"
+	"os"
+	"os/signal"
+	"syscall"
+
 	vmInit "github.com/easysoft/zagent/cmd/vm/init"
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	agentUtils "github.com/easysoft/zagent/internal/pkg/utils/common"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"github.com/fatih/color"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
 var (
@@ -42,6 +43,7 @@ func main() {
 	flagSet.IntVar(&agentConf.Inst.NodePort, "p", consts.AgentVmServicePort, "")
 	flagSet.StringVar(&agentConf.Inst.Secret, "secret", "", "")
 	flagSet.StringVar(&agentConf.Inst.Language, "l", "zh", "")
+	flagSet.StringVar(&agentConf.Inst.Uuid, "uuid", "", "")
 
 	flagSet.BoolVar(&help, "h", false, "")
 
