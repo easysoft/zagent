@@ -3,9 +3,10 @@ package v1
 import consts "github.com/easysoft/zagent/internal/pkg/const"
 
 type SnapTaskReq struct {
-	Vm   string `json:"vm"`
-	Name string `json:"name"`
-	Task int    `json:"task"`
+	Vm   string          `json:"vm"`
+	Name string          `json:"name"`
+	Type consts.TaskType `json:"type"`
+	Task int             `json:"task"`
 }
 
 type SnapTaskResp struct {

@@ -193,6 +193,7 @@ const (
 	DownloadImage TaskType = "downloadImage"
 	ExportVm      TaskType = "exportVm"
 	CreateSnap    TaskType = "createSnap"
+	RevertSnap    TaskType = "revertSnap"
 )
 
 func (e TaskType) ToString() string {

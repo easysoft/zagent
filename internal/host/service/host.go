@@ -50,7 +50,7 @@ func (s *HostService) Check() {
 	//job := s.JobService.PeekJob()
 	//s.Register(true)
 	//
-	//s.JobService.StartTask()
+	//s.JobService.StartCreateSnapTask()
 	//
 	//s.PassEnvsToContainerIfNeeded(&job)
 	//s.TestService.Run(&job)

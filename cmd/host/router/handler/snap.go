@@ -24,7 +24,7 @@ func NewSnapCtrl() *SnapCtrl {
 // @Param SnapTaskReq body []v1.SnapTaskReq true "Snap Request Object"
 // @Success 200 {object} _domain.Response "code = success | fail"
 // @Router /api/v1/snaps/add [post]
-func (c *SnapCtrl) Add(ctx iris.Context) {
+func (c *SnapCtrl) AddSnapTask(ctx iris.Context) {
 	req := make([]v1.SnapTaskReq, 0)
 	err := ctx.ReadJSON(&req)
 	if err != nil {
@@ -39,6 +39,24 @@ func (c *SnapCtrl) Add(ctx iris.Context) {
 	}
 
 	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to add create snapshot task", nil))
+	return
+}
+
+func (c *SnapCtrl) AddRevertSnap(ctx iris.Context) {
+	req := make([]v1.SnapTaskReq, 0)
+	err := ctx.ReadJSON(&req)
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
+
+	err = c.SnapService.AddTasks(req)
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
+
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to add revert snapshot task", nil))
 	return
 }
 
@@ -76,25 +94,6 @@ func (c *SnapCtrl) RemoveSnap(ctx iris.Context) {
 	}
 
 	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to remove snapshot", nil))
-
-	return
-}
-
-func (c *SnapCtrl) RevertSnap(ctx iris.Context) {
-	req := v1.SnapTaskReq{}
-	err := ctx.ReadJSON(&req)
-	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
-		return
-	}
-
-	err = c.SnapService.RevertSnap(&req)
-	if err != nil {
-		ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
-		return
-	}
-
-	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to revert snapshot", nil))
 
 	return
 }

@@ -44,31 +44,6 @@ func (s *SnapService) ListSnap(vm string) (ret []v1.SnapItemResp, err error) {
 	return
 }
 
-func (s *SnapService) RemoveSnap(req *v1.SnapTaskReq) (err error) {
-	cmd := fmt.Sprintf("virsh snapshot-delete %s %s", req.Vm, req.Name)
-
-	out, err := _shellUtils.ExeShell(cmd)
-	if err != nil {
-		_logUtils.Infof("remove snap '%s' err, output %s, error %s", cmd, out, err.Error())
-		return
-	}
-
-	return
-}
-
-// RevertSnap 回滚到快照
-func (s *SnapService) RevertSnap(req *v1.SnapTaskReq) (err error) {
-	cmd := fmt.Sprintf("virsh snapshot-revert %s %s --running", req.Vm, req.Name)
-
-	out, err := _shellUtils.ExeShell(cmd)
-	if err != nil {
-		_logUtils.Infof("revert snap '%s' err, output %s, error %s", cmd, out, err.Error())
-		return
-	}
-
-	return
-}
-
 func (s *SnapService) AddTasks(req []v1.SnapTaskReq) (err error) {
 	for _, item := range req {
 		if item.Vm == "" || item.Name == "" {
@@ -79,7 +54,7 @@ func (s *SnapService) AddTasks(req []v1.SnapTaskReq) (err error) {
 			Vm:     item.Vm,
 			Name:   item.Name,
 			Task:   item.Task,
-			Type:   consts.CreateSnap,
+			Type:   item.Type,
 			Retry:  1,
 			Status: consts.Created,
 		}
@@ -93,6 +68,74 @@ func (s *SnapService) AddTasks(req []v1.SnapTaskReq) (err error) {
 
 		s.TaskRepo.Save(&po)
 	}
+
+	return
+}
+
+func (s *SnapService) StartCreateSnapTask(po agentModel.Task) {
+	ch := make(chan int, 1)
+	channelMap.Store(po.ID, ch)
+
+	go func() {
+		s.TaskRepo.UpdateStatus(po.ID, "", 0.01, "", consts.Inprogress, true, false)
+
+		// create ...
+		finalStatus := s.createSnap(&po)
+
+		s.TaskRepo.UpdateStatus(po.ID, "", 1, "", finalStatus, false, true)
+
+		po, _ = s.TaskRepo.Get(po.ID)
+		s.TaskService.SubmitResult(po)
+
+		job.TaskStatus.Delete(po.ID)
+
+		if ch != nil {
+			channelMap.Delete(po.ID)
+			close(ch)
+		}
+	}()
+}
+
+func (s *SnapService) StartRevertSnapTask(po agentModel.Task) {
+	ch := make(chan int, 1)
+	channelMap.Store(po.ID, ch)
+
+	go func() {
+		s.TaskRepo.UpdateStatus(po.ID, "", 0.01, "", consts.Inprogress, true, false)
+
+		// create ...
+		finalStatus := s.createSnap(&po)
+
+		s.TaskRepo.UpdateStatus(po.ID, "", 1, "", finalStatus, false, true)
+
+		po, _ = s.TaskRepo.Get(po.ID)
+		s.TaskService.SubmitResult(po)
+
+		job.TaskStatus.Delete(po.ID)
+
+		if ch != nil {
+			channelMap.Delete(po.ID)
+			close(ch)
+		}
+	}()
+}
+
+// RevertSnap 回滚到快照
+func (s *SnapService) revertSnap(po *agentModel.Task) (status consts.TaskStatus) {
+	uuidStr := uuid.Must(uuid.NewV4()).String()
+
+	s.AsyncExecutorService.Exec(po, uuidStr, func(po *agentModel.Task) (status consts.TaskStatus) {
+		cmd := fmt.Sprintf("virsh snapshot-revert %s %s --running -uuid-%s", po.Vm, po.Name, uuidStr)
+		out, err := _shellUtils.ExeShell(cmd)
+
+		status = consts.Completed
+		if err != nil {
+			_logUtils.Infof("revert snap '%s' err, output %s, error %s", cmd, out, err.Error())
+			status = consts.Failed
+		}
+
+		return
+	})
 
 	return
 }
@@ -116,28 +159,16 @@ func (s *SnapService) createSnap(po *agentModel.Task) (status consts.TaskStatus)
 	return
 }
 
-func (s *SnapService) StartTask(po agentModel.Task) {
-	ch := make(chan int, 1)
-	channelMap.Store(po.ID, ch)
+func (s *SnapService) RemoveSnap(req *v1.SnapTaskReq) (err error) {
+	cmd := fmt.Sprintf("virsh snapshot-delete %s %s", req.Vm, req.Name)
 
-	go func() {
-		s.TaskRepo.UpdateStatus(po.ID, "", 0.01, "", consts.Inprogress, true, false)
+	out, err := _shellUtils.ExeShell(cmd)
+	if err != nil {
+		_logUtils.Infof("remove snap '%s' err, output %s, error %s", cmd, out, err.Error())
+		return
+	}
 
-		// create ...
-		finalStatus := s.createSnap(&po)
-
-		s.TaskRepo.UpdateStatus(po.ID, "", 1, "", finalStatus, false, true)
-
-		po, _ = s.TaskRepo.Get(po.ID)
-		s.TaskService.SubmitResult(po)
-
-		job.TaskStatus.Delete(po.ID)
-
-		if ch != nil {
-			channelMap.Delete(po.ID)
-			close(ch)
-		}
-	}()
+	return
 }
 
 func (s *SnapService) RemoveTask(req v1.DownloadReq) {
