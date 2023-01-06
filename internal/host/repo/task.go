@@ -109,6 +109,10 @@ func (r *TaskRepo) UpdateStatus(id uint, filePath string, completionRate float64
 
 	updates := map[string]interface{}{"status": status, "xml": xmlDesc}
 
+	if execInfo != "" {
+		updates["execInfo"] = execInfo
+	}
+
 	if filePath != "" {
 		updates["path"] = filePath
 	}
