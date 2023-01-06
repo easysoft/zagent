@@ -16,7 +16,7 @@ type Task struct {
 	Md5      string            `json:"md5,omitempty"`
 	Path     string            `json:"path,omitempty"`
 	Status   consts.TaskStatus `json:"status"`
-	ExecInfo string            `json:"execInfo"`
+	ExecInfo string            `json:"execInfo" gorm:"column:execInfo"`
 	Retry    int               `json:"retry"`
 	Rate     float64           `json:"rate"`
 	Speed    float64           `json:"speed,omitempty"`
