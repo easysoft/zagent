@@ -142,10 +142,8 @@ func (s *SnapService) createSnap(po *agentModel.Task) (status consts.TaskStatus)
 
 // revertSnap 回滚到快照
 func (s *SnapService) revertSnap(po *agentModel.Task) (status consts.TaskStatus) {
-	uuidStr := uuid.Must(uuid.NewV4()).String()
-
-	status = s.AsyncExecutorService.Exec(po, uuidStr, func(po *agentModel.Task) (status consts.TaskStatus) {
-		cmd := fmt.Sprintf("virsh snapshot-revert %s %s --running -uuid-%s", po.Vm, po.Name, uuidStr)
+	status = s.AsyncExecutorService.Exec(po, "", func(po *agentModel.Task) (status consts.TaskStatus) {
+		cmd := fmt.Sprintf("virsh snapshot-revert %s %s --running", po.Vm, po.Name)
 		out, err := _shellUtils.ExeShell(cmd)
 
 		status = consts.Completed
