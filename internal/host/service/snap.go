@@ -25,8 +25,9 @@ type SnapService struct {
 	QemuService    *kvmService.QemuService    `inject:""`
 	KvmService     *kvmService.KvmService     `inject:""`
 
-	TaskRepo    *hostRepo.TaskRepo `inject:""`
-	TaskService *TaskService       `inject:""`
+	TaskRepo             *hostRepo.TaskRepo    `inject:""`
+	TaskService          *TaskService          `inject:""`
+	AsyncExecutorService *AsyncExecutorService `inject:""`
 }
 
 func NewSnapService() *SnapService {
@@ -99,28 +100,18 @@ func (s *SnapService) AddTasks(req []v1.SnapTaskReq) (err error) {
 func (s *SnapService) createSnap(po *agentModel.Task) (status consts.TaskStatus) {
 	uuidStr := uuid.Must(uuid.NewV4()).String()
 
-	ch := make(chan string)
-	go func() {
+	s.AsyncExecutorService.Exec(po, uuidStr, func(po *agentModel.Task) (status consts.TaskStatus) {
 		cmd := fmt.Sprintf("virsh snapshot-create-as %s %s --atomic -uuid-%s", po.Vm, po.Name, uuidStr)
 		out, err := _shellUtils.ExeShell(cmd)
 
-		statusMsg := consts.Completed.ToString()
+		status = consts.Completed
 		if err != nil {
 			_logUtils.Infof("create snap '%s' err, output %s, error %s", cmd, out, err.Error())
-			statusMsg = consts.Failed.ToString()
+			status = consts.Failed
 		}
 
-		ch <- statusMsg
-	}()
-
-	select {
-	case val := <-ch:
-		status = consts.TaskStatus(val)
-
-	case <-time.After(consts.CreateSnapTimeout * time.Second):
-		status = consts.Timeout
-		_shellUtils.KillProcessByUUID(uuidStr)
-	}
+		return
+	})
 
 	return
 }
