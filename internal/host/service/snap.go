@@ -126,11 +126,11 @@ func (s *SnapService) createSnap(po *agentModel.Task) (status consts.TaskStatus,
 
 	status, result = s.AsyncExecutorService.Exec(po, uuidStr, func(po *agentModel.Task) (status consts.TaskStatus, result string) {
 		cmd := fmt.Sprintf("virsh snapshot-create-as %s %s --atomic -uuid-%s", po.Vm, po.Name, uuidStr)
-		out, err := _shellUtils.ExeShell(cmd)
+		result, err := _shellUtils.ExeShell(cmd)
 
 		status = consts.Completed
 		if err != nil {
-			_logUtils.Infof("create snap '%s' err, output %s, error %s", cmd, out, err.Error())
+			_logUtils.Infof("create snap '%s' err, output %s, error %s", cmd, result, err.Error())
 			status = consts.Failed
 		}
 
@@ -142,8 +142,7 @@ func (s *SnapService) createSnap(po *agentModel.Task) (status consts.TaskStatus,
 
 // revertSnap 回滚到快照
 func (s *SnapService) revertSnap(po *agentModel.Task) (status consts.TaskStatus, result string) {
-	status, result = s.AsyncExecutorService.Exec(po, "", func(po *agentModel.Task) (
-		status consts.TaskStatus, result string) {
+	status, result = s.AsyncExecutorService.Exec(po, "", func(po *agentModel.Task) (status consts.TaskStatus, result string) {
 		cmd := fmt.Sprintf("virsh snapshot-revert %s %s --running", po.Vm, po.Name)
 		result, err := _shellUtils.ExeShell(cmd)
 
