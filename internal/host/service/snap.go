@@ -120,17 +120,17 @@ func (s *SnapService) StartRevertSnapTask(po agentModel.Task) {
 	}()
 }
 
-// RevertSnap 回滚到快照
-func (s *SnapService) revertSnap(po *agentModel.Task) (status consts.TaskStatus) {
+// createSnap 创建快照
+func (s *SnapService) createSnap(po *agentModel.Task) (status consts.TaskStatus) {
 	uuidStr := uuid.Must(uuid.NewV4()).String()
 
-	s.AsyncExecutorService.Exec(po, uuidStr, func(po *agentModel.Task) (status consts.TaskStatus) {
-		cmd := fmt.Sprintf("virsh snapshot-revert %s %s --running -uuid-%s", po.Vm, po.Name, uuidStr)
+	status = s.AsyncExecutorService.Exec(po, uuidStr, func(po *agentModel.Task) (status consts.TaskStatus) {
+		cmd := fmt.Sprintf("virsh snapshot-create-as %s %s --atomic -uuid-%s", po.Vm, po.Name, uuidStr)
 		out, err := _shellUtils.ExeShell(cmd)
 
 		status = consts.Completed
 		if err != nil {
-			_logUtils.Infof("revert snap '%s' err, output %s, error %s", cmd, out, err.Error())
+			_logUtils.Infof("create snap '%s' err, output %s, error %s", cmd, out, err.Error())
 			status = consts.Failed
 		}
 
@@ -140,16 +140,17 @@ func (s *SnapService) revertSnap(po *agentModel.Task) (status consts.TaskStatus)
 	return
 }
 
-func (s *SnapService) createSnap(po *agentModel.Task) (status consts.TaskStatus) {
+// revertSnap 回滚到快照
+func (s *SnapService) revertSnap(po *agentModel.Task) (status consts.TaskStatus) {
 	uuidStr := uuid.Must(uuid.NewV4()).String()
 
-	s.AsyncExecutorService.Exec(po, uuidStr, func(po *agentModel.Task) (status consts.TaskStatus) {
-		cmd := fmt.Sprintf("virsh snapshot-create-as %s %s --atomic -uuid-%s", po.Vm, po.Name, uuidStr)
+	status = s.AsyncExecutorService.Exec(po, uuidStr, func(po *agentModel.Task) (status consts.TaskStatus) {
+		cmd := fmt.Sprintf("virsh snapshot-revert %s %s --running -uuid-%s", po.Vm, po.Name, uuidStr)
 		out, err := _shellUtils.ExeShell(cmd)
 
 		status = consts.Completed
 		if err != nil {
-			_logUtils.Infof("create snap '%s' err, output %s, error %s", cmd, out, err.Error())
+			_logUtils.Infof("revert snap '%s' err, output %s, error %s", cmd, out, err.Error())
 			status = consts.Failed
 		}
 
