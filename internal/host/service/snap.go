@@ -77,12 +77,12 @@ func (s *SnapService) StartCreateSnapTask(po agentModel.Task) {
 	channelMap.Store(po.ID, ch)
 
 	go func() {
-		s.TaskRepo.UpdateStatus(po.ID, "", 0.01, "", consts.Inprogress, true, false)
+		s.TaskRepo.UpdateStatus(po.ID, "", 0.01, "", consts.Inprogress, "", true, false)
 
 		// create ...
-		finalStatus := s.createSnap(&po)
+		finalStatus, result := s.createSnap(&po)
 
-		s.TaskRepo.UpdateStatus(po.ID, "", 1, "", finalStatus, false, true)
+		s.TaskRepo.UpdateStatus(po.ID, "", 1, "", finalStatus, result, false, true)
 
 		po, _ = s.TaskRepo.Get(po.ID)
 		s.TaskService.SubmitResult(po)
@@ -101,12 +101,12 @@ func (s *SnapService) StartRevertSnapTask(po agentModel.Task) {
 	channelMap.Store(po.ID, ch)
 
 	go func() {
-		s.TaskRepo.UpdateStatus(po.ID, "", 0.01, "", consts.Inprogress, true, false)
+		s.TaskRepo.UpdateStatus(po.ID, "", 0.01, "", consts.Inprogress, "", true, false)
 
 		// create ...
-		finalStatus := s.revertSnap(&po)
+		finalStatus, result := s.revertSnap(&po)
 
-		s.TaskRepo.UpdateStatus(po.ID, "", 1, "", finalStatus, false, true)
+		s.TaskRepo.UpdateStatus(po.ID, "", 1, "", finalStatus, result, false, true)
 
 		po, _ = s.TaskRepo.Get(po.ID)
 		s.TaskService.SubmitResult(po)
@@ -121,10 +121,10 @@ func (s *SnapService) StartRevertSnapTask(po agentModel.Task) {
 }
 
 // createSnap 创建快照
-func (s *SnapService) createSnap(po *agentModel.Task) (status consts.TaskStatus) {
+func (s *SnapService) createSnap(po *agentModel.Task) (status consts.TaskStatus, result string) {
 	uuidStr := uuid.Must(uuid.NewV4()).String()
 
-	status = s.AsyncExecutorService.Exec(po, uuidStr, func(po *agentModel.Task) (status consts.TaskStatus) {
+	status, result = s.AsyncExecutorService.Exec(po, uuidStr, func(po *agentModel.Task) (status consts.TaskStatus, result string) {
 		cmd := fmt.Sprintf("virsh snapshot-create-as %s %s --atomic -uuid-%s", po.Vm, po.Name, uuidStr)
 		out, err := _shellUtils.ExeShell(cmd)
 
@@ -141,14 +141,15 @@ func (s *SnapService) createSnap(po *agentModel.Task) (status consts.TaskStatus)
 }
 
 // revertSnap 回滚到快照
-func (s *SnapService) revertSnap(po *agentModel.Task) (status consts.TaskStatus) {
-	status = s.AsyncExecutorService.Exec(po, "", func(po *agentModel.Task) (status consts.TaskStatus) {
+func (s *SnapService) revertSnap(po *agentModel.Task) (status consts.TaskStatus, result string) {
+	status, result = s.AsyncExecutorService.Exec(po, "", func(po *agentModel.Task) (
+		status consts.TaskStatus, result string) {
 		cmd := fmt.Sprintf("virsh snapshot-revert %s %s --running", po.Vm, po.Name)
-		out, err := _shellUtils.ExeShell(cmd)
+		result, err := _shellUtils.ExeShell(cmd)
 
 		status = consts.Completed
 		if err != nil {
-			_logUtils.Infof("revert snap '%s' err, output %s, error %s", cmd, out, err.Error())
+			_logUtils.Infof("revert snap '%s' err, output %s, error %s", cmd, result, err.Error())
 			status = consts.Failed
 		}
 

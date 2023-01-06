@@ -12,13 +12,14 @@ type Task struct {
 	Desc string `json:"desc,omitempty"`
 
 	// for download
-	Url    string            `json:"url,omitempty"`
-	Md5    string            `json:"md5,omitempty"`
-	Path   string            `json:"path,omitempty"`
-	Status consts.TaskStatus `json:"status"`
-	Retry  int               `json:"retry"`
-	Rate   float64           `json:"rate"`
-	Speed  float64           `json:"speed,omitempty"`
+	Url      string            `json:"url,omitempty"`
+	Md5      string            `json:"md5,omitempty"`
+	Path     string            `json:"path,omitempty"`
+	Status   consts.TaskStatus `json:"status"`
+	ExecInfo string            `json:"execInfo"`
+	Retry    int               `json:"retry"`
+	Rate     float64           `json:"rate"`
+	Speed    float64           `json:"speed,omitempty"`
 
 	// for export vm
 	Vm      string `json:"vm,omitempty"`

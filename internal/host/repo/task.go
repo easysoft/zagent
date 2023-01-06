@@ -105,7 +105,7 @@ func (r *TaskRepo) UpdateSpeed(id uint, speed float64) (err error) {
 }
 
 func (r *TaskRepo) UpdateStatus(id uint, filePath string, completionRate float64, xmlDesc string,
-	status consts.TaskStatus, isStart, isEnd bool) (err error) {
+	status consts.TaskStatus, execInfo string, isStart, isEnd bool) (err error) {
 
 	updates := map[string]interface{}{"status": status, "xml": xmlDesc}
 

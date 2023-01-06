@@ -17,13 +17,18 @@ func NewAsyncExecutor() *SnapService {
 	return &s
 }
 
-func (s *AsyncExecutorService) Exec(po *agentModel.Task, uuidStr string, opt func(*agentModel.Task) consts.TaskStatus) (
-	status consts.TaskStatus) {
+func (s *AsyncExecutorService) Exec(po *agentModel.Task, uuidStr string, opt func(*agentModel.Task) (consts.TaskStatus, string)) (
+	status consts.TaskStatus, result string) {
+
+	var statusMsg consts.TaskStatus
+	var resultMsg string
+
 	ch := make(chan string)
 
 	go func() {
-		statusMsg := opt(po).ToString()
-		ch <- statusMsg
+		statusMsg, resultMsg = opt(po)
+
+		ch <- statusMsg.ToString()
 	}()
 
 	select {
@@ -36,6 +41,8 @@ func (s *AsyncExecutorService) Exec(po *agentModel.Task, uuidStr string, opt fun
 			_shellUtils.KillProcessByUUID(uuidStr)
 		}
 	}
+
+	result = resultMsg
 
 	return
 }

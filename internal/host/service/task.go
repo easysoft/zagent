@@ -61,7 +61,6 @@ func (s *TaskService) CheckTask() (err error) {
 		} else if newTask.Type == consts.RevertSnap {
 			s.SnapService.StartRevertSnapTask(newTask)
 		}
-
 	}
 
 	return
@@ -139,6 +138,15 @@ func (s *TaskService) SubmitResult(task agentModel.Task) (err error) {
 
 		_, err = _httpUtils.Post(url, data)
 
+	} else if task.Type == consts.CreateSnap || task.Type == consts.RevertSnap {
+		url := requestUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/host/submitResult")
+
+		data := v1.ExportVmResp{
+			Status: task.Status,
+			Task:   task.Task,
+		}
+
+		_, err = _httpUtils.Post(url, data)
 	}
 
 	return

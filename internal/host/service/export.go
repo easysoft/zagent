@@ -37,11 +37,11 @@ func (s *ExportService) StartTask(po agentModel.Task) {
 	go func() {
 		targetBakingFilePath := filepath.Join(agentConf.Inst.DirBaking, po.Backing)
 
-		s.TaskRepo.UpdateStatus(po.ID, targetBakingFilePath, 0, "", consts.Inprogress, true, false)
+		s.TaskRepo.UpdateStatus(po.ID, targetBakingFilePath, 0, "", consts.Inprogress, "", true, false)
 
 		xmlDesc, finalStatus := s.exportVm(po, targetBakingFilePath)
 
-		s.TaskRepo.UpdateStatus(po.ID, targetBakingFilePath, 0, xmlDesc, finalStatus, false, true)
+		s.TaskRepo.UpdateStatus(po.ID, targetBakingFilePath, 0, xmlDesc, finalStatus, "", false, true)
 
 		po, _ = s.TaskRepo.Get(po.ID)
 		s.TaskService.SubmitResult(po)
