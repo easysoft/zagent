@@ -104,7 +104,7 @@ func (s *SnapService) StartRevertSnapTask(po agentModel.Task) {
 		s.TaskRepo.UpdateStatus(po.ID, "", 0.01, "", consts.Inprogress, true, false)
 
 		// create ...
-		finalStatus := s.createSnap(&po)
+		finalStatus := s.revertSnap(&po)
 
 		s.TaskRepo.UpdateStatus(po.ID, "", 1, "", finalStatus, false, true)
 
