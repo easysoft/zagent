@@ -23,8 +23,8 @@ func NewSnapCtrl() *SnapCtrl {
 // @Produce json
 // @Param SnapTaskReq body []v1.SnapTaskReq true "Snap Request Object"
 // @Success 200 {object} _domain.Response "code = success | fail"
-// @Router /api/v1/snaps/add [post]
-func (c *SnapCtrl) AddSnapTask(ctx iris.Context) {
+// @Router /api/v1/snaps/addCreateSnap [post]
+func (c *SnapCtrl) AddCreateSnap(ctx iris.Context) {
 	req := make([]v1.SnapTaskReq, 0)
 	err := ctx.ReadJSON(&req)
 	if err != nil {
@@ -42,6 +42,12 @@ func (c *SnapCtrl) AddSnapTask(ctx iris.Context) {
 	return
 }
 
+// @summary 添加回滚到快照任务
+// @Accept json
+// @Produce json
+// @Param SnapTaskReq body []v1.SnapTaskReq true "Snap Request Object"
+// @Success 200 {object} _domain.Response "code = success | fail"
+// @Router /api/v1/snaps/addRevertSnap [post]
 func (c *SnapCtrl) AddRevertSnap(ctx iris.Context) {
 	req := make([]v1.SnapTaskReq, 0)
 	err := ctx.ReadJSON(&req)
@@ -60,15 +66,16 @@ func (c *SnapCtrl) AddRevertSnap(ctx iris.Context) {
 	return
 }
 
+// @summary 列出虚拟机快照任务
+// @Accept json
+// @Produce json
+// @Param vm query string true "vm name"
+// @Success 200 {object} _domain.Response "code = success | fail"
+// @Router /api/v1/snaps/listSnap [get]
 func (c *SnapCtrl) ListSnap(ctx iris.Context) {
-	req := v1.SnapTaskReq{}
-	err := ctx.ReadJSON(&req)
-	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
-		return
-	}
+	vm := ctx.URLParam("vm")
 
-	snaps, err := c.SnapService.ListSnap(req.Vm)
+	snaps, err := c.SnapService.ListSnap(vm)
 	if err != nil {
 		ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
 		return
@@ -79,6 +86,12 @@ func (c *SnapCtrl) ListSnap(ctx iris.Context) {
 	return
 }
 
+// @summary 移除虚拟机快照任务
+// @Accept json
+// @Produce json
+// @Param SnapTaskReq body []v1.SnapTaskReq true "Snap Request Object"
+// @Success 200 {object} _domain.Response "code = success | fail"
+// @Router /api/v1/snaps/removeSnap [post]
 func (c *SnapCtrl) RemoveSnap(ctx iris.Context) {
 	req := v1.SnapTaskReq{}
 	err := ctx.ReadJSON(&req)

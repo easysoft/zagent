@@ -501,6 +501,133 @@
                 }
             }
         },
+        "/api/v1/snaps/addCreateSnap": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "添加创建快照任务",
+                "parameters": [
+                    {
+                        "description": "Snap Request Object",
+                        "name": "SnapTaskReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/v1.SnapTaskReq"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "$ref": "#/definitions/_domain.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/snaps/addRevertSnap": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "添加回滚到快照任务",
+                "parameters": [
+                    {
+                        "description": "Snap Request Object",
+                        "name": "SnapTaskReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/v1.SnapTaskReq"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "$ref": "#/definitions/_domain.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/snaps/listSnap": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "列出虚拟机快照任务",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "vm name",
+                        "name": "vm",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "$ref": "#/definitions/_domain.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/snaps/removeSnap": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "移除虚拟机快照任务",
+                "parameters": [
+                    {
+                        "description": "Snap Request Object",
+                        "name": "SnapTaskReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/v1.SnapTaskReq"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code = success | fail",
+                        "schema": {
+                            "$ref": "#/definitions/_domain.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/task/status": {
             "get": {
                 "consumes": [
@@ -650,7 +777,7 @@
                 "produces": [
                     "application/json"
                 ],
-                "summary": "虚拟机请求安全码",
+                "summary": "虚拟机心跳并请求Token",
                 "parameters": [
                     {
                         "description": "Vm Notify Request Object",
@@ -721,11 +848,13 @@
             "properties": {
                 "code": {
                     "description": "Enums consts.ResultCode",
-                    "type": "string"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/consts.ResultCode"
+                        }
+                    ]
                 },
-                "data": {
-                    "type": "object"
-                },
+                "data": {},
                 "msg": {
                     "type": "string"
                 }
@@ -758,6 +887,9 @@
                 "endDate": {
                     "type": "string"
                 },
+                "execInfo": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -783,7 +915,7 @@
                     "type": "string"
                 },
                 "status": {
-                    "type": "string"
+                    "$ref": "#/definitions/consts.TaskStatus"
                 },
                 "task": {
                     "type": "integer"
@@ -792,7 +924,7 @@
                     "type": "string"
                 },
                 "type": {
-                    "type": "string"
+                    "$ref": "#/definitions/consts.TaskType"
                 },
                 "updatedDate": {
                     "type": "string"
@@ -809,6 +941,135 @@
                     "type": "string"
                 }
             }
+        },
+        "consts.HostServiceStatus": {
+            "type": "string",
+            "enum": [
+                "ready",
+                "not_available",
+                "not_install",
+                "unknown"
+            ],
+            "x-enum-varnames": [
+                "HostServiceReady",
+                "HostServiceNotAvailable",
+                "HostServiceNotInstall",
+                "HostServiceUnknown"
+            ]
+        },
+        "consts.NatForwardType": {
+            "type": "string",
+            "enum": [
+                "http",
+                "stream",
+                "*"
+            ],
+            "x-enum-varnames": [
+                "Http",
+                "Stream",
+                "All"
+            ]
+        },
+        "consts.ResultCode": {
+            "type": "string",
+            "enum": [
+                "success",
+                "fail",
+                "unauthorized",
+                "biz_vm_not_exist",
+                "biz_image_not_exist",
+                "biz_ready",
+                "biz_not_install",
+                "biz_service_not_available"
+            ],
+            "x-enum-varnames": [
+                "ResultPass",
+                "ResultFail",
+                "ResultUnauthorized",
+                "BizVmNotExist",
+                "BizImageNotExist",
+                "BizReady",
+                "BizNotInstall",
+                "BizServiceNotAvailable"
+            ]
+        },
+        "consts.TaskStatus": {
+            "type": "string",
+            "enum": [
+                "created",
+                "inprogress",
+                "timeout",
+                "error",
+                "canceled",
+                "completed",
+                "failed"
+            ],
+            "x-enum-varnames": [
+                "Created",
+                "Inprogress",
+                "Timeout",
+                "Error",
+                "Canceled",
+                "Completed",
+                "Failed"
+            ]
+        },
+        "consts.TaskType": {
+            "type": "string",
+            "enum": [
+                "downloadImage",
+                "exportVm",
+                "createSnap",
+                "revertSnap"
+            ],
+            "x-enum-varnames": [
+                "DownloadImage",
+                "ExportVm",
+                "CreateSnap",
+                "RevertSnap"
+            ]
+        },
+        "consts.VmStatus": {
+            "type": "string",
+            "enum": [
+                "created",
+                "launch",
+                "vm_fail_create",
+                "running",
+                "shutoff",
+                "suspend",
+                "busy",
+                "ready",
+                "unknown",
+                "destroy",
+                "destroy_fail"
+            ],
+            "x-enum-comments": {
+                "VmBusy": "report by agent in vm",
+                "VmCreated": "set first time created",
+                "VmDestroy": "final status",
+                "VmDestroyFail": "set after fail to call vm destroy remotely",
+                "VmFailCreate": "set after fail to call vm creating remotely",
+                "VmLaunch": "set after success to call vm creating remotely",
+                "VmPaused": "report by agent on host",
+                "VmReady": "report by agent in vm",
+                "VmRunning": "report by agent on host",
+                "VmShutOff": "report by agent on host",
+                "VmUnknown": "report by agent on host, not running, destroy and shutoff"
+            },
+            "x-enum-varnames": [
+                "VmCreated",
+                "VmLaunch",
+                "VmFailCreate",
+                "VmRunning",
+                "VmShutOff",
+                "VmPaused",
+                "VmBusy",
+                "VmReady",
+                "VmUnknown",
+                "VmDestroy",
+                "VmDestroyFail"
+            ]
         },
         "v1.CreateVmReq": {
             "type": "object",
@@ -851,7 +1112,11 @@
                 },
                 "status": {
                     "description": "Enums consts.VmStatus",
-                    "type": "string"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/consts.VmStatus"
+                        }
+                    ]
                 },
                 "vnc": {
                     "type": "integer"
@@ -907,19 +1172,35 @@
             "properties": {
                 "kvm": {
                     "description": "Enums consts.HostServiceStatus",
-                    "type": "string"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/consts.HostServiceStatus"
+                        }
+                    ]
                 },
                 "nginx": {
                     "description": "Enums consts.HostServiceStatus",
-                    "type": "string"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/consts.HostServiceStatus"
+                        }
+                    ]
                 },
                 "novnc": {
                     "description": "Enums consts.HostServiceStatus",
-                    "type": "string"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/consts.HostServiceStatus"
+                        }
+                    ]
                 },
                 "websockify": {
                     "description": "Enums consts.HostServiceStatus",
-                    "type": "string"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/consts.HostServiceStatus"
+                        }
+                    ]
                 }
             }
         },
@@ -958,6 +1239,23 @@
                 }
             }
         },
+        "v1.SnapTaskReq": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "task": {
+                    "type": "integer"
+                },
+                "type": {
+                    "$ref": "#/definitions/consts.TaskType"
+                },
+                "vm": {
+                    "type": "string"
+                }
+            }
+        },
         "v1.VmNotifyReq": {
             "type": "object",
             "properties": {
@@ -975,7 +1273,10 @@
                 "ip": {
                     "type": "string"
                 },
-                "secret": {
+                "server": {
+                    "type": "string"
+                },
+                "token": {
                     "type": "string"
                 }
             }
@@ -991,7 +1292,11 @@
                 },
                 "type": {
                     "description": "Enums consts.NatForwardType",
-                    "type": "string"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/consts.NatForwardType"
+                        }
+                    ]
                 }
             }
         },
@@ -1012,7 +1317,11 @@
                 },
                 "type": {
                     "description": "Enums consts.NatForwardType",
-                    "type": "string"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/consts.NatForwardType"
+                        }
+                    ]
                 }
             }
         },
