@@ -93,7 +93,7 @@ func (r *Router) App() {
 				client.Post("/remove", r.KvmCtrl.Remove).Name = "移除KVM虚拟机"
 
 				client.Get("/listSnap", r.SnapCtrl.ListSnap).Name = "列出虚拟机快照"
-				client.Post("/addSnapTask", r.SnapCtrl.AddSnapTask).Name = "创建虚拟机快照"
+				// client.Post("/addSnapTask", r.SnapCtrl.AddSnapTask).Name = "创建虚拟机快照"
 				client.Post("/addRevertSnap", r.SnapCtrl.AddRevertSnap).Name = "回滚虚拟机快照"
 				client.Post("/removeSnap", r.SnapCtrl.RemoveSnap).Name = "删除虚拟机快照"
 			})
