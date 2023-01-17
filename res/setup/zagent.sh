@@ -40,6 +40,16 @@ command_exist(){
     fi
 }
 
+port_is_used(){
+    pid=`/usr/bin/lsof -i :$1|grep -v "PID" | awk '{print $2}'`
+    if [ "$pid" != "" ];
+    then
+        return 0
+    else
+        return 1
+    fi
+}
+
 service_is_inactive(){
     check_command=`sudo ps -ef | grep $1 | grep -v grep | awk '{print $2}'`
     if [[ -z ${check_command} ]]; then
@@ -109,6 +119,14 @@ download_zagent()
 restart_zagent()
 {
     sudo pkill zagent-host
+    if service_is_inactive zagent-host;then
+        if port_is_used 55001;then
+            is_success_zagent=false
+            echo -e "\033[31m 端口 55001 已被占用，请清理占用程序后重新执行初始化命令。 \033[0m"
+            exit 1
+            return
+        fi
+    fi
     cat > /tmp/zagent.sh <<EOF
 #!/bin/sh
 ### BEGIN INIT INFO
@@ -597,6 +615,11 @@ install_websockify()
         if [ ${force} == false ];then
             echo "Already installed websockify"
             if service_is_inactive JSONTokenApi;then
+                if port_is_used 6080;then
+                    echo -e "\033[31m 端口 6080 已被占用，请清理占用程序后重新执行初始化命令。 \033[0m"
+                    exit 1
+                    return
+                fi
                 nohup ${HOME}/zagent/websockify/run --token-plugin JSONTokenApi --token-source http://127.0.0.1:55001/api/v1/virtual/getVncAddress?token=%s 6080 > ${HOME}/zagent/websockify/nohup.log 2>&1 &
             fi
             return
@@ -630,6 +653,13 @@ install_websockify()
     /usr/bin/rm -rf ${HOME}/zagent/websockify.zip
     
     sudo chmod +x ${HOME}/zagent/websockify/run
+    if service_is_inactive JSONTokenApi;then
+        if port_is_used 6080;then
+            echo -e "\033[31m 端口 6080 已被占用，请清理占用程序后重新执行初始化命令。 \033[0m"
+            exit 1
+            return
+        fi
+    fi
     ${HOME}/zagent/websockify/run --token-plugin JSONTokenApi --token-source http://127.0.0.1:55001/api/v1/virtual/getVncAddress?token=%s 6080 -D
 }
 
