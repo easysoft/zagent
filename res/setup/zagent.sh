@@ -145,6 +145,7 @@ EOF
     if [ ${ID} = ${ubuntu} ];then
         sudo chmod +x /tmp/zagent.sh
         sudo /bin/mv /tmp/zagent.sh /etc/init.d/
+        sudo chmod +x /etc/init.d/zagent.sh
         ck_ok "edit zagent.sh"
         
         echo "Load sh"
