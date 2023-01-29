@@ -41,7 +41,7 @@ command_exist(){
 }
 
 port_is_used(){
-    pid=`/usr/bin/lsof -i :$1|grep -v "PID" | awk '{print $2}'`
+    pid=`sudo /usr/bin/lsof -i :$1|grep -v "PID" | awk '{print $2}'`
     if [ "$pid" != "" ];
     then
         return 0
@@ -440,10 +440,23 @@ install_nginx()
         if [ ${force} == false ];then
             echo "Already installed nginx"
             if is_inactive nginx;then
+                if port_is_used 80;then
+                    echo -e "\033[31m 端口 80 已被占用，请清理占用程序后重新执行初始化命令。 \033[0m"
+                    exit 1
+                    return
+                fi
                 sudo systemctl start nginx
+                ck_ok "Start Nginx"
             fi
             return
         fi
+        sudo systemctl stop nginx
+    fi
+    
+    if port_is_used 80;then
+        echo -e "\033[31m 端口 80 已被占用，请清理占用程序后重新执行初始化命令。 \033[0m"
+        exit 1
+        return
     fi
     
     download_nginx
