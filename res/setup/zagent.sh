@@ -745,6 +745,11 @@ if [ ! -n "$(egrep -o "(vmx|svm)" /proc/cpuinfo)" ];then
     exit 1
 fi
 
+if [ ! -n "$(dmesg | grep DMAR)" ];then
+    echo -e "\033[31m Virtualization is disabled in the host BIOS \033[0m"
+    exit 1
+fi
+
 ubuntu=ubuntu
 centos=centos
 
