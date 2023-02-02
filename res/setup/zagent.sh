@@ -745,7 +745,7 @@ if [ ! -n "$(egrep -o "(vmx|svm)" /proc/cpuinfo)" ];then
     exit 1
 fi
 
-if [ ! -n "$(dmesg | grep DMAR)" ];then
+if [ '0' = "$(lsmod |grep kvm |grep -v grep | tr -s ' ' | cut -d' ' -f1,3|grep kvm|grep -v grep | tr -s ' ' | cut -d' ' -f2)" ];then
     echo -e "\033[31m Virtualization is disabled in the host BIOS \033[0m"
     exit 1
 fi

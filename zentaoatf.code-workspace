@@ -1,0 +1,14 @@
+{
+	"folders": [
+        {
+            "path": "../zentaoatf"
+        },
+        {
+            "path": "."
+        },
+        {
+            "path": "../deeptest"
+        }
+    ],
+    "settings": {}
+}
