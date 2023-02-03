@@ -4,15 +4,16 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"strings"
+	"time"
+
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	authUtils "github.com/easysoft/zagent/internal/pkg/utils/auth"
 	_const "github.com/easysoft/zagent/pkg/const"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"github.com/fatih/color"
-	"io/ioutil"
-	"net/http"
-	"strings"
-	"time"
 )
 
 const ()
