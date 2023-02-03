@@ -2,6 +2,7 @@
 *.log
 /zv.db
 /bin/
+/zentaoatf.code-workspace
 
 /log/
 /cmd/test/log/
