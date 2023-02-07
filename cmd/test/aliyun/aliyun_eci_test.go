@@ -2,11 +2,12 @@ package aliyun
 
 import (
 	"fmt"
+	"testing"
+
 	testconst "github.com/easysoft/zagent/cmd/test/_const"
-	"github.com/easysoft/zagent/internal/pkg/const"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/vendors/aliyun"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
-	"testing"
 )
 
 func TestAliyunEci(t *testing.T) {

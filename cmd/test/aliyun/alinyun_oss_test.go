@@ -1,12 +1,13 @@
 package aliyun
 
 import (
-	"github.com/aliyun/aliyun-oss-go-sdk/oss"
-	"github.com/easysoft/zagent/cmd/test/_const"
-	"github.com/easysoft/zagent/internal/pkg/const"
-	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"os"
 	"testing"
+
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
+	testconst "github.com/easysoft/zagent/cmd/test/_const"
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 )
 
 func TestOss(t *testing.T) {

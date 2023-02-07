@@ -3,9 +3,10 @@ package _fileUtils
 import (
 	"archive/zip"
 	"fmt"
+	"strings"
+
 	_errUtils "github.com/easysoft/zagent/pkg/lib/err"
 	"github.com/mholt/archiver/v3"
-	"strings"
 )
 
 func ZipFiles(dist string, dir string, files []string) error {

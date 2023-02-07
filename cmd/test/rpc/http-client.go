@@ -3,11 +3,12 @@ package main
 import (
 	"bytes"
 	"fmt"
-	gateway "github.com/rpcxio/rpcx-gateway"
-	"github.com/smallnest/rpcx/codec"
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	gateway "github.com/rpcxio/rpcx-gateway"
+	"github.com/smallnest/rpcx/codec"
 )
 
 func main() {

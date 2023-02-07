@@ -10,7 +10,7 @@ import (
 	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 )
 
-//find port by keyword
+// find port by keyword
 func GetUsedPortByKeyword(keyword string, defaultVal int) (port int, err error) {
 	if _commonUtils.IsWin() {
 		return GetWindowsUsedPortByKeyword(keyword, defaultVal)
@@ -71,7 +71,7 @@ func GetWindowsUsedPortByKeyword(keyword string, defaultVal int) (port int, err 
 	return
 }
 
-//find port by ps command
+// find port by ps command
 func GetUsedPortByPs(keyword string, defaultVal int) (port int, err error) {
 	cmd := fmt.Sprintf(`ps aux | grep "%s" |grep -v grep | tr -s ' ' | cut -d' ' -f2,11-20`, keyword)
 	output, _ := _shellUtils.ExeSysCmd(cmd)

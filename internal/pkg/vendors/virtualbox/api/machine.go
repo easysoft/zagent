@@ -2,8 +2,9 @@ package virtualboxapi
 
 import (
 	"errors"
-	virtualboxsrv "github.com/easysoft/zagent/internal/pkg/vendors/virtualbox/srv"
 	"log"
+
+	virtualboxsrv "github.com/easysoft/zagent/internal/pkg/vendors/virtualbox/srv"
 )
 
 type Machine struct {

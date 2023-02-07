@@ -1,11 +1,12 @@
 package aliyun
 
 import (
+	"testing"
+
 	_const "github.com/easysoft/zagent/cmd/test/_const"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/vendors/huaweicloud"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
-	"testing"
 )
 
 func TestHuaweiCloudQuery(t *testing.T) {

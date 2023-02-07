@@ -1,11 +1,12 @@
 package docker
 
 import (
+	"testing"
+
 	hostDockerService "github.com/easysoft/zagent/internal/host/service/docker"
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
-	"testing"
 )
 
 func TestDocker(t *testing.T) {

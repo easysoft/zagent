@@ -2,6 +2,7 @@ package swaggerUtils
 
 import (
 	"fmt"
+
 	"github.com/iris-contrib/swagger"
 	"github.com/iris-contrib/swagger/swaggerFiles"
 	"github.com/kataras/iris/v12"

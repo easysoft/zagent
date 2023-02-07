@@ -1,9 +1,10 @@
 package wsapiclient
 
 import (
-	vmwareService "github.com/easysoft/zagent/internal/pkg/vendors/vmware"
 	"log"
 	"testing"
+
+	vmwareService "github.com/easysoft/zagent/internal/pkg/vendors/vmware"
 )
 
 func TestNewClient(t *testing.T) {

@@ -3,8 +3,9 @@ package kvmService
 import "C"
 import (
 	"fmt"
-	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	"time"
+
+	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	consts "github.com/easysoft/zagent/internal/pkg/const"

@@ -1,9 +1,10 @@
 package virtualboxapi
 
 import (
+	"strings"
+
 	virtualboxsrv "github.com/easysoft/zagent/internal/pkg/vendors/virtualbox/srv"
 	_stringUtils "github.com/easysoft/zagent/pkg/lib/string"
-	"strings"
 )
 
 type NetworkAdapter struct {

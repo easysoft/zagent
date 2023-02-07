@@ -1,9 +1,10 @@
 package kvm
 
 import (
-	hostKvmService "github.com/easysoft/zagent/internal/host/service/kvm"
 	"log"
 	"testing"
+
+	hostKvmService "github.com/easysoft/zagent/internal/host/service/kvm"
 )
 
 func TestLibVirt(t *testing.T) {

@@ -2,15 +2,16 @@ package main
 
 import (
 	"flag"
+	"os"
+	"os/signal"
+	"syscall"
+
 	hostInit "github.com/easysoft/zagent/cmd/host/init"
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	agentUtils "github.com/easysoft/zagent/internal/pkg/utils/common"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"github.com/fatih/color"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
 var (

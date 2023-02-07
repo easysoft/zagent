@@ -10,3 +10,4 @@
 /down/upload/*
 /cmd/test/_const/const.go
 /cmd/test/_const/const_secret.go
+report.xml

@@ -3,13 +3,14 @@ package hostAgentService
 import (
 	"errors"
 	"fmt"
+	"sync"
+	"time"
+
 	agentModel "github.com/easysoft/zagent/internal/host/model"
 	kvmService "github.com/easysoft/zagent/internal/host/service/kvm"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/job"
 	"github.com/gofrs/uuid"
-	"sync"
-	"time"
 
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	hostRepo "github.com/easysoft/zagent/internal/host/repo"

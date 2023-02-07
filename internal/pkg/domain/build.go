@@ -1,8 +1,9 @@
 package domain
 
 import (
-	consts "github.com/easysoft/zagent/internal/pkg/const"
 	"time"
+
+	consts "github.com/easysoft/zagent/internal/pkg/const"
 )
 
 type Build struct {

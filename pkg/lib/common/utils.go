@@ -2,7 +2,6 @@ package _commonUtils
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/maps"
 	"net"
 	"os"
 	"path"
@@ -12,6 +11,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/emirpasic/gods/maps"
 )
 
 func Base(pathStr string) string {

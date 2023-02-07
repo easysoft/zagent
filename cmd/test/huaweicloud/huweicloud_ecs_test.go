@@ -1,13 +1,14 @@
 package aliyun
 
 import (
+	"testing"
+	"time"
+
 	_const "github.com/easysoft/zagent/cmd/test/_const"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/vendors/huaweicloud"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	_stringUtils "github.com/easysoft/zagent/pkg/lib/string"
-	"testing"
-	"time"
 )
 
 func TestHuaweiCloudEcs(t *testing.T) {

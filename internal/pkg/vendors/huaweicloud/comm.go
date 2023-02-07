@@ -2,15 +2,16 @@ package huaweicloud
 
 import (
 	"encoding/json"
+	"io/ioutil"
+	"net/http"
+	"strings"
+
 	"github.com/alibabacloud-go/tea/tea"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"github.com/huaweicloud/huaweicloud-sdk-go-v3/core/auth/basic"
 	iam "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/iam/v3"
 	iamModel "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/iam/v3/model"
 	region "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/iam/v3/region"
-	"io/ioutil"
-	"net/http"
-	"strings"
 )
 
 type HuaweiCloudCommService struct {

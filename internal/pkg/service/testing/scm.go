@@ -1,6 +1,9 @@
 package agentTestingService
 
 import (
+	"os"
+	"strings"
+
 	commDomain "github.com/easysoft/zagent/internal/pkg/domain"
 	_const "github.com/easysoft/zagent/pkg/const"
 	_fileUtils "github.com/easysoft/zagent/pkg/lib/file"
@@ -8,9 +11,7 @@ import (
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/transport/http"
 	"github.com/mholt/archiver/v3"
-	"github.com/satori/go.uuid"
-	"os"
-	"strings"
+	uuid "github.com/satori/go.uuid"
 )
 
 type ScmService struct {

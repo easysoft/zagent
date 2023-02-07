@@ -2,6 +2,7 @@ package _domain
 
 import (
 	"fmt"
+
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 )
 

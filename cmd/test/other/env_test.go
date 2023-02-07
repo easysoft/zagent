@@ -1,10 +1,11 @@
 package other
 
 import (
-	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 	"log"
 	"os"
 	"testing"
+
+	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 )
 
 func TestEnv(t *testing.T) {

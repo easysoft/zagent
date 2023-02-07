@@ -2,10 +2,11 @@ package authUtils
 
 import (
 	"fmt"
-	consts "github.com/easysoft/zagent/internal/pkg/const"
-	_const "github.com/easysoft/zagent/pkg/const"
 	"net/http"
 	"strings"
+
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	_const "github.com/easysoft/zagent/pkg/const"
 )
 
 func AddBearTokenIfNeeded(req *http.Request) {

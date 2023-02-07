@@ -2,8 +2,9 @@ package hostHandler
 
 import (
 	"fmt"
+
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
-	"github.com/easysoft/zagent/internal/host/service/virtualbox"
+	virtualboxService "github.com/easysoft/zagent/internal/host/service/virtualbox"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
 	"github.com/kataras/iris/v12"

@@ -2,6 +2,9 @@ package vmInit
 
 import (
 	"fmt"
+	"net/http"
+	"time"
+
 	vmCron "github.com/easysoft/zagent/cmd/vm/cron"
 	vmRouter "github.com/easysoft/zagent/cmd/vm/router"
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
@@ -11,8 +14,6 @@ import (
 	"github.com/facebookgo/inject"
 	"github.com/kataras/iris/v12"
 	"github.com/sirupsen/logrus"
-	"net/http"
-	"time"
 )
 
 func Init() {

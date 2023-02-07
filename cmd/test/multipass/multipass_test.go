@@ -1,13 +1,14 @@
 package multipass
 
 import (
+	"log"
+	"testing"
+
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	multiPassService "github.com/easysoft/zagent/internal/host/service/multipass"
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
-	"log"
-	"testing"
 )
 
 func TestMultiPass(t *testing.T) {

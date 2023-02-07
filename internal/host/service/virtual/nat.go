@@ -1,10 +1,11 @@
 package virtualService
 
 import (
+	"sync"
+
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	natHelper "github.com/easysoft/zagent/internal/pkg/utils/net"
 	"github.com/jinzhu/copier"
-	"sync"
 )
 
 type NatService struct {

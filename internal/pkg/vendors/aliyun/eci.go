@@ -1,10 +1,11 @@
 package aliyun
 
 import (
+	"strings"
+
 	eci "github.com/alibabacloud-go/eci-20180808/v2/client"
 	"github.com/alibabacloud-go/tea/tea"
 	"github.com/easysoft/zagent/internal/pkg/domain"
-	"strings"
 )
 
 type AliyunEciService struct {

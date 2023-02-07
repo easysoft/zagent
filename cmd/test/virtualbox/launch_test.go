@@ -1,9 +1,10 @@
 package main
 
 import (
-	virtualboxapi "github.com/easysoft/zagent/internal/pkg/vendors/virtualbox/api"
 	"log"
 	"testing"
+
+	virtualboxapi "github.com/easysoft/zagent/internal/pkg/vendors/virtualbox/api"
 )
 
 const (

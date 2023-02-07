@@ -184,9 +184,9 @@ func (c *Client) httpRequest(p string, m string, pl bytes.Buffer) (io.ReadCloser
 }
 
 // requestPath method show the URL to the request of httpClient.
-//Input:
+// Input:
 // p: string just the path of the URL.
-//Return:
+// Return:
 // string with the complete URL to access
 func (c *Client) requestPath(p string) string {
 	r := fmt.Sprintf("%s/%s", c.BaseURL, p)

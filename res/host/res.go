@@ -233,11 +233,13 @@ var _bindata = map[string]func() (*asset, error){
 // directory embedded in the file by go-bindata.
 // For example if you run go-bindata on data/... and data contains the
 // following hierarchy:
-//     data/
-//       foo.txt
-//       img/
-//         a.png
-//         b.png
+//
+//	data/
+//	  foo.txt
+//	  img/
+//	    a.png
+//	    b.png
+//
 // then AssetDir("data") would return []string{"foo.txt", "img"}
 // AssetDir("data/img") would return []string{"a.png", "b.png"}
 // AssetDir("foo.txt") and AssetDir("notexist") would return an error
@@ -270,16 +272,16 @@ type bintree struct {
 }
 
 var _bintree = &bintree{nil, map[string]*bintree{
-	"res": &bintree{nil, map[string]*bintree{
-		"host": &bintree{nil, map[string]*bintree{
-			"en": &bintree{nil, map[string]*bintree{
-				"messages.json": &bintree{resHostEnMessagesJson, map[string]*bintree{}},
-				"usage.txt":     &bintree{resHostEnUsageTxt, map[string]*bintree{}},
+	"res": {nil, map[string]*bintree{
+		"host": {nil, map[string]*bintree{
+			"en": {nil, map[string]*bintree{
+				"messages.json": {resHostEnMessagesJson, map[string]*bintree{}},
+				"usage.txt":     {resHostEnUsageTxt, map[string]*bintree{}},
 			}},
-			"res.go": &bintree{resHostResGo, map[string]*bintree{}},
-			"zh": &bintree{nil, map[string]*bintree{
-				"messages.json": &bintree{resHostZhMessagesJson, map[string]*bintree{}},
-				"usage.txt":     &bintree{resHostZhUsageTxt, map[string]*bintree{}},
+			"res.go": {resHostResGo, map[string]*bintree{}},
+			"zh": {nil, map[string]*bintree{
+				"messages.json": {resHostZhMessagesJson, map[string]*bintree{}},
+				"usage.txt":     {resHostZhUsageTxt, map[string]*bintree{}},
 			}},
 		}},
 	}},

@@ -2,6 +2,9 @@ package _db
 
 import (
 	"fmt"
+	"path/filepath"
+	"time"
+
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	_fileUtils "github.com/easysoft/zagent/pkg/lib/file"
@@ -10,8 +13,6 @@ import (
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 	"gorm.io/plugin/dbresolver"
-	"path/filepath"
-	"time"
 
 	_ "gorm.io/driver/sqlite"
 	"gorm.io/gorm"

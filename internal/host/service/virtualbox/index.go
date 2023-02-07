@@ -4,15 +4,16 @@ import "C"
 import (
 	"errors"
 	"fmt"
-	"github.com/easysoft/zagent/cmd/host/router/v1"
-	"github.com/easysoft/zagent/internal/pkg/vendors/virtualbox/api"
+	"regexp"
+	"strings"
+
+	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
+	virtualboxapi "github.com/easysoft/zagent/internal/pkg/vendors/virtualbox/api"
 	_domain "github.com/easysoft/zagent/pkg/domain"
 	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 	_stringUtils "github.com/easysoft/zagent/pkg/lib/string"
-	"regexp"
-	"strings"
 )
 
 const (

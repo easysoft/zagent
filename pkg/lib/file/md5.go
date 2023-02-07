@@ -1,9 +1,10 @@
 package _fileUtils
 
 import (
+	"strings"
+
 	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
 	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
-	"strings"
 )
 
 func GetMd5(pth string) (ret string, err error) {

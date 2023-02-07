@@ -2,6 +2,7 @@ package vmwareService
 
 import (
 	"errors"
+
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 )
 

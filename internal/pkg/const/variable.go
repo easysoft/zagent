@@ -9,8 +9,6 @@ import (
 	_const "github.com/easysoft/zagent/pkg/const"
 )
 
-var ()
-
 var (
 	ConfigFile     = filepath.Join("conf", AppNameAgent+".yaml")
 	LogDir         = fmt.Sprintf("log%s", _const.PthSep)

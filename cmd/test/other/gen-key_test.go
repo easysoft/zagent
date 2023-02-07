@@ -7,10 +7,11 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
-	"golang.org/x/crypto/ssh"
 	"io/ioutil"
 	"log"
 	"testing"
+
+	"golang.org/x/crypto/ssh"
 )
 
 func TestGenKey(t *testing.T) {

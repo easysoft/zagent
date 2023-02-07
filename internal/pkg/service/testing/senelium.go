@@ -2,12 +2,13 @@ package agentTestingService
 
 import (
 	"fmt"
+	"path/filepath"
+
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	commDomain "github.com/easysoft/zagent/internal/pkg/domain"
 	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
 	_fileUtils "github.com/easysoft/zagent/pkg/lib/file"
-	"path/filepath"
 )
 
 type SeleniumService struct {

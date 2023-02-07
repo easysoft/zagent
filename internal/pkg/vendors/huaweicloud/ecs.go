@@ -8,8 +8,9 @@ import (
 	vpc "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/vpc/v2"
 	vpcRegion "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/vpc/v2/region"
 
-	"github.com/huaweicloud/huaweicloud-sdk-go-v3/services/vpc/v2/model"
 	"strings"
+
+	"github.com/huaweicloud/huaweicloud-sdk-go-v3/services/vpc/v2/model"
 
 	ecs "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/ecs/v2"
 	ecsModel "github.com/huaweicloud/huaweicloud-sdk-go-v3/services/ecs/v2/model"

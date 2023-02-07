@@ -3,14 +3,15 @@ package multiPassService
 import (
 	"errors"
 	"fmt"
+	"path/filepath"
+	"strings"
+	"sync"
+
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	"github.com/easysoft/zagent/internal/pkg/domain"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
-	"path/filepath"
-	"strings"
-	"sync"
 )
 
 const (

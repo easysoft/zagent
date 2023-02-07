@@ -3,11 +3,12 @@ package _i118Utils
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"path/filepath"
+
 	_resUtils "github.com/easysoft/zagent/pkg/lib/res"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
-	"io/ioutil"
-	"path/filepath"
 )
 
 var I118Prt *message.Printer

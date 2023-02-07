@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
+	"strings"
+
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	"github.com/easysoft/zagent/internal/pkg/domain"
 	_const "github.com/easysoft/zagent/pkg/const"
@@ -13,9 +16,7 @@ import (
 	_i118Utils "github.com/easysoft/zagent/pkg/lib/i118"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
-	"github.com/satori/go.uuid"
-	"os"
-	"strings"
+	uuid "github.com/satori/go.uuid"
 )
 
 type ExecService struct {

@@ -1,10 +1,11 @@
 package agentService
 
 import (
-	consts "github.com/easysoft/zagent/internal/pkg/const"
-	"github.com/easysoft/zagent/internal/pkg/domain"
 	"sync"
 	"time"
+
+	consts "github.com/easysoft/zagent/internal/pkg/const"
+	"github.com/easysoft/zagent/internal/pkg/domain"
 )
 
 var lock sync.Mutex

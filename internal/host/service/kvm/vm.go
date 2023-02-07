@@ -20,8 +20,6 @@ import (
 	libvirtxml "github.com/libvirt/libvirt-go-xml"
 )
 
-const ()
-
 type KvmService struct {
 	VmMapVar         map[string]domain.Vm
 	SyncHeartbeatMap sync.Map

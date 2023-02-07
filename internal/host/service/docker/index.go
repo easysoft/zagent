@@ -4,6 +4,12 @@ import "C"
 import (
 	"context"
 	"fmt"
+	"io"
+	"io/ioutil"
+	"net/http"
+	"os"
+	"strconv"
+
 	"github.com/docker/cli/cli/connhelper"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
@@ -14,11 +20,6 @@ import (
 	commDomain "github.com/easysoft/zagent/internal/pkg/domain"
 	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
-	"io"
-	"io/ioutil"
-	"net/http"
-	"os"
-	"strconv"
 )
 
 const (

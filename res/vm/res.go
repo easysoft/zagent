@@ -332,11 +332,13 @@ var _bindata = map[string]func() (*asset, error){
 // directory embedded in the file by go-bindata.
 // For example if you run go-bindata on data/... and data contains the
 // following hierarchy:
-//     data/
-//       foo.txt
-//       img/
-//         a.png
-//         b.png
+//
+//	data/
+//	  foo.txt
+//	  img/
+//	    a.png
+//	    b.png
+//
 // then AssetDir("data") would return []string{"foo.txt", "img"}
 // AssetDir("data/img") would return []string{"a.png", "b.png"}
 // AssetDir("foo.txt") and AssetDir("notexist") would return an error
@@ -369,24 +371,24 @@ type bintree struct {
 }
 
 var _bintree = &bintree{nil, map[string]*bintree{
-	"res": &bintree{nil, map[string]*bintree{
-		"vm": &bintree{nil, map[string]*bintree{
-			"docs": &bintree{nil, map[string]*bintree{
-				"docs.go":      &bintree{resVmDocsDocsGo, map[string]*bintree{}},
-				"swagger.json": &bintree{resVmDocsSwaggerJson, map[string]*bintree{}},
-				"swagger.yaml": &bintree{resVmDocsSwaggerYaml, map[string]*bintree{}},
+	"res": {nil, map[string]*bintree{
+		"vm": {nil, map[string]*bintree{
+			"docs": {nil, map[string]*bintree{
+				"docs.go":      {resVmDocsDocsGo, map[string]*bintree{}},
+				"swagger.json": {resVmDocsSwaggerJson, map[string]*bintree{}},
+				"swagger.yaml": {resVmDocsSwaggerYaml, map[string]*bintree{}},
 			}},
-			"en": &bintree{nil, map[string]*bintree{
-				"messages.json": &bintree{resVmEnMessagesJson, map[string]*bintree{}},
-				"usage.txt":     &bintree{resVmEnUsageTxt, map[string]*bintree{}},
+			"en": {nil, map[string]*bintree{
+				"messages.json": {resVmEnMessagesJson, map[string]*bintree{}},
+				"usage.txt":     {resVmEnUsageTxt, map[string]*bintree{}},
 			}},
-			"key": &bintree{nil, map[string]*bintree{
-				"id_rsa_test":     &bintree{resVmKeyId_rsa_test, map[string]*bintree{}},
-				"id_rsa_test.pub": &bintree{resVmKeyId_rsa_testPub, map[string]*bintree{}},
+			"key": {nil, map[string]*bintree{
+				"id_rsa_test":     {resVmKeyId_rsa_test, map[string]*bintree{}},
+				"id_rsa_test.pub": {resVmKeyId_rsa_testPub, map[string]*bintree{}},
 			}},
-			"zh": &bintree{nil, map[string]*bintree{
-				"messages.json": &bintree{resVmZhMessagesJson, map[string]*bintree{}},
-				"usage.txt":     &bintree{resVmZhUsageTxt, map[string]*bintree{}},
+			"zh": {nil, map[string]*bintree{
+				"messages.json": {resVmZhMessagesJson, map[string]*bintree{}},
+				"usage.txt":     {resVmZhUsageTxt, map[string]*bintree{}},
 			}},
 		}},
 	}},

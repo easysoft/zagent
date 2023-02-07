@@ -1,10 +1,11 @@
 package hostAgentService
 
 import (
+	"time"
+
 	agentModel "github.com/easysoft/zagent/internal/host/model"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
-	"time"
 )
 
 type AsyncExecutorService struct {

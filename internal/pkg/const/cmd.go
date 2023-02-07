@@ -27,5 +27,3 @@ const (
 
 	CmdExportVm = `qemu-img convert -f qcow2 -O qcow2 -c %s %s`
 )
-
-var ()

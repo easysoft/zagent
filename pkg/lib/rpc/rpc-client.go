@@ -2,14 +2,15 @@ package _rpcUtils
 
 import (
 	"bytes"
+	"io/ioutil"
+	"net/http"
+	"strings"
+
 	_domain "github.com/easysoft/zagent/internal/pkg/domain"
 	_logUtils "github.com/easysoft/zagent/internal/pkg/lib/log"
 	gateway "github.com/rpcxio/rpcx-gateway"
 	"github.com/smallnest/rpcx/codec"
 	"github.com/smallnest/rpcx/log"
-	"io/ioutil"
-	"net/http"
-	"strings"
 )
 
 func Post(url, method, api, mtd string, args interface{}) (resp _domain.RemoteResp) {

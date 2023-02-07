@@ -2,8 +2,9 @@ package hostAgentService
 
 import (
 	"fmt"
-	"github.com/easysoft/zagent/internal/host/model"
-	"github.com/easysoft/zagent/pkg/db"
+
+	agentModel "github.com/easysoft/zagent/internal/host/model"
+	_db "github.com/easysoft/zagent/pkg/db"
 	"github.com/fatih/color"
 )
 

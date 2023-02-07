@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	"log"
+
+	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 )
 
 // GetAllVMs Method return array of Vm and a error variable if occurr some problem
@@ -54,7 +55,7 @@ func (c *Client) GetAllVMs() ([]Vm, error) {
 
 // CreateVM method to create a new VM in VmWare Worstation Input:
 // tmplId: string with the ID of the origin VM,
-//name: string with the denomination of the VM, desc: string with the description of VM
+// name: string with the denomination of the VM, desc: string with the description of VM
 func (c *Client) CreateVM(tmplId string, name string, desc string) (*Vm, error) {
 	var vm Vm
 	requestBody := new(bytes.Buffer)

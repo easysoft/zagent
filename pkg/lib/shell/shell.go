@@ -5,13 +5,14 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
-	_i118Utils "github.com/easysoft/zagent/pkg/lib/i118"
-	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	"io"
 	"os/exec"
 	"regexp"
 	"strings"
+
+	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
+	_i118Utils "github.com/easysoft/zagent/pkg/lib/i118"
+	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 )
 
 func ExeSysCmd(cmdStr string) (string, error) {

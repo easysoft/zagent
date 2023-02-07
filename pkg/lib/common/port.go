@@ -1,8 +1,9 @@
 package _commonUtils
 
 import (
-	consts "github.com/easysoft/zagent/internal/pkg/const"
 	"sync"
+
+	consts "github.com/easysoft/zagent/internal/pkg/const"
 )
 
 func GetHttpPort() (ret int) {

@@ -2,11 +2,12 @@ package vmWareService
 
 import (
 	"fmt"
+	"time"
+
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	"github.com/easysoft/zagent/internal/pkg/domain"
 	vmwareService "github.com/easysoft/zagent/internal/pkg/vendors/vmware"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
-	"time"
 )
 
 type VmWareService struct {

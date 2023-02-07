@@ -3,8 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/smallnest/rpcx/client"
 	"log"
+
+	"github.com/smallnest/rpcx/client"
 )
 
 func main() {

@@ -2,12 +2,13 @@ package _stringUtils
 
 import (
 	"encoding/base64"
-	"github.com/jameskeane/bcrypt"
 	"math/rand"
 	"strconv"
 	"strings"
 	"time"
 	"unicode"
+
+	"github.com/jameskeane/bcrypt"
 )
 
 func TrimAll(str string) string {

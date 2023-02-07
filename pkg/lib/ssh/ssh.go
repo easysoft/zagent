@@ -1,11 +1,12 @@
 package _sshUtils
 
 import (
+	"path/filepath"
+
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	_resUtils "github.com/easysoft/zagent/pkg/lib/res"
 	"golang.org/x/crypto/ssh"
-	"path/filepath"
 )
 
 func Connect(host, user string) (client *ssh.Client, err error) {

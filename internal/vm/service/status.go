@@ -1,13 +1,14 @@
 package vmAgentService
 
 import (
-	v1 "github.com/easysoft/zagent/cmd/vm/router/v1"
-	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
-	natHelper "github.com/easysoft/zagent/internal/pkg/utils/net"
 	"net"
 	"strconv"
 	"strings"
 	"time"
+
+	v1 "github.com/easysoft/zagent/cmd/vm/router/v1"
+	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
+	natHelper "github.com/easysoft/zagent/internal/pkg/utils/net"
 
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	_stringUtils "github.com/easysoft/zagent/pkg/lib/string"

@@ -1,6 +1,8 @@
 package aliyun
 
 import (
+	"strings"
+
 	openapi "github.com/alibabacloud-go/darabonba-openapi/client"
 	eci "github.com/alibabacloud-go/eci-20180808/v2/client"
 	ecs "github.com/alibabacloud-go/ecs-20140526/v2/client"
@@ -8,7 +10,6 @@ import (
 	vpc "github.com/alibabacloud-go/vpc-20160428/v2/client"
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/ens"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
-	"strings"
 )
 
 type AliyunCommService struct {

@@ -16,8 +16,6 @@ import (
 	"github.com/fatih/color"
 )
 
-const ()
-
 func Get(url string) (ret []byte, err error) {
 	if consts.Verbose {
 		_logUtils.Infof("===DEBUG===  request: %s", url)
