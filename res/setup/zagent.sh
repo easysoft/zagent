@@ -119,6 +119,10 @@ download_zagent()
 restart_zagent()
 {
     sudo pkill zagent-host
+    if [ -f ${HOME}/zagent/zagent-host.db ]
+    then
+        rm ${HOME}/zagent/zagent-host.db
+    fi
     if service_is_inactive zagent-host;then
         if port_is_used 55001;then
             is_success_zagent=false
