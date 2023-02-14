@@ -3,13 +3,14 @@ package hostAgentService
 import (
 	"errors"
 	"fmt"
+	"sync"
+	"time"
+
 	agentModel "github.com/easysoft/zagent/internal/host/model"
 	kvmService "github.com/easysoft/zagent/internal/host/service/kvm"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/job"
 	"github.com/gofrs/uuid"
-	"sync"
-	"time"
 
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	hostRepo "github.com/easysoft/zagent/internal/host/repo"
@@ -40,6 +41,16 @@ func NewSnapService() *SnapService {
 // ListSnap 列出快照
 func (s *SnapService) ListSnap(vm string) (ret []v1.SnapItemResp, err error) {
 	ret = s.LibvirtService.GetVmSnaps(vm)
+
+	return
+}
+
+// ListSnap 列出快照
+func (s *SnapService) RemoveSnapsByVmName(vm string) (err error) {
+	snaps := s.LibvirtService.GetVmSnaps(vm)
+	for _, snap := range snaps {
+		s.RemoveSnap(&v1.SnapTaskReq{Vm: vm, Name: snap.Name})
+	}
 
 	return
 }
