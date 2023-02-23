@@ -128,7 +128,11 @@ func (c *KvmCtrl) Boot(ctx iris.Context) {
 		return
 	}
 
-	c.KvmService.StartVm(name)
+	err := c.KvmService.StartVm(name)
+	if err != nil {
+		ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), name))
+		return
+	}
 
 	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to boot vm", name))
 	return

@@ -3,6 +3,7 @@ package hostAgentService
 import (
 	"errors"
 	"fmt"
+	"strings"
 	"sync"
 	"time"
 
@@ -45,18 +46,31 @@ func (s *SnapService) ListSnap(vm string) (ret []v1.SnapItemResp, err error) {
 	return
 }
 
-// ListSnap 列出快照
+// RemoveSnapsByVmName 删除虚拟机下所有快照
 func (s *SnapService) RemoveSnapsByVmName(vm string) (err error) {
-	snaps := s.LibvirtService.GetVmSnaps(vm)
+	snaps := s.GetVmSnaps(vm)
+
+	for _, snap := range snaps {
+		err = s.RemoveSnap(&v1.SnapTaskReq{Vm: vm, Name: snap})
+	}
+
+	return
+}
+
+func (s *SnapService) GetVmSnaps(vm string) (snaps []string) {
 	cmd := fmt.Sprintf("virsh snapshot-list %s | awk '{print $1}' | tail -n +3", vm)
 
 	out, err := _shellUtils.ExeShell(cmd)
 	if err != nil {
-		_logUtils.Infof("remove snap '%s' err, output %s, error %s", cmd, out, err.Error())
+		_logUtils.Infof("list snap '%s' err, output %s, error %s", cmd, out, err.Error())
 		return
 	}
-	for _, snap := range snaps {
-		s.RemoveSnap(&v1.SnapTaskReq{Vm: vm, Name: snap.Name})
+	snapNames := strings.Split(out, "\n")
+	for _, name := range snapNames {
+		name = strings.TrimSpace(name)
+		if name != "" {
+			snaps = append(snaps, name)
+		}
 	}
 
 	return
