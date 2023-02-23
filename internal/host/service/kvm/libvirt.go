@@ -338,7 +338,7 @@ func (s *LibvirtService) ResumeVmByName(name string) (err error) {
 func (s *LibvirtService) RemoveVmByName(name string, removeDiskImage bool) (err error) {
 	dom, err := s.GetVm(name)
 	if err != nil {
-		return
+		return nil
 	}
 
 	dickPath, err := s.QemuService.GetDisk(dom)

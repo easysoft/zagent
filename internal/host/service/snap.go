@@ -48,6 +48,13 @@ func (s *SnapService) ListSnap(vm string) (ret []v1.SnapItemResp, err error) {
 // ListSnap 列出快照
 func (s *SnapService) RemoveSnapsByVmName(vm string) (err error) {
 	snaps := s.LibvirtService.GetVmSnaps(vm)
+	cmd := fmt.Sprintf("virsh snapshot-list %s | awk '{print $1}' | tail -n +3", vm)
+
+	out, err := _shellUtils.ExeShell(cmd)
+	if err != nil {
+		_logUtils.Infof("remove snap '%s' err, output %s, error %s", cmd, out, err.Error())
+		return
+	}
 	for _, snap := range snaps {
 		s.RemoveSnap(&v1.SnapTaskReq{Vm: vm, Name: snap.Name})
 	}

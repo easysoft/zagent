@@ -123,6 +123,11 @@ restart_zagent()
     then
         rm ${HOME}/zagent/zagent-host.db
     fi
+    if [ ! -f ${HOME}/zagent/zagent-host ]
+    then
+        echo -e "\033[31m zagent 文件不存在，请重新执行初始化命令。 \033[0m"
+            exit 1
+    fi
     if service_is_inactive zagent-host;then
         if port_is_used 55001;then
             is_success_zagent=false
@@ -197,6 +202,11 @@ install_zagent()
         echo "unZip zagent"
         unzip -o ./agent.zip
         ck_ok "unZip Zagent"
+        if [ ! -f ${HOME}/zagent/zagent-host ]
+        then
+            echo -e "\033[31m zagent 下载失败，请重新执行初始化命令。 \033[0m"
+                exit 1
+        fi
         sudo pkill zagent-host
         sudo chmod +x ./zagent-host
         if [[ -n $secret ]];then
