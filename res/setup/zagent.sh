@@ -41,7 +41,7 @@ command_exist(){
 }
 
 port_is_used(){
-    pid=`sudo /usr/bin/lsof -i :$1|grep -v "PID" | awk '{print $2}'`
+    pid=`sudo lsof -i :$1|grep -v "PID" | awk '{print $2}'`
     if [ "$pid" != "" ];
     then
         return 0
