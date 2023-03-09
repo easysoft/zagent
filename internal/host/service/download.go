@@ -63,6 +63,9 @@ func (s *DownloadService) StartTask(po agentModel.Task) {
 	go func() {
 		filePath := downloadUtils.GetPath(po)
 
+		if po.Md5 == "" {
+			downloadUtils.GetMd5FromRemote(&po, consts.DownloadDir)
+		}
 		//query same md5 task
 		sameMd5Task, _ := s.TaskRepo.GetCompletedTaskByMd5(po.Md5)
 		if sameMd5Task.ID > 0 {

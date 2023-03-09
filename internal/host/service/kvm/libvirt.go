@@ -3,8 +3,9 @@ package kvmService
 import "C"
 import (
 	"fmt"
-	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	"time"
+
+	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
@@ -337,12 +338,12 @@ func (s *LibvirtService) ResumeVmByName(name string) (err error) {
 func (s *LibvirtService) RemoveVmByName(name string, removeDiskImage bool) (err error) {
 	dom, err := s.GetVm(name)
 	if err != nil {
-		return
+		return nil
 	}
 
 	dickPath, err := s.QemuService.GetDisk(dom)
 	if err != nil {
-		return
+		return nil
 	}
 
 	dom.DestroyFlags(libvirt.DOMAIN_DESTROY_DEFAULT)

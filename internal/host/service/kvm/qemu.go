@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"path/filepath"
+	"regexp"
+	"strconv"
 	"strings"
 
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
@@ -358,6 +360,37 @@ func (s *QemuService) GetBackingFileSize(diskPath string) (size int64) {
 	}
 
 	size, _ = _fileUtils.GetFileSize(backingPath)
+
+	return size
+}
+
+func (s *QemuService) GetBackingFileVirtualSize(diskPath string) (size int) {
+	var cmd = fmt.Sprintf("qemu-img info %s", diskPath)
+
+	out, err := _shellUtils.ExeShell(cmd)
+	if out == "" || err != nil {
+		return 100
+	}
+
+	outSlice := strings.Split(out, "\n")
+	for _, line := range outSlice {
+		line = strings.TrimSpace(line)
+		if strings.Contains(line, "virtual size:") {
+			reg := regexp.MustCompile(`\d+\s*GiB`)
+			//根据规则提取关键信息
+			sizeSlice := reg.FindStringSubmatch(line)
+			if len(sizeSlice) < 1 {
+				return 100
+			}
+			sizeString := sizeSlice[0]
+			size, _ = strconv.Atoi(strings.TrimSpace(strings.Replace(sizeString, "GiB", "", -1)))
+			break
+		}
+	}
+
+	if size == 0 {
+		size = 100
+	}
 
 	return size
 }

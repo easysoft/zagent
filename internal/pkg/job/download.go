@@ -23,7 +23,7 @@ func Start(downloadTask *agentModel.Task, filePath string, ch chan int) (status 
 
 	targetDir := consts.DownloadDir
 	if downloadTask.Md5 == "" {
-		getMd5FromRemote(downloadTask, targetDir)
+		GetMd5FromRemote(downloadTask, targetDir)
 	}
 
 	existFile = findSameFile(*downloadTask, targetDir)
@@ -165,7 +165,7 @@ func CheckMd5(task agentModel.Task) bool {
 	return pass
 }
 
-func getMd5FromRemote(task *agentModel.Task, dir string) (err error) {
+func GetMd5FromRemote(task *agentModel.Task, dir string) (err error) {
 	index := strings.LastIndex(task.Url, ".")
 	md5FileUrl := task.Url[:index] + ".md5"
 
@@ -208,6 +208,10 @@ func findSameFile(task agentModel.Task, dir string) (existFile string) {
 			existFile = strings.Replace(md5FilePath, ".md5", "", -1)
 
 			if _fileUtils.FileExist(existFile) {
+				actualVal, _ := _fileUtils.GetMd5(existFile)
+				if actualVal != task.Md5 {
+					existFile = ""
+				}
 				return
 			} else {
 				existFile = ""

@@ -219,11 +219,11 @@ func (s *ToolService) startProcess(name, execPath, uuid, ip, server, secret stri
 	var cmd *exec.Cmd
 	if _commonUtils.IsWin() {
 		if name == "ztf" {
-			tmpl := `start cmd /c %s -uuid %s -h http://%s:%d -i %s -p %d ^1^> %snohup.%s.log ^2^>^&^1`
-			cmdStr = fmt.Sprintf(tmpl, execPath, uuid, consts.KvmHostIpInNatNetwork, consts.AgentHostServicePort, ip, consts.ZtfServicePort, consts.WorkDir, name)
+			tmpl := `start cmd /c %s -p %d -h http://%s:%d -i %s -uuid %s ^1^> %snohup.%s.log ^2^>^&^1`
+			cmdStr = fmt.Sprintf(tmpl, execPath, consts.ZtfServicePort, consts.KvmHostIpInNatNetwork, consts.AgentHostServicePort, ip, uuid, consts.WorkDir, name)
 		} else if name == "zd" { // set root for workdir
-			tmpl := `start cmd /c %s -uuid %s -b %s -p %d ^1^> %snohup.%s.log ^2^>^&^1`
-			cmdStr = fmt.Sprintf(tmpl, execPath, uuid, ip, consts.ZdServicePort, consts.WorkDir, name)
+			tmpl := `start cmd /c %s -p %d -b %s -uuid %s ^1^> %snohup.%s.log ^2^>^&^1`
+			cmdStr = fmt.Sprintf(tmpl, execPath, consts.ZdServicePort, ip, uuid, consts.WorkDir, name)
 		}
 
 		cmd = exec.Command("cmd", "/C", cmdStr)

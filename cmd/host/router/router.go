@@ -4,7 +4,6 @@ import (
 	hostHandler "github.com/easysoft/zagent/cmd/host/router/handler"
 	hostService "github.com/easysoft/zagent/internal/host/service"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
-	"github.com/easysoft/zagent/internal/pkg/core"
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
 	"github.com/kataras/iris/v12"
 )
@@ -52,7 +51,7 @@ func (r *Router) App() {
 				client.Get("/getVncAddress", r.VirtualCtrl.GetAddress).Name = "获取vnc token对应虚拟机地址"
 			})
 
-			v1.Use(core.Auth())
+			// v1.Use(core.Auth())
 
 			v1.PartyFunc("/service", func(client iris.Party) {
 				client.Post("/check", r.CheckCtrl.CheckService).Name = "检测宿主机服务状态"
@@ -93,7 +92,7 @@ func (r *Router) App() {
 				client.Post("/remove", r.KvmCtrl.Remove).Name = "移除KVM虚拟机"
 
 				client.Get("/listSnap", r.SnapCtrl.ListSnap).Name = "列出虚拟机快照"
-				client.Post("/addSnapTask", r.SnapCtrl.AddCreateSnap).Name = "创建虚拟机快照"
+				client.Post("/addCreateSnap", r.SnapCtrl.AddCreateSnap).Name = "创建虚拟机快照"
 				client.Post("/addRevertSnap", r.SnapCtrl.AddRevertSnap).Name = "回滚虚拟机快照"
 				client.Post("/removeSnap", r.SnapCtrl.RemoveSnap).Name = "删除虚拟机快照"
 			})

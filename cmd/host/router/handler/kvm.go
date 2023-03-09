@@ -2,6 +2,7 @@ package hostHandler
 
 import (
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
+	hostAgentService "github.com/easysoft/zagent/internal/host/service"
 	kvmService "github.com/easysoft/zagent/internal/host/service/kvm"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	natHelper "github.com/easysoft/zagent/internal/pkg/utils/net"
@@ -10,8 +11,9 @@ import (
 )
 
 type KvmCtrl struct {
-	KvmService     *kvmService.KvmService     `inject:""`
-	LibvirtService *kvmService.LibvirtService `inject:""`
+	KvmService     *kvmService.KvmService        `inject:""`
+	SnapService    *hostAgentService.SnapService `inject:""`
+	LibvirtService *kvmService.LibvirtService    `inject:""`
 }
 
 func NewKvmCtrl() *KvmCtrl {
@@ -126,7 +128,11 @@ func (c *KvmCtrl) Boot(ctx iris.Context) {
 		return
 	}
 
-	c.KvmService.StartVm(name)
+	err := c.KvmService.StartVm(name)
+	if err != nil {
+		ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), name))
+		return
+	}
 
 	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to boot vm", name))
 	return
@@ -332,7 +338,7 @@ func (c *KvmCtrl) Remove(ctx iris.Context) {
 		_, _ = ctx.JSON(_httpUtils.RespData(consts.ResultFail, "vm name is empty", nil))
 		return
 	}
-
+	c.SnapService.RemoveSnapsByVmName(req.Name)
 	err := c.LibvirtService.RemoveVmByName(req.Name, req.RemoveDisk)
 	if err != nil {
 		ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))

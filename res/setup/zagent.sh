@@ -40,6 +40,16 @@ command_exist(){
     fi
 }
 
+port_is_used(){
+    pid=`sudo lsof -i :$1|grep -v "PID" | awk '{print $2}'`
+    if [ "$pid" != "" ];
+    then
+        return 0
+    else
+        return 1
+    fi
+}
+
 service_is_inactive(){
     check_command=`sudo ps -ef | grep $1 | grep -v grep | awk '{print $2}'`
     if [[ -z ${check_command} ]]; then
@@ -109,6 +119,23 @@ download_zagent()
 restart_zagent()
 {
     sudo pkill zagent-host
+    if [ -f ${HOME}/zagent/zagent-host.db ]
+    then
+        rm ${HOME}/zagent/zagent-host.db
+    fi
+    if [ ! -f ${HOME}/zagent/zagent-host ]
+    then
+        echo -e "\033[31m zagent 文件不存在，请重新执行初始化命令。 \033[0m"
+            exit 1
+    fi
+    if service_is_inactive zagent-host;then
+        if port_is_used 55001;then
+            is_success_zagent=false
+            echo -e "\033[31m 端口 55001 已被占用，请清理占用程序后重新执行初始化命令。 \033[0m"
+            exit 1
+            return
+        fi
+    fi
     cat > /tmp/zagent.sh <<EOF
 #!/bin/sh
 ### BEGIN INIT INFO
@@ -127,6 +154,7 @@ EOF
     if [ ${ID} = ${ubuntu} ];then
         sudo chmod +x /tmp/zagent.sh
         sudo /bin/mv /tmp/zagent.sh /etc/init.d/
+        sudo chmod +x /etc/init.d/zagent.sh
         ck_ok "edit zagent.sh"
         
         echo "Load sh"
@@ -174,6 +202,11 @@ install_zagent()
         echo "unZip zagent"
         unzip -o ./agent.zip
         ck_ok "unZip Zagent"
+        if [ ! -f ${HOME}/zagent/zagent-host ]
+        then
+            echo -e "\033[31m zagent 下载失败，请重新执行初始化命令。 \033[0m"
+                exit 1
+        fi
         sudo pkill zagent-host
         sudo chmod +x ./zagent-host
         if [[ -n $secret ]];then
@@ -421,10 +454,23 @@ install_nginx()
         if [ ${force} == false ];then
             echo "Already installed nginx"
             if is_inactive nginx;then
+                if port_is_used 80;then
+                    echo -e "\033[31m 端口 80 已被占用，请清理占用程序后重新执行初始化命令。 \033[0m"
+                    exit 1
+                    return
+                fi
                 sudo systemctl start nginx
+                ck_ok "Start Nginx"
             fi
             return
         fi
+        sudo systemctl stop nginx
+    fi
+    
+    if port_is_used 80;then
+        echo -e "\033[31m 端口 80 已被占用，请清理占用程序后重新执行初始化命令。 \033[0m"
+        exit 1
+        return
     fi
     
     download_nginx
@@ -597,6 +643,11 @@ install_websockify()
         if [ ${force} == false ];then
             echo "Already installed websockify"
             if service_is_inactive JSONTokenApi;then
+                if port_is_used 6080;then
+                    echo -e "\033[31m 端口 6080 已被占用，请清理占用程序后重新执行初始化命令。 \033[0m"
+                    exit 1
+                    return
+                fi
                 nohup ${HOME}/zagent/websockify/run --token-plugin JSONTokenApi --token-source http://127.0.0.1:55001/api/v1/virtual/getVncAddress?token=%s 6080 > ${HOME}/zagent/websockify/nohup.log 2>&1 &
             fi
             return
@@ -630,6 +681,13 @@ install_websockify()
     /usr/bin/rm -rf ${HOME}/zagent/websockify.zip
     
     sudo chmod +x ${HOME}/zagent/websockify/run
+    if service_is_inactive JSONTokenApi;then
+        if port_is_used 6080;then
+            echo -e "\033[31m 端口 6080 已被占用，请清理占用程序后重新执行初始化命令。 \033[0m"
+            exit 1
+            return
+        fi
+    fi
     ${HOME}/zagent/websockify/run --token-plugin JSONTokenApi --token-source http://127.0.0.1:55001/api/v1/virtual/getVncAddress?token=%s 6080 -D
 }
 
@@ -698,6 +756,11 @@ install()
 
 if [ ! -n "$(egrep -o "(vmx|svm)" /proc/cpuinfo)" ];then
     echo -e "\033[31m Not support virtualization \033[0m"
+    exit 1
+fi
+
+if [ '0' = "$(lsmod |grep kvm |grep -v grep | tr -s ' ' | cut -d' ' -f1,3|grep kvm|grep -v grep | tr -s ' ' | cut -d' ' -f2)" ];then
+    echo -e "\033[31m Virtualization is disabled in the host BIOS \033[0m"
     exit 1
 fi
 

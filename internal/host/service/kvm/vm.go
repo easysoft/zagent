@@ -55,8 +55,13 @@ func (s *KvmService) CreateVmFromImage(req *v1.CreateVmReq, removeSameName bool)
 		s.LibvirtService.SafeDestroyVmByName(vmName)
 	}
 
+	virtualSize := s.QemuService.GetBackingFileVirtualSize(targetBacking)
+	if diskSize > virtualSize {
+		virtualSize = diskSize
+	}
+
 	// create image
-	cmdCreateImage := fmt.Sprintf(consts.CmdCreateImage, targetBacking, srcFile)
+	cmdCreateImage := fmt.Sprintf(consts.CmdCreateImage, targetBacking, srcFile, virtualSize)
 	out, err := _shellUtils.ExeShell(cmdCreateImage)
 	if err != nil {
 		_logUtils.Infof("exec cmd '%s' err, output %s, error %s", cmdCreateImage, out, err.Error())

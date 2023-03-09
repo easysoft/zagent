@@ -3,13 +3,15 @@ package hostAgentService
 import (
 	"errors"
 	"fmt"
+	"strings"
+	"sync"
+	"time"
+
 	agentModel "github.com/easysoft/zagent/internal/host/model"
 	kvmService "github.com/easysoft/zagent/internal/host/service/kvm"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/job"
 	"github.com/gofrs/uuid"
-	"sync"
-	"time"
 
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	hostRepo "github.com/easysoft/zagent/internal/host/repo"
@@ -40,6 +42,36 @@ func NewSnapService() *SnapService {
 // ListSnap 列出快照
 func (s *SnapService) ListSnap(vm string) (ret []v1.SnapItemResp, err error) {
 	ret = s.LibvirtService.GetVmSnaps(vm)
+
+	return
+}
+
+// RemoveSnapsByVmName 删除虚拟机下所有快照
+func (s *SnapService) RemoveSnapsByVmName(vm string) (err error) {
+	snaps := s.GetVmSnaps(vm)
+
+	for _, snap := range snaps {
+		err = s.RemoveSnap(&v1.SnapTaskReq{Vm: vm, Name: snap})
+	}
+
+	return
+}
+
+func (s *SnapService) GetVmSnaps(vm string) (snaps []string) {
+	cmd := fmt.Sprintf("virsh snapshot-list %s | awk '{print $1}' | tail -n +3", vm)
+
+	out, err := _shellUtils.ExeShell(cmd)
+	if err != nil {
+		_logUtils.Infof("list snap '%s' err, output %s, error %s", cmd, out, err.Error())
+		return
+	}
+	snapNames := strings.Split(out, "\n")
+	for _, name := range snapNames {
+		name = strings.TrimSpace(name)
+		if name != "" {
+			snaps = append(snaps, name)
+		}
+	}
 
 	return
 }

@@ -111,6 +111,7 @@ func (s *TaskService) ListTask() (ret v1.ListTaskResp, err error) {
 }
 
 func (s *TaskService) SubmitResult(task agentModel.Task) (err error) {
+	fmt.Println("=======submit task", task.Task, task.Status)
 	// only submit vm task
 	if task.Type == consts.DownloadImage {
 		url := requestUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/host/submitResult")
