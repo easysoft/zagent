@@ -498,6 +498,9 @@ func (s *LibvirtService) GetVmSnaps(vm string) (ret []v1.SnapItemResp) {
 		return
 	}
 
+	content, _ := dom.GetXMLDesc(libvirt.DOMAIN_XML_INACTIVE)
+	log.Print(content)
+
 	snaps, _ := dom.ListAllSnapshots(0)
 
 	for _, snap := range snaps {
