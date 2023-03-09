@@ -4,6 +4,7 @@ import "C"
 import (
 	"fmt"
 	v1 "github.com/easysoft/zagent/cmd/host/router/v1"
+	"log"
 	"time"
 
 	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
@@ -502,6 +503,8 @@ func (s *LibvirtService) GetVmSnaps(vm string) (ret []v1.SnapItemResp) {
 	for _, snap := range snaps {
 		name, _ := snap.GetName()
 		parent, _ := snap.GetParent(0)
+		content, _ := snap.GetXMLDesc(libvirt.DOMAIN_SNAPSHOT_XML_SECURE)
+		log.Print(content)
 
 		if parent == nil {
 			continue

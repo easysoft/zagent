@@ -38,8 +38,9 @@ type ExportVmResp struct {
 	Xml     string            `json:"xml"`
 	Status  consts.TaskStatus `json:"status"` // Enums consts.TaskStatus
 
-	Rate  float64 `json:"rate"`
-	Speed float64 `json:"speed"`
+	Rate     float64 `json:"rate"`
+	Speed    float64 `json:"speed"`
+	SnapSize int     `json:"snapSize"`
 
 	Task int `json:"task"`
 }
