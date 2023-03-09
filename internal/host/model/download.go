@@ -20,7 +20,6 @@ type Task struct {
 	Retry    int               `json:"retry"`
 	Rate     float64           `json:"rate"`
 	Speed    float64           `json:"speed,omitempty"`
-	SnapSize int               `json:"snapSize,omitempty"`
 
 	// for export vm
 	Vm      string `json:"vm,omitempty"`

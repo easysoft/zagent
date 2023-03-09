@@ -142,9 +142,8 @@ func (s *TaskService) SubmitResult(task agentModel.Task) (err error) {
 		url := requestUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/host/submitResult")
 
 		data := v1.ExportVmResp{
-			Status:   task.Status,
-			Task:     task.Task,
-			SnapSize: task.SnapSize,
+			Status: task.Status,
+			Task:   task.Task,
 		}
 
 		_, err = _httpUtils.Post(url, data)
