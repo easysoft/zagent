@@ -140,7 +140,12 @@ func IsSuccessCode(code int) (success bool) {
 
 func GenUrl(server string, path string) string {
 	server = AddUrlPostFixIfNeeded(server)
-	url := fmt.Sprintf("%sapi/v1/%s", server, path)
+	url := ""
+	if strings.Contains(path, "api.php") {
+		url = fmt.Sprintf("%s%s", server, path)
+	} else {
+		url = fmt.Sprintf("%sapi/v1/%s", server, path)
+	}
 	url = AddUrlPostFixIfNeeded(url)
 	return url
 }

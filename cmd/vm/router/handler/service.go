@@ -1,7 +1,9 @@
 package vmHandler
 
 import (
+	hostV1 "github.com/easysoft/zagent/cmd/host/router/v1"
 	v1 "github.com/easysoft/zagent/cmd/vm/router/v1"
+	agentConf "github.com/easysoft/zagent/internal/pkg/conf"
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	vmAgentService "github.com/easysoft/zagent/internal/vm/service"
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
@@ -59,4 +61,29 @@ func (c *ServiceCtrl) Setup(ctx iris.Context) {
 
 	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success", resp))
 	return
+}
+
+// @summary ztf心跳并请求Token
+// @Accept json
+// @Produce json
+// @Param VmNotifyReq body v1.VmNotifyReq true "Vm Notify Request Object"
+// @Success 200 {object} _domain.Response{data=v1.VmNotifyResp} "code = success | fail"
+// @Router /api/v1/virtual/notifyHost [post]
+func (c *ServiceCtrl) Heartbeat(ctx iris.Context) {
+	req := hostV1.VmNotifyReq{}
+	if err := ctx.ReadJSON(&req); err != nil {
+		ctx.JSON(_httpUtils.RespData(consts.ResultFail, err.Error(), nil))
+		return
+	}
+
+	if req.MacAddress != agentConf.Inst.MacAddress {
+		return
+	}
+	data := hostV1.VmNotifyResp{
+		Token: consts.AuthToken,
+	}
+
+	data.Server = agentConf.Inst.Server
+
+	ctx.JSON(_httpUtils.RespData(consts.ResultPass, "success to refresh token", data))
 }

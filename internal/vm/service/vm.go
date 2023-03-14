@@ -12,9 +12,11 @@ import (
 	"github.com/easysoft/zagent/internal/pkg/domain"
 	agentService "github.com/easysoft/zagent/internal/pkg/service"
 	agentTestingService "github.com/easysoft/zagent/internal/pkg/service/testing"
+	natHelper "github.com/easysoft/zagent/internal/pkg/utils/net"
 	requestUtils "github.com/easysoft/zagent/internal/pkg/utils/request"
 	_domain "github.com/easysoft/zagent/pkg/domain"
 	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
+	_dateUtils "github.com/easysoft/zagent/pkg/lib/date"
 	_httpUtils "github.com/easysoft/zagent/pkg/lib/http"
 	_i118Utils "github.com/easysoft/zagent/pkg/lib/i118"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
@@ -73,7 +75,11 @@ func (s *VmService) Register(isBusy bool) (ok bool) {
 		vm.Status = consts.VmReady
 	}
 
-	if consts.AuthSecret == "" || consts.ExpiredDate.Unix() < time.Now().Unix() { // re-apply token using secret
+	serverUrl := ""
+	if agentConf.Inst.Secret == "" { // re-apply token using secret
+		serverUrl = _httpUtils.GenUrl(
+			fmt.Sprintf("http://%s:%d/", consts.KvmHostIpInNatNetwork, consts.AgentHostServicePort),
+			"virtual/notifyHost")
 		var err error
 		vm.Token, vm.Ip, vm.AgentPortOnHost, err = s.notifyHost()
 		consts.AuthToken = vm.Token
@@ -82,37 +88,66 @@ func (s *VmService) Register(isBusy bool) (ok bool) {
 			_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_notify", "error or return empty value"))
 			return
 		}
+	} else {
+		host := domain.HostNode{
+			Node: domain.Node{
+				Ip:   agentConf.Inst.NodeIp,
+				Port: agentConf.Inst.NodePort,
+			},
+			Status: consts.HostOnline,
+			Vms:    []domain.Vm{},
+		}
+		if consts.AuthToken == "" || consts.ExpiredDate.Unix() < time.Now().Unix() { // re-apply token using secret
+			host.Secret = agentConf.Inst.Secret
+		}
+
+		domainVm := domain.Vm{
+			Port:            agentConf.Inst.NodePort,
+			Status:          consts.VmRunning,
+			MacAddress:      vm.MacAddress,
+			AgentPortOnHost: agentConf.Inst.NodePort,
+			VncPortOnHost:   0,
+			ZtfPortOnHost:   0,
+			ZdPortOnHost:    0,
+			SshPortOnHost:   0,
+			Ip:              vm.Ip,
+		}
+		domainVm.ZtfPortOnHost, _ = natHelper.GetUsedPortByKeyword("ztf", agentConf.Inst.ZtfPort)
+		host.Vms = append(host.Vms, domainVm)
+
+		serverUrl = requestUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/host/heartbeat")
+
+		respBytes, ok := s.register(host)
+
+		if ok {
+			respObj := v1.RegisterResp{}
+			err := json.Unmarshal(respBytes, &respObj)
+			if err == nil && respObj.Token != "" {
+				respObj.TokenTime, _ = _dateUtils.UnitToDate(respObj.TokenTimeUnix)
+				consts.AuthToken = respObj.Token
+				consts.ExpiredDate = respObj.TokenTime
+			}
+		}
 	}
 
-	// respBytes, ok := s.register(vm)
-
-	// if ok {
-	// 	respObj := v1.RegisterResp{}
-	// 	err := json.Unmarshal(respBytes, &respObj)
-	// 	if err == nil && respObj.Token != "" {
-	// 		respObj.TokenTime, _ = _dateUtils.UnitToDate(respObj.TokenTimeUnix)
-	// 		consts.AuthToken = respObj.Token
-	// 		consts.ExpiredDate = respObj.TokenTime
-	// 	}
-	// }
 	ok = true
 	if consts.AuthToken == "" {
 		ok = false
 	}
 
 	if ok {
-		_logUtils.Info(_i118Utils.I118Prt.Sprintf("success_to_register", agentConf.Inst.Server))
+		_logUtils.Info(_i118Utils.I118Prt.Sprintf("success_to_register", serverUrl))
 	} else {
-		_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_register", agentConf.Inst.Server))
+		_logUtils.Info(_i118Utils.I118Prt.Sprintf("fail_to_register", serverUrl))
 	}
 
 	return
 }
 
-func (s *VmService) register(host interface{}) (resp []byte, ok bool) {
-	url := requestUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/zanode/heartbeat")
+func (s *VmService) register(vm interface{}) (resp []byte, ok bool) {
+	url := requestUtils.GenUrl(agentConf.Inst.Server, "api.php/v1/host/heartbeat")
 
-	resp, err := _httpUtils.Post(url, host)
+	resp, err := _httpUtils.Post(url, vm)
 	ok = err == nil
 
 	return

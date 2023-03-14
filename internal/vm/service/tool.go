@@ -215,12 +215,16 @@ func (s *ToolService) startProcess(name, execPath, uuid, ip, server, secret stri
 	}
 	execDir := _fileUtils.GetAbsolutePath(filepath.Dir(execPath))
 
+	hostServerUrl := fmt.Sprintf("http://%s:%d", consts.KvmHostIpInNatNetwork, consts.AgentHostServicePort)
+	if agentConf.Inst.Secret != "" {
+		hostServerUrl = fmt.Sprintf("http://127.0.0.1:%d", consts.AgentVmServicePort)
+	}
 	cmdStr := ""
 	var cmd *exec.Cmd
 	if _commonUtils.IsWin() {
 		if name == "ztf" {
-			tmpl := `start cmd /c %s -p %d -h http://%s:%d -i %s -uuid %s ^1^> %snohup.%s.log ^2^>^&^1`
-			cmdStr = fmt.Sprintf(tmpl, execPath, consts.ZtfServicePort, consts.KvmHostIpInNatNetwork, consts.AgentHostServicePort, ip, uuid, consts.WorkDir, name)
+			tmpl := `start cmd /c %s -p %d -h %s -i %s -uuid %s ^1^> %snohup.%s.log ^2^>^&^1`
+			cmdStr = fmt.Sprintf(tmpl, execPath, consts.ZtfServicePort, hostServerUrl, ip, uuid, consts.WorkDir, name)
 		} else if name == "zd" { // set root for workdir
 			tmpl := `start cmd /c %s -p %d -b %s -uuid %s ^1^> %snohup.%s.log ^2^>^&^1`
 			cmdStr = fmt.Sprintf(tmpl, execPath, consts.ZdServicePort, ip, uuid, consts.WorkDir, name)
@@ -231,7 +235,7 @@ func (s *ToolService) startProcess(name, execPath, uuid, ip, server, secret stri
 	} else {
 		if name == "ztf" {
 			cmd = exec.Command("nohup", execPath, "-uuid", uuid,
-				"-h", "http://"+consts.KvmHostIpInNatNetwork+":"+strconv.Itoa(consts.AgentHostServicePort), "-i", ip, "-p", strconv.Itoa(consts.ZtfServicePort))
+				"-h", hostServerUrl, "-i", ip, "-p", strconv.Itoa(consts.ZtfServicePort))
 		} else if name == "zd" {
 			cmd = exec.Command("nohup", execPath, "-uuid", uuid, "-b", ip, "-p", strconv.Itoa(consts.ZdServicePort))
 		}

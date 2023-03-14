@@ -16,9 +16,6 @@ print_res(){
     if $is_install_zvm && $is_success_zvm;then
         echo -e "\033[32m Install zagent success \033[0m"
     fi
-    if $is_install_ztf && $is_success_ztf;then
-        echo -e "\033[32m Install ztf success \033[0m"
-    fi
     if $is_install_nginx && $is_success_nginx;then
         echo -e "\033[32m Install nginx success \033[0m"
     fi
@@ -251,17 +248,7 @@ download_zvm()
     
     return 1
 }
-install_ztf(){
-    sleep 3s
-    result=$(curl http://127.0.0.1:55201/api/v1/service/setup -X POST -d '{"name":"ztf","secret":"'"$secret"'","server":"'"$zentaoSite"'"}' --header "Content-Type:application/json" | grep success)
-    if [[ "$result" != "" ]]
-    then
-        is_success_ztf=true
-    else
-        echo -e "\033[31m Install ztf error. \033[0m"
-        exit 1
-    fi
-}
+
 install_zvm()
 {
     cd  ${HOME}/zagent
@@ -274,7 +261,6 @@ install_zvm()
                 if service_is_inactive zagent-vm;then
                     sudo systemctl start zagent-vm
                 fi
-                install_ztf
                 return
             fi
         fi
@@ -301,7 +287,7 @@ Wants=network-online.target
 [Service]
 User=${USER}
 Type=forking
-ExecStart=/bin/bash -c "${HOME}/zagent/zagent-vm -p 55201 -s ${zentaoSite} > /dev/null 2>&1 &"
+ExecStart=/bin/bash -c "${HOME}/zagent/zagent-vm -p 55201 -secret ${secret} -s ${zentaoSite} > /dev/null 2>&1 &"
 
 [Install]
 WantedBy=multi-user.target
@@ -319,8 +305,6 @@ EOF
         sudo systemctl start zagent-vm
         ck_ok "Start Zagent-vm"
     fi
-    
-    install_ztf
 }
 
 download_novnc()
@@ -776,7 +760,6 @@ fi
 
 is_install_zagent=true
 is_install_zvm=false
-is_install_ztf=false
 is_install_nginx=true
 is_install_kvm=true
 is_install_novnc=true
@@ -806,7 +789,6 @@ do
                 soft=$OPTARG
                 is_install_zagent=false
                 is_install_zvm=false
-                is_install_ztf=false
                 is_install_nginx=false
                 is_install_kvm=false
                 is_install_novnc=false
@@ -816,7 +798,6 @@ do
                 fi
                 if [[ $OPTARG =~ zvm ]];then
                     is_install_zvm=true
-                    is_install_ztf=true
                 fi
                 if [[ $OPTARG =~ nginx ]];then
                     is_install_nginx=true

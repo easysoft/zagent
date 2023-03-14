@@ -25,6 +25,9 @@ func (r *Router) App() {
 	{
 		v1 := app.Party("/v1")
 		{
+			v1.PartyFunc("/virtual", func(client iris.Party) {
+				client.Post("/notifyHost", r.ServiceCtrl.Heartbeat).Name = "ztf心跳&获取token"
+			})
 			// v1.Use(core.Auth())
 
 			v1.PartyFunc("/service", func(client iris.Party) {
