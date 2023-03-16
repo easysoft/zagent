@@ -1,16 +1,5 @@
 VERSION=1.0.0
 PROJECT=zagent
-
-ifeq ($(OS),Windows_NT)
-    PLATFORM="Windows"
-else
-    ifeq ($(shell uname),Darwin)
-        PLATFORM="Mac"
-    else
-        PLATFORM="Unix"
-    endif
-endif
-
 PACKAGE=${PROJECT}-${VERSION}
 BINARY_SERVER=server
 BINARY_HOST=host
