@@ -1,5 +1,16 @@
 VERSION=1.0.0
 PROJECT=zagent
+
+ifeq ($(OS),Windows_NT)
+    PLATFORM="Windows"
+else
+    ifeq ($(shell uname),Darwin)
+        PLATFORM="Mac"
+    else
+        PLATFORM="Unix"
+    endif
+endif
+
 PACKAGE=${PROJECT}-${VERSION}
 BINARY_SERVER=server
 BINARY_HOST=host
@@ -12,7 +23,8 @@ BIN_SERVER_WIN64=${BIN_OUT}win64/
 BIN_SERVER_WIN32=${BIN_OUT}win32/
 BIN_SERVER_LINUX=${BIN_OUT}linux/
 BIN_SERVER_MAC=${BIN_OUT}mac/
-QINIU_DIR=/Users/aaron/work/zentao/qiniu/
+
+QINIU_DIR=~/work/zentao/qiniu/
 QINIU_DIST_DIR=${QINIU_DIR}${PROJECT}/${VERSION}/
 
 host: prepare_res_host compile_host copy_host_files package_host
@@ -57,7 +69,7 @@ copy_vm_files:
 package_host:
 	@echo 'start package host'
 	@find . -name .DS_Store -print0 | xargs -0 rm -f
-	@for subdir in `ls ${BIN_OUT_HOST}`; do mkdir -p ${QINIU_DIST_DIR}$${platform}; done
+	@for platform in `ls ${BIN_OUT_HOST}`; do mkdir -p ${QINIU_DIST_DIR}$${platform}; done
 
 	@cd ${BIN_OUT} && \
 		for platform in `ls ./`; \
@@ -71,7 +83,7 @@ package_host:
 package_vm:
 	@echo 'start package vm'
 	@find . -name .DS_Store -print0 | xargs -0 rm -f
-	@for subdir in `ls ${BIN_OUT}`; do mkdir -p ${QINIU_DIST_DIR}$${platform}; done
+	@for platform in `ls ${BIN_OUT}`; do mkdir -p ${QINIU_DIST_DIR}$${platform}; done
 
 	@cd ${BIN_OUT} && \
 		for platform in `ls ./`; \

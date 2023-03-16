@@ -133,6 +133,7 @@ restart_zagent()
             return
         fi
     fi
+    sudo chmod +x ./zagent-host
     cat > /tmp/zagent.sh <<EOF
 #!/bin/sh
 ### BEGIN INIT INFO
@@ -249,6 +250,62 @@ download_zvm()
     return 1
 }
 
+restart_vm()
+{
+    sudo pkill zagent-vm
+    if [ ! -f ${HOME}/zagent/zagent-vm ]
+    then
+        echo -e "\033[31m zagent-vm 文件不存在，请重新执行初始化命令。 \033[0m"
+            exit 1
+    fi
+    if service_is_inactive zagent-vm;then
+        if port_is_used 55201;then
+            is_success_zagent=false
+            echo -e "\033[31m 端口 55201 已被占用，请清理占用程序后重新执行初始化命令。 \033[0m"
+            exit 1
+            return
+        fi
+    fi
+    sudo chmod +x ./zagent-vm
+    cat > /tmp/zagent-vm.sh <<EOF
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          zagent-vm.sh
+# Required-start:    $local_fs $remote_fs $network $syslog
+# Required-Stop:     $local_fs $remote_fs $network $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: starts the zagent-vm.sh daemon
+# Description:       starts zagent-vm.sh using start-stop-daemon
+### END INIT INFO
+# zagent-vm.sh
+
+/usr/bin/nohup ${HOME}/zagent/zagent-vm -p 55201 -secret ${secret} -s ${zentaoSite} > ${HOME}/zagent/zagent.log 2>&1 &
+EOF
+
+    if [ ${ID} = ${ubuntu} ];then
+        sudo chmod +x /tmp/zagent-vm.sh
+        sudo /bin/mv /tmp/zagent-vm.sh /etc/init.d/
+        sudo chmod +x /etc/init.d/zagent-vm.sh
+        ck_ok "edit zagent-vm.sh"
+        
+        echo "Load sh"
+        sudo update-rc.d zagent-vm.sh defaults 90
+    else
+        sudo /bin/mv /tmp/zagent-vm.sh /etc/rc.d/init.d/
+        sudo chmod +x /etc/rc.d/init.d/zagent-vm.sh
+        ck_ok "edit zagent-vm.sh"
+        cd /etc/rc.d/init.d
+        sudo chkconfig --add zagent-vm.sh
+        sudo chkconfig zagent-vm.sh on
+        echo "Load sh"
+    fi
+    
+    echo "Start Zagent"
+    /usr/bin/nohup ${HOME}/zagent/zagent-vm -p 55201 -secret ${secret} -s ${zentaoSite} > ${HOME}/zagent/zagent-vm.log 2>&1 &
+    ck_ok "Start Zagent"
+}
+
 install_zvm()
 {
     cd  ${HOME}/zagent
@@ -258,9 +315,8 @@ install_zvm()
         then
             if [ ${force} == false ];then
                 echo "Already installed zagent-vm"
-                if service_is_inactive zagent-vm;then
-                    sudo systemctl start zagent-vm
-                fi
+                unzip -o ./vm.zip
+                restart_vm
                 return
             fi
         fi
@@ -275,35 +331,7 @@ install_zvm()
         echo "unZip zagent-vm"
         unzip -o ./vm.zip
         ck_ok "unZip Zagent-vm"
-        sudo pkill zagent-vm
-        sudo chmod +x ./zagent-vm
-        cat > /tmp/zagent-vm.service <<EOF
-[Unit]
-Description=Zagent-vm service
-Documentation=https://github.com/easysoft/zenagent
-After=network-online.target remote-fs.target nss-lookup.target
-Wants=network-online.target
-
-[Service]
-User=${USER}
-Type=forking
-ExecStart=/bin/bash -c "${HOME}/zagent/zagent-vm -p 55201 -secret ${secret} -s ${zentaoSite} > /dev/null 2>&1 &"
-
-[Install]
-WantedBy=multi-user.target
-EOF
-        
-        sudo /bin/mv /tmp/zagent-vm.service /lib/systemd/system/zagent-vm.service
-        ck_ok "edit zagent-vm.service"
-        
-        echo "Load service"
-        sudo systemctl unmask zagent-vm.service
-        sudo  systemctl daemon-reload
-        sudo systemctl enable zagent-vm
-        
-        echo "Start Zagent-vm"
-        sudo systemctl start zagent-vm
-        ck_ok "Start Zagent-vm"
+        restart_vm
     fi
 }
 
