@@ -280,7 +280,7 @@ restart_vm()
 ### END INIT INFO
 # zagent-vm.sh
 
-/usr/bin/nohup ${HOME}/zagent/zagent-vm -p 55201 -secret ${secret} -s ${zentaoSite} > ${HOME}/zagent/zagent.log 2>&1 &
+/usr/bin/nohup ${HOME}/zagent/zagent-vm -p 55201 -secret ${secret} -s ${zentaoSite} > ${HOME}/zagent/zagent-vm.log 2>&1 &
 EOF
 
     if [ ${ID} = ${ubuntu} ];then
