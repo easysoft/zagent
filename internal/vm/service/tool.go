@@ -17,7 +17,6 @@ import (
 	_fileUtils "github.com/easysoft/zagent/pkg/lib/file"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
-	_stringUtils "github.com/easysoft/zagent/pkg/lib/string"
 	"github.com/mholt/archiver/v3"
 )
 
@@ -179,25 +178,7 @@ func (s *ToolService) getOldVersion(name string) (versionStr string, versionNum 
 	versionStr = strings.TrimSpace(_fileUtils.ReadFile(versionFile))
 	versionNum = s.convertVersion(versionStr)
 
-	if name == "ztf" && versionNum > 0 {
-		if s.checkIsIgnoredZtf(versionStr) {
-			versionStr = ""
-			versionNum = 0
-		}
-	}
-
 	return
-}
-
-func (s *ToolService) checkIsIgnoredZtf(versionStr string) (ignored bool) {
-	dir := s.getToolDir("ztf")
-	targetPath := filepath.Join(dir, "download", versionStr+".zip")
-	md5Path := targetPath + ".md5"
-
-	localMd5, _ := _fileUtils.GetMd5(md5Path)
-	ignored = _stringUtils.StrInArr(localMd5, []string{"43626a024ab8d7c0fbc4bb81585451b9"})
-
-	return ignored
 }
 
 func (s *ToolService) getToolDir(name string) (dir string) {
