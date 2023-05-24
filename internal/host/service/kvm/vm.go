@@ -223,11 +223,11 @@ func (s *KvmService) UpdateVmMapAndDestroyTimeout(vms []domain.Vm) {
 		}
 
 		// destroy and remove timeout vm
-		v := s.VmMapVar[key]
-		if time.Now().Unix()-v.FirstDetectedTime.Unix() > consts.WaitVmLifecycleTimeout { // timeout
-			s.LibvirtService.SafeDestroyVmByName(v.Name)
-			delete(s.VmMapVar, key)
-		}
+		// v := s.VmMapVar[key]
+		// if time.Now().Unix()-v.FirstDetectedTime.Unix() > consts.WaitVmLifecycleTimeout { // timeout
+		// 	s.LibvirtService.SafeDestroyVmByName(v.Name)
+		// 	delete(s.VmMapVar, key)
+		// }
 	}
 }
 
