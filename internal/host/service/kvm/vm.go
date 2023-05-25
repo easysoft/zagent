@@ -208,9 +208,6 @@ func (s *KvmService) UpdateVmMapAndDestroyTimeout(vms []domain.Vm) {
 			s.VmMapVar[name] = v
 			vms[key].Heartbeat = s.GetHeartbeat(v.MacAddress)
 		} else { // update time then add
-			if vm.FirstDetectedTime.IsZero() {
-				vm.FirstDetectedTime = time.Now()
-			}
 			s.VmMapVar[name] = vm
 		}
 	}
@@ -221,13 +218,6 @@ func (s *KvmService) UpdateVmMapAndDestroyTimeout(vms []domain.Vm) {
 			delete(s.VmMapVar, key)
 			continue
 		}
-
-		// destroy and remove timeout vm
-		// v := s.VmMapVar[key]
-		// if time.Now().Unix()-v.FirstDetectedTime.Unix() > consts.WaitVmLifecycleTimeout { // timeout
-		// 	s.LibvirtService.SafeDestroyVmByName(v.Name)
-		// 	delete(s.VmMapVar, key)
-		// }
 	}
 }
 
