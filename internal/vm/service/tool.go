@@ -134,7 +134,7 @@ func (s *ToolService) getToolPath(name, version string) (pth string) {
 		exeName += "-server"
 	}
 
-	pth = filepath.Join(dir, version, exeName)
+	pth = filepath.Join(dir, version, "server", exeName)
 	if _commonUtils.IsWin() {
 		pth += ".exe"
 	}
