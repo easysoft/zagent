@@ -92,7 +92,7 @@ func (s *ToolService) downloadTool(name string, version string) (pass bool, err 
 	url := fmt.Sprintf(consts.PackageDownloadUrl, name, version, os, zipName)
 
 	targetPath := filepath.Join(dir, "download", version+".zip")
-	extractDir := filepath.Join(dir, version)
+	extractDir := filepath.Join(dir, version, "server")
 
 	_fileUtils.RemoveFile(targetPath)
 	_, err = _fileUtils.DownloadAdv(_fileUtils.AddTimeParam(url), targetPath)
