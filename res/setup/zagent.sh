@@ -766,16 +766,6 @@ install()
     print_res
 }
 
-if [ ! -n "$(egrep -o "(vmx|svm)" /proc/cpuinfo)" ];then
-    echo -e "\033[31m Not support virtualization \033[0m"
-    exit 1
-fi
-
-if [ '0' = "$(lsmod |grep kvm |grep -v grep | tr -s ' ' | cut -d' ' -f1,3|grep kvm|grep -v grep | tr -s ' ' | cut -d' ' -f2)" ];then
-    echo -e "\033[31m Virtualization is disabled in the host BIOS \033[0m"
-    exit 1
-fi
-
 ubuntu=ubuntu
 centos=centos
 
@@ -870,6 +860,18 @@ fi
 
 HOME="`cat /etc/passwd |grep ^${SUDO_USER:-$(id -un)}: | cut -d: -f 6`"
 HOME=${HOME:-$HOME}
+
+if [ ${is_install_zvm} == false ];then
+    if [ ! -n "$(egrep -o "(vmx|svm)" /proc/cpuinfo)" ];then
+    echo -e "\033[31m Not support virtualization \033[0m"
+    exit 1
+    fi
+
+    if [ '0' = "$(lsmod |grep kvm |grep -v grep | tr -s ' ' | cut -d' ' -f1,3|grep kvm|grep -v grep | tr -s ' ' | cut -d' ' -f2)" ];then
+        echo -e "\033[31m Virtualization is disabled in the host BIOS \033[0m"
+        exit 1
+    fi
+fi
 
 if [ ${isInstall} == true ];then
     install
