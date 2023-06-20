@@ -70,8 +70,12 @@ create_dir(){
     fi
     
     if [ ! -d $1 ];then
-        echo "mkdir $1 error."
+        echo -e "\033[31m mkdir $1 error. \033[0m"
         exit 1
+    fi
+
+    if [ ! -r "$1" ] || [ ! -w "$1" ] || [ ! -x "$1" ];then
+        sudo chmod -R 777 $1
     fi
 }
 create_all_dir(){
@@ -727,15 +731,6 @@ install()
     fi
     
     create_dir ${HOME}/zagent
-    if $is_install_zagent;then
-        install_zagent
-        is_success_zagent=true
-    fi
-    
-    if $is_install_zvm;then
-        install_zvm
-        is_success_zvm=true
-    fi
     
     if $is_install_nginx;then
         create_dir ${HOME}/zagent/nginx
@@ -750,6 +745,16 @@ install()
         create_dir ${HOME}/zagent/token
         install_kvm
         is_success_kvm=true
+    fi
+
+    if $is_install_zagent;then
+        install_zagent
+        is_success_zagent=true
+    fi
+    
+    if $is_install_zvm;then
+        install_zvm
+        is_success_zvm=true
     fi
     
     if $is_install_novnc;then
