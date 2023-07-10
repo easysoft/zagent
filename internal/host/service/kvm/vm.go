@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 	"regexp"
+	"strings"
 	"sync"
 	"time"
 
@@ -245,21 +246,21 @@ func (s *KvmService) GetVmIpByMac(macAddress string) (ip string, err error) {
 	cmd := `virsh net-dhcp-leases default | grep ipv4 | awk '{print $3,$5 }'`
 
 	out, err := _shellUtils.ExeSysCmd(cmd)
-	// arr := strings.Split(out, "\n")
+	arr := strings.Split(out, "\n")
 
-	// for _, line := range arr {
-	// 	cols := strings.Split(line, " ")
-	// 	if len(cols) == 0 {
-	// 		continue
-	// 	}
+	for _, line := range arr {
+		cols := strings.Split(line, " ")
+		if len(cols) == 0 {
+			continue
+		}
 
-	// 	if strings.TrimSpace(cols[0]) == macAddress {
-	// 		ip = strings.Split(strings.TrimSpace(cols[1]), "/")[0]
-	// 		ip = strings.TrimSpace(ip)
+		if strings.TrimSpace(cols[0]) == macAddress {
+			ip = strings.Split(strings.TrimSpace(cols[1]), "/")[0]
+			ip = strings.TrimSpace(ip)
 
-	// 		break
-	// 	}
-	// }
+			break
+		}
+	}
 
 	if ip == "" {
 		cmd = `arp -an | grep ` + macAddress
