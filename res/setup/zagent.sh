@@ -598,6 +598,13 @@ install_libvirt()
     else
         sudo yum -y install qemu-kvm python-virtinst libvirt libvirt-python virt-manager libguestfs-tools bridge-utils virt-install
     fi
+
+    sudo bash -c 'cat >> /etc/libvirt/qemu.conf << EOF
+    user = "root"
+    group = "root"
+    EOF'
+    sudo systemctl restart libvirtd.service
+    sudo systemctl restart qemu-kvm.service
 }
 
 install_kvm()
