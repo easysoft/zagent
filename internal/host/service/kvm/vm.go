@@ -3,7 +3,7 @@ package kvmService
 import (
 	"fmt"
 	"path/filepath"
-	"strings"
+	"regexp"
 	"sync"
 	"time"
 
@@ -14,7 +14,6 @@ import (
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/domain"
 	natHelper "github.com/easysoft/zagent/internal/pkg/utils/net"
-	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 	"github.com/libvirt/libvirt-go"
@@ -75,10 +74,6 @@ func (s *KvmService) CreateVmFromImage(req *v1.CreateVmReq, removeSameName bool)
 	if err != nil {
 		_logUtils.Infof("exec cmd '%s' err, output %s, error %s", cmdCreateVm, out, err.Error())
 		return
-	}
-
-	if !_commonUtils.IsWin() {
-		_shellUtils.ExeShell("chmod 777 " + srcFile)
 	}
 
 	// start vm
@@ -250,20 +245,31 @@ func (s *KvmService) GetVmIpByMac(macAddress string) (ip string, err error) {
 	cmd := `virsh net-dhcp-leases default | grep ipv4 | awk '{print $3,$5 }'`
 
 	out, err := _shellUtils.ExeSysCmd(cmd)
-	arr := strings.Split(out, "\n")
+	// arr := strings.Split(out, "\n")
 
-	for _, line := range arr {
-		cols := strings.Split(line, " ")
-		if len(cols) == 0 {
-			continue
+	// for _, line := range arr {
+	// 	cols := strings.Split(line, " ")
+	// 	if len(cols) == 0 {
+	// 		continue
+	// 	}
+
+	// 	if strings.TrimSpace(cols[0]) == macAddress {
+	// 		ip = strings.Split(strings.TrimSpace(cols[1]), "/")[0]
+	// 		ip = strings.TrimSpace(ip)
+
+	// 		break
+	// 	}
+	// }
+
+	if ip == "" {
+		cmd = `arp -an | grep ` + macAddress
+		out, err = _shellUtils.ExeSysCmd(cmd)
+		reg := regexp.MustCompile(`(?:[0-9]{1,3}\.){3}[0-9]{1,3}`)
+		ipSlice := reg.FindStringSubmatch(out)
+		if len(ipSlice) < 1 {
+			return
 		}
-
-		if strings.TrimSpace(cols[0]) == macAddress {
-			ip = strings.Split(strings.TrimSpace(cols[1]), "/")[0]
-			ip = strings.TrimSpace(ip)
-
-			break
-		}
+		ip = ipSlice[0]
 	}
 
 	return
