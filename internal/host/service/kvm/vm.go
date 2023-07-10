@@ -14,6 +14,7 @@ import (
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	"github.com/easysoft/zagent/internal/pkg/domain"
 	natHelper "github.com/easysoft/zagent/internal/pkg/utils/net"
+	_commonUtils "github.com/easysoft/zagent/pkg/lib/common"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
 	_shellUtils "github.com/easysoft/zagent/pkg/lib/shell"
 	"github.com/libvirt/libvirt-go"
@@ -74,6 +75,10 @@ func (s *KvmService) CreateVmFromImage(req *v1.CreateVmReq, removeSameName bool)
 	if err != nil {
 		_logUtils.Infof("exec cmd '%s' err, output %s, error %s", cmdCreateVm, out, err.Error())
 		return
+	}
+
+	if !_commonUtils.IsWin() {
+		_shellUtils.ExeShell("chmod 777 " + srcFile)
 	}
 
 	// start vm
