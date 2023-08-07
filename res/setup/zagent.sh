@@ -216,15 +216,15 @@ install_zagent()
         fi
     fi
     
-    /usr/bin/rm -rf ${HOME}/zagent/agent.zip
+    /bin/rm -rf ${HOME}/zagent/agent.zip
 }
 
 install_netTools()
 {
     if [[ ${ID} = ${ubuntu} ]];then
-        sudo apt install net-tools
+        sudo apt install -y net-tools
     else
-        sudo yum install net-tools.x86_64
+        sudo yum install -y net-tools.x86_64
     fi
 }
 
@@ -388,8 +388,8 @@ install_novnc()
         ck_ok "unZip novnc"
     fi
     
-    /usr/bin/mv ${HOME}/zagent/novnc/vnc_lite.html ${HOME}/zagent/novnc/index.html
-    /usr/bin/rm ${HOME}/zagent/novnc.zip
+    /bin/mv ${HOME}/zagent/novnc/vnc_lite.html ${HOME}/zagent/novnc/index.html
+    /bin/rm ${HOME}/zagent/novnc.zip
 }
 download_nginx()
 {
@@ -440,7 +440,7 @@ install_depends()
             if ! dpkg -l $pkg >/dev/null 2>&1
             then
                 apt_update
-                sudo apt reinstall -y $pkg
+                sudo apt install -y $pkg
                 ck_ok "install $pkg"
             else
                 echo "$pkg already installed"
@@ -453,7 +453,7 @@ install_depends()
             then
                 apt_update
                 if [[ ${ID} = ${ubuntu} ]];then
-                    sudo apt reinstall -y $pkg
+                    sudo apt install -y $pkg
                 else
                     sudo yum install -y $pkg
                 fi
@@ -588,23 +588,25 @@ EOF'
     sudo systemctl start nginx
     ck_ok "Start Nginx"
     
-    sudo /usr/bin/rm /usr/local/src/nginx-1.23.0.tar.gz
+    sudo /bin/rm /usr/local/src/nginx-1.23.0.tar.gz
 }
 
 install_libvirt()
 {
     if [[ ${ID} = ${ubuntu} ]];then
-        sudo apt reinstall -y qemu-kvm libvirt-daemon-system libvirt-clients libvirt-dev qemu virt-manager bridge-utils libosinfo-bin
+        sudo apt install -y qemu-kvm libvirt-daemon-system libvirt-clients libvirt-dev qemu virt-manager bridge-utils libosinfo-bin
     else
         sudo yum -y install qemu-kvm python-virtinst libvirt libvirt-python virt-manager libguestfs-tools bridge-utils virt-install
     fi
 
-    sudo bash -c 'cat >> /etc/libvirt/qemu.conf << EOF
-    user = "root"
-    group = "root"
-    EOF'
-    sudo systemctl restart libvirtd.service
-    sudo systemctl restart qemu-kvm.service
+    if [ "$USER" = "root" ]; then
+        sudo bash -c 'cat >> /etc/libvirt/qemu.conf << EOF
+        user = "root"
+        group = "root"
+        EOF'
+        sudo systemctl restart libvirtd.service
+        sudo systemctl restart qemu-kvm.service
+    fi
 }
 
 install_kvm()
@@ -695,15 +697,17 @@ install_websockify()
     
     if ! command_exist python3;then
         if [[ ${ID} = ${ubuntu} ]];then
-            sudo apt install python3
+            sudo apt install -y python3
         else
-            sudo yum install python3
+            sudo yum install -y python3
         fi
     fi
     
-    /usr/bin/rm -rf ${HOME}/zagent/websockify.zip
+    /bin/rm -rf ${HOME}/zagent/websockify.zip
     
     sudo chmod +x ${HOME}/zagent/websockify/run
+    sudo chmod +x ${HOME}/zagent/websockify/setup.py
+    python3 ${HOME}/zagent/websockify/setup.py install
     if service_is_inactive JSONTokenApi;then
         if port_is_used 6080;then
             echo -e "\033[31m 端口 6080 已被占用，请清理占用程序后重新执行初始化命令。 \033[0m"
@@ -719,7 +723,23 @@ install_curl()
     if [[ ${ID} = ${ubuntu} ]];then
         sudo apt install  -y curl
     else
-        sudo yum install curl
+        sudo yum install -y curl
+    fi
+}
+install_lsof()
+{
+    if [[ ${ID} = ${ubuntu} ]];then
+        sudo apt install  -y lsof
+    else
+        sudo yum install -y lsof
+    fi
+}
+install_unzip()
+{
+    if [[ ${ID} = ${ubuntu} ]];then
+        sudo apt install  -y unzip
+    else
+        sudo yum install -y unzip
     fi
 }
 
@@ -735,6 +755,30 @@ install()
         fi
         install_curl
         ck_ok "install curl"
+    fi
+
+    if ! command_exist lsof;then
+        echo "Install lsof"
+        if ! $is_update_apt;then
+            if [[ ${ID} = ${ubuntu} ]];then
+                sudo apt update
+            fi
+            is_update_apt=true
+        fi
+        install_lsof
+        ck_ok "install lsof"
+    fi
+
+    if ! command_exist unzip;then
+        echo "Install unzip"
+        if ! $is_update_apt;then
+            if [[ ${ID} = ${ubuntu} ]];then
+                sudo apt update
+            fi
+            is_update_apt=true
+        fi
+        install_unzip
+        ck_ok "install unzip"
     fi
     
     create_dir ${HOME}/zagent
