@@ -603,7 +603,7 @@ install_libvirt()
         sudo bash -c 'cat >> /etc/libvirt/qemu.conf << EOF
         user = "root"
         group = "root"
-        EOF'
+EOF'
         sudo systemctl restart libvirtd.service
         sudo systemctl restart qemu-kvm.service
     fi
