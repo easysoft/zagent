@@ -59,11 +59,14 @@ func (s *SnapService) RemoveSnapsByVmName(vm string) (err error) {
 
 func (s *SnapService) GetVmSnaps(vm string) (snaps []string) {
 	cmd := fmt.Sprintf("virsh snapshot-list %s | awk '{print $1}' | tail -n +3", vm)
-
 	out, err := _shellUtils.ExeShell(cmd)
 	if err != nil {
-		_logUtils.Infof("list snap '%s' err, output %s, error %s", cmd, out, err.Error())
-		return
+		cmd = fmt.Sprintf("virsh --connect qemu:///system snapshot-list %s | awk '{print $1}' | tail -n +3", vm)
+		out, err = _shellUtils.ExeShell(cmd)
+		if err != nil {
+			_logUtils.Infof("list snap '%s' err, output %s, error %s", cmd, out, err.Error())
+			return
+		}
 	}
 	snapNames := strings.Split(out, "\n")
 	for _, name := range snapNames {
@@ -160,7 +163,11 @@ func (s *SnapService) createSnap(po *agentModel.Task) (status consts.TaskStatus,
 		cmd := fmt.Sprintf("virsh snapshot-create-as %s %s --atomic -uuid-%s", po.Vm, po.Name, uuidStr)
 		result, err := _shellUtils.ExeShell(cmd)
 		if err != nil {
-			result = err.Error()
+			cmd = fmt.Sprintf("virsh --connect qemu:///system snapshot-create-as %s %s --atomic -uuid-%s", po.Vm, po.Name, uuidStr)
+			result, err = _shellUtils.ExeShell(cmd)
+			if err != nil {
+				result = err.Error()
+			}
 		}
 
 		status = consts.Completed
@@ -181,7 +188,11 @@ func (s *SnapService) revertSnap(po *agentModel.Task) (status consts.TaskStatus,
 		cmd := fmt.Sprintf("virsh snapshot-revert %s %s --running", po.Vm, po.Name)
 		result, err := _shellUtils.ExeShell(cmd)
 		if err != nil {
-			result = err.Error()
+			cmd = fmt.Sprintf("virsh --connect qemu:///system snapshot-revert %s %s --running", po.Vm, po.Name)
+			result, err = _shellUtils.ExeShell(cmd)
+			if err != nil {
+				result = err.Error()
+			}
 		}
 
 		status = consts.Completed
@@ -198,11 +209,14 @@ func (s *SnapService) revertSnap(po *agentModel.Task) (status consts.TaskStatus,
 
 func (s *SnapService) RemoveSnap(req *v1.SnapTaskReq) (err error) {
 	cmd := fmt.Sprintf("virsh snapshot-delete %s %s", req.Vm, req.Name)
-
 	out, err := _shellUtils.ExeShell(cmd)
 	if err != nil {
-		_logUtils.Infof("remove snap '%s' err, output %s, error %s", cmd, out, err.Error())
-		return
+		cmd = fmt.Sprintf("virsh --connect qemu:///system snapshot-delete %s %s", req.Vm, req.Name)
+		out, err = _shellUtils.ExeShell(cmd)
+		if err != nil {
+			_logUtils.Infof("remove snap '%s' err, output %s, error %s", cmd, out, err.Error())
+			return
+		}
 	}
 
 	return
