@@ -35,6 +35,7 @@ require (
 	github.com/facebookgo/structtag v0.0.0-20150214074306-217e25fb9691 // indirect
 	github.com/facebookgo/subset v0.0.0-20200203212716-c811ad88dec4 // indirect
 	github.com/fatih/color v1.13.0
+	github.com/glebarez/sqlite v1.10.0 // indirect
 	github.com/go-bindata/go-bindata v1.0.0 // indirect
 	github.com/go-git/go-git/v5 v5.2.0
 	github.com/go-openapi/analysis v0.21.1 // indirect
@@ -47,6 +48,7 @@ require (
 	github.com/gofrs/uuid v4.1.0+incompatible
 	github.com/goinggo/mapstructure v0.0.0-20140717182941-194205d9b4a9 // indirect
 	github.com/gomodule/redigo v1.8.4
+	github.com/google/uuid v1.4.0 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20200217142428-fce0ec30dd00 // indirect
 	github.com/gorilla/websocket v1.4.2
 	github.com/huandu/go-clone v1.1.4 // indirect
@@ -69,6 +71,7 @@ require (
 	github.com/libvirt/libvirt-go v7.4.0+incompatible
 	github.com/libvirt/libvirt-go-xml v7.4.0+incompatible
 	github.com/manveru/gobdd v0.0.0-20131210092515-f1a17fdd710b // indirect
+	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible // indirect
 	github.com/mholt/archiver/v3 v3.5.0
 	github.com/microcosm-cc/bluemonday v1.0.20 // indirect
@@ -93,14 +96,16 @@ require (
 	github.com/yudai/pp v2.0.1+incompatible // indirect
 	go.mongodb.org/mongo-driver v1.7.4 // indirect
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
-	golang.org/x/net v0.0.0-20220826154423-83b083e8dc8b
-	golang.org/x/text v0.3.7
+	golang.org/x/net v0.10.0
+	golang.org/x/text v0.9.0
 	gopkg.in/ini.v1 v1.64.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/mysql v1.0.3
 	gorm.io/driver/postgres v1.1.0
 	gorm.io/driver/sqlite v1.1.4
-	gorm.io/gorm v1.21.9
+	gorm.io/gorm v1.25.5
 	gorm.io/plugin/dbresolver v1.1.0
+	modernc.org/libc v1.31.0 // indirect
+	modernc.org/sqlite v1.27.0 // indirect
 )

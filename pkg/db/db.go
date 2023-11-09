@@ -6,14 +6,14 @@ import (
 	consts "github.com/easysoft/zagent/internal/pkg/const"
 	_fileUtils "github.com/easysoft/zagent/pkg/lib/file"
 	_logUtils "github.com/easysoft/zagent/pkg/lib/log"
-	"gorm.io/driver/sqlite"
+	"github.com/glebarez/sqlite"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 	"gorm.io/plugin/dbresolver"
 	"path/filepath"
 	"time"
 
-	_ "gorm.io/driver/sqlite"
+	_ "github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 )
 
